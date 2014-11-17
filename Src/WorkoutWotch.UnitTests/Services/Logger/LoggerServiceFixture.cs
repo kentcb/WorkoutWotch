@@ -123,6 +123,7 @@
             var entryTask = service
                 .Entries
                 .FirstAsync()
+                .Timeout(TimeSpan.FromSeconds(3))
                 .ToTask();
 
             logger.Debug("A message with a parameter: {0}", 42);
@@ -140,6 +141,7 @@
             var entryTask = service
                 .Entries
                 .FirstAsync()
+                .Timeout(TimeSpan.FromSeconds(3))
                 .ToTask();
 
             logger.Debug(new InvalidOperationException("foo"), "A message with an exception and a parameter ({0}): ", 42);
