@@ -12,7 +12,7 @@
     public class LoggerServiceFixture
     {
         [Test]
-        public void is_debug_enabled_reflects_threshold()
+        public void is_debug_enabled_honors_threshold()
         {
             var service = new LoggerService();
             service.Threshold = LogLevel.Debug;
@@ -22,7 +22,7 @@
         }
 
         [Test]
-        public void is_info_enabled_reflects_threshold()
+        public void is_info_enabled_honors_threshold()
         {
             var service = new LoggerService();
             service.Threshold = LogLevel.Info;
@@ -32,7 +32,7 @@
         }
 
         [Test]
-        public void is_perf_enabled_reflects_threshold()
+        public void is_perf_enabled_honors_threshold()
         {
             var service = new LoggerService();
             service.Threshold = LogLevel.Perf;
@@ -42,7 +42,7 @@
         }
 
         [Test]
-        public void is_warn_enabled_reflects_threshold()
+        public void is_warn_enabled_honors_threshold()
         {
             var service = new LoggerService();
             service.Threshold = LogLevel.Warn;
@@ -152,4 +152,3 @@
         }
     }
 }
-
