@@ -34,6 +34,13 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Logger\ILoggerService.cs" />
+    <Compile Include="Logger\ILogger.cs" />
+    <Compile Include="Logger\LogLevel.cs" />
+    <Compile Include="Logger\LogEntry.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Logger\" />
+  </ItemGroup>
 </Project>

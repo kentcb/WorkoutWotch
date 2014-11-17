@@ -34,6 +34,15 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="DisposableBase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <ItemGroup>
+    <Reference Include="Kent.Boogaart.HelperTrinity">
+      <HintPath>..\packages\Kent.Boogaart.HelperTrinity.2.0.1\lib\portable-win8+net403+sl40+wp+xbox40\Kent.Boogaart.HelperTrinity.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>

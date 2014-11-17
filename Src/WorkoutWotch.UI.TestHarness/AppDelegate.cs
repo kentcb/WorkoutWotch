@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using MonoTouch.Foundation;
+﻿using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using MonoTouch.NUnit.UI;
-using WorkoutWotch.UnitTests;
+using WorkoutWotch.UnitTests.Services.Logger;
 
 namespace WorkoutWotch.UI.TestHarness
 {
@@ -32,7 +28,7 @@ namespace WorkoutWotch.UI.TestHarness
             window = new UIWindow(UIScreen.MainScreen.Bounds);
             runner = new TouchRunner(window);
 
-            runner.Add(typeof(DummyTest).Assembly);
+            runner.Add(typeof(LoggerServiceFixture).Assembly);
 
             window.RootViewController = new UINavigationController(runner.GetViewController());
             window.MakeKeyAndVisible();
