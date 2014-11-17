@@ -27,27 +27,27 @@
 
         public bool IsDebugEnabled
         {
-            get { return this.threshold <= LogLevel.Debug; }
+            get { return this.IsLevelEnabled(LogLevel.Debug); }
         }
 
         public bool IsInfoEnabled
         {
-            get { return this.threshold <= LogLevel.Info; }
+            get { return this.IsLevelEnabled(LogLevel.Info); }
         }
 
         public bool IsPerfEnabled
         {
-            get { return this.threshold <= LogLevel.Perf; }
+            get { return this.IsLevelEnabled(LogLevel.Perf); }
         }
 
         public bool IsWarnEnabled
         {
-            get { return this.threshold <= LogLevel.Warn; }
+            get { return this.IsLevelEnabled(LogLevel.Warn); }
         }
 
         public bool IsErrorEnabled
         {
-            get { return this.threshold <= LogLevel.Error; }
+            get { return this.IsLevelEnabled(LogLevel.Error); }
         }
 
         public IObservable<LogEntry> Entries
@@ -65,6 +65,11 @@
         {
             name.AssertNotNull("name");
             return new Logger(this, name);
+        }
+
+        private bool IsLevelEnabled(LogLevel level)
+        {
+            return this.threshold <= level;
         }
 
         private sealed class Logger : ILogger
@@ -110,84 +115,32 @@
 
             public void Debug(string message)
             {
-                message.AssertNotNull("message");
-
-                if (!this.IsDebugEnabled)
-                {
-                    return;
-                }
-
                 this.Log(LogLevel.Debug, message);
             }
 
             public void Debug(string format, params object[] args)
             {
-                format.AssertNotNull("format");
-                args.AssertNotNull("args");
-
-                if (!this.IsDebugEnabled)
-                {
-                    return;
-                }
-
-                var message = string.Format(CultureInfo.InvariantCulture, format, args);
-                this.Log(LogLevel.Debug, message);
+                this.Log(LogLevel.Debug, format, args);
             }
 
             public void Debug(Exception exception, string format, params object[] args)
             {
-                exception.AssertNotNull("exception");
-                format.AssertNotNull("format");
-                args.AssertNotNull("args");
-
-                if (!this.IsDebugEnabled)
-                {
-                    return;
-                }
-
-                var message = string.Format(CultureInfo.InvariantCulture, format, args) + exception.ToString();
-                this.Log(LogLevel.Debug, message);
+                this.Log(LogLevel.Debug, exception, format, args);
             }
 
             public void Info(string message)
             {
-                message.AssertNotNull("message");
-
-                if (!this.IsInfoEnabled)
-                {
-                    return;
-                }
-
                 this.Log(LogLevel.Info, message);
             }
 
             public void Info(string format, params object[] args)
             {
-                format.AssertNotNull("format");
-                args.AssertNotNull("args");
-
-                if (!this.IsInfoEnabled)
-                {
-                    return;
-                }
-
-                var message = string.Format(CultureInfo.InvariantCulture, format, args);
-                this.Log(LogLevel.Info, message);
+                this.Log(LogLevel.Info, format, args);
             }
 
             public void Info(Exception exception, string format, params object[] args)
             {
-                exception.AssertNotNull("exception");
-                format.AssertNotNull("format");
-                args.AssertNotNull("args");
-
-                if (!this.IsInfoEnabled)
-                {
-                    return;
-                }
-
-                var message = string.Format(CultureInfo.InvariantCulture, format, args) + exception.ToString();
-                this.Log(LogLevel.Info, message);
+                this.Log(LogLevel.Info, exception, format, args);
             }
 
             public IDisposable Perf(string message)
@@ -218,88 +171,72 @@
 
             public void Warn(string message)
             {
-                message.AssertNotNull("message");
-
-                if (!this.IsWarnEnabled)
-                {
-                    return;
-                }
-
                 this.Log(LogLevel.Warn, message);
             }
 
             public void Warn(string format, params object[] args)
             {
-                format.AssertNotNull("format");
-                args.AssertNotNull("args");
-
-                if (!this.IsWarnEnabled)
-                {
-                    return;
-                }
-
-                var message = string.Format(CultureInfo.InvariantCulture, format, args);
-                this.Log(LogLevel.Warn, message);
+                this.Log(LogLevel.Warn, format, args);
             }
 
             public void Warn(Exception exception, string format, params object[] args)
             {
-                exception.AssertNotNull("exception");
-                format.AssertNotNull("format");
-                args.AssertNotNull("args");
-
-                if (!this.IsWarnEnabled)
-                {
-                    return;
-                }
-
-                var message = string.Format(CultureInfo.InvariantCulture, format, args) + exception.ToString();
-                this.Log(LogLevel.Warn, message);
+                this.Log(LogLevel.Warn, exception, format, args);
             }
 
             public void Error(string message)
             {
-                message.AssertNotNull("message");
-
-                if (!this.IsErrorEnabled)
-                {
-                    return;
-                }
-
                 this.Log(LogLevel.Error, message);
             }
 
             public void Error(string format, params object[] args)
             {
+                this.Log(LogLevel.Error, format, args);
+            }
+
+            public void Error(Exception exception, string format, params object[] args)
+            {
+                this.Log(LogLevel.Error, exception, format, args);
+            }
+
+            private void Log(LogLevel level, string format, params object[] args)
+            {
                 format.AssertNotNull("format");
                 args.AssertNotNull("args");
 
-                if (!this.IsErrorEnabled)
+                if (!this.owner.IsLevelEnabled(level))
                 {
                     return;
                 }
 
                 var message = string.Format(CultureInfo.InvariantCulture, format, args);
-                this.Log(LogLevel.Error, message);
+                this.Log(level, message);
             }
 
-            public void Error(Exception exception, string format, params object[] args)
+            private void Log(LogLevel level, Exception exception, string format, params object[] args)
             {
                 exception.AssertNotNull("exception");
                 format.AssertNotNull("format");
                 args.AssertNotNull("args");
 
-                if (!this.IsErrorEnabled)
+                if (!this.owner.IsLevelEnabled(level))
                 {
                     return;
                 }
 
                 var message = string.Format(CultureInfo.InvariantCulture, format, args) + exception.ToString();
-                this.Log(LogLevel.Error, message);
+                this.Log(level, message);
             }
 
             private void Log(LogLevel level, string message)
             {
+                message.AssertNotNull("message");
+
+                if (!this.owner.IsLevelEnabled(level))
+                {
+                    return;
+                }
+
                 var entry = new LogEntry(DateTime.UtcNow, this.name, level, Environment.CurrentManagedThreadId, message);
                 this.owner.entries.OnNext(entry);
             }
@@ -324,7 +261,7 @@
                     if (disposing)
                     {
                         this.stopwatch.Stop();
-                        this.owner.Log(LogLevel.Perf, string.Format(CultureInfo.InvariantCulture, "{0} [{1} ({2}ms)]", message, this.stopwatch.Elapsed, this.stopwatch.ElapsedMilliseconds));
+                        this.owner.Log(LogLevel.Perf, "{0} [{1} ({2}ms)]", message, this.stopwatch.Elapsed, this.stopwatch.ElapsedMilliseconds);
                     }
                 }
             }
