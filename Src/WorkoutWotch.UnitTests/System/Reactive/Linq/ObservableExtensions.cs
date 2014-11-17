@@ -1,9 +1,9 @@
 ﻿namespace System.Reactive.Linq
 {
-    using Kent.Boogaart.HelperTrinity.Extensions;
     using System;
     using System.Collections.Generic;
     using System.Reactive.Linq;
+    using Kent.Boogaart.HelperTrinity.Extensions;
 
     public static class ObservableExtensions
     {

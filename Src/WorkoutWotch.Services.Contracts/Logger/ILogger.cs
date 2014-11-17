@@ -1,7 +1,7 @@
-using System;
-
 namespace WorkoutWotch.Services.Contracts.Logger
 {
+    using System;
+
 	public interface ILogger
 	{
         string Name
@@ -62,6 +62,4 @@ namespace WorkoutWotch.Services.Contracts.Logger
 
         void Error(Exception exception, string format, params object[] args);
 	}
-
 }
-

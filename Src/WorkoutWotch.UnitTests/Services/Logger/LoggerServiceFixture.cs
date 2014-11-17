@@ -1,13 +1,13 @@
-﻿using System;
-using NUnit.Framework;
-using WorkoutWotch.Services.Logger;
-using WorkoutWotch.Services.Contracts.Logger;
-using System.Threading.Tasks;
-using System.Reactive.Linq;
-using System.Reactive.Threading.Tasks;
-
-namespace WorkoutWotch.UnitTests.Services.Logger
+﻿namespace WorkoutWotch.UnitTests.Services.Logger
 {
+    using System;
+    using System.Reactive.Linq;
+    using System.Reactive.Threading.Tasks;
+    using System.Threading.Tasks;
+    using NUnit.Framework;
+    using WorkoutWotch.Services.Contracts.Logger;
+    using WorkoutWotch.Services.Logger;
+
     [TestFixture]
     public class LoggerServiceFixture
     {

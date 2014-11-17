@@ -1,7 +1,7 @@
-using System;
-
 namespace WorkoutWotch.Services.Contracts.Logger
 {
+    using System;
+
 	public struct LogEntry
 	{
         private readonly DateTime timestamp;
@@ -21,30 +21,27 @@ namespace WorkoutWotch.Services.Contracts.Logger
 
         public DateTime Timestamp
         {
-            get{return this.timestamp;}
+            get { return this.timestamp; }
         }
 
         public string Name
         {
-            get{return this.name;
-            }
+            get { return this.name; }
         }
 
         public LogLevel Level
         {
-            get{return this.level;}
+            get { return this.level; }
         }
 
         public int ThreadId
         {
-            get{return this.threadId;}
+            get { return this.threadId; }
         }
 
         public string Message
         {
-            get{return this.message;}
+            get { return this.message; }
         }
 	}
-
 }
-

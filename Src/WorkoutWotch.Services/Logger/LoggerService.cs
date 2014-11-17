@@ -1,14 +1,14 @@
-﻿using System;
-using WorkoutWotch.Services.Contracts.Logger;
-using System.Reactive.Subjects;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using System.Globalization;
-using System.Reactive.Disposables;
-using WorkoutWotch.Utility;
-using System.Diagnostics;
-
-namespace WorkoutWotch.Services.Logger
+﻿namespace WorkoutWotch.Services.Logger
 {
+    using System;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.Reactive.Disposables;
+    using System.Reactive.Subjects;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using WorkoutWotch.Services.Contracts.Logger;
+    using WorkoutWotch.Utility;
+
     public sealed class LoggerService : ILoggerService
     {
         private readonly Subject<LogEntry> entries;
@@ -19,72 +19,53 @@ namespace WorkoutWotch.Services.Logger
             this.entries = new Subject<LogEntry>();
         }
 
+        public LogLevel Threshold
+        {
+            get { return this.threshold; }
+            set { this.threshold = value; }
+        }
 
-        #region ILoggerService implementation
+        public bool IsDebugEnabled
+        {
+            get { return this.threshold <= LogLevel.Debug; }
+        }
+
+        public bool IsInfoEnabled
+        {
+            get { return this.threshold <= LogLevel.Info; }
+        }
+
+        public bool IsPerfEnabled
+        {
+            get { return this.threshold <= LogLevel.Perf; }
+        }
+
+        public bool IsWarnEnabled
+        {
+            get { return this.threshold <= LogLevel.Warn; }
+        }
+
+        public bool IsErrorEnabled
+        {
+            get { return this.threshold <= LogLevel.Error; }
+        }
+
+        public IObservable<LogEntry> Entries
+        {
+            get { return this.entries; }
+        }
+
         public ILogger GetLogger(Type forType)
         {
             forType.AssertNotNull("forType");
             return this.GetLogger(forType.FullName);
         }
+
         public ILogger GetLogger(string name)
         {
             name.AssertNotNull("name");
             return new Logger(this, name);
         }
-        public LogLevel Threshold
-        {
-            get
-            {
-                return this.threshold;
-            }
-            set
-            {
-                this.threshold = value;
-            }
-        }
-        public bool IsDebugEnabled
-        {
-            get
-            {
-                return this.threshold <= LogLevel.Debug;
-            }
-        }
-        public bool IsInfoEnabled
-        {
-            get
-            {
-                return this.threshold <= LogLevel.Info;
-            }
-        }
-        public bool IsPerfEnabled
-        {
-            get
-            {
-                return this.threshold <= LogLevel.Perf;
-            }
-        }
-        public bool IsWarnEnabled
-        {
-            get
-            {
-                return this.threshold <= LogLevel.Warn;
-            }
-        }
-        public bool IsErrorEnabled
-        {
-            get
-            {
-                return this.threshold <= LogLevel.Error;
-            }
-        }
-        public IObservable<LogEntry> Entries
-        {
-            get
-            {
-                return this.entries;
-            }
-        }
-        #endregion
 
         private sealed class Logger : ILogger
         {
@@ -97,7 +78,36 @@ namespace WorkoutWotch.Services.Logger
                 this.name = name;
             }
 
-            #region ILogger implementation
+            public string Name
+            {
+                get { return this.name; }
+            }
+
+            public bool IsDebugEnabled
+            {
+                get { return this.owner.IsDebugEnabled; }
+            }
+
+            public bool IsInfoEnabled
+            {
+                get { return this.owner.IsInfoEnabled; }
+            }
+
+            public bool IsPerfEnabled
+            {
+                get { return this.owner.IsPerfEnabled; }
+            }
+
+            public bool IsWarnEnabled
+            {
+                get { return this.owner.IsWarnEnabled; }
+            }
+
+            public bool IsErrorEnabled
+            {
+                get { return this.owner.IsErrorEnabled; }
+            }
+
             public void Debug(string message)
             {
                 message.AssertNotNull("message");
@@ -123,6 +133,7 @@ namespace WorkoutWotch.Services.Logger
                 var message = string.Format(CultureInfo.InvariantCulture, format, args);
                 this.Log(LogLevel.Debug, message);
             }
+
             public void Debug(Exception exception, string format, params object[] args)
             {
                 exception.AssertNotNull("exception");
@@ -137,6 +148,7 @@ namespace WorkoutWotch.Services.Logger
                 var message = string.Format(CultureInfo.InvariantCulture, format, args) + exception.ToString();
                 this.Log(LogLevel.Debug, message);
             }
+
             public void Info(string message)
             {
                 message.AssertNotNull("message");
@@ -148,6 +160,7 @@ namespace WorkoutWotch.Services.Logger
 
                 this.Log(LogLevel.Info, message);
             }
+
             public void Info(string format, params object[] args)
             {
                 format.AssertNotNull("format");
@@ -161,6 +174,7 @@ namespace WorkoutWotch.Services.Logger
                 var message = string.Format(CultureInfo.InvariantCulture, format, args);
                 this.Log(LogLevel.Info, message);
             }
+
             public void Info(Exception exception, string format, params object[] args)
             {
                 exception.AssertNotNull("exception");
@@ -175,6 +189,7 @@ namespace WorkoutWotch.Services.Logger
                 var message = string.Format(CultureInfo.InvariantCulture, format, args) + exception.ToString();
                 this.Log(LogLevel.Info, message);
             }
+
             public IDisposable Perf(string message)
             {
                 message.AssertNotNull("message");
@@ -186,6 +201,7 @@ namespace WorkoutWotch.Services.Logger
 
                 return new PerfBlock(this, message);
             }
+
             public IDisposable Perf(string format, params object[] args)
             {
                 format.AssertNotNull("format");
@@ -199,6 +215,7 @@ namespace WorkoutWotch.Services.Logger
                 var message = string.Format(CultureInfo.InvariantCulture, format, args);
                 return new PerfBlock(this, message);
             }
+
             public void Warn(string message)
             {
                 message.AssertNotNull("message");
@@ -210,6 +227,7 @@ namespace WorkoutWotch.Services.Logger
 
                 this.Log(LogLevel.Warn, message);
             }
+
             public void Warn(string format, params object[] args)
             {
                 format.AssertNotNull("format");
@@ -223,6 +241,7 @@ namespace WorkoutWotch.Services.Logger
                 var message = string.Format(CultureInfo.InvariantCulture, format, args);
                 this.Log(LogLevel.Warn, message);
             }
+
             public void Warn(Exception exception, string format, params object[] args)
             {
                 exception.AssertNotNull("exception");
@@ -237,6 +256,7 @@ namespace WorkoutWotch.Services.Logger
                 var message = string.Format(CultureInfo.InvariantCulture, format, args) + exception.ToString();
                 this.Log(LogLevel.Warn, message);
             }
+
             public void Error(string message)
             {
                 message.AssertNotNull("message");
@@ -248,6 +268,7 @@ namespace WorkoutWotch.Services.Logger
 
                 this.Log(LogLevel.Error, message);
             }
+
             public void Error(string format, params object[] args)
             {
                 format.AssertNotNull("format");
@@ -261,6 +282,7 @@ namespace WorkoutWotch.Services.Logger
                 var message = string.Format(CultureInfo.InvariantCulture, format, args);
                 this.Log(LogLevel.Error, message);
             }
+
             public void Error(Exception exception, string format, params object[] args)
             {
                 exception.AssertNotNull("exception");
@@ -281,50 +303,6 @@ namespace WorkoutWotch.Services.Logger
                 var entry = new LogEntry(DateTime.UtcNow, this.name, level, Environment.CurrentManagedThreadId, message);
                 this.owner.entries.OnNext(entry);
             }
-
-            public string Name
-            {
-                get
-                {
-                    return this.name;
-                }
-            }
-            public bool IsDebugEnabled
-            {
-                get
-                {
-                    return this.owner.IsDebugEnabled;
-                }
-            }
-            public bool IsInfoEnabled
-            {
-                get
-                {
-                    return this.owner.IsInfoEnabled;
-                }
-            }
-            public bool IsPerfEnabled
-            {
-                get
-                {
-                    return this.owner.IsPerfEnabled;
-                }
-            }
-            public bool IsWarnEnabled
-            {
-                get
-                {
-                    return this.owner.IsWarnEnabled;
-                }
-            }
-            public bool IsErrorEnabled
-            {
-                get
-                {
-                    return this.owner.IsErrorEnabled;
-                }
-            }
-            #endregion
 
             private sealed class PerfBlock : DisposableBase
             {

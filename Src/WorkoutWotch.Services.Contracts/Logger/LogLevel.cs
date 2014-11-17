@@ -1,5 +1,3 @@
-using System;
-
 namespace WorkoutWotch.Services.Contracts.Logger
 {
 	public enum LogLevel
@@ -10,6 +8,4 @@ namespace WorkoutWotch.Services.Contracts.Logger
         Warn = 3,
         Error = 4
 	}
-
 }
-

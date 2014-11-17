@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace WorkoutWotch.Services.Contracts.Logger
+﻿namespace WorkoutWotch.Services.Contracts.Logger
 {
+    using System;
+
     public interface ILoggerService
     {
         LogLevel Threshold
@@ -45,4 +45,3 @@ namespace WorkoutWotch.Services.Contracts.Logger
         ILogger GetLogger(string name);
     }
 }
-
