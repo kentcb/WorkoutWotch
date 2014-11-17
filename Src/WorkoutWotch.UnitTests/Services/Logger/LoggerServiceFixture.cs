@@ -3,6 +3,7 @@
     using System;
     using System.Reactive.Linq;
     using System.Reactive.Threading.Tasks;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using NUnit.Framework;
     using WorkoutWotch.Services.Contracts.Logger;
@@ -149,6 +150,50 @@
             var entry = await entryTask;
 
             Assert.AreEqual("A message with an exception and a parameter (42): System.InvalidOperationException: foo", entry.Message);
+        }
+
+        [Test]
+        public async Task logging_perf_is_a_noop_if_perf_level_is_disabled()
+        {
+            var service = new LoggerService();
+            var logger = service.GetLogger("test");
+            service.Threshold = LogLevel.Warn;
+            var entryTask = service
+                .Entries
+                .FirstAsync()
+                .Timeout(TimeSpan.FromSeconds(3))
+                .ToTask();
+
+            using (logger.Perf("This shouldn't be logged"))
+            {
+            }
+
+            logger.Warn("This should be logged");
+
+            var entry = await entryTask;
+
+            Assert.AreEqual("This should be logged", entry.Message);
+        }
+
+        [Test]
+        public async Task logging_perf_adds_extra_performance_information_to_the_log_message()
+        {
+            var service = new LoggerService();
+            var logger = service.GetLogger("test");
+            var entryTask = service
+                .Entries
+                .FirstAsync()
+                .Timeout(TimeSpan.FromSeconds(3))
+                .ToTask();
+
+            using (logger.Perf("Some performance {0}", "entry"))
+            {
+            }
+
+            var entry = await entryTask;
+
+            // Some performance entry [00:00:00.0045605 (4ms)]
+            Assert.True(Regex.IsMatch(entry.Message, @"Some performance entry \[\d\d:\d\d:\d\d\.\d*? \(\d*?ms\)\]"));
         }
     }
 }
