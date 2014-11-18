@@ -3,6 +3,7 @@
     using System.Reactive.Concurrency;
     using System.Threading;
     using WorkoutWotch.Services.Contracts.Scheduler;
+    using Rx = System.Reactive.Concurrency;
 
     public sealed class SchedulerService : ISchedulerService
     {
@@ -10,22 +11,22 @@
 
         public SchedulerService()
         {
-            this.synchronizationContextScheduler = new System.Reactive.Concurrency.SynchronizationContextScheduler(SynchronizationContext.Current);
+            this.synchronizationContextScheduler = new SynchronizationContextScheduler(SynchronizationContext.Current);
         }
 
         public IScheduler DefaultScheduler
         {
-            get { return System.Reactive.Concurrency.DefaultScheduler.Instance; }
+            get { return Rx.DefaultScheduler.Instance; }
         }
 
         public IScheduler CurrentThreadScheduler
         {
-            get { return System.Reactive.Concurrency.CurrentThreadScheduler.Instance; }
+            get { return Rx.CurrentThreadScheduler.Instance; }
         }
 
         public IScheduler ImmediateScheduler
         {
-            get { return System.Reactive.Concurrency.ImmediateScheduler.Instance; }
+            get { return Rx.ImmediateScheduler.Instance; }
         }
 
         public IScheduler SynchronizationContextScheduler
@@ -35,7 +36,7 @@
 
         public IScheduler TaskPoolScheduler
         {
-            get { return System.Reactive.Concurrency.TaskPoolScheduler.Default; }
+            get { return Rx.TaskPoolScheduler.Default; }
         }
     }
 }
