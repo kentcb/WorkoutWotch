@@ -1,9 +1,12 @@
-﻿using System;
-using Akavache;
-using Kent.Boogaart.PCLMock;
-
-namespace WorkoutWotch.UnitTests.Services.State.Mocks
+﻿namespace WorkoutWotch.UnitTests.Services.State.Mocks
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Reactive;
+    using System.Reactive.Concurrency;
+    using Akavache;
+    using Kent.Boogaart.PCLMock;
+
     public sealed class BlobCacheMock : MockBase<IBlobCache>, IBlobCache
     {
         public BlobCacheMock(MockBehavior behavior = MockBehavior.Strict)
@@ -11,9 +14,17 @@ namespace WorkoutWotch.UnitTests.Services.State.Mocks
         {
         }
 
-        #region IBlobCache implementation
+        public IObservable<Unit> Shutdown
+        {
+            get { return this.Apply(x => x.Shutdown); }
+        }
 
-        public IObservable<System.Reactive.Unit> Insert(string key, byte[] data, DateTimeOffset? absoluteExpiration = default(DateTimeOffset?))
+        public IScheduler Scheduler
+        {
+            get { return this.Apply(x => x.Scheduler); }
+        }
+
+        public IObservable<Unit> Insert(string key, byte[] data, DateTimeOffset? absoluteExpiration = default(DateTimeOffset?))
         {
             return this.Apply(x => x.Insert(key, data, absoluteExpiration));
         }
@@ -23,7 +34,7 @@ namespace WorkoutWotch.UnitTests.Services.State.Mocks
             return this.Apply(x => x.GetAsync(key));
         }
 
-        public System.Collections.Generic.IEnumerable<string> GetAllKeys()
+        public IEnumerable<string> GetAllKeys()
         {
             return this.Apply(x => x.GetAllKeys());
         }
@@ -33,47 +44,24 @@ namespace WorkoutWotch.UnitTests.Services.State.Mocks
             return this.Apply(x => x.GetCreatedAt(key));
         }
 
-        public IObservable<System.Reactive.Unit> Flush()
+        public IObservable<Unit> Flush()
         {
             return this.Apply(x => x.Flush());
         }
 
-        public IObservable<System.Reactive.Unit> Invalidate(string key)
+        public IObservable<Unit> Invalidate(string key)
         {
             return this.Apply(x => x.Invalidate(key));
         }
 
-        public IObservable<System.Reactive.Unit> InvalidateAll()
+        public IObservable<Unit> InvalidateAll()
         {
             return this.Apply(x => x.InvalidateAll());
         }
-
-        public IObservable<System.Reactive.Unit> Shutdown
-        {
-            get
-            {
-                return this.Apply(x => x.Shutdown);
-            }
-        }
-
-        public System.Reactive.Concurrency.IScheduler Scheduler
-        {
-            get
-            {
-                return this.Apply(x => x.Scheduler);
-            }
-        }
-
-        #endregion
-
-        #region IDisposable implementation
 
         public void Dispose()
         {
             this.Apply(x => x.Dispose());
         }
-
-        #endregion
     }
 }
-

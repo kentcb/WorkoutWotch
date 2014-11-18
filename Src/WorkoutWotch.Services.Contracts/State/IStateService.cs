@@ -1,8 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace WorkoutWotch.Services.Contracts.State
+﻿namespace WorkoutWotch.Services.Contracts.State
 {
+    using System;
+    using System.Threading.Tasks;
+
     public interface IStateService
     {
         Task<T> GetAsync<T>(string key);
@@ -16,4 +16,3 @@ namespace WorkoutWotch.Services.Contracts.State
         IDisposable RegisterSaveCallback(Func<IStateService, Task> saveTaskFactory);
     }
 }
-

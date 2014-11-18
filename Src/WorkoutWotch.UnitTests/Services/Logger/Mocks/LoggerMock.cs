@@ -1,10 +1,10 @@
-﻿using System;
-using WorkoutWotch.Services.Contracts.Logger;
-using Kent.Boogaart.PCLMock;
-using System.Reactive.Disposables;
-
-namespace WorkoutWotch.UnitTests.Services.Logger.Mocks
+﻿namespace WorkoutWotch.UnitTests.Services.Logger.Mocks
 {
+    using System;
+    using System.Reactive.Disposables;
+    using Kent.Boogaart.PCLMock;
+    using WorkoutWotch.Services.Contracts.Logger;
+
     public sealed class LoggerMock : MockBase<ILogger>, ILogger
     {
         public LoggerMock(MockBehavior behavior = MockBehavior.Strict)
@@ -15,6 +15,36 @@ namespace WorkoutWotch.UnitTests.Services.Logger.Mocks
                 this.When(x => x.Perf(It.IsAny<string>())).Return(Disposable.Empty);
                 this.When(x => x.Perf(It.IsAny<string>(), It.IsAny<object[]>())).Return(Disposable.Empty);
             }
+        }
+
+        public string Name
+        {
+            get { return this.Apply(x => x.Name); }
+        }
+
+        public bool IsDebugEnabled
+        {
+            get { return this.Apply(x => x.IsDebugEnabled); }
+        }
+
+        public bool IsInfoEnabled
+        {
+            get { return this.Apply(x => x.IsInfoEnabled); }
+        }
+
+        public bool IsPerfEnabled
+        {
+            get { return this.Apply(x => x.IsPerfEnabled); }
+        }
+
+        public bool IsWarnEnabled
+        {
+            get { return this.Apply(x => x.IsWarnEnabled); }
+        }
+
+        public bool IsErrorEnabled
+        {
+            get { return this.Apply(x => x.IsErrorEnabled); }
         }
 
         public void Debug(string message)
@@ -86,54 +116,5 @@ namespace WorkoutWotch.UnitTests.Services.Logger.Mocks
         {
             this.Apply(x => x.Error(exception, format, args));
         }
-
-        public string Name
-        {
-            get
-            {
-                return this.Apply(x => x.Name);
-            }
-        }
-
-        public bool IsDebugEnabled
-        {
-            get
-            {
-                return this.Apply(x => x.IsDebugEnabled);
-            }
-        }
-
-        public bool IsInfoEnabled
-        {
-            get
-            {
-                return this.Apply(x => x.IsInfoEnabled);
-            }
-        }
-
-        public bool IsPerfEnabled
-        {
-            get
-            {
-                return this.Apply(x => x.IsPerfEnabled);
-            }
-        }
-
-        public bool IsWarnEnabled
-        {
-            get
-            {
-                return this.Apply(x => x.IsWarnEnabled);
-            }
-        }
-
-        public bool IsErrorEnabled
-        {
-            get
-            {
-                return this.Apply(x => x.IsErrorEnabled);
-            }
-        }
     }
 }
-

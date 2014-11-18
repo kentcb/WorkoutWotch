@@ -1,13 +1,13 @@
-﻿using System;
-using NUnit.Framework;
-using WorkoutWotch.Services.State;
-using System.Threading.Tasks;
-using Kent.Boogaart.PCLMock;
-using WorkoutWotch.UnitTests.Services.Logger.Mocks;
-using WorkoutWotch.UnitTests.Services.State.Mocks;
-
-namespace WorkoutWotch.UnitTests.Services.State
+﻿namespace WorkoutWotch.UnitTests.Services.State
 {
+    using System;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.PCLMock;
+    using NUnit.Framework;
+    using WorkoutWotch.Services.State;
+    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
+    using WorkoutWotch.UnitTests.Services.State.Mocks;
+
     [TestFixture]
     public class StateServiceFixture
     {
@@ -60,4 +60,3 @@ namespace WorkoutWotch.UnitTests.Services.State
         }
     }
 }
-

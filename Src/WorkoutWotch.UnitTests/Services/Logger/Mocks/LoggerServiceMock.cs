@@ -1,10 +1,10 @@
-﻿using System;
-using WorkoutWotch.Services.Contracts.Logger;
-using Kent.Boogaart.PCLMock;
-using System.Reactive.Linq;
-
-namespace WorkoutWotch.UnitTests.Services.Logger.Mocks
+﻿namespace WorkoutWotch.UnitTests.Services.Logger.Mocks
 {
+    using System;
+    using System.Reactive.Linq;
+    using Kent.Boogaart.PCLMock;
+    using WorkoutWotch.Services.Contracts.Logger;
+
     public sealed class LoggerServiceMock : MockBase<ILoggerService>, ILoggerService
     {
         public LoggerServiceMock(MockBehavior behavior = MockBehavior.Strict)
@@ -18,6 +18,42 @@ namespace WorkoutWotch.UnitTests.Services.Logger.Mocks
             }
         }
 
+        public LogLevel Threshold
+        {
+            get { return this.Apply(x => x.Threshold); }
+            set { this.ApplyPropertySet(x => x.Threshold, value); }
+        }
+
+        public bool IsDebugEnabled
+        {
+            get { return this.Apply(x => x.IsDebugEnabled); }
+        }
+
+        public bool IsInfoEnabled
+        {
+            get { return this.Apply(x => x.IsInfoEnabled); }
+        }
+
+        public bool IsPerfEnabled
+        {
+            get { return this.Apply(x => x.IsPerfEnabled); }
+        }
+
+        public bool IsWarnEnabled
+        {
+            get { return this.Apply(x => x.IsWarnEnabled); }
+        }
+
+        public bool IsErrorEnabled
+        {
+            get { return this.Apply(x => x.IsErrorEnabled); }
+        }
+
+        public IObservable<LogEntry> Entries
+        {
+            get { return this.Apply(x => x.Entries); }
+        }
+
         public ILogger GetLogger(Type forType)
         {
             return this.Apply(x => x.GetLogger(forType));
@@ -27,66 +63,5 @@ namespace WorkoutWotch.UnitTests.Services.Logger.Mocks
         {
             return this.Apply(x => x.GetLogger(name));
         }
-
-        public LogLevel Threshold
-        {
-            get
-            {
-                return this.Apply(x => x.Threshold);
-            }
-            set
-            {
-                this.ApplyPropertySet(x => x.Threshold, value);
-            }
-        }
-
-        public bool IsDebugEnabled
-        {
-            get
-            {
-                return this.Apply(x => x.IsDebugEnabled);
-            }
-        }
-
-        public bool IsInfoEnabled
-        {
-            get
-            {
-                return this.Apply(x => x.IsInfoEnabled);
-            }
-        }
-
-        public bool IsPerfEnabled
-        {
-            get
-            {
-                return this.Apply(x => x.IsPerfEnabled);
-            }
-        }
-
-        public bool IsWarnEnabled
-        {
-            get
-            {
-                return this.Apply(x => x.IsWarnEnabled);
-            }
-        }
-
-        public bool IsErrorEnabled
-        {
-            get
-            {
-                return this.Apply(x => x.IsErrorEnabled);
-            }
-        }
-
-        public IObservable<LogEntry> Entries
-        {
-            get
-            {
-                return this.Apply(x => x.Entries);
-            }
-        }
     }
 }
-

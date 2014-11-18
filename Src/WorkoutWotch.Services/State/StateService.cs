@@ -1,17 +1,17 @@
-﻿using System;
-using WorkoutWotch.Services.Contracts.State;
-using System.Threading.Tasks;
-using Akavache;
-using WorkoutWotch.Services.Contracts.Logger;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using System.Reactive.Threading.Tasks;
-using System.Collections.Generic;
-using WorkoutWotch.Utility;
-using System.Diagnostics;
-using System.Linq;
-
-namespace WorkoutWotch.Services.State
+﻿namespace WorkoutWotch.Services.State
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Reactive.Threading.Tasks;
+    using System.Threading.Tasks;
+    using Akavache;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using WorkoutWotch.Services.Contracts.Logger;
+    using WorkoutWotch.Services.Contracts.State;
+    using WorkoutWotch.Utility;
+
     public sealed class StateService : IStateService
     {
         private readonly IBlobCache blobCache;
@@ -115,4 +115,3 @@ namespace WorkoutWotch.Services.State
         }
     }
 }
-
