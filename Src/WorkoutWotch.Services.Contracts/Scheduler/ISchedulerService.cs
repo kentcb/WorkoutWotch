@@ -1,8 +1,7 @@
-﻿using System;
-using System.Reactive.Concurrency;
-
-namespace WorkoutWotch.Services.Contracts.Scheduler
+﻿namespace WorkoutWotch.Services.Contracts.Scheduler
 {
+    using System.Reactive.Concurrency;
+
     public interface ISchedulerService
     {
         IScheduler DefaultScheduler
@@ -31,4 +30,3 @@ namespace WorkoutWotch.Services.Contracts.Scheduler
         }
     }
 }
-
