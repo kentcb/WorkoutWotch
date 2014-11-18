@@ -1,0 +1,1 @@
+﻿This code was taken from https://rx.codeplex.com/, since that assembly is not a PCL. It has only minor modifications to enable compilation.
