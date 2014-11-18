@@ -49,6 +49,10 @@
     <Compile Include="Reactive\Testing\Recorded.cs" />
     <Compile Include="Reactive\Testing\Subscription.cs" />
     <Compile Include="Reactive\Testing\TestScheduler.cs" />
+    <Compile Include="Services\State\StateServiceFixture.cs" />
+    <Compile Include="Services\Logger\Mocks\LoggerMock.cs" />
+    <Compile Include="Services\Logger\Mocks\LoggerServiceMock.cs" />
+    <Compile Include="Services\State\Mocks\BlobCacheMock.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -70,6 +74,18 @@
     <Reference Include="Kent.Boogaart.HelperTrinity">
       <HintPath>..\packages\Kent.Boogaart.HelperTrinity.2.0.1\lib\portable-win8+net403+sl40+wp+xbox40\Kent.Boogaart.HelperTrinity.dll</HintPath>
     </Reference>
+    <Reference Include="Kent.Boogaart.PCLMock">
+      <HintPath>..\packages\Kent.Boogaart.PCLMock.0.0.4\lib\portable-net45+netcore45+win8+wp8+MonoAndroid1+MonoTouch1\Kent.Boogaart.PCLMock.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.5\lib\portable-net45+wp80+win8\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="ReactiveUI">
+      <HintPath>..\packages\reactiveui-core.5.2.0\lib\Portable-Net45+WinRT45+WP8\ReactiveUI.dll</HintPath>
+    </Reference>
+    <Reference Include="Akavache.Portable">
+      <HintPath>..\packages\akavache.portable.3.1.2\lib\portable-net45+win8+wp8\Akavache.Portable.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />
@@ -78,6 +94,9 @@
     <Folder Include="System\Reactive\" />
     <Folder Include="System\Reactive\Linq\" />
     <Folder Include="Reactive\" />
+    <Folder Include="Services\State\" />
+    <Folder Include="Services\Logger\Mocks\" />
+    <Folder Include="Services\State\Mocks\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WorkoutWotch.Services\WorkoutWotch.Services.csproj">

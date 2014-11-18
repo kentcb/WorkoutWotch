@@ -39,11 +39,13 @@
     <Compile Include="Logger\LogLevel.cs" />
     <Compile Include="Logger\LogEntry.cs" />
     <Compile Include="Scheduler\ISchedulerService.cs" />
+    <Compile Include="State\IStateService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Logger\" />
     <Folder Include="Scheduler\" />
+    <Folder Include="State\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Reactive.Interfaces">
