@@ -54,6 +54,7 @@
     <Compile Include="Services\Logger\Mocks\LoggerServiceMock.cs" />
     <Compile Include="Services\State\Mocks\BlobCacheMock.cs" />
     <Compile Include="Services\State\Mocks\StateServiceMock.cs" />
+    <Compile Include="Services\Delay\DelayServiceMock.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -98,6 +99,7 @@
     <Folder Include="Services\State\" />
     <Folder Include="Services\Logger\Mocks\" />
     <Folder Include="Services\State\Mocks\" />
+    <Folder Include="Services\Delay\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WorkoutWotch.Services\WorkoutWotch.Services.csproj">

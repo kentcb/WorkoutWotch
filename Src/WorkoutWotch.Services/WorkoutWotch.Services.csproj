@@ -37,12 +37,14 @@
     <Compile Include="Logger\LoggerService.cs" />
     <Compile Include="Scheduler\SchedulerService.cs" />
     <Compile Include="State\StateService.cs" />
+    <Compile Include="Delay\DelayService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Logger\" />
     <Folder Include="Scheduler\" />
     <Folder Include="State\" />
+    <Folder Include="Delay\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WorkoutWotch.Services.Contracts\WorkoutWotch.Services.Contracts.csproj">
