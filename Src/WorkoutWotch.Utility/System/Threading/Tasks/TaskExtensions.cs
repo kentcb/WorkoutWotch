@@ -1,9 +1,8 @@
-﻿using System;
-using System.Runtime.CompilerServices;
-using Kent.Boogaart.HelperTrinity.Extensions;
-
-namespace System.Threading.Tasks
+﻿namespace System.Threading.Tasks
 {
+    using System.Runtime.CompilerServices;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+
     public static class TaskExtensions
     {
         public static ConfiguredTaskAwaitable ContinueOnAnyContext(this Task @this)
@@ -19,4 +18,3 @@ namespace System.Threading.Tasks
         }
     }
 }
-

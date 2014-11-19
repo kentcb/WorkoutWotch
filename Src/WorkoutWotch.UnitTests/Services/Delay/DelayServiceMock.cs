@@ -1,11 +1,11 @@
-﻿using System;
-using WorkoutWotch.Services.Contracts.Delay;
-using Kent.Boogaart.PCLMock;
-using System.Threading.Tasks;
-using System.Threading;
-
-namespace WorkoutWotch.UnitTests.Services.Delay
+﻿namespace WorkoutWotch.UnitTests.Services.Delay
 {
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.PCLMock;
+    using WorkoutWotch.Services.Contracts.Delay;
+
     public sealed class DelayServiceMock : MockBase<IDelayService>, IDelayService
     {
         public DelayServiceMock(MockBehavior behavior = MockBehavior.Strict)
@@ -23,4 +23,3 @@ namespace WorkoutWotch.UnitTests.Services.Delay
         }
     }
 }
-
