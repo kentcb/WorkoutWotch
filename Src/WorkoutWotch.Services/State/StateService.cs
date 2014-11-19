@@ -54,7 +54,10 @@
 
             lock (this.sync)
             {
-                saveTasks = this.saveCallbacks.Select(x => x(this)).ToList();
+                saveTasks = this.saveCallbacks
+                    .Select(x => x(this))
+                    .Where(x => x != null)
+                    .ToList();
             }
 
             try
