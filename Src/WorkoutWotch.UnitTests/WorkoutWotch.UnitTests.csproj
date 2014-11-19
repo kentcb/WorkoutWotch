@@ -53,6 +53,7 @@
     <Compile Include="Services\Logger\Mocks\LoggerMock.cs" />
     <Compile Include="Services\Logger\Mocks\LoggerServiceMock.cs" />
     <Compile Include="Services\State\Mocks\BlobCacheMock.cs" />
+    <Compile Include="Services\State\Mocks\StateServiceMock.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
