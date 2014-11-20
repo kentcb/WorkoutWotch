@@ -1,11 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace WorkoutWotch.Services.Contracts.Audio
+﻿namespace WorkoutWotch.Services.Contracts.Audio
 {
+    using System.Threading.Tasks;
+
     public interface IAudioService
     {
         Task PlayAsync(string resourceUri);
     }
 }
-

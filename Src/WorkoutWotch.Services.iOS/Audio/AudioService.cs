@@ -1,15 +1,15 @@
-﻿using System;
-using WorkoutWotch.Services.Contracts.Audio;
-using System.Threading.Tasks;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using MonoTouch.AVFoundation;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
-using MonoTouch.Foundation;
-
-namespace WorkoutWotch.Services.iOS.Audio
+﻿namespace WorkoutWotch.Services.iOS.Audio
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using MonoTouch.AVFoundation;
+    using MonoTouch.Foundation;
+    using WorkoutWotch.Services.Contracts.Audio;
+
     public sealed class AudioService : IAudioService
     {
         private readonly IDictionary<AVAudioPlayer, TaskCompletionSource<bool>> activeAudioPlayers;
@@ -47,4 +47,3 @@ namespace WorkoutWotch.Services.iOS.Audio
         }
     }
 }
-
