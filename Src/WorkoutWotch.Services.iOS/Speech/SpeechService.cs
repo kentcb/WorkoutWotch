@@ -1,19 +1,14 @@
-﻿using System;
-using WorkoutWotch.Services.Contracts.Speech;
-using System.Threading.Tasks;
-using System.Threading;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using MonoTouch.AVFoundation;
-
-namespace WorkoutWotch.Services.iOS.Speech
+﻿namespace WorkoutWotch.Services.iOS.Speech
 {
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using MonoTouch.AVFoundation;
+    using WorkoutWotch.Services.Contracts.Speech;
+
     public sealed class SpeechService : ISpeechService
     {
         private static readonly AVSpeechSynthesisVoice voice = AVSpeechSynthesisVoice.FromLanguage("en-AU");
-
-        public SpeechService()
-        {
-        }
 
         public Task SpeakAsync(string speechString, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -27,21 +22,23 @@ namespace WorkoutWotch.Services.iOS.Speech
             };
             var synthesizer = new AVSpeechSynthesizer();
 
-            synthesizer.DidFinishSpeechUtterance += (sender, e) =>
-            {
-                utterance.Dispose();
-                synthesizer.Dispose();
-                tcs.TrySetResult(true);
-            };
-
-            if (cancellationToken.CanBeCanceled)
-            {
-                synthesizer.DidCancelSpeechUtterance += (sender, e) =>
+            synthesizer.DidFinishSpeechUtterance +=
+                (sender, e) =>
                 {
                     utterance.Dispose();
                     synthesizer.Dispose();
-                    tcs.TrySetCanceled();
+                    tcs.TrySetResult(true);
                 };
+
+            if (cancellationToken.CanBeCanceled)
+            {
+                synthesizer.DidCancelSpeechUtterance +=
+                    (sender, e) =>
+                    {
+                        utterance.Dispose();
+                        synthesizer.Dispose();
+                        tcs.TrySetCanceled();
+                    };
 
                 cancellationToken.Register(() => synthesizer.StopSpeaking(AVSpeechBoundary.Immediate));
             }
@@ -52,4 +49,3 @@ namespace WorkoutWotch.Services.iOS.Speech
         }
     }
 }
-
