@@ -56,6 +56,7 @@
     <Compile Include="Services\State\Mocks\StateServiceMock.cs" />
     <Compile Include="Services\Delay\DelayServiceMock.cs" />
     <Compile Include="Services\ExerciseDocument\Mocks\ExerciseDocumentServiceMock.cs" />
+    <Compile Include="Services\Audio\AudioServiceMock.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -103,6 +104,8 @@
     <Folder Include="Services\Delay\" />
     <Folder Include="Services\ExerciseDocument\" />
     <Folder Include="Services\ExerciseDocument\Mocks\" />
+    <Folder Include="Services\Speech\" />
+    <Folder Include="Services\Audio\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WorkoutWotch.Services\WorkoutWotch.Services.csproj">
