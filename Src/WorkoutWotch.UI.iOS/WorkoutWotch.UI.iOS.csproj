@@ -105,4 +105,19 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="sample.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WorkoutWotch.Services.iOS\WorkoutWotch.Services.iOS.csproj">
+      <Project>{9BA1959E-4C76-42F6-A2F5-AC6E0C6CCF61}</Project>
+      <Name>WorkoutWotch.Services.iOS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WorkoutWotch.Services.Contracts\WorkoutWotch.Services.Contracts.csproj">
+      <Project>{FF31957D-CE68-4633-9683-4D285C12F3F1}</Project>
+      <Name>WorkoutWotch.Services.Contracts</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

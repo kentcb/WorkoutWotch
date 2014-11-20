@@ -4,6 +4,7 @@ using System.Linq;
 
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using WorkoutWotch.Services.iOS.Audio;
 
 namespace WorkoutWotch.UI.iOS
 {
@@ -30,6 +31,9 @@ namespace WorkoutWotch.UI.iOS
             
             // If you have defined a root view controller, set it here:
             // window.RootViewController = myViewController;
+
+            var audioService = new AudioService();
+            audioService.PlayAsync("sample.wav");
             
             // make the window visible
             window.MakeKeyAndVisible();
