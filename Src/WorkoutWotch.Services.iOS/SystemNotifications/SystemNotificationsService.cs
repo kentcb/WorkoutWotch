@@ -10,7 +10,7 @@
     public sealed class SystemNotificationsService : DisposableBase, ISystemNotificationsService
     {
         private readonly Subject<Unit> dynamicTypeChanged;
-        private NSObject contentSizeCategoryChangedObserver;
+        private readonly NSObject contentSizeCategoryChangedObserver;
 
         public SystemNotificationsService()
         {
@@ -29,11 +29,7 @@
 
             if (disposing)
             {
-                if (this.contentSizeCategoryChangedObserver != null)
-                {
-                    NSNotificationCenter.DefaultCenter.RemoveObserver(this.contentSizeCategoryChangedObserver);
-                }
-
+                NSNotificationCenter.DefaultCenter.RemoveObserver(this.contentSizeCategoryChangedObserver);
                 this.dynamicTypeChanged.Dispose();
             }
         }
