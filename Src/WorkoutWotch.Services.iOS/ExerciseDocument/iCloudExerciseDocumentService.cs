@@ -78,6 +78,8 @@
             {
                 await this.InitializeUbiquityContainerUrlAsync().ContinueOnAnyContext();
                 await this.InstigateDocumentLookupAsync(synchronizationContextTaskScheduler).ContinueOnAnyContext();
+
+                this.logger.Debug("Successfully initialized.");
             }
             catch (Exception ex)
             {
@@ -100,6 +102,8 @@
                         this.logger.Error("Failed to obtain URL for ubiquity container.");
                         throw new NotSupportedException("iCloud not enabled.");
                     }
+
+                    this.logger.Debug("Ubiquity URL obtained: {0}", localUbiquityContainerUrl);
 
                     lock (this.sync)
                     {
@@ -160,6 +164,8 @@
 
             if (query.ResultCount == 1)
             {
+                this.logger.Debug("Query has 1 result.");
+
                 var item = (NSMetadataItem)query.ResultAtIndex(0);
                 var url = (NSUrl)item.ValueForAttribute(NSMetadataQuery.ItemURLKey);
                 var exerciseCloudDocument = new ExerciseCloudDocument(url);
