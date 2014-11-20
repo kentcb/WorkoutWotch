@@ -1,8 +1,8 @@
-﻿using System;
-using System.Reactive;
-
-namespace WorkoutWotch.Services.iOS.SystemNotifications
+﻿namespace WorkoutWotch.Services.iOS.SystemNotifications
 {
+    using System;
+    using System.Reactive;
+
     public interface ISystemNotificationsService
     {
         IObservable<Unit> DynamicTypeChanged
@@ -11,4 +11,3 @@ namespace WorkoutWotch.Services.iOS.SystemNotifications
         }
     }
 }
-

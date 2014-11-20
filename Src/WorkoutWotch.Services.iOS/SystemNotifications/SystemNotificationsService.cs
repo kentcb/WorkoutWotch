@@ -1,12 +1,12 @@
-﻿using System;
-using System.Reactive;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-using System.Reactive.Subjects;
-using WorkoutWotch.Utility;
-
-namespace WorkoutWotch.Services.iOS.SystemNotifications
+﻿namespace WorkoutWotch.Services.iOS.SystemNotifications
 {
+    using System;
+    using System.Reactive;
+    using System.Reactive.Subjects;
+    using MonoTouch.Foundation;
+    using MonoTouch.UIKit;
+    using WorkoutWotch.Utility;
+
     public sealed class SystemNotificationsService : DisposableBase, ISystemNotificationsService
     {
         private readonly Subject<Unit> dynamicTypeChanged;
@@ -44,4 +44,3 @@ namespace WorkoutWotch.Services.iOS.SystemNotifications
         }
     }
 }
-
