@@ -132,7 +132,7 @@
                             })
                     };
 
-                    NSNotificationCenter.DefaultCenter.AddObserver(this, new Selector("queryDidFinishGathering:"), NSMetadataQuery.DidFinishGatheringNotification, query);
+                    NSNotificationCenter.DefaultCenter.AddObserver(NSMetadataQuery.DidFinishGatheringNotification, this.OnQueryFinished, query);
                     query.StartQuery();
                 },
                 CancellationToken.None,
@@ -140,8 +140,7 @@
                 synchronizationContextTaskScheduler);
         }
 
-        [Export("queryDidFinishGathering:")]
-        private void QueryFinished(NSNotification notification)
+        private void OnQueryFinished(NSNotification notification)
         {
             var query = (NSMetadataQuery)notification.Object;
             query.DisableUpdates();
@@ -151,8 +150,7 @@
             this.LoadDocument(query);
         }
 
-        [Export("documentUpdated:")]
-        private void DocumentUpdated(NSNotification notification)
+        private void OnDocumentUpdated(NSNotification notification)
         {
             var document = (ExerciseCloudDocument)notification.Object;
             this.exerciseDocument.OnNext(document.Data);
@@ -160,8 +158,6 @@
 
         private void LoadDocument(NSMetadataQuery query)
         {
-            var addObserver = true;
-
             if (query.ResultCount == 1)
             {
                 this.logger.Debug("Query has 1 result.");
@@ -177,7 +173,6 @@
                         {
                             this.logger.Error("Failed to open document.");
                             this.exerciseDocument.OnError(new InvalidOperationException("Failed to open document."));
-                            addObserver = false;
                         }
                     });
             }
@@ -205,15 +200,12 @@
                         {
                             this.logger.Error("Failed to create new document.");
                             this.exerciseDocument.OnError(new InvalidOperationException("Failed to create default document."));
-                            addObserver = false;
                         }
                     });
             }
 
-            if (addObserver)
-            {
-                NSNotificationCenter.DefaultCenter.AddObserver(UIDocument.StateChangedNotification, this.DocumentUpdated);
-            }
+            // register for document updates
+            NSNotificationCenter.DefaultCenter.AddObserver(UIDocument.StateChangedNotification, this.OnDocumentUpdated);
         }
 
         private sealed class ExerciseCloudDocument : UIDocument
@@ -221,7 +213,7 @@
             private NSString data;
 
             public ExerciseCloudDocument(NSUrl url)
-                :base(url)
+                : base(url)
             {
             }
 
