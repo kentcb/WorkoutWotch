@@ -57,6 +57,7 @@
     <Compile Include="Services\Delay\DelayServiceMock.cs" />
     <Compile Include="Services\ExerciseDocument\Mocks\ExerciseDocumentServiceMock.cs" />
     <Compile Include="Services\Audio\AudioServiceMock.cs" />
+    <Compile Include="Services\Speech\SpeechServiceMock.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
