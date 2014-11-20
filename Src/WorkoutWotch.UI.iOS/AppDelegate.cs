@@ -6,6 +6,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using WorkoutWotch.Services.iOS.Audio;
 using WorkoutWotch.Services.iOS.Speech;
+using WorkoutWotch.Services.iOS.SystemNotifications;
 
 namespace WorkoutWotch.UI.iOS
 {
@@ -33,8 +34,8 @@ namespace WorkoutWotch.UI.iOS
             // If you have defined a root view controller, set it here:
             // window.RootViewController = myViewController;
 
-            var speechService = new SpeechService();
-            speechService.SpeakAsync("Hello World!");
+            var systemNotificationsService = new SystemNotificationsService();
+            systemNotificationsService.DynamicTypeChanged.Subscribe(_ => System.Diagnostics.Debug.WriteLine("Dynamic type size changed"));
 
             // make the window visible
             window.MakeKeyAndVisible();

@@ -54,6 +54,7 @@
     <Folder Include="ExerciseDocument\" />
     <Folder Include="Audio\" />
     <Folder Include="Speech\" />
+    <Folder Include="SystemNotifications\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -63,6 +64,8 @@
     <Compile Include="ExerciseDocument\iCloudExerciseDocumentService.cs" />
     <Compile Include="Audio\AudioService.cs" />
     <Compile Include="Speech\SpeechService.cs" />
+    <Compile Include="SystemNotifications\ISystemNotificationsService.cs" />
+    <Compile Include="SystemNotifications\SystemNotificationsService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
