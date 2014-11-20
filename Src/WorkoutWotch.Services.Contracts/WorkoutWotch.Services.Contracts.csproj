@@ -43,6 +43,7 @@
     <Compile Include="Delay\IDelayService.cs" />
     <Compile Include="ExerciseDocument\IExerciseDocumentService.cs" />
     <Compile Include="Audio\IAudioService.cs" />
+    <Compile Include="Speech\ISpeechService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -52,6 +53,7 @@
     <Folder Include="Delay\" />
     <Folder Include="ExerciseDocument\" />
     <Folder Include="Audio\" />
+    <Folder Include="Speech\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Reactive.Interfaces">

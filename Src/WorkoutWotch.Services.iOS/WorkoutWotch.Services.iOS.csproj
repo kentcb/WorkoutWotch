@@ -53,6 +53,7 @@
     <Folder Include="Resources\" />
     <Folder Include="ExerciseDocument\" />
     <Folder Include="Audio\" />
+    <Folder Include="Speech\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,6 +62,7 @@
     </Compile>
     <Compile Include="ExerciseDocument\iCloudExerciseDocumentService.cs" />
     <Compile Include="Audio\AudioService.cs" />
+    <Compile Include="Speech\SpeechService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
