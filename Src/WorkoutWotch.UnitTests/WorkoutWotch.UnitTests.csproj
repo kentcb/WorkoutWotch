@@ -117,6 +117,10 @@
       <Project>{FF31957D-CE68-4633-9683-4D285C12F3F1}</Project>
       <Name>WorkoutWotch.Services.Contracts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WorkoutWotch.Utility\WorkoutWotch.Utility.csproj">
+      <Project>{9F1656AA-40C6-4996-AEAE-780E0BEE19A2}</Project>
+      <Name>WorkoutWotch.Utility</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

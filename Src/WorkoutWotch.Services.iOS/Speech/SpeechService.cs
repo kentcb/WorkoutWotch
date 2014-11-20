@@ -1,5 +1,6 @@
 ﻿namespace WorkoutWotch.Services.iOS.Speech
 {
+    using System.Reactive.Disposables;
     using System.Threading;
     using System.Threading.Tasks;
     using Kent.Boogaart.HelperTrinity.Extensions;
@@ -21,12 +22,12 @@
                 Rate = 0.3f
             };
             var synthesizer = new AVSpeechSynthesizer();
+            var disposables = new CompositeDisposable(utterance, synthesizer);
 
             synthesizer.DidFinishSpeechUtterance +=
                 (sender, e) =>
                 {
-                    utterance.Dispose();
-                    synthesizer.Dispose();
+                    disposables.Dispose();
                     tcs.TrySetResult(true);
                 };
 
@@ -35,8 +36,7 @@
                 synthesizer.DidCancelSpeechUtterance +=
                     (sender, e) =>
                     {
-                        utterance.Dispose();
-                        synthesizer.Dispose();
+                        disposables.Dispose();
                         tcs.TrySetCanceled();
                     };
 

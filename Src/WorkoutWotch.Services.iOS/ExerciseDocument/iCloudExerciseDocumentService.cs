@@ -67,6 +67,7 @@
             if (disposing)
             {
                 NSNotificationCenter.DefaultCenter.RemoveObserver(this, UIDocument.StateChangedNotification);
+                this.exerciseDocument.Dispose();
             }
         }
 

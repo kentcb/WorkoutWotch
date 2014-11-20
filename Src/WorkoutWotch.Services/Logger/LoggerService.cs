@@ -9,7 +9,7 @@
     using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Utility;
 
-    public sealed class LoggerService : ILoggerService
+    public sealed class LoggerService : DisposableBase, ILoggerService
     {
         private readonly Subject<LogEntry> entries;
         private LogLevel threshold;
@@ -65,6 +65,16 @@
         {
             name.AssertNotNull("name");
             return new Logger(this, name);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (disposing)
+            {
+                this.entries.Dispose();
+            }
         }
 
         private bool IsLevelEnabled(LogLevel level)
