@@ -1,17 +1,17 @@
-﻿using System;
-using WorkoutWotch.Services.Contracts.ExerciseDocument;
-using MonoTouch.Foundation;
-using WorkoutWotch.Services.Contracts.Logger;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using System.Reactive.Subjects;
-using System.Threading;
-using System.Threading.Tasks;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-using System.IO;
-
-namespace WorkoutWotch.Services.iOS.ExerciseDocument
+﻿namespace WorkoutWotch.Services.iOS.ExerciseDocument
 {
+    using System;
+    using System.IO;
+    using System.Reactive.Subjects;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using MonoTouch.Foundation;
+    using MonoTouch.ObjCRuntime;
+    using MonoTouch.UIKit;
+    using WorkoutWotch.Services.Contracts.ExerciseDocument;
+    using WorkoutWotch.Services.Contracts.Logger;
+
     public sealed class iCloudExerciseDocumentService : NSObject, IExerciseDocumentService
     {
         private static readonly string documentFilename = "Workout Wotch Exercise Programs.mkd";
@@ -43,17 +43,17 @@ namespace WorkoutWotch.Services.iOS.ExerciseDocument
                     this
                         .InitializeAsync()
                         .ContinueWith(
-                        x =>
-                        {
-                            if (x.IsFaulted)
+                            x =>
                             {
-                                this.logger.Error(x.Exception, "Failed to initialize.");
-                            }
-                            else
-                            {
-                                this.logger.Info("Successfully initialized.");
-                            }
-                        });
+                                if (x.IsFaulted)
+                                {
+                                    this.logger.Error(x.Exception, "Failed to initialize.");
+                                }
+                                else
+                                {
+                                    this.logger.Info("Successfully initialized.");
+                                }
+                            });
                 }
 
                 return this.exerciseDocument;
@@ -88,49 +88,51 @@ namespace WorkoutWotch.Services.iOS.ExerciseDocument
 
         private Task InitializeUbiquityContainerUrlAsync()
         {
-            return Task.Run(() =>
-            {
-                this.logger.Debug("Getting URL for ubiquity container.");
-
-                var localUbiquityContainerUrl = NSFileManager.DefaultManager.GetUrlForUbiquityContainer(containerIdentifier: null);
-
-                if (localUbiquityContainerUrl == null)
+            return Task.Run(
+                () =>
                 {
-                    this.logger.Error("Failed to obtain URL for ubiquity container.");
-                    throw new NotSupportedException("iCloud not enabled.");
-                }
+                    this.logger.Debug("Getting URL for ubiquity container.");
 
-                lock (this.sync)
-                {
-                    this.ubiquityContainerUrl = localUbiquityContainerUrl;
-                }
-            });
+                    var localUbiquityContainerUrl = NSFileManager.DefaultManager.GetUrlForUbiquityContainer(containerIdentifier: null);
+
+                    if (localUbiquityContainerUrl == null)
+                    {
+                        this.logger.Error("Failed to obtain URL for ubiquity container.");
+                        throw new NotSupportedException("iCloud not enabled.");
+                    }
+
+                    lock (this.sync)
+                    {
+                        this.ubiquityContainerUrl = localUbiquityContainerUrl;
+                    }
+                });
         }
 
         private Task InstigateDocumentLookupAsync(TaskScheduler synchronizationContextTaskScheduler)
         {
-            return Task.Factory.StartNew(() =>
-            {
-                var query = new NSMetadataQuery
+            return Task.Factory.StartNew(
+                () =>
                 {
-                    SearchScopes = new NSObject[]
+                    var query = new NSMetadataQuery
                     {
-                        NSMetadataQuery.QueryUbiquitousDocumentsScope
-                    },
-                    Predicate = NSPredicate.FromFormat(
-                        "%K == %@",
-                        new NSObject[]
+                        SearchScopes = new NSObject[]
                         {
-                            NSMetadataQuery.ItemFSNameKey,
-                            new NSString(documentFilename)
-                        })
-                };
+                            NSMetadataQuery.QueryUbiquitousDocumentsScope
+                        },
+                        Predicate = NSPredicate.FromFormat(
+                            "%K == %@",
+                            new NSObject[]
+                            {
+                                NSMetadataQuery.ItemFSNameKey,
+                                new NSString(documentFilename)
+                            })
+                    };
 
-                NSNotificationCenter.DefaultCenter.AddObserver(this, new Selector("queryDidFinishGathering:"), NSMetadataQuery.DidFinishGatheringNotification, query);
-                query.StartQuery();
-            },
-            CancellationToken.None,
-            TaskCreationOptions.None,
+                    NSNotificationCenter.DefaultCenter.AddObserver(this, new Selector("queryDidFinishGathering:"), NSMetadataQuery.DidFinishGatheringNotification, query);
+                    query.StartQuery();
+                },
+                CancellationToken.None,
+                TaskCreationOptions.None,
                 synchronizationContextTaskScheduler);
         }
 
@@ -178,7 +180,8 @@ namespace WorkoutWotch.Services.iOS.ExerciseDocument
                 var documentsFolder = Path.Combine(this.ubiquityContainerUrl.Path, "Documents");
                 var documentPath = Path.Combine(documentsFolder, documentFilename);
                 var url = new NSUrl(documentPath, isDir: false);
-                var exerciseCloudDocument = new ExerciseCloudDocument(url) {
+                var exerciseCloudDocument = new ExerciseCloudDocument(url)
+                {
                     Data = defaultDocumentContents
                 };
 
@@ -198,7 +201,6 @@ namespace WorkoutWotch.Services.iOS.ExerciseDocument
                             this.exerciseDocument.OnError(new InvalidOperationException("Failed to create default document."));
                             addObserver = false;
                         }
-
                     });
             }
 
@@ -206,7 +208,6 @@ namespace WorkoutWotch.Services.iOS.ExerciseDocument
             {
                 NSNotificationCenter.DefaultCenter.AddObserver(UIDocument.StateChangedNotification, this.DocumentUpdated);
             }
-
         }
 
         private sealed class ExerciseCloudDocument : UIDocument
@@ -220,7 +221,7 @@ namespace WorkoutWotch.Services.iOS.ExerciseDocument
 
             public string Data
             {
-                get{ return this.data.ToString(); }
+                get { return this.data.ToString(); }
                 set { this.data = new NSString(value); }
             }
 
@@ -244,4 +245,3 @@ namespace WorkoutWotch.Services.iOS.ExerciseDocument
         }
     }
 }
-

@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace WorkoutWotch.Services.Contracts.ExerciseDocument
+﻿namespace WorkoutWotch.Services.Contracts.ExerciseDocument
 {
+    using System;
+
     public interface IExerciseDocumentService
     {
         IObservable<string> ExerciseDocument
