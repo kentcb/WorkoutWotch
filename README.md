@@ -19,3 +19,6 @@ A repository for my video series on building an iOS app with C#. Here is a full 
   * [Video 07: Audio Service](https://www.youtube.com/watch?v=wT06GvzoGFs)
   * [Video 08: Speech Service](https://www.youtube.com/watch?v=WvW6ZbjWuOk)
   * [Video 09: System Notifications Service](https://www.youtube.com/watch?v=bvhujyDH0VE)
+* Module 05: Models
+  * [Video 01: Overview](https://www.youtube.com/watch?v=gGPHYl1bFBY)
+  * [Video 02: Action](https://www.youtube.com/watch?v=kypi98ur3ZE)
