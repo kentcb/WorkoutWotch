@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WorkoutWotch.Models
+﻿namespace WorkoutWotch.Models
 {
     public interface IEvent
     {
@@ -10,4 +8,3 @@ namespace WorkoutWotch.Models
         }
     }
 }
-
