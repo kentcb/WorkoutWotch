@@ -1,8 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace WorkoutWotch.Models
+﻿namespace WorkoutWotch.Models
 {
+    using System;
+    using System.Threading.Tasks;
+
     public interface IAction
     {
         TimeSpan Duration
@@ -13,4 +13,3 @@ namespace WorkoutWotch.Models
         Task ExecuteAsync(ExecutionContext context);
     }
 }
-
