@@ -1,10 +1,7 @@
-﻿using System;
-
-namespace WorkoutWotch.Models
+﻿namespace WorkoutWotch.Models
 {
     public interface IEventMatcher
     {
         bool Matches(IEvent @event);
     }
 }
-
