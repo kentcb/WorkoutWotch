@@ -29,12 +29,12 @@
             return this.Apply(x => x.Insert(key, data, absoluteExpiration));
         }
 
-        public IObservable<byte[]> GetAsync(string key)
+        public IObservable<byte[]> Get(string key)
         {
-            return this.Apply(x => x.GetAsync(key));
+            return this.Apply(x => x.Get(key));
         }
 
-        public IEnumerable<string> GetAllKeys()
+        public IObservable<IEnumerable<string>> GetAllKeys()
         {
             return this.Apply(x => x.GetAllKeys());
         }
@@ -57,6 +57,11 @@
         public IObservable<Unit> InvalidateAll()
         {
             return this.Apply(x => x.InvalidateAll());
+        }
+
+        public IObservable<Unit> Vacuum()
+        {
+            return this.Apply(x => x.Vacuum());
         }
 
         public void Dispose()

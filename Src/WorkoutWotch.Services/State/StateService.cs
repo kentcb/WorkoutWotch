@@ -33,7 +33,7 @@
         public Task<T> GetAsync<T>(string key)
         {
             key.AssertNotNull("key");
-            return this.blobCache.GetObjectAsync<T>(key).ToTask();
+            return this.blobCache.GetObject<T>(key).ToTask();
         }
 
         public Task SetAsync<T>(string key, T value)

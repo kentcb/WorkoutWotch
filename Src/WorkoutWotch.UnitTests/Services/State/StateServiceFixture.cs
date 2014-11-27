@@ -1,9 +1,8 @@
-﻿using System.Reactive.Linq;
-using System.Reactive;
-
-namespace WorkoutWotch.UnitTests.Services.State
+﻿namespace WorkoutWotch.UnitTests.Services.State
 {
     using System;
+    using System.Reactive;
+    using System.Reactive.Linq;
     using System.Threading.Tasks;
     using Kent.Boogaart.PCLMock;
     using NUnit.Framework;
@@ -25,12 +24,12 @@ namespace WorkoutWotch.UnitTests.Services.State
         public void get_async_forwards_the_call_onto_the_blob_cache()
         {
             var blobCache = new BlobCacheMock();
-            blobCache.When(x => x.GetAsync(It.IsAny<string>())).Return(Observable.Return(new byte[0]));
+            blobCache.When(x => x.Get(It.IsAny<string>())).Return(Observable.Return(new byte[0]));
             var service = new StateService(blobCache, new LoggerServiceMock(MockBehavior.Loose));
             service.GetAsync<string>("some key");
 
             // we don't verify the specific key because Akavache does some key manipulation internally
-            blobCache.Verify(x => x.GetAsync(It.IsAny<string>())).WasCalledExactlyOnce();
+            blobCache.Verify(x => x.Get(It.IsAny<string>())).WasCalledExactlyOnce();
         }
 
         [Test]

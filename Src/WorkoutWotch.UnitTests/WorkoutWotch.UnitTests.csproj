@@ -83,17 +83,17 @@
     <Reference Include="Kent.Boogaart.PCLMock">
       <HintPath>..\packages\Kent.Boogaart.PCLMock.0.0.4\lib\portable-net45+netcore45+win8+wp8+MonoAndroid1+MonoTouch1\Kent.Boogaart.PCLMock.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.5.0.5\lib\portable-net45+wp80+win8\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Akavache.Portable">
-      <HintPath>..\packages\akavache.portable.3.1.2\lib\portable-net45+win8+wp8\Akavache.Portable.dll</HintPath>
-    </Reference>
     <Reference Include="Splat">
       <HintPath>..\packages\Splat.1.5.1\lib\Portable-net45+win+wpa81+wp80\Splat.dll</HintPath>
     </Reference>
     <Reference Include="ReactiveUI">
       <HintPath>..\packages\reactiveui-core.6.2.1.1\lib\Portable-Net45+Win8+WP8+WPA81\ReactiveUI.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Akavache">
+      <HintPath>..\packages\akavache.core.4.0.4\lib\Portable-Net45+Win8+WP8+Wpa81\Akavache.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
