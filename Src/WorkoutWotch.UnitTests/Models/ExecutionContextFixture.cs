@@ -1,13 +1,11 @@
-﻿using System;
-using NUnit.Framework;
-using WorkoutWotch.Models;
-using ReactiveUI;
-using System.Threading.Tasks;
-using System.Reactive.Linq;
-using System.Reactive.Threading.Tasks;
-
-namespace WorkoutWotch.UnitTests.Models
+﻿namespace WorkoutWotch.UnitTests.Models
 {
+    using System;
+    using System.Threading.Tasks;
+    using NUnit.Framework;
+    using ReactiveUI;
+    using WorkoutWotch.Models;
+
     [TestFixture]
     public class ExecutionContextFixture
     {
@@ -76,7 +74,6 @@ namespace WorkoutWotch.UnitTests.Models
                 Assert.AreEqual(1, ex.InnerExceptions.Count);
                 Assert.True(ex.InnerExceptions[0] is TaskCanceledException);
             }
-
         }
 
         [Test]
@@ -159,4 +156,3 @@ namespace WorkoutWotch.UnitTests.Models
         }
     }
 }
-

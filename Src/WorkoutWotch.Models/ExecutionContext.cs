@@ -1,26 +1,26 @@
-using WorkoutWotch.Utility;
-using System;
-using System.Threading;
-using ReactiveUI;
-using System.Reactive.Subjects;
-using System.Reactive;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
-using System.Reactive.Threading.Tasks;
-using System.Reactive.Disposables;
-
 namespace WorkoutWotch.Models
 {
+    using System;
+    using System.Reactive;
+    using System.Reactive.Disposables;
+    using System.Reactive.Linq;
+    using System.Reactive.Subjects;
+    using System.Reactive.Threading.Tasks;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using ReactiveUI;
+    using WorkoutWotch.Utility;
+
 	public sealed class ExecutionContext : DisposableReactiveObject
 	{
         private readonly CompositeDisposable disposables;
         private readonly CancellationTokenSource cancellationTokenSource;
-        private readonly Subject<Unit> cancelRequested;
         private readonly ObservableAsPropertyHelper<bool> isCancelled;
-        private readonly Subject<TimeSpan> progressDeltas;
         private readonly ObservableAsPropertyHelper<TimeSpan> progress;
         private readonly ObservableAsPropertyHelper<TimeSpan> currentExerciseProgress;
         private readonly ObservableAsPropertyHelper<TimeSpan> skipAhead;
+        private readonly Subject<Unit> cancelRequested;
+        private readonly Subject<TimeSpan> progressDeltas;
         private bool isPaused;
         private Exercise currentExercise;
         private int currentSet;
@@ -29,26 +29,34 @@ namespace WorkoutWotch.Models
         public ExecutionContext(TimeSpan skipAhead = default(TimeSpan))
         {
             this.disposables = new CompositeDisposable();
-            this.cancellationTokenSource = new CancellationTokenSource().AddTo(this.disposables);
-            this.cancelRequested = new Subject<Unit>();
+            this.cancellationTokenSource = new CancellationTokenSource()
+                .AddTo(this.disposables);
+            this.cancelRequested = new Subject<Unit>()
+                .AddTo(this.disposables);
+            this.progressDeltas = new Subject<TimeSpan>()
+                .AddTo(this.disposables);
+
             this.isCancelled = this.cancelRequested
                 .Select(_ => true)
                 .ToProperty(this, x => x.IsCancelled)
                 .AddTo(this.disposables);
+
             this.WhenAnyValue(x => x.IsCancelled)
                 .Where(x => x)
                 .Subscribe(_ => this.cancellationTokenSource.Cancel())
                 .AddTo(this.disposables);
-            this.progressDeltas = new Subject<TimeSpan>().AddTo(this.disposables);
+
             this.progress = this.progressDeltas
                 .Scan((running, next) => running + next)
                 .ToProperty(this, x => x.Progress)
                 .AddTo(this.disposables);
+
             this.currentExerciseProgress = this.WhenAnyValue(x => x.CurrentExercise)
                 .Select(x => this.progressDeltas.StartWith(TimeSpan.Zero).Scan((running, next) => running + next))
                 .Switch()
                 .ToProperty(this, x => x.CurrentExerciseProgress)
                 .AddTo(this.disposables);
+
             this.skipAhead = this.progressDeltas
                 .StartWith(skipAhead)
                 .Scan((running, next) => running - next)
@@ -59,7 +67,7 @@ namespace WorkoutWotch.Models
 
         public CancellationToken CancellationToken
         {
-            get{ return this.cancellationTokenSource.Token; }
+            get { return this.cancellationTokenSource.Token; }
         }
 
         public bool IsCancelled
@@ -70,40 +78,40 @@ namespace WorkoutWotch.Models
         public bool IsPaused
         {
             get {return this.isPaused; }
-            set{ this.RaiseAndSetIfChanged(ref this.isPaused, value); }
+            set { this.RaiseAndSetIfChanged(ref this.isPaused, value); }
         }
 
         public Exercise CurrentExercise
         {
-            get{ return this.currentExercise; }
+            get { return this.currentExercise; }
             private set { this.RaiseAndSetIfChanged(ref this.currentExercise, value); }
         }
 
         public int CurrentSet
         {
-            get{ return this.currentSet; }
+            get { return this.currentSet; }
             private set { this.RaiseAndSetIfChanged(ref this.currentSet, value); }
         }
 
         public int CurrentRepetition
         {
-            get{ return this.currentRepetition; }
+            get { return this.currentRepetition; }
             private set { this.RaiseAndSetIfChanged(ref this.currentRepetition, value); }
         }
 
         public TimeSpan Progress
         {
-            get{ return this.progress.Value; }
+            get { return this.progress.Value; }
         }
 
         public TimeSpan CurrentExerciseProgress
         {
-            get{ return this.currentExerciseProgress.Value; }
+            get { return this.currentExerciseProgress.Value; }
         }
 
         public TimeSpan SkipAhead
         {
-            get{ return this.skipAhead.Value; }
+            get { return this.skipAhead.Value; }
         }
 
         public Task WaitWhilePausedAsync()
