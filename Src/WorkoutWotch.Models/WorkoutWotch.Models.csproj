@@ -37,6 +37,7 @@
     <Compile Include="IAction.cs" />
     <Compile Include="ExecutionContext.cs" />
     <Compile Include="IEvent.cs" />
+    <Compile Include="IEventMatcher.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>
