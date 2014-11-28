@@ -4,21 +4,24 @@ WorkoutWotch
 A repository for my video series on building an iOS app with C#. Here is a full list of supporting videos:
 
 * Module 01: Introduction
-  * [Video 01](https://www.youtube.com/watch?v=rpiVOiKdqog)
+  * [Video 01](http://youtu.be/rpiVOiKdqog)
 * Module 02: Architecture
-  * [Video 01](https://www.youtube.com/watch?v=kSADWnL1HxU)
+  * [Video 01](http://youtu.be/kSADWnL1HxU)
 * Module 03: Solution/Project Setup
-  * [Video 01](https://www.youtube.com/watch?v=GQT6L2WpfEc)
+  * [Video 01](http://youtu.be/GQT6L2WpfEc)
 * Module 04: Services
-  * [Video 01: Overview](https://www.youtube.com/watch?v=OvbpqFHJRXc)
-  * [Video 02: Logger Service](https://www.youtube.com/watch?v=0Kgp4GigOPE)
-  * [Video 03: Scheduler Service](https://www.youtube.com/watch?v=5l5xXzYWsSI)
-  * [Video 04: State Service](https://www.youtube.com/watch?v=6bEvIoE_rm8)
-  * [Video 05: Delay Service](https://www.youtube.com/watch?v=Ex7ouQIgDWM)
-  * [Video 06: Exercise Document Service](https://www.youtube.com/watch?v=AZ8uzF6at74)
-  * [Video 07: Audio Service](https://www.youtube.com/watch?v=wT06GvzoGFs)
-  * [Video 08: Speech Service](https://www.youtube.com/watch?v=WvW6ZbjWuOk)
-  * [Video 09: System Notifications Service](https://www.youtube.com/watch?v=bvhujyDH0VE)
+  * [Video 01: Overview](http://youtu.be/OvbpqFHJRXc)
+  * [Video 02: Logger Service](http://youtu.be/0Kgp4GigOPE)
+  * [Video 03: Scheduler Service](http://youtu.be/5l5xXzYWsSI)
+  * [Video 04: State Service](http://youtu.be/6bEvIoE_rm8)
+  * [Video 05: Delay Service](http://youtu.be/Ex7ouQIgDWM)
+  * [Video 06: Exercise Document Service](http://youtu.be/AZ8uzF6at74)
+  * [Video 07: Audio Service](http://youtu.be/wT06GvzoGFs)
+  * [Video 08: Speech Service](http://youtu.be/WvW6ZbjWuOk)
+  * [Video 09: System Notifications Service](http://youtu.be/bvhujyDH0VE)
 * Module 05: Models
-  * [Video 01: Overview](https://www.youtube.com/watch?v=gGPHYl1bFBY)
-  * [Video 02: Action](https://www.youtube.com/watch?v=kypi98ur3ZE)
+  * [Video 01: Overview](http://youtu.be/gGPHYl1bFBY)
+  * [Video 02: Action](http://youtu.be/kypi98ur3ZE)
+  * [Video 03: Event](http://youtu.be/6Igd9v6Ae7c)
+  * [Video 04: Event Matcher](http://youtu.be/4wSZkocu40o)
+  * [Video 05: Execution Context](http://youtu.be/oIEIcC_t-WA)
