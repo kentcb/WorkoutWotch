@@ -1,11 +1,7 @@
-using System;
-using System.Threading.Tasks;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-
 namespace WorkoutWotch.Models.Events
 {
+    using Kent.Boogaart.HelperTrinity.Extensions;
+
 	public sealed class BeforeExerciseEvent : EventBase
 	{
         private readonly Exercise exercise;
@@ -19,8 +15,7 @@ namespace WorkoutWotch.Models.Events
 
         public Exercise Exercise
         {
-            get{return this.exercise;}
+            get { return this.exercise; }
         }
 	}
-
 }

@@ -1,10 +1,7 @@
-using System;
-using System.Threading.Tasks;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using System.Collections.Generic;
-
 namespace WorkoutWotch.Models
 {
+    using Kent.Boogaart.HelperTrinity.Extensions;
+
 	public sealed class MatcherWithAction 
 	{
         private readonly IEventMatcher matcher;
@@ -29,5 +26,4 @@ namespace WorkoutWotch.Models
             get { return this.action; }
         }
 	}
-
 }

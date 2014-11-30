@@ -1,10 +1,10 @@
-﻿using System;
-using WorkoutWotch.Models;
-using Kent.Boogaart.PCLMock;
-using System.Threading.Tasks;
-
-namespace WorkoutWotch.UnitTests.Models.Mocks
+﻿namespace WorkoutWotch.UnitTests.Models.Mocks
 {
+    using System;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.PCLMock;
+    using WorkoutWotch.Models;
+
     public sealed class ActionMock : MockBase<IAction>, IAction
     {
         public ActionMock(MockBehavior behavior = MockBehavior.Strict)
@@ -27,4 +27,3 @@ namespace WorkoutWotch.UnitTests.Models.Mocks
         }
     }
 }
-

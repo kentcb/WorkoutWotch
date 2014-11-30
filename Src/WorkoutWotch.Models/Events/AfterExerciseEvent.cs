@@ -1,8 +1,7 @@
-﻿using System;
-using Kent.Boogaart.HelperTrinity.Extensions;
-
-namespace WorkoutWotch.Models.Events
+﻿namespace WorkoutWotch.Models.Events
 {
+    using Kent.Boogaart.HelperTrinity.Extensions;
+
     public sealed class AfterExerciseEvent : EventBase
     {
         private readonly Exercise exercise;
@@ -16,8 +15,7 @@ namespace WorkoutWotch.Models.Events
 
         public Exercise Exercise
         {
-            get{return this.exercise;}
+            get { return this.exercise; }
         }
     }
 }
-

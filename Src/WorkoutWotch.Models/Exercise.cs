@@ -1,13 +1,13 @@
-using System;
-using System.Threading.Tasks;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using WorkoutWotch.Models.Events;
-using System.Linq;
-
 namespace WorkoutWotch.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.Immutable;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using WorkoutWotch.Models.Events;
+
 	public sealed class Exercise
 	{
         private readonly string name;
@@ -38,7 +38,8 @@ namespace WorkoutWotch.Models
 
             using (var dummyExecutionContext = new ExecutionContext())
             {
-                this.duration = this.GetEventsWithActions(dummyExecutionContext)
+                this.duration = this
+                    .GetEventsWithActions(dummyExecutionContext)
                     .SelectMany(x => x.Actions)
                     .Select(x => x.Duration)
                     .DefaultIfEmpty()
@@ -53,12 +54,12 @@ namespace WorkoutWotch.Models
 
         public int SetCount
         {
-            get {return this.setCount;}
+            get { return this.setCount; }
         }
 
         public int RepetitionCount
         {
-            get {return this.repetitionCount;}
+            get { return this.repetitionCount; }
         }
 
         public TimeSpan Duration
@@ -144,12 +145,12 @@ namespace WorkoutWotch.Models
 
             public IEvent Event
             {
-                get{ return this.@event; }
+                get { return this.@event; }
             }
 
             public IImmutableList<IAction> Actions
             {
-                get{return this.actions;}
+                get { return this.actions; }
             }
         }
 	}

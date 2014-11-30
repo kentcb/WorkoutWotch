@@ -1,18 +1,18 @@
-﻿using System;
-using NUnit.Framework;
-using WorkoutWotch.Models;
-using System.Linq;
-using WorkoutWotch.UnitTests.Models.Mocks;
-using ReactiveUI;
-using System.Collections.Generic;
-using Kent.Boogaart.PCLMock;
-using WorkoutWotch.Models.Events;
-using System.Threading.Tasks;
-using System.Reactive.Linq;
-using System.Reactive.Threading.Tasks;
-
-namespace WorkoutWotch.UnitTests.Models
+﻿namespace WorkoutWotch.UnitTests.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reactive.Linq;
+    using System.Reactive.Threading.Tasks;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.PCLMock;
+    using NUnit.Framework;
+    using ReactiveUI;
+    using WorkoutWotch.Models;
+    using WorkoutWotch.Models.Events;
+    using WorkoutWotch.UnitTests.Models.Mocks;
+
     [TestFixture]
     public class ExerciseFixture
     {
@@ -272,4 +272,3 @@ namespace WorkoutWotch.UnitTests.Models
         }
     }
 }
-

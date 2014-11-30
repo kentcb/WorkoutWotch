@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WorkoutWotch.Models.Events
+﻿namespace WorkoutWotch.Models.Events
 {
     public sealed class AfterSetEvent : NumberedEvent
     {
@@ -10,4 +8,3 @@ namespace WorkoutWotch.Models.Events
         }
     }
 }
-

@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace WorkoutWotch.Models.Events
+﻿namespace WorkoutWotch.Models.Events
 {
+    using System;
+
     public abstract class NumberedEvent : EventBase
     {
         private readonly int number;
@@ -19,8 +19,7 @@ namespace WorkoutWotch.Models.Events
 
         public int Number
         {
-            get{return this.number;}
+            get { return this.number; }
         }
     }
 }
-

@@ -1,8 +1,7 @@
-﻿using System;
-using Kent.Boogaart.HelperTrinity.Extensions;
-
-namespace WorkoutWotch.Models.Events
+﻿namespace WorkoutWotch.Models.Events
 {
+    using Kent.Boogaart.HelperTrinity.Extensions;
+
     public abstract class EventBase : IEvent
     {
         private readonly ExecutionContext executionContext;
@@ -15,8 +14,7 @@ namespace WorkoutWotch.Models.Events
 
         public ExecutionContext ExecutionContext
         {
-            get{return this.executionContext;}
+            get { return this.executionContext; }
         }
     }
 }
-

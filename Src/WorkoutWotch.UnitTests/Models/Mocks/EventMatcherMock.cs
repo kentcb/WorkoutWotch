@@ -1,9 +1,8 @@
-﻿using System;
-using WorkoutWotch.Models;
-using Kent.Boogaart.PCLMock;
-
-namespace WorkoutWotch.UnitTests.Models.Mocks
+﻿namespace WorkoutWotch.UnitTests.Models.Mocks
 {
+    using Kent.Boogaart.PCLMock;
+    using WorkoutWotch.Models;
+
     public sealed class EventMatcherMock : MockBase<IEventMatcher>, IEventMatcher
     {
         public EventMatcherMock(MockBehavior behavior = MockBehavior.Strict)
@@ -17,4 +16,3 @@ namespace WorkoutWotch.UnitTests.Models.Mocks
         }
     }
 }
-
