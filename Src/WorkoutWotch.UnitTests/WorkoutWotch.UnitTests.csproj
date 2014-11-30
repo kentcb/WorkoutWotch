@@ -59,6 +59,10 @@
     <Compile Include="Services\Audio\AudioServiceMock.cs" />
     <Compile Include="Services\Speech\SpeechServiceMock.cs" />
     <Compile Include="Models\ExecutionContextFixture.cs" />
+    <Compile Include="Models\ExerciseFixture.cs" />
+    <Compile Include="Models\Mocks\ActionMock.cs" />
+    <Compile Include="Models\Mocks\EventMock.cs" />
+    <Compile Include="Models\Mocks\EventMatcherMock.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -112,6 +116,7 @@
     <Folder Include="Services\Speech\" />
     <Folder Include="Services\Audio\" />
     <Folder Include="Models\" />
+    <Folder Include="Models\Mocks\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WorkoutWotch.Services\WorkoutWotch.Services.csproj">

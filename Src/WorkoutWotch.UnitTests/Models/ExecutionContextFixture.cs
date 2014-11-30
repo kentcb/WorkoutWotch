@@ -1,4 +1,6 @@
-﻿namespace WorkoutWotch.UnitTests.Models
+﻿using System.Linq;
+
+namespace WorkoutWotch.UnitTests.Models
 {
     using System;
     using System.Threading.Tasks;
@@ -144,11 +146,11 @@
         public void setting_current_exercise_resets_the_current_exercise_progress_to_zero()
         {
             var context = new ExecutionContext();
-            context.SetCurrentExercise(new Exercise());
+            context.SetCurrentExercise(new Exercise("name", 3, 10, Enumerable.Empty<MatcherWithAction>()));
             context.AddProgress(TimeSpan.FromMilliseconds(100));
             Assert.AreEqual(TimeSpan.FromMilliseconds(100), context.CurrentExerciseProgress);
 
-            context.SetCurrentExercise(new Exercise());
+            context.SetCurrentExercise(new Exercise("name", 3, 10, Enumerable.Empty<MatcherWithAction>()));
             Assert.AreEqual(TimeSpan.Zero, context.CurrentExerciseProgress);
 
             context.AddProgress(TimeSpan.FromMilliseconds(150));

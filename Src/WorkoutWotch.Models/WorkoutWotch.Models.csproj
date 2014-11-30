@@ -39,6 +39,16 @@
     <Compile Include="IEvent.cs" />
     <Compile Include="IEventMatcher.cs" />
     <Compile Include="Exercise.cs" />
+    <Compile Include="MatcherWithAction.cs" />
+    <Compile Include="Events\BeforeExerciseEvent.cs" />
+    <Compile Include="Events\EventBase.cs" />
+    <Compile Include="Events\BeforeSetEvent.cs" />
+    <Compile Include="Events\NumberedEvent.cs" />
+    <Compile Include="Events\AfterSetEvent.cs" />
+    <Compile Include="Events\BeforeRepetitionEvent.cs" />
+    <Compile Include="Events\DuringRepetitionEvent.cs" />
+    <Compile Include="Events\AfterRepetitionEvent.cs" />
+    <Compile Include="Events\AfterExerciseEvent.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -60,6 +70,12 @@
     <Reference Include="ReactiveUI">
       <HintPath>..\packages\reactiveui-core.6.2.1.1\lib\Portable-Net45+Win8+WP8+WPA81\ReactiveUI.dll</HintPath>
     </Reference>
+    <Reference Include="Kent.Boogaart.HelperTrinity">
+      <HintPath>..\packages\Kent.Boogaart.HelperTrinity.2.0.1\lib\portable-win8+net403+sl40+wp+xbox40\Kent.Boogaart.HelperTrinity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Immutable">
+      <HintPath>..\packages\Microsoft.Bcl.Immutable.1.0.34\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -69,5 +85,8 @@
       <Project>{9F1656AA-40C6-4996-AEAE-780E0BEE19A2}</Project>
       <Name>WorkoutWotch.Utility</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Events\" />
   </ItemGroup>
 </Project>
