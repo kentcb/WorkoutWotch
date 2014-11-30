@@ -1,16 +1,16 @@
-﻿using System;
-using NUnit.Framework;
-using System.Linq;
-using WorkoutWotch.Models;
-using Kent.Boogaart.PCLMock;
-using WorkoutWotch.UnitTests.Services.Logger.Mocks;
-using System.Collections.Generic;
-using WorkoutWotch.UnitTests.Models.Mocks;
-using WorkoutWotch.Models.Events;
-using System.Threading.Tasks;
-
-namespace WorkoutWotch.UnitTests.Models
+﻿namespace WorkoutWotch.UnitTests.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.PCLMock;
+    using NUnit.Framework;
+    using WorkoutWotch.Models;
+    using WorkoutWotch.Models.Events;
+    using WorkoutWotch.UnitTests.Models.Mocks;
+    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
+
     [TestFixture]
     public class ExerciseProgramFixture
     {

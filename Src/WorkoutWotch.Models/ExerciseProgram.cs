@@ -1,12 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Collections.Immutable;
-using System.Collections.Generic;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using System.Linq;
-
-namespace WorkoutWotch.Models
+﻿namespace WorkoutWotch.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.Immutable;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+
     public sealed class ExerciseProgram
     {
         private readonly string name;
@@ -60,4 +60,3 @@ namespace WorkoutWotch.Models
         }
     }
 }
-
