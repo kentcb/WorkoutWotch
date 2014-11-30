@@ -1,5 +1,6 @@
 ﻿namespace WorkoutWotch.Models.Events
 {
+    using System.Globalization;
     using Kent.Boogaart.HelperTrinity.Extensions;
 
     public sealed class AfterExerciseEvent : EventBase
@@ -16,6 +17,11 @@
         public Exercise Exercise
         {
             get { return this.exercise; }
+        }
+
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.InvariantCulture, "After Exercise '{0}'", this.exercise.Name);
         }
     }
 }

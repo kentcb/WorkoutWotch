@@ -63,6 +63,13 @@
     <Compile Include="Models\Mocks\ActionMock.cs" />
     <Compile Include="Models\Mocks\EventMock.cs" />
     <Compile Include="Models\Mocks\EventMatcherMock.cs" />
+    <Compile Include="Models\Events\AfterExerciseEventFixture.cs" />
+    <Compile Include="Models\Events\BeforeExerciseEventFixture.cs" />
+    <Compile Include="Models\Events\AfterRepetitionEventFixture.cs" />
+    <Compile Include="Models\Events\BeforeRepetitionEventFixture.cs" />
+    <Compile Include="Models\Events\DuringRepetitionEventFixture.cs" />
+    <Compile Include="Models\Events\BeforeSetEventFixture.cs" />
+    <Compile Include="Models\Events\AfterSetEventFixture.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -117,6 +124,7 @@
     <Folder Include="Services\Audio\" />
     <Folder Include="Models\" />
     <Folder Include="Models\Mocks\" />
+    <Folder Include="Models\Events\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WorkoutWotch.Services\WorkoutWotch.Services.csproj">
