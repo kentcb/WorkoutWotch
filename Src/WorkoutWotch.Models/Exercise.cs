@@ -128,13 +128,10 @@ namespace WorkoutWotch.Models
 
         private IEnumerable<IAction> GetActionsForEvent(IEvent @event)
         {
-            foreach (var matcherWithAction in this.matchersWithActions)
-            {
-                if (matcherWithAction.Matcher.Matches(@event))
-                {
-                    yield return matcherWithAction.Action;
-                }
-            }
+            return this
+                .matchersWithActions
+                .Where(x => x.Matcher.Matches(@event))
+                .Select(x => x.Action);
         }
 
         private struct EventWithActions
