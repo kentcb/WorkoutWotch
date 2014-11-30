@@ -70,6 +70,7 @@
     <Compile Include="Models\Events\DuringRepetitionEventFixture.cs" />
     <Compile Include="Models\Events\BeforeSetEventFixture.cs" />
     <Compile Include="Models\Events\AfterSetEventFixture.cs" />
+    <Compile Include="Models\ExerciseProgramFixture.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -105,6 +106,9 @@
     </Reference>
     <Reference Include="Akavache">
       <HintPath>..\packages\akavache.core.4.0.4\lib\Portable-Net45+Win8+WP8+Wpa81\Akavache.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Immutable">
+      <HintPath>..\packages\Microsoft.Bcl.Immutable.1.0.34\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
