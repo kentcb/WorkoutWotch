@@ -6,18 +6,21 @@ namespace WorkoutWotch.Models
     using System.Linq;
     using System.Threading.Tasks;
     using Kent.Boogaart.HelperTrinity.Extensions;
+    using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Models.Events;
 
 	public sealed class Exercise
 	{
+        private readonly ILogger logger;
         private readonly string name;
         private readonly int setCount;
         private readonly int repetitionCount;
         private readonly IImmutableList<MatcherWithAction> matchersWithActions;
         private readonly TimeSpan duration;
 
-        public Exercise(string name, int setCount, int repetitionCount, IEnumerable<MatcherWithAction> matchersWithActions)
+        public Exercise(ILoggerService loggerService, string name, int setCount, int repetitionCount, IEnumerable<MatcherWithAction> matchersWithActions)
         {
+            loggerService.AssertNotNull("loggerService");
             name.AssertNotNull("name");
             matchersWithActions.AssertNotNull("matchersWithActions");
 
@@ -31,6 +34,7 @@ namespace WorkoutWotch.Models
                 throw new ArgumentException("repetitionCount cannot be less than zero.", "repetitionCount");
             }
 
+            this.logger = loggerService.GetLogger(this.GetType());
             this.name = name;
             this.setCount = setCount;
             this.repetitionCount = repetitionCount;
@@ -77,11 +81,12 @@ namespace WorkoutWotch.Models
                 {
                     if (context.SkipAhead > TimeSpan.Zero && context.SkipAhead >= action.Duration)
                     {
-                        // we can completely skip this action
+                        this.logger.Debug("Skipping action {0} for event {1} because its duration ({2}) is less than the remaining skip ahead ({3}).", action, eventWithActions.Event, action.Duration, context.SkipAhead);
                         context.AddProgress(action.Duration);
                         continue;
                     }
 
+                    this.logger.Debug("Executing action {0} for event {1}.", action, eventWithActions.Event);
                     await action.ExecuteAsync(context).ContinueOnAnyContext();
                 }
             }

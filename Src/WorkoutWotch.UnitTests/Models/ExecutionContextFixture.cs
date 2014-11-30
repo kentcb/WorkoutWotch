@@ -1,11 +1,13 @@
-namespace WorkoutWotch.UnitTests.Models
+﻿namespace WorkoutWotch.UnitTests.Models
 {
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using Kent.Boogaart.PCLMock;
     using NUnit.Framework;
     using ReactiveUI;
     using WorkoutWotch.Models;
+    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
 
     [TestFixture]
     public class ExecutionContextFixture
@@ -145,11 +147,11 @@ namespace WorkoutWotch.UnitTests.Models
         public void setting_current_exercise_resets_the_current_exercise_progress_to_zero()
         {
             var context = new ExecutionContext();
-            context.SetCurrentExercise(new Exercise("name", 3, 10, Enumerable.Empty<MatcherWithAction>()));
+            context.SetCurrentExercise(new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 3, 10, Enumerable.Empty<MatcherWithAction>()));
             context.AddProgress(TimeSpan.FromMilliseconds(100));
             Assert.AreEqual(TimeSpan.FromMilliseconds(100), context.CurrentExerciseProgress);
 
-            context.SetCurrentExercise(new Exercise("name", 3, 10, Enumerable.Empty<MatcherWithAction>()));
+            context.SetCurrentExercise(new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 3, 10, Enumerable.Empty<MatcherWithAction>()));
             Assert.AreEqual(TimeSpan.Zero, context.CurrentExerciseProgress);
 
             context.AddProgress(TimeSpan.FromMilliseconds(150));

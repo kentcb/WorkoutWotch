@@ -12,59 +12,66 @@
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Events;
     using WorkoutWotch.UnitTests.Models.Mocks;
+    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
 
     [TestFixture]
     public class ExerciseFixture
     {
         [Test]
+        public void ctor_throws_if_logger_service_is_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new Exercise(null, "name", 3, 10, Enumerable.Empty<MatcherWithAction>()));
+        }
+
+        [Test]
         public void ctor_throws_if_name_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new Exercise(null, 3, 10, Enumerable.Empty<MatcherWithAction>()));
+            Assert.Throws<ArgumentNullException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), null, 3, 10, Enumerable.Empty<MatcherWithAction>()));
         }
 
         [Test]
         public void ctor_throws_if_set_count_is_less_than_zero()
         {
-            Assert.Throws<ArgumentException>(() => new Exercise("name", -3, 10, Enumerable.Empty<MatcherWithAction>()));
+            Assert.Throws<ArgumentException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", -3, 10, Enumerable.Empty<MatcherWithAction>()));
         }
 
         [Test]
         public void ctor_throws_if_repetition_count_is_less_than_zero()
         {
-            Assert.Throws<ArgumentException>(() => new Exercise("name", 3, -10, Enumerable.Empty<MatcherWithAction>()));
+            Assert.Throws<ArgumentException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 3, -10, Enumerable.Empty<MatcherWithAction>()));
         }
 
         [Test]
         public void ctor_throws_if_matchers_with_actions_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new Exercise("name", 3, 10, null));
+            Assert.Throws<ArgumentNullException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 3, 10, null));
         }
 
         [Test]
         public void name_gets_name_passed_into_ctor()
         {
-            var exercise = new Exercise("some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
+            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
             Assert.AreEqual("some name", exercise.Name);
         }
 
         [Test]
         public void set_count_gets_set_count_passed_into_ctor()
         {
-            var exercise = new Exercise("some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
+            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
             Assert.AreEqual(3, exercise.SetCount);
         }
 
         [Test]
         public void repetition_count_gets_repetition_count_passed_into_ctor()
         {
-            var exercise = new Exercise("some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
+            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
             Assert.AreEqual(10, exercise.RepetitionCount);
         }
 
         [Test]
         public void duration_returns_zero_if_there_are_no_actions()
         {
-            var exercise = new Exercise("some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
+            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
             Assert.AreEqual(TimeSpan.Zero, exercise.Duration);
         }
 
@@ -89,14 +96,14 @@
                 new MatcherWithAction(eventMatcher2, action2),
                 new MatcherWithAction(eventMatcher3, action3),
             };
-            var exercise = new Exercise("name", 2, 3, matchersWithActions);
+            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
             Assert.AreEqual(TimeSpan.FromSeconds(30), exercise.Duration);
         }
 
         [Test]
         public void execute_async_throws_if_execution_context_is_null()
         {
-            var exercise = new Exercise("name", 2, 3, Enumerable.Empty<MatcherWithAction>());
+            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, Enumerable.Empty<MatcherWithAction>());
             Assert.Throws<ArgumentNullException>(async () => await exercise.ExecuteAsync(null));
         }
 
@@ -118,7 +125,7 @@
                 new MatcherWithAction(eventMatcher2, action2),
                 new MatcherWithAction(eventMatcher3, action3),
             };
-            var exercise = new Exercise("name", 2, 3, matchersWithActions);
+            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
 
             using (var executionContext = new ExecutionContext())
             {
@@ -140,7 +147,7 @@
             {
                 new MatcherWithAction(eventMatcher, action)
             };
-            var exercise = new Exercise("name", 2, 3, matchersWithActions);
+            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
 
             using (var executionContext = new ExecutionContext())
             {
@@ -172,7 +179,7 @@
                 new MatcherWithAction(eventMatcher2, action2),
                 new MatcherWithAction(eventMatcher3, action3),
             };
-            var exercise = new Exercise("name", 2, 3, matchersWithActions);
+            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
 
             using (var executionContext = new ExecutionContext(TimeSpan.FromSeconds(13)))
             {
@@ -205,7 +212,7 @@
                 new MatcherWithAction(eventMatcher2, action2),
                 new MatcherWithAction(eventMatcher3, action3),
             };
-            var exercise = new Exercise("name", 2, 3, matchersWithActions);
+            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
 
             using (var executionContext = new ExecutionContext(TimeSpan.FromSeconds(13)))
             {
@@ -219,7 +226,7 @@
         [Test]
         public async Task execute_async_updates_the_current_exercise_in_the_context()
         {
-            var exercise = new Exercise("name", 2, 3, Enumerable.Empty<MatcherWithAction>());
+            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, Enumerable.Empty<MatcherWithAction>());
             var context = new ExecutionContext();
 
             await exercise.ExecuteAsync(context);
@@ -230,7 +237,7 @@
         [Test]
         public async Task execute_async_updates_the_current_set_in_the_context()
         {
-            var exercise = new Exercise("name", 3, 5, Enumerable.Empty<MatcherWithAction>());
+            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 3, 5, Enumerable.Empty<MatcherWithAction>());
             var context = new ExecutionContext();
             var currentSetsTask = context
                 .ObservableForProperty(x => x.CurrentSet)
@@ -251,7 +258,7 @@
         [Test]
         public async Task execute_async_updates_the_current_repetitions_in_the_context()
         {
-            var exercise = new Exercise("name", 3, 5, Enumerable.Empty<MatcherWithAction>());
+            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 3, 5, Enumerable.Empty<MatcherWithAction>());
             var context = new ExecutionContext();
             var currentRepetitionsTask = context
                 .ObservableForProperty(x => x.CurrentRepetition)
