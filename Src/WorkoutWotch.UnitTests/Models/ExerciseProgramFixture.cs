@@ -15,27 +15,33 @@
     public class ExerciseProgramFixture
     {
         [Test]
+        public void ctor_throws_if_logger_service_is_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new ExerciseProgram(null, "name", Enumerable.Empty<Exercise>()));
+        }
+
+        [Test]
         public void ctor_throws_if_name_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgram(null, Enumerable.Empty<Exercise>()));
+            Assert.Throws<ArgumentNullException>(() => new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), null, Enumerable.Empty<Exercise>()));
         }
 
         [Test]
         public void ctor_throws_if_exercises_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgram("name", null));
+            Assert.Throws<ArgumentNullException>(() => new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", null));
         }
 
         [Test]
         public void ctor_throws_if_any_exercise_is_null()
         {
-            Assert.Throws<ArgumentException>(() => new ExerciseProgram("name", new Exercise[] { this.CreateExercise("name"), null }));
+            Assert.Throws<ArgumentException>(() => new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", new Exercise[] { this.CreateExercise("name"), null }));
         }
 
         [Test]
         public void name_returns_value_provided_to_ctor()
         {
-            Assert.AreEqual("some name", new ExerciseProgram("some name", Enumerable.Empty<Exercise>()).Name);
+            Assert.AreEqual("some name", new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "some name", Enumerable.Empty<Exercise>()).Name);
         }
 
         [Test]
@@ -47,7 +53,7 @@
                 this.CreateExercise("second"),
                 this.CreateExercise("third")
             };
-            var exerciseProgram = new ExerciseProgram("name", exercises);
+            var exerciseProgram = new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", exercises);
 
             Assert.AreEqual(3, exerciseProgram.Exercises.Count);
             Assert.AreSame(exercises[0], exerciseProgram.Exercises[0]);
@@ -58,7 +64,7 @@
         [Test]
         public void duration_is_zero_if_there_are_no_exercises()
         {
-            Assert.AreEqual(TimeSpan.Zero, new ExerciseProgram("name", Enumerable.Empty<Exercise>()).Duration);
+            Assert.AreEqual(TimeSpan.Zero, new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", Enumerable.Empty<Exercise>()).Duration);
         }
 
         [Test]
@@ -74,7 +80,7 @@
                 this.CreateExercise("second", action2),
                 this.CreateExercise("third", action1)
             };
-            var exerciseProgram = new ExerciseProgram("name", exercises);
+            var exerciseProgram = new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", exercises);
 
             Assert.AreEqual(TimeSpan.FromSeconds(12), exerciseProgram.Duration);
         }
@@ -82,7 +88,7 @@
         [Test]
         public void execute_async_throws_if_the_context_is_null()
         {
-            var exerciseProgram = new ExerciseProgram("name", Enumerable.Empty<Exercise>());
+            var exerciseProgram = new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", Enumerable.Empty<Exercise>());
             Assert.Throws<ArgumentNullException>(async () => await exerciseProgram.ExecuteAsync(null));
         }
 
@@ -98,7 +104,7 @@
                 this.CreateExercise("first", action1),
                 this.CreateExercise("second", action2)
             };
-            var exerciseProgram = new ExerciseProgram("name", exercises);
+            var exerciseProgram = new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", exercises);
 
             using (var executionContext = new ExecutionContext())
             {
@@ -126,7 +132,7 @@
                 this.CreateExercise("second", action2),
                 this.CreateExercise("third", action3)
             };
-            var exerciseProgram = new ExerciseProgram("name", exercises);
+            var exerciseProgram = new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", exercises);
 
             using (var executionContext = new ExecutionContext(TimeSpan.FromSeconds(23)))
             {

@@ -6,18 +6,22 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Kent.Boogaart.HelperTrinity.Extensions;
+    using WorkoutWotch.Services.Contracts.Logger;
 
     public sealed class ExerciseProgram
     {
+        private readonly ILogger logger;
         private readonly string name;
         private readonly IImmutableList<Exercise> exercises;
         private readonly TimeSpan duration;
 
-        public ExerciseProgram(string name, IEnumerable<Exercise> exercises)
+        public ExerciseProgram(ILoggerService loggerService, string name, IEnumerable<Exercise> exercises)
         {
+            loggerService.AssertNotNull("loggerService");
             name.AssertNotNull("name");
             exercises.AssertNotNull("exercises", assertContentsNotNull: true);
 
+            this.logger = loggerService.GetLogger(this.GetType());
             this.name = name;
             this.exercises = exercises.ToImmutableList();
             this.duration = this
@@ -50,11 +54,12 @@
             {
                 if (context.SkipAhead > TimeSpan.Zero && context.SkipAhead >= exercise.Duration)
                 {
-                    // we can skip the exercise
+                    this.logger.Debug("Skipping exercise '{0}' because its duration ({1}) is less than the remaining skip ahead ({2}).", exercise.Name, exercise.Duration, context.SkipAhead);
                     context.AddProgress(exercise.Duration);
                     continue;
                 }
 
+                this.logger.Debug("Executing exercise '{0}'.", exercise.Name);
                 await exercise.ExecuteAsync(context).ContinueOnAnyContext();
             }
         }
