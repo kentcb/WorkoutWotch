@@ -22,7 +22,7 @@
             Assert.Throws<ArgumentException>(() => new ExercisePrograms(
                 new []
                 {
-                    new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "first", Enumerable.Empty<Exercise>()),
+                    this.CreateExerciseProgram("first"),
                     null
                 }));
         }
@@ -32,9 +32,9 @@
         {
             var programs = new[]
             {
-                new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "first", Enumerable.Empty<Exercise>()),
-                new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "second", Enumerable.Empty<Exercise>()),
-                new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "third", Enumerable.Empty<Exercise>())
+                this.CreateExerciseProgram("first"),
+                this.CreateExerciseProgram("second"),
+                this.CreateExerciseProgram("third")
             };
             var exercisePrograms = new ExercisePrograms(programs);
 
@@ -43,5 +43,14 @@
             Assert.AreSame(programs[1], exercisePrograms.Programs[1]);
             Assert.AreSame(programs[2], exercisePrograms.Programs[2]);
         }
+
+        #region Supporting Members
+
+        private ExerciseProgram CreateExerciseProgram(string name)
+        {
+            return new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), name, Enumerable.Empty<Exercise>());
+        }
+
+        #endregion
     }
 }
