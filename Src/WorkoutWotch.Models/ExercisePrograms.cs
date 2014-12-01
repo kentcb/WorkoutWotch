@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Immutable;
-using System.Collections.Generic;
-using Kent.Boogaart.HelperTrinity.Extensions;
-
-namespace WorkoutWotch.Models
+﻿namespace WorkoutWotch.Models
 {
+    using System.Collections.Generic;
+    using System.Collections.Immutable;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+
     public sealed class ExercisePrograms
     {
         private readonly IImmutableList<ExerciseProgram> programs;
@@ -21,4 +20,3 @@ namespace WorkoutWotch.Models
         }
     }
 }
-

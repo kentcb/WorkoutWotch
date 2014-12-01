@@ -1,12 +1,12 @@
-﻿using System;
-using NUnit.Framework;
-using WorkoutWotch.Models;
-using Kent.Boogaart.PCLMock;
-using System.Linq;
-using WorkoutWotch.UnitTests.Services.Logger.Mocks;
-
-namespace WorkoutWotch.UnitTests.Models
+﻿namespace WorkoutWotch.UnitTests.Models
 {
+    using System;
+    using System.Linq;
+    using Kent.Boogaart.PCLMock;
+    using NUnit.Framework;
+    using WorkoutWotch.Models;
+    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
+
     [TestFixture]
     public class ExerciseProgramsFixture
     {
@@ -45,4 +45,3 @@ namespace WorkoutWotch.UnitTests.Models
         }
     }
 }
-
