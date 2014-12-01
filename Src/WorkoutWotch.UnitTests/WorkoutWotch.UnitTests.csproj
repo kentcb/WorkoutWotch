@@ -71,6 +71,7 @@
     <Compile Include="Models\Events\BeforeSetEventFixture.cs" />
     <Compile Include="Models\Events\AfterSetEventFixture.cs" />
     <Compile Include="Models\ExerciseProgramFixture.cs" />
+    <Compile Include="Models\ExerciseProgramsFixture.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

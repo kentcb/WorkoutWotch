@@ -50,6 +50,7 @@
     <Compile Include="Events\AfterRepetitionEvent.cs" />
     <Compile Include="Events\AfterExerciseEvent.cs" />
     <Compile Include="ExerciseProgram.cs" />
+    <Compile Include="ExercisePrograms.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
