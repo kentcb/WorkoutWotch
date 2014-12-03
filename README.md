@@ -25,3 +25,6 @@ A repository for my video series on building an iOS app with C#. Here is a full 
   * [Video 03: Event](http://youtu.be/6Igd9v6Ae7c)
   * [Video 04: Event Matcher](http://youtu.be/4wSZkocu40o)
   * [Video 05: Execution Context](http://youtu.be/oIEIcC_t-WA)
+  * [Video 06: Exercise](http://youtu.be/T_dwGiBXuzU)
+  * [Video 07: Exercise Program](http://youtu.be/WhQx7d0i2Tw)
+  * [Video 08: Exercise Programs](http://youtu.be/Z23m9V4RV78)
