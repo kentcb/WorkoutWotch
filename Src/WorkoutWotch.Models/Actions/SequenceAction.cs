@@ -1,12 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using System.Linq;
-
-namespace WorkoutWotch.Models.Actions
+﻿namespace WorkoutWotch.Models.Actions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.Immutable;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+
     public sealed class SequenceAction : IAction
     {
         private readonly IImmutableList<IAction> children;
@@ -48,4 +48,3 @@ namespace WorkoutWotch.Models.Actions
         }
     }
 }
-
