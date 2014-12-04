@@ -72,6 +72,7 @@
     <Compile Include="Models\Events\AfterSetEventFixture.cs" />
     <Compile Include="Models\ExerciseProgramFixture.cs" />
     <Compile Include="Models\ExerciseProgramsFixture.cs" />
+    <Compile Include="Models\Actions\SequenceActionFixture.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -130,6 +131,7 @@
     <Folder Include="Models\" />
     <Folder Include="Models\Mocks\" />
     <Folder Include="Models\Events\" />
+    <Folder Include="Models\Actions\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WorkoutWotch.Services\WorkoutWotch.Services.csproj">

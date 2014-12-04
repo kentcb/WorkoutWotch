@@ -51,6 +51,7 @@
     <Compile Include="Events\AfterExerciseEvent.cs" />
     <Compile Include="ExerciseProgram.cs" />
     <Compile Include="ExercisePrograms.cs" />
+    <Compile Include="Actions\SequenceAction.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -94,5 +95,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Events\" />
+    <Folder Include="Actions\" />
   </ItemGroup>
 </Project>
