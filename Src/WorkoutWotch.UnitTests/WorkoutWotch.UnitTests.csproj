@@ -74,6 +74,7 @@
     <Compile Include="Models\ExerciseProgramsFixture.cs" />
     <Compile Include="Models\Actions\SequenceActionFixture.cs" />
     <Compile Include="Models\Actions\ParallelActionFixture.cs" />
+    <Compile Include="Models\Actions\WaitActionFixture.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
