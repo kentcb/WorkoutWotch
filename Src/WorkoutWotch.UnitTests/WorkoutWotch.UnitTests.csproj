@@ -75,6 +75,7 @@
     <Compile Include="Models\Actions\SequenceActionFixture.cs" />
     <Compile Include="Models\Actions\ParallelActionFixture.cs" />
     <Compile Include="Models\Actions\WaitActionFixture.cs" />
+    <Compile Include="Utility\MathExtFixture.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -134,6 +135,7 @@
     <Folder Include="Models\Mocks\" />
     <Folder Include="Models\Events\" />
     <Folder Include="Models\Actions\" />
+    <Folder Include="Utility\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WorkoutWotch.Services\WorkoutWotch.Services.csproj">

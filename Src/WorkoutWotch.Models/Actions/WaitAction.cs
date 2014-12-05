@@ -34,17 +34,12 @@
             context.AssertNotNull("context");
 
             var remainingDelay = this.delay;
+            var skipAhead = MathExt.Min(remainingDelay, context.SkipAhead);
 
-            if (context.SkipAhead > TimeSpan.Zero)
+            if (skipAhead > TimeSpan.Zero)
             {
-                remainingDelay = remainingDelay - context.SkipAhead;
-
-                if (remainingDelay < TimeSpan.Zero)
-                {
-                    remainingDelay = TimeSpan.Zero;
-                }
-
-                context.AddProgress(context.SkipAhead);
+                remainingDelay = remainingDelay - skipAhead;
+                context.AddProgress(skipAhead);
             }
 
             while (remainingDelay > TimeSpan.Zero)
@@ -55,7 +50,7 @@
                     .WaitWhilePausedAsync()
                     .ContinueOnAnyContext();
 
-                var delayFor = remainingDelay > maximumDelayTime ? maximumDelayTime : remainingDelay;
+                var delayFor = MathExt.Min(remainingDelay, maximumDelayTime);
 
                 await this.delayService
                     .DelayAsync(delayFor, context.CancellationToken)

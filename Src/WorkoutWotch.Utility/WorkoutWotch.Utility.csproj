@@ -38,6 +38,7 @@
     <Compile Include="System\Threading\Tasks\TaskExtensions.cs" />
     <Compile Include="DisposableReactiveObject.cs" />
     <Compile Include="System\Reactive\Disposables\CompositeDisposableExtensions.cs" />
+    <Compile Include="System\MathExt.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

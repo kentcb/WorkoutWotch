@@ -116,6 +116,22 @@
         }
 
         [Test]
+        public async Task execute_async_reports_progress_correctly_even_if_the_skip_ahead_exceeds_the_wait_duration()
+        {
+            var delayService = new DelayServiceMock(MockBehavior.Loose);
+            var waitAction = new WaitAction(delayService, TimeSpan.FromMilliseconds(50));
+
+            using (var context = new ExecutionContext(TimeSpan.FromMilliseconds(100)))
+            {
+                Assert.AreEqual(TimeSpan.Zero, context.Progress);
+
+                await waitAction.ExecuteAsync(context);
+
+                Assert.AreEqual(TimeSpan.FromMilliseconds(50), context.Progress);
+            }
+        }
+
+        [Test]
         public async Task execute_async_bails_out_if_context_is_cancelled()
         {
             var delayService = new DelayServiceMock();
