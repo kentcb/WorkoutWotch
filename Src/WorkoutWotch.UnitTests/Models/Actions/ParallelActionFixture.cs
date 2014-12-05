@@ -115,6 +115,29 @@
         }
 
         [Test]
+        public async Task execute_async_correctly_handles_a_skip_ahead_value_that_exceeds_even_the_longest_child_actions_duration()
+        {
+            var action1 = new ActionMock(MockBehavior.Loose);
+            var action2 = new ActionMock(MockBehavior.Loose);
+            var action3 = new ActionMock(MockBehavior.Loose);
+            action1.When(x => x.Duration).Return(TimeSpan.FromMinutes(1));
+            action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(10));
+            action3.When(x => x.Duration).Return(TimeSpan.FromSeconds(71));
+            var parallelAction = new ParallelAction(new [] { action1, action2, action3 });
+
+            using (var context = new ExecutionContext(TimeSpan.FromMinutes(3)))
+            {
+                await parallelAction.ExecuteAsync(context);
+
+                action1.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasNotCalled();
+                action2.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasNotCalled();
+                action3.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasNotCalled();
+
+                Assert.AreEqual(TimeSpan.FromSeconds(71), context.Progress);
+            }
+        }
+
+        [Test]
         public async Task execute_async_ensures_progress_of_child_actions_does_not_compound()
         {
             var action1 = new ActionMock();

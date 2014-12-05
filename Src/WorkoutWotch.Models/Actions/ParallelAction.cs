@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
-    using System.Diagnostics;
     using System.Linq;
     using System.Reactive.Linq;
     using System.Threading.Tasks;
@@ -18,6 +17,7 @@
         public ParallelAction(IEnumerable<IAction> children)
         {
             children.AssertNotNull("children");
+
             this.children = children.ToImmutableList();
             this.duration = this
                 .children
@@ -34,30 +34,29 @@
         public async Task ExecuteAsync(ExecutionContext context)
         {
             context.AssertNotNull("context");
-
-            var childrenGroupedBySkip = this
+                
+            var childrenToExecute = this
                 .children
+                .Where(x => context.SkipAhead == TimeSpan.Zero || context.SkipAhead < x.Duration)
                 .OrderByDescending(x => x.Duration)
-                .GroupBy(x => context.SkipAhead > TimeSpan.Zero && context.SkipAhead >= x.Duration)
-                .ToList();
-            var childrenToExecute = childrenGroupedBySkip
-                .SingleOrDefault(x => !x.Key)
                 .ToList();
 
-            Debug.Assert(childrenToExecute != null, "Always expecting at least one child to execute.");
+            if (childrenToExecute.Count == 0)
+            {
+                // although this shouldn't really happen, we've been asked to execute even though the skip ahead exceeds even our longest-running child
+                context.AddProgress(this.Duration);
+                return;
+            }
 
             var shadowedContext = CreateShadowExecutionContext(context);
-            var firstChildExecution = childrenToExecute
-                .Take(1)
-                .Select(x => x.ExecuteAsync(context))
-                .ToList();
-            var subsequentChildExecutions = childrenToExecute
-                .Skip(1)
-                .Select(x => x.ExecuteAsync(shadowedContext))
+
+            // only the longest-running child gets the real execution context. The other actions get a shadowed context so that progress does not compound incorrectly
+            var executionTasks = childrenToExecute
+                .Select((action, index) => action.ExecuteAsync(index == 0 ? context : shadowedContext))
                 .ToList();
 
             await Task
-                .WhenAll(firstChildExecution.Concat(subsequentChildExecutions))
+                .WhenAll(executionTasks)
                 .ContinueOnAnyContext();
         }
 
