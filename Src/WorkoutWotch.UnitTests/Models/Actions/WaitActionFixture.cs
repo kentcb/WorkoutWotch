@@ -1,17 +1,17 @@
-﻿using System;
-using NUnit.Framework;
-using WorkoutWotch.Models.Actions;
-using WorkoutWotch.UnitTests.Services.Delay;
-using System.Threading.Tasks;
-using Kent.Boogaart.PCLMock;
-using System.Threading;
-using WorkoutWotch.Models;
-using ReactiveUI;
-using System.Reactive.Linq;
-using System.Reactive.Threading.Tasks;
-
-namespace WorkoutWotch.UnitTests.Models.Actions
+﻿namespace WorkoutWotch.UnitTests.Models.Actions
 {
+    using System;
+    using System.Reactive.Linq;
+    using System.Reactive.Threading.Tasks;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.PCLMock;
+    using NUnit.Framework;
+    using ReactiveUI;
+    using WorkoutWotch.Models;
+    using WorkoutWotch.Models.Actions;
+    using WorkoutWotch.UnitTests.Services.Delay;
+
     [TestFixture]
     public class WaitActionFixture
     {
@@ -187,4 +187,3 @@ namespace WorkoutWotch.UnitTests.Models.Actions
         }
     }
 }
-

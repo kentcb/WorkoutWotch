@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using WorkoutWotch.Services.Contracts.Delay;
-using Kent.Boogaart.HelperTrinity.Extensions;
-
-namespace WorkoutWotch.Models.Actions
+﻿namespace WorkoutWotch.Models.Actions
 {
+    using System;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using WorkoutWotch.Services.Contracts.Delay;
+
     public sealed class WaitAction : IAction
     {
         private static readonly TimeSpan maximumDelayTime = TimeSpan.FromSeconds(1);
@@ -50,10 +50,16 @@ namespace WorkoutWotch.Models.Actions
             while (remainingDelay > TimeSpan.Zero)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
-                await context.WaitWhilePausedAsync().ContinueOnAnyContext();
+
+                await context
+                    .WaitWhilePausedAsync()
+                    .ContinueOnAnyContext();
 
                 var delayFor = remainingDelay > maximumDelayTime ? maximumDelayTime : remainingDelay;
-                await this.delayService.DelayAsync(delayFor, context.CancellationToken).ContinueOnAnyContext();
+
+                await this.delayService
+                    .DelayAsync(delayFor, context.CancellationToken)
+                    .ContinueOnAnyContext();
 
                 remainingDelay -= delayFor;
                 context.AddProgress(delayFor);
@@ -61,4 +67,3 @@ namespace WorkoutWotch.Models.Actions
         }
     }
 }
-
