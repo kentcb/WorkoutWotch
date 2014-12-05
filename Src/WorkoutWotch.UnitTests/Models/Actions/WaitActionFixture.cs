@@ -10,7 +10,7 @@
     using ReactiveUI;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Actions;
-    using WorkoutWotch.UnitTests.Services.Delay;
+    using WorkoutWotch.UnitTests.Services.Delay.Mocks;
 
     [TestFixture]
     public class WaitActionFixture

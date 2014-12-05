@@ -1,4 +1,4 @@
-﻿namespace WorkoutWotch.UnitTests.Services.Delay
+﻿namespace WorkoutWotch.UnitTests.Services.Delay.Mocks
 {
     using System;
     using System.Threading;

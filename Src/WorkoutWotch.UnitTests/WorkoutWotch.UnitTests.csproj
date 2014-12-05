@@ -54,10 +54,7 @@
     <Compile Include="Services\Logger\Mocks\LoggerServiceMock.cs" />
     <Compile Include="Services\State\Mocks\BlobCacheMock.cs" />
     <Compile Include="Services\State\Mocks\StateServiceMock.cs" />
-    <Compile Include="Services\Delay\DelayServiceMock.cs" />
     <Compile Include="Services\ExerciseDocument\Mocks\ExerciseDocumentServiceMock.cs" />
-    <Compile Include="Services\Audio\AudioServiceMock.cs" />
-    <Compile Include="Services\Speech\SpeechServiceMock.cs" />
     <Compile Include="Models\ExecutionContextFixture.cs" />
     <Compile Include="Models\ExerciseFixture.cs" />
     <Compile Include="Models\Mocks\ActionMock.cs" />
@@ -76,6 +73,9 @@
     <Compile Include="Models\Actions\ParallelActionFixture.cs" />
     <Compile Include="Models\Actions\WaitActionFixture.cs" />
     <Compile Include="Utility\MathExtFixture.cs" />
+    <Compile Include="Services\Audio\Mocks\AudioServiceMock.cs" />
+    <Compile Include="Services\Delay\Mocks\DelayServiceMock.cs" />
+    <Compile Include="Services\Speech\Mocks\SpeechServiceMock.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -136,6 +136,9 @@
     <Folder Include="Models\Events\" />
     <Folder Include="Models\Actions\" />
     <Folder Include="Utility\" />
+    <Folder Include="Services\Audio\Mocks\" />
+    <Folder Include="Services\Delay\Mocks\" />
+    <Folder Include="Services\Speech\Mocks\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WorkoutWotch.Services\WorkoutWotch.Services.csproj">

@@ -1,4 +1,4 @@
-﻿namespace WorkoutWotch.UnitTests.Services.Speech
+﻿namespace WorkoutWotch.UnitTests.Services.Speech.Mocks
 {
     using System.Threading;
     using System.Threading.Tasks;

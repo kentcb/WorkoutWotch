@@ -1,4 +1,4 @@
-﻿namespace WorkoutWotch.UnitTests.Services.Audio
+﻿namespace WorkoutWotch.UnitTests.Services.Audio.Mocks
 {
     using System.Threading.Tasks;
     using Kent.Boogaart.PCLMock;
