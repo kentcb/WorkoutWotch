@@ -28,3 +28,6 @@ A repository for my video series on building an iOS app with C#. Here is a full 
   * [Video 06: Exercise](http://youtu.be/T_dwGiBXuzU)
   * [Video 07: Exercise Program](http://youtu.be/WhQx7d0i2Tw)
   * [Video 08: Exercise Programs](http://youtu.be/Z23m9V4RV78)
+  * [Video 09: Sequence Action](http://youtu.be/BZlbV4XxiCY)
+  * [Video 10: Parallel Action](http://youtu.be/bHuBNTho8FU)
+  * [Video 11: Wait Action](http://youtu.be/YFzeeR8PUKk)
