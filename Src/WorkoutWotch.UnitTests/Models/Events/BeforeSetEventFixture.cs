@@ -11,9 +11,9 @@
         public void to_string_returns_correct_representation(
             [Values(0, 1, 3, 8, 13, 1628)]int repetitions)
         {
-            var @event = new BeforeSetEvent(new ExecutionContext(), repetitions);
+            var sut = new BeforeSetEvent(new ExecutionContext(), repetitions);
 
-            Assert.AreEqual("Before Set " + repetitions, @event.ToString());
+            Assert.AreEqual("Before Set " + repetitions, sut.ToString());
         }
     }
 }

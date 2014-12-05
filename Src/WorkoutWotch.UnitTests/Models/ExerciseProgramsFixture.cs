@@ -36,12 +36,12 @@
                 this.CreateExerciseProgram("second"),
                 this.CreateExerciseProgram("third")
             };
-            var exercisePrograms = new ExercisePrograms(programs);
+            var sut = new ExercisePrograms(programs);
 
-            Assert.NotNull(exercisePrograms.Programs);
-            Assert.AreSame(programs[0], exercisePrograms.Programs[0]);
-            Assert.AreSame(programs[1], exercisePrograms.Programs[1]);
-            Assert.AreSame(programs[2], exercisePrograms.Programs[2]);
+            Assert.NotNull(sut.Programs);
+            Assert.AreSame(programs[0], sut.Programs[0]);
+            Assert.AreSame(programs[1], sut.Programs[1]);
+            Assert.AreSame(programs[2], sut.Programs[2]);
         }
 
         #region Supporting Members

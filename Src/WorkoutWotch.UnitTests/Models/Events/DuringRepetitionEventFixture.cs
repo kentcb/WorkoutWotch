@@ -11,9 +11,9 @@
         public void to_string_returns_correct_representation(
             [Values(0, 1, 3, 8, 13, 1628)]int repetitions)
         {
-            var @event = new DuringRepetitionEvent(new ExecutionContext(), repetitions);
+            var sut = new DuringRepetitionEvent(new ExecutionContext(), repetitions);
 
-            Assert.AreEqual("During Repetition " + repetitions, @event.ToString());
+            Assert.AreEqual("During Repetition " + repetitions, sut.ToString());
         }
     }
 }

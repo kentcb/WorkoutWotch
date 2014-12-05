@@ -15,9 +15,9 @@
             [Values("", "  ", "Push-ups", "Chin-ups", "Sit-ups")]string exerciseName)
         {
             var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), exerciseName, 0, 0, Enumerable.Empty<MatcherWithAction>());
-            var @event = new BeforeExerciseEvent(new ExecutionContext(), exercise);
+            var sut = new BeforeExerciseEvent(new ExecutionContext(), exercise);
 
-            Assert.AreEqual("Before Exercise '" + exerciseName + "'", @event.ToString());
+            Assert.AreEqual("Before Exercise '" + exerciseName + "'", sut.ToString());
         }
     }
 }

@@ -36,15 +36,15 @@
             action3.When(x => x.Duration).Return(TimeSpan.FromSeconds(5));
             action4.When(x => x.Duration).Return(TimeSpan.FromMilliseconds(550));
 
-            var parallelAction = new ParallelAction(new [] { action1, action2, action3, action4 });
-            Assert.AreEqual(TimeSpan.FromSeconds(5), parallelAction.Duration);
+            var sut = new ParallelAction(new [] { action1, action2, action3, action4 });
+            Assert.AreEqual(TimeSpan.FromSeconds(5), sut.Duration);
         }
 
         [Test]
         public void execute_async_throws_if_the_execution_context_is_null()
         {
-            var parallelAction = new ParallelAction(Enumerable.Empty<IAction>());
-            Assert.Throws<ArgumentNullException>(async () => await parallelAction.ExecuteAsync(null));
+            var sut = new ParallelAction(Enumerable.Empty<IAction>());
+            Assert.Throws<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
         [Test]
@@ -58,11 +58,11 @@
             action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(2));
             action3.When(x => x.Duration).Return(TimeSpan.FromSeconds(3));
             action4.When(x => x.Duration).Return(TimeSpan.FromSeconds(4));
-            var parallelAction = new ParallelAction(new [] { action1, action2, action3, action4 });
+            var sut = new ParallelAction(new [] { action1, action2, action3, action4 });
 
             using (var context = new ExecutionContext())
             {
-                await parallelAction.ExecuteAsync(context);
+                await sut.ExecuteAsync(context);
 
                 action1.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasCalledExactlyOnce();
                 action2.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasCalledExactlyOnce();
@@ -80,11 +80,11 @@
             action1.When(x => x.Duration).Return(TimeSpan.FromMinutes(1));
             action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(10));
             action3.When(x => x.Duration).Return(TimeSpan.FromSeconds(71));
-            var parallelAction = new ParallelAction(new [] { action1, action2, action3 });
+            var sut = new ParallelAction(new [] { action1, action2, action3 });
 
             using (var context = new ExecutionContext(TimeSpan.FromSeconds(70)))
             {
-                await parallelAction.ExecuteAsync(context);
+                await sut.ExecuteAsync(context);
 
                 action1.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasNotCalled();
                 action2.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasNotCalled();
@@ -101,12 +101,12 @@
             action1.When(x => x.Duration).Return(TimeSpan.FromMinutes(1));
             action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(10));
             action3.When(x => x.Duration).Return(TimeSpan.FromSeconds(71));
-            var parallelAction = new ParallelAction(new [] { action1, action2, action3 });
+            var sut = new ParallelAction(new [] { action1, action2, action3 });
 
             using (var context = new ExecutionContext(TimeSpan.FromSeconds(70)))
             {
                 context.IsPaused = true;
-                await parallelAction.ExecuteAsync(context);
+                await sut.ExecuteAsync(context);
 
                 action1.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasNotCalled();
                 action2.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasNotCalled();
@@ -123,11 +123,11 @@
             action1.When(x => x.Duration).Return(TimeSpan.FromMinutes(1));
             action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(10));
             action3.When(x => x.Duration).Return(TimeSpan.FromSeconds(71));
-            var parallelAction = new ParallelAction(new [] { action1, action2, action3 });
+            var sut = new ParallelAction(new [] { action1, action2, action3 });
 
             using (var context = new ExecutionContext(TimeSpan.FromMinutes(3)))
             {
-                await parallelAction.ExecuteAsync(context);
+                await sut.ExecuteAsync(context);
 
                 action1.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasNotCalled();
                 action2.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasNotCalled();
@@ -152,11 +152,11 @@
             action2.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.AddProgress(action2.Duration)).Return(Task.FromResult(true));
             action3.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.AddProgress(action3.Duration)).Return(Task.FromResult(true));
             action4.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.AddProgress(action4.Duration)).Return(Task.FromResult(true));
-            var parallelAction = new ParallelAction(new [] { action1, action2, action3, action4 });
+            var sut = new ParallelAction(new [] { action1, action2, action3, action4 });
 
             using (var context = new ExecutionContext())
             {
-                await parallelAction.ExecuteAsync(context);
+                await sut.ExecuteAsync(context);
 
                 Assert.AreEqual(TimeSpan.FromSeconds(2), context.Progress);
             }
@@ -177,11 +177,11 @@
             action2.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.AddProgress(action2.Duration)).Return(Task.FromResult(true));
             action3.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.AddProgress(action3.Duration)).Return(Task.FromResult(true));
             action4.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.AddProgress(action4.Duration)).Return(Task.FromResult(true));
-            var parallelAction = new ParallelAction(new [] { action1, action2, action3, action4 });
+            var sut = new ParallelAction(new [] { action1, action2, action3, action4 });
 
             using (var context = new ExecutionContext(TimeSpan.FromSeconds(5)))
             {
-                await parallelAction.ExecuteAsync(context);
+                await sut.ExecuteAsync(context);
 
                 Assert.AreEqual(TimeSpan.FromSeconds(10), context.Progress);
 
@@ -198,11 +198,11 @@
             action1.When(x => x.Duration).Return(TimeSpan.FromSeconds(13));
             action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(8));
             action1.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.Cancel()).Return(Task.FromResult(true));
-            var parallelAction = new ParallelAction(new [] { action1, action2 });
+            var sut = new ParallelAction(new [] { action1, action2 });
 
             using (var context = new ExecutionContext())
             {
-                await parallelAction.ExecuteAsync(context);
+                await sut.ExecuteAsync(context);
 
                 // can't assume certain actions did not execute because actions run in parallel, but we can check the context is cancelled
                 Assert.True(context.IsCancelled);
@@ -217,11 +217,11 @@
             action1.When(x => x.Duration).Return(TimeSpan.FromSeconds(8));
             action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(13));
             action1.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.Cancel()).Return(Task.FromResult(true));
-            var parallelAction = new ParallelAction(new [] { action1, action2 });
+            var sut = new ParallelAction(new [] { action1, action2 });
 
             using (var context = new ExecutionContext())
             {
-                await parallelAction.ExecuteAsync(context);
+                await sut.ExecuteAsync(context);
 
                 // can't assume certain actions did not execute because actions run in parallel, but we can check the context is cancelled
                 Assert.True(context.IsCancelled);
@@ -236,11 +236,11 @@
             action1.When(x => x.Duration).Return(TimeSpan.FromSeconds(13));
             action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(8));
             action1.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.IsPaused = true).Return(Task.FromResult(true));
-            var parallelAction = new ParallelAction(new [] { action1, action2 });
+            var sut = new ParallelAction(new [] { action1, action2 });
 
             using (var context = new ExecutionContext())
             {
-                await parallelAction.ExecuteAsync(context);
+                await sut.ExecuteAsync(context);
 
                 // can't assume certain actions did not execute because actions run in parallel, but we can check the context is paused
                 Assert.True(context.IsPaused);
@@ -255,11 +255,11 @@
             action1.When(x => x.Duration).Return(TimeSpan.FromSeconds(8));
             action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(13));
             action1.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.IsPaused = true).Return(Task.FromResult(true));
-            var parallelAction = new ParallelAction(new [] { action1, action2 });
+            var sut = new ParallelAction(new [] { action1, action2 });
 
             using (var context = new ExecutionContext())
             {
-                await parallelAction.ExecuteAsync(context);
+                await sut.ExecuteAsync(context);
 
                 // can't assume certain actions did not execute because actions run in parallel, but we can check the context is paused
                 Assert.True(context.IsPaused);

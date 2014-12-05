@@ -34,15 +34,15 @@
             action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(1));
             action3.When(x => x.Duration).Return(TimeSpan.FromSeconds(7));
 
-            var sequenceAction = new SequenceAction(new [] { action1, action2, action3 });
-            Assert.AreEqual(TimeSpan.FromSeconds(18), sequenceAction.Duration);
+            var sut = new SequenceAction(new [] { action1, action2, action3 });
+            Assert.AreEqual(TimeSpan.FromSeconds(18), sut.Duration);
         }
 
         [Test]
         public void execute_async_throws_if_context_is_null()
         {
-            var sequenceAction = new SequenceAction(Enumerable.Empty<IAction>());
-            Assert.Throws<ArgumentNullException>(async () => await sequenceAction.ExecuteAsync(null));
+            var sut = new SequenceAction(Enumerable.Empty<IAction>());
+            Assert.Throws<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
         [Test]
@@ -51,11 +51,11 @@
             var action1 = new ActionMock(MockBehavior.Loose);
             var action2 = new ActionMock(MockBehavior.Loose);
             var action3 = new ActionMock(MockBehavior.Loose);
-            var sequenceAction = new SequenceAction(new [] { action1, action2, action3 });
+            var sut = new SequenceAction(new [] { action1, action2, action3 });
 
             using (var context = new ExecutionContext())
             {
-                await sequenceAction.ExecuteAsync(context);
+                await sut.ExecuteAsync(context);
 
                 action1.Verify(x => x.ExecuteAsync(It.Is(context))).WasCalledExactlyOnce();
                 action2.Verify(x => x.ExecuteAsync(It.Is(context))).WasCalledExactlyOnce();
@@ -74,11 +74,11 @@
             action1.When(x => x.Duration).Return(TimeSpan.FromSeconds(3));
             action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(8));
             action3.When(x => x.Duration).Return(TimeSpan.FromSeconds(2));
-            var sequenceAction = new SequenceAction(new [] { action1, action2, action3 });
+            var sut = new SequenceAction(new [] { action1, action2, action3 });
 
             using (var context = new ExecutionContext(TimeSpan.FromSeconds(11)))
             {
-                await sequenceAction.ExecuteAsync(context);
+                await sut.ExecuteAsync(context);
 
                 action3.Verify(x => x.ExecuteAsync(It.Is(context))).WasCalledExactlyOnce();
             }
@@ -95,12 +95,12 @@
             action1.When(x => x.Duration).Return(TimeSpan.FromSeconds(3));
             action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(8));
             action3.When(x => x.Duration).Return(TimeSpan.FromSeconds(2));
-            var sequenceAction = new SequenceAction(new [] { action1, action2, action3 });
+            var sut = new SequenceAction(new [] { action1, action2, action3 });
 
             using (var context = new ExecutionContext(TimeSpan.FromSeconds(11)))
             {
                 context.IsPaused = true;
-                await sequenceAction.ExecuteAsync(context);
+                await sut.ExecuteAsync(context);
 
                 action3.Verify(x => x.ExecuteAsync(It.Is(context))).WasCalledExactlyOnce();
             }
@@ -112,7 +112,7 @@
             var action1 = new ActionMock(MockBehavior.Loose);
             var action2 = new ActionMock(MockBehavior.Loose);
             var action3 = new ActionMock(MockBehavior.Loose);
-            var sequenceAction = new SequenceAction(new [] { action1, action2, action3 });
+            var sut = new SequenceAction(new [] { action1, action2, action3 });
 
             using (var context = new ExecutionContext())
             {
@@ -123,7 +123,7 @@
 
                 try
                 {
-                    await sequenceAction.ExecuteAsync(context);
+                    await sut.ExecuteAsync(context);
                     Assert.Fail("Expected OperationCanceledException.");
                 }
                 catch (OperationCanceledException)

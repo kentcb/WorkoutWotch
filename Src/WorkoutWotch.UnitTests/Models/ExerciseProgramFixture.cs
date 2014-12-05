@@ -53,12 +53,12 @@
                 this.CreateExercise("second"),
                 this.CreateExercise("third")
             };
-            var exerciseProgram = new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", exercises);
+            var sut = new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", exercises);
 
-            Assert.AreEqual(3, exerciseProgram.Exercises.Count);
-            Assert.AreSame(exercises[0], exerciseProgram.Exercises[0]);
-            Assert.AreSame(exercises[1], exerciseProgram.Exercises[1]);
-            Assert.AreSame(exercises[2], exerciseProgram.Exercises[2]);
+            Assert.AreEqual(3, sut.Exercises.Count);
+            Assert.AreSame(exercises[0], sut.Exercises[0]);
+            Assert.AreSame(exercises[1], sut.Exercises[1]);
+            Assert.AreSame(exercises[2], sut.Exercises[2]);
         }
 
         [Test]
@@ -80,16 +80,16 @@
                 this.CreateExercise("second", action2),
                 this.CreateExercise("third", action1)
             };
-            var exerciseProgram = new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", exercises);
+            var sut = new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", exercises);
 
-            Assert.AreEqual(TimeSpan.FromSeconds(12), exerciseProgram.Duration);
+            Assert.AreEqual(TimeSpan.FromSeconds(12), sut.Duration);
         }
 
         [Test]
         public void execute_async_throws_if_the_context_is_null()
         {
-            var exerciseProgram = new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", Enumerable.Empty<Exercise>());
-            Assert.Throws<ArgumentNullException>(async () => await exerciseProgram.ExecuteAsync(null));
+            var sut = new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", Enumerable.Empty<Exercise>());
+            Assert.Throws<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
         [Test]
@@ -104,11 +104,11 @@
                 this.CreateExercise("first", action1),
                 this.CreateExercise("second", action2)
             };
-            var exerciseProgram = new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", exercises);
+            var sut = new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", exercises);
 
             using (var executionContext = new ExecutionContext())
             {
-                await exerciseProgram.ExecuteAsync(executionContext);
+                await sut.ExecuteAsync(executionContext);
 
                 action1.Verify(x => x.ExecuteAsync(It.Is(executionContext))).WasCalledExactlyOnce();
                 action2.Verify(x => x.ExecuteAsync(It.Is(executionContext))).WasCalledExactlyOnce();
@@ -132,11 +132,11 @@
                 this.CreateExercise("second", action2),
                 this.CreateExercise("third", action3)
             };
-            var exerciseProgram = new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", exercises);
+            var sut = new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", exercises);
 
             using (var executionContext = new ExecutionContext(TimeSpan.FromSeconds(23)))
             {
-                await exerciseProgram.ExecuteAsync(executionContext);
+                await sut.ExecuteAsync(executionContext);
 
                 action3.Verify(x => x.ExecuteAsync(It.Is(executionContext))).WasCalledExactlyOnce();
             }

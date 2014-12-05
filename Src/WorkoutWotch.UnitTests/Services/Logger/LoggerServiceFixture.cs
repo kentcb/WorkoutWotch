@@ -15,87 +15,87 @@
         [Test]
         public void is_debug_enabled_honors_threshold()
         {
-            var service = new LoggerService();
-            service.Threshold = LogLevel.Debug;
-            Assert.True(service.IsDebugEnabled);
-            service.Threshold = LogLevel.Info;
-            Assert.False(service.IsDebugEnabled);
+            var sut = new LoggerService();
+            sut.Threshold = LogLevel.Debug;
+            Assert.True(sut.IsDebugEnabled);
+            sut.Threshold = LogLevel.Info;
+            Assert.False(sut.IsDebugEnabled);
         }
 
         [Test]
         public void is_info_enabled_honors_threshold()
         {
-            var service = new LoggerService();
-            service.Threshold = LogLevel.Info;
-            Assert.True(service.IsInfoEnabled);
-            service.Threshold = LogLevel.Warn;
-            Assert.False(service.IsInfoEnabled);
+            var sut = new LoggerService();
+            sut.Threshold = LogLevel.Info;
+            Assert.True(sut.IsInfoEnabled);
+            sut.Threshold = LogLevel.Warn;
+            Assert.False(sut.IsInfoEnabled);
         }
 
         [Test]
         public void is_perf_enabled_honors_threshold()
         {
-            var service = new LoggerService();
-            service.Threshold = LogLevel.Perf;
-            Assert.True(service.IsPerfEnabled);
-            service.Threshold = LogLevel.Warn;
-            Assert.False(service.IsPerfEnabled);
+            var sut = new LoggerService();
+            sut.Threshold = LogLevel.Perf;
+            Assert.True(sut.IsPerfEnabled);
+            sut.Threshold = LogLevel.Warn;
+            Assert.False(sut.IsPerfEnabled);
         }
 
         [Test]
         public void is_warn_enabled_honors_threshold()
         {
-            var service = new LoggerService();
-            service.Threshold = LogLevel.Warn;
-            Assert.True(service.IsWarnEnabled);
-            service.Threshold = LogLevel.Error;
-            Assert.False(service.IsWarnEnabled);
+            var sut = new LoggerService();
+            sut.Threshold = LogLevel.Warn;
+            Assert.True(sut.IsWarnEnabled);
+            sut.Threshold = LogLevel.Error;
+            Assert.False(sut.IsWarnEnabled);
         }
 
         [Test]
         public void is_error_enabled_is_always_true()
         {
-            var service = new LoggerService();
-            service.Threshold = LogLevel.Info;
-            Assert.True(service.IsErrorEnabled);
-            service.Threshold = LogLevel.Error;
-            Assert.True(service.IsErrorEnabled);
+            var sut = new LoggerService();
+            sut.Threshold = LogLevel.Info;
+            Assert.True(sut.IsErrorEnabled);
+            sut.Threshold = LogLevel.Error;
+            Assert.True(sut.IsErrorEnabled);
         }
 
         [Test]
         public void get_logger_throws_if_type_is_null()
         {
-            var service = new LoggerService();
-            Assert.Throws<ArgumentNullException>(() => service.GetLogger((Type)null));
+            var sut = new LoggerService();
+            Assert.Throws<ArgumentNullException>(() => sut.GetLogger((Type)null));
         }
 
         [Test]
         public void get_logger_throws_if_name_is_null()
         {
-            var service = new LoggerService();
-            Assert.Throws<ArgumentNullException>(() => service.GetLogger((string)null));
+            var sut = new LoggerService();
+            Assert.Throws<ArgumentNullException>(() => sut.GetLogger((string)null));
         }
 
         [Test]
         public void get_logger_for_type_returns_a_logger_with_the_full_name_of_the_type_as_its_name()
         {
-            var service = new LoggerService();
-            var logger = service.GetLogger(this.GetType());
+            var sut = new LoggerService();
+            var logger = sut.GetLogger(this.GetType());
             Assert.AreEqual(this.GetType().FullName, logger.Name);
         }
 
         [Test]
         public async Task log_entries_ticks_for_log_calls_within_the_configured_threshold()
         {
-            var service = new LoggerService();
-            var logger = service.GetLogger("test");
-            var entriesTask = service
+            var sut = new LoggerService();
+            var logger = sut.GetLogger("test");
+            var entriesTask = sut
                 .Entries
                 .Take(3)
                 .ToListAsync()
                 .ToTask();
 
-            service.Threshold = LogLevel.Info;
+            sut.Threshold = LogLevel.Info;
             logger.Debug("Whatever");
             logger.Debug("foo");
             logger.Debug("bar");
@@ -119,9 +119,9 @@
         [Test]
         public async Task log_entries_can_be_formatted()
         {
-            var service = new LoggerService();
-            var logger = service.GetLogger("test");
-            var entryTask = service
+            var sut = new LoggerService();
+            var logger = sut.GetLogger("test");
+            var entryTask = sut
                 .Entries
                 .FirstAsync()
                 .Timeout(TimeSpan.FromSeconds(3))
@@ -137,9 +137,9 @@
         [Test]
         public async Task log_entries_can_contain_exception_details()
         {
-            var service = new LoggerService();
-            var logger = service.GetLogger("test");
-            var entryTask = service
+            var sut = new LoggerService();
+            var logger = sut.GetLogger("test");
+            var entryTask = sut
                 .Entries
                 .FirstAsync()
                 .Timeout(TimeSpan.FromSeconds(3))
@@ -155,10 +155,10 @@
         [Test]
         public async Task logging_perf_is_a_noop_if_perf_level_is_disabled()
         {
-            var service = new LoggerService();
-            var logger = service.GetLogger("test");
-            service.Threshold = LogLevel.Warn;
-            var entryTask = service
+            var sut = new LoggerService();
+            var logger = sut.GetLogger("test");
+            sut.Threshold = LogLevel.Warn;
+            var entryTask = sut
                 .Entries
                 .FirstAsync()
                 .Timeout(TimeSpan.FromSeconds(3))
@@ -178,9 +178,9 @@
         [Test]
         public async Task logging_perf_adds_extra_performance_information_to_the_log_message()
         {
-            var service = new LoggerService();
-            var logger = service.GetLogger("test");
-            var entryTask = service
+            var sut = new LoggerService();
+            var logger = sut.GetLogger("test");
+            var entryTask = sut
                 .Entries
                 .FirstAsync()
                 .Timeout(TimeSpan.FromSeconds(3))

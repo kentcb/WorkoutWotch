@@ -16,8 +16,8 @@
         [Test]
         public void get_async_throws_if_key_is_null()
         {
-            var service = new StateService(new BlobCacheMock(), new LoggerServiceMock(MockBehavior.Loose));
-            Assert.Throws<ArgumentNullException>(() => service.GetAsync<string>(null));
+            var sut = new StateService(new BlobCacheMock(), new LoggerServiceMock(MockBehavior.Loose));
+            Assert.Throws<ArgumentNullException>(() => sut.GetAsync<string>(null));
         }
 
         [Test]
@@ -25,8 +25,8 @@
         {
             var blobCache = new BlobCacheMock();
             blobCache.When(x => x.Get(It.IsAny<string>())).Return(Observable.Return(new byte[0]));
-            var service = new StateService(blobCache, new LoggerServiceMock(MockBehavior.Loose));
-            service.GetAsync<string>("some key");
+            var sut = new StateService(blobCache, new LoggerServiceMock(MockBehavior.Loose));
+            sut.GetAsync<string>("some key");
 
             // we don't verify the specific key because Akavache does some key manipulation internally
             blobCache.Verify(x => x.Get(It.IsAny<string>())).WasCalledExactlyOnce();
@@ -35,8 +35,8 @@
         [Test]
         public void set_async_throws_if_key_is_null()
         {
-            var service = new StateService(new BlobCacheMock(), new LoggerServiceMock(MockBehavior.Loose));
-            Assert.Throws<ArgumentNullException>(() => service.SetAsync<string>(null, "foo"));
+            var sut = new StateService(new BlobCacheMock(), new LoggerServiceMock(MockBehavior.Loose));
+            Assert.Throws<ArgumentNullException>(() => sut.SetAsync<string>(null, "foo"));
         }
 
         [Test]
@@ -44,8 +44,8 @@
         {
             var blobCache = new BlobCacheMock(MockBehavior.Loose);
             blobCache.When(x => x.Insert(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<DateTimeOffset?>())).Return(Observable.Return(Unit.Default));
-            var service = new StateService(blobCache, new LoggerServiceMock(MockBehavior.Loose));
-            service.SetAsync<string>("some key", "some value");
+            var sut = new StateService(blobCache, new LoggerServiceMock(MockBehavior.Loose));
+            sut.SetAsync<string>("some key", "some value");
 
             // we don't verify the specific key because Akavache does some key manipulation internally
             blobCache.Verify(x => x.Insert(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<DateTimeOffset?>())).WasCalledExactlyOnce();
@@ -54,8 +54,8 @@
         [Test]
         public void remove_async_throws_if_key_is_null()
         {
-            var service = new StateService(new BlobCacheMock(), new LoggerServiceMock(MockBehavior.Loose));
-            Assert.Throws<ArgumentNullException>(() => service.RemoveAsync<string>(null));
+            var sut = new StateService(new BlobCacheMock(), new LoggerServiceMock(MockBehavior.Loose));
+            Assert.Throws<ArgumentNullException>(() => sut.RemoveAsync<string>(null));
         }
 
         [Test]
@@ -63,8 +63,8 @@
         {
             var blobCache = new BlobCacheMock(MockBehavior.Loose);
             blobCache.When(x => x.Invalidate(It.IsAny<string>())).Return(Observable.Return(Unit.Default));
-            var service = new StateService(blobCache, new LoggerServiceMock(MockBehavior.Loose));
-            service.RemoveAsync<string>("some key");
+            var sut = new StateService(blobCache, new LoggerServiceMock(MockBehavior.Loose));
+            sut.RemoveAsync<string>("some key");
 
             // we don't verify the specific key because Akavache does some key manipulation internally
             blobCache.Verify(x => x.Invalidate(It.IsAny<string>())).WasCalledExactlyOnce();
@@ -73,13 +73,13 @@
         [Test]
         public async Task save_async_executes_all_tasks_returned_by_saved_callbacks()
         {
-            var service = new StateService(new BlobCacheMock(), new LoggerServiceMock(MockBehavior.Loose));
+            var sut = new StateService(new BlobCacheMock(), new LoggerServiceMock(MockBehavior.Loose));
             var firstExecuted = false;
             var secondExecuted = false;
-            service.RegisterSaveCallback(_ => Task.Run(() => firstExecuted = true));
-            service.RegisterSaveCallback(_ => Task.Run(() => secondExecuted = true));
+            sut.RegisterSaveCallback(_ => Task.Run(() => firstExecuted = true));
+            sut.RegisterSaveCallback(_ => Task.Run(() => secondExecuted = true));
 
-            await service.SaveAsync();
+            await sut.SaveAsync();
 
             Assert.True(firstExecuted);
             Assert.True(secondExecuted);
@@ -91,14 +91,14 @@
             var logger = new LoggerMock(MockBehavior.Loose);
             var loggerService = new LoggerServiceMock(MockBehavior.Loose);
             loggerService.When(x => x.GetLogger(typeof(StateService))).Return(logger);
-            var service = new StateService(new BlobCacheMock(), loggerService);
+            var sut = new StateService(new BlobCacheMock(), loggerService);
             var firstExecuted = false;
             var secondExecuted = false;
-            service.RegisterSaveCallback(_ => Task.Run(() => firstExecuted = true));
-            service.RegisterSaveCallback(_ => null);
-            service.RegisterSaveCallback(_ => Task.Run(() => secondExecuted = true));
+            sut.RegisterSaveCallback(_ => Task.Run(() => firstExecuted = true));
+            sut.RegisterSaveCallback(_ => null);
+            sut.RegisterSaveCallback(_ => Task.Run(() => secondExecuted = true));
 
-            await service.SaveAsync();
+            await sut.SaveAsync();
 
             Assert.True(firstExecuted);
             Assert.True(secondExecuted);
@@ -111,10 +111,10 @@
         [Test]
         public async Task save_async_does_not_fail_if_a_save_callback_fails()
         {
-            var service = new StateService(new BlobCacheMock(), new LoggerServiceMock(MockBehavior.Loose));
-            service.RegisterSaveCallback(_ => Task.Run(() => { throw new Exception("Failed"); }));
+            var sut = new StateService(new BlobCacheMock(), new LoggerServiceMock(MockBehavior.Loose));
+            sut.RegisterSaveCallback(_ => Task.Run(() => { throw new Exception("Failed"); }));
 
-            await service.SaveAsync();
+            await sut.SaveAsync();
         }
 
         [Test]
@@ -123,10 +123,10 @@
             var logger = new LoggerMock(MockBehavior.Loose);
             var loggerService = new LoggerServiceMock(MockBehavior.Loose);
             loggerService.When(x => x.GetLogger(typeof(StateService))).Return(logger);
-            var service = new StateService(new BlobCacheMock(), loggerService);
-            service.RegisterSaveCallback(_ => Task.Run(() => { throw new Exception("whatever"); }));
+            var sut = new StateService(new BlobCacheMock(), loggerService);
+            sut.RegisterSaveCallback(_ => Task.Run(() => { throw new Exception("whatever"); }));
 
-            await service.SaveAsync();
+            await sut.SaveAsync();
 
             logger.Verify(x => x.Error(It.IsAny<Exception>(), It.IsAny<string>(), It.IsAny<object[]>())).WasCalledExactlyOnce();
         }
@@ -134,22 +134,22 @@
         [Test]
         public void register_save_callback_throws_if_save_task_factory_is_null()
         {
-            var service = new StateService(new BlobCacheMock(), new LoggerServiceMock(MockBehavior.Loose));
-            Assert.Throws<ArgumentNullException>(() => service.RegisterSaveCallback(null));
+            var sut = new StateService(new BlobCacheMock(), new LoggerServiceMock(MockBehavior.Loose));
+            Assert.Throws<ArgumentNullException>(() => sut.RegisterSaveCallback(null));
         }
 
         [Test]
         public async Task register_save_callback_returns_a_registration_handle_that_unregisters_the_callback_when_disposed()
         {
-            var service = new StateService(new BlobCacheMock(), new LoggerServiceMock(MockBehavior.Loose));
+            var sut = new StateService(new BlobCacheMock(), new LoggerServiceMock(MockBehavior.Loose));
             var firstExecuted = false;
             var secondExecuted = false;
-            var handle = service.RegisterSaveCallback(_ => Task.Run(() => firstExecuted = true));
-            service.RegisterSaveCallback(_ => Task.Run(() => secondExecuted = true));
+            var handle = sut.RegisterSaveCallback(_ => Task.Run(() => firstExecuted = true));
+            sut.RegisterSaveCallback(_ => Task.Run(() => secondExecuted = true));
 
             handle.Dispose();
 
-            await service.SaveAsync();
+            await sut.SaveAsync();
 
             Assert.False(firstExecuted);
             Assert.True(secondExecuted);

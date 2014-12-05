@@ -50,29 +50,29 @@
         [Test]
         public void name_gets_name_passed_into_ctor()
         {
-            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
-            Assert.AreEqual("some name", exercise.Name);
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
+            Assert.AreEqual("some name", sut.Name);
         }
 
         [Test]
         public void set_count_gets_set_count_passed_into_ctor()
         {
-            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
-            Assert.AreEqual(3, exercise.SetCount);
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
+            Assert.AreEqual(3, sut.SetCount);
         }
 
         [Test]
         public void repetition_count_gets_repetition_count_passed_into_ctor()
         {
-            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
-            Assert.AreEqual(10, exercise.RepetitionCount);
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
+            Assert.AreEqual(10, sut.RepetitionCount);
         }
 
         [Test]
         public void duration_returns_zero_if_there_are_no_actions()
         {
-            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
-            Assert.AreEqual(TimeSpan.Zero, exercise.Duration);
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
+            Assert.AreEqual(TimeSpan.Zero, sut.Duration);
         }
 
         [Test]
@@ -96,15 +96,15 @@
                 new MatcherWithAction(eventMatcher2, action2),
                 new MatcherWithAction(eventMatcher3, action3),
             };
-            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
-            Assert.AreEqual(TimeSpan.FromSeconds(30), exercise.Duration);
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
+            Assert.AreEqual(TimeSpan.FromSeconds(30), sut.Duration);
         }
 
         [Test]
         public void execute_async_throws_if_execution_context_is_null()
         {
-            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, Enumerable.Empty<MatcherWithAction>());
-            Assert.Throws<ArgumentNullException>(async () => await exercise.ExecuteAsync(null));
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, Enumerable.Empty<MatcherWithAction>());
+            Assert.Throws<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
         [Test]
@@ -125,11 +125,11 @@
                 new MatcherWithAction(eventMatcher2, action2),
                 new MatcherWithAction(eventMatcher3, action3),
             };
-            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
 
             using (var executionContext = new ExecutionContext())
             {
-                await exercise.ExecuteAsync(executionContext);
+                await sut.ExecuteAsync(executionContext);
 
                 action1.Verify(x => x.ExecuteAsync(It.Is(executionContext))).WasCalledExactlyOnce();
                 action2.Verify(x => x.ExecuteAsync(It.Is(executionContext))).WasCalledExactly(times: 6);
@@ -147,11 +147,11 @@
             {
                 new MatcherWithAction(eventMatcher, action)
             };
-            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
 
             using (var executionContext = new ExecutionContext())
             {
-                await exercise.ExecuteAsync(executionContext);
+                await sut.ExecuteAsync(executionContext);
                 action.Verify(x => x.ExecuteAsync(It.Is(executionContext))).WasCalledExactlyOnce();
             }
         }
@@ -179,11 +179,11 @@
                 new MatcherWithAction(eventMatcher2, action2),
                 new MatcherWithAction(eventMatcher3, action3),
             };
-            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
 
             using (var executionContext = new ExecutionContext(TimeSpan.FromSeconds(13)))
             {
-                await exercise.ExecuteAsync(executionContext);
+                await sut.ExecuteAsync(executionContext);
 
                 action3.Verify(x => x.ExecuteAsync(It.Is(executionContext))).WasCalledExactlyOnce();
             }
@@ -212,12 +212,12 @@
                 new MatcherWithAction(eventMatcher2, action2),
                 new MatcherWithAction(eventMatcher3, action3),
             };
-            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
 
             using (var executionContext = new ExecutionContext(TimeSpan.FromSeconds(13)))
             {
                 executionContext.IsPaused = true;
-                await exercise.ExecuteAsync(executionContext);
+                await sut.ExecuteAsync(executionContext);
 
                 action3.Verify(x => x.ExecuteAsync(It.Is(executionContext))).WasCalledExactlyOnce();
             }
@@ -226,18 +226,18 @@
         [Test]
         public async Task execute_async_updates_the_current_exercise_in_the_context()
         {
-            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, Enumerable.Empty<MatcherWithAction>());
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, Enumerable.Empty<MatcherWithAction>());
             var context = new ExecutionContext();
 
-            await exercise.ExecuteAsync(context);
+            await sut.ExecuteAsync(context);
 
-            Assert.AreSame(exercise, context.CurrentExercise);
+            Assert.AreSame(sut, context.CurrentExercise);
         }
 
         [Test]
         public async Task execute_async_updates_the_current_set_in_the_context()
         {
-            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 3, 5, Enumerable.Empty<MatcherWithAction>());
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 3, 5, Enumerable.Empty<MatcherWithAction>());
             var context = new ExecutionContext();
             var currentSetsTask = context
                 .ObservableForProperty(x => x.CurrentSet)
@@ -246,7 +246,7 @@
                 .ToListAsync()
                 .ToTask();
 
-            await exercise.ExecuteAsync(context);
+            await sut.ExecuteAsync(context);
             var currentSets = await currentSetsTask;
 
             Assert.AreEqual(3, currentSets.Count);
@@ -258,7 +258,7 @@
         [Test]
         public async Task execute_async_updates_the_current_repetitions_in_the_context()
         {
-            var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 3, 5, Enumerable.Empty<MatcherWithAction>());
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 3, 5, Enumerable.Empty<MatcherWithAction>());
             var context = new ExecutionContext();
             var currentRepetitionsTask = context
                 .ObservableForProperty(x => x.CurrentRepetition)
@@ -267,7 +267,7 @@
                 .ToListAsync()
                 .ToTask();
 
-            await exercise.ExecuteAsync(context);
+            await sut.ExecuteAsync(context);
             var currentRepetitions = await currentRepetitionsTask;
 
             Assert.AreEqual(5, currentRepetitions.Count);

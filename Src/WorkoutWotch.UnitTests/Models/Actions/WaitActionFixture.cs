@@ -30,15 +30,15 @@
         [Test]
         public void duration_returns_delay()
         {
-            var waitAction = new WaitAction(new DelayServiceMock(), TimeSpan.FromSeconds(23));
-            Assert.AreEqual(TimeSpan.FromSeconds(23), waitAction.Duration);
+            var sut = new WaitAction(new DelayServiceMock(), TimeSpan.FromSeconds(23));
+            Assert.AreEqual(TimeSpan.FromSeconds(23), sut.Duration);
         }
 
         [Test]
         public void execute_async_throws_if_context_is_null()
         {
-            var waitAction = new WaitAction(new DelayServiceMock(), TimeSpan.Zero);
-            Assert.Throws<ArgumentNullException>(async () => await waitAction.ExecuteAsync(null));
+            var sut = new WaitAction(new DelayServiceMock(), TimeSpan.Zero);
+            Assert.Throws<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
         [Test]
@@ -50,9 +50,9 @@
                 .When(x => x.DelayAsync(It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()))
                 .Do<TimeSpan, CancellationToken>((t, ct) => totalDelay += t)
                 .Return(Task.FromResult(true));
-            var waitAction = new WaitAction(delayService, TimeSpan.FromMilliseconds(850));
+            var sut = new WaitAction(delayService, TimeSpan.FromMilliseconds(850));
 
-            await waitAction.ExecuteAsync(new ExecutionContext());
+            await sut.ExecuteAsync(new ExecutionContext());
 
             Assert.AreEqual(TimeSpan.FromMilliseconds(850), totalDelay);
         }
@@ -66,9 +66,9 @@
                 .When(x => x.DelayAsync(It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()))
                 .Do<TimeSpan, CancellationToken>((t, ct) => totalDelay += t)
                 .Return(Task.FromResult(true));
-            var waitAction = new WaitAction(delayService, TimeSpan.FromMilliseconds(850));
+            var sut = new WaitAction(delayService, TimeSpan.FromMilliseconds(850));
 
-            await waitAction.ExecuteAsync(new ExecutionContext(TimeSpan.FromMilliseconds(800)));
+            await sut.ExecuteAsync(new ExecutionContext(TimeSpan.FromMilliseconds(800)));
 
             Assert.AreEqual(TimeSpan.FromMilliseconds(50), totalDelay);
         }
@@ -82,11 +82,11 @@
                 .When(x => x.DelayAsync(It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()))
                 .Do<TimeSpan, CancellationToken>((t, ct) => totalDelay += t)
                 .Return(Task.FromResult(true));
-            var waitAction = new WaitAction(delayService, TimeSpan.FromMilliseconds(850));
+            var sut = new WaitAction(delayService, TimeSpan.FromMilliseconds(850));
 
             using (var context = new ExecutionContext(TimeSpan.FromMilliseconds(800)) { IsPaused = true })
             {
-                var task = waitAction.ExecuteAsync(context);
+                var task = sut.ExecuteAsync(context);
 
                 Assert.False(task.Wait(TimeSpan.FromMilliseconds(50)));
 
@@ -103,13 +103,13 @@
         public async Task execute_async_reports_progress()
         {
             var delayService = new DelayServiceMock(MockBehavior.Loose);
-            var waitAction = new WaitAction(delayService, TimeSpan.FromMilliseconds(50));
+            var sut = new WaitAction(delayService, TimeSpan.FromMilliseconds(50));
 
             using (var context = new ExecutionContext())
             {
                 Assert.AreEqual(TimeSpan.Zero, context.Progress);
 
-                await waitAction.ExecuteAsync(context);
+                await sut.ExecuteAsync(context);
 
                 Assert.AreEqual(TimeSpan.FromMilliseconds(50), context.Progress);
             }
@@ -119,13 +119,13 @@
         public async Task execute_async_reports_progress_correctly_even_if_the_skip_ahead_exceeds_the_wait_duration()
         {
             var delayService = new DelayServiceMock(MockBehavior.Loose);
-            var waitAction = new WaitAction(delayService, TimeSpan.FromMilliseconds(50));
+            var sut = new WaitAction(delayService, TimeSpan.FromMilliseconds(50));
 
             using (var context = new ExecutionContext(TimeSpan.FromMilliseconds(100)))
             {
                 Assert.AreEqual(TimeSpan.Zero, context.Progress);
 
-                await waitAction.ExecuteAsync(context);
+                await sut.ExecuteAsync(context);
 
                 Assert.AreEqual(TimeSpan.FromMilliseconds(50), context.Progress);
             }
@@ -151,11 +151,11 @@
                         })
                     .Return(Task.FromResult(true));
 
-                var waitAction = new WaitAction(delayService, TimeSpan.FromSeconds(50));
+                var sut = new WaitAction(delayService, TimeSpan.FromSeconds(50));
 
                 try
                 {
-                    await waitAction.ExecuteAsync(context);
+                    await sut.ExecuteAsync(context);
                     Assert.Fail("Expecting operation cancelled exception.");
                 }
                 catch (OperationCanceledException)
@@ -186,9 +186,9 @@
                         })
                     .Return(Task.FromResult(true));
 
-                var waitAction = new WaitAction(delayService, TimeSpan.FromSeconds(50));
+                var sut = new WaitAction(delayService, TimeSpan.FromSeconds(50));
 
-                var task = waitAction.ExecuteAsync(context);
+                var task = sut.ExecuteAsync(context);
                 Assert.False(task.Wait(TimeSpan.FromMilliseconds(50)));
 
                 await context
