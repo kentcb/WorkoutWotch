@@ -1,14 +1,14 @@
-﻿using System;
-using NUnit.Framework;
-using WorkoutWotch.Models.Actions;
-using WorkoutWotch.Models;
-using System.Linq;
-using WorkoutWotch.UnitTests.Models.Mocks;
-using Kent.Boogaart.PCLMock;
-using System.Threading.Tasks;
-
-namespace WorkoutWotch.UnitTests.Models.Actions
+﻿namespace WorkoutWotch.UnitTests.Models.Actions
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.PCLMock;
+    using NUnit.Framework;
+    using WorkoutWotch.Models;
+    using WorkoutWotch.Models.Actions;
+    using WorkoutWotch.UnitTests.Models.Mocks;
+
     [TestFixture]
     public class ParallelActionFixture
     {
@@ -244,4 +244,3 @@ namespace WorkoutWotch.UnitTests.Models.Actions
         }
     }
 }
-

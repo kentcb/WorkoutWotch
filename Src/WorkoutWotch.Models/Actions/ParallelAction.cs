@@ -1,15 +1,15 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using System.Linq;
-using ReactiveUI;
-using System.Reactive.Linq;
-using System.Diagnostics;
-
-namespace WorkoutWotch.Models.Actions
+﻿namespace WorkoutWotch.Models.Actions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.Immutable;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Reactive.Linq;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using ReactiveUI;
+
     public sealed class ParallelAction : IAction
     {
         private readonly IImmutableList<IAction> children;
@@ -40,7 +40,7 @@ namespace WorkoutWotch.Models.Actions
                 .OrderByDescending(x => x.Duration)
                 .GroupBy(x => context.SkipAhead > TimeSpan.Zero && context.SkipAhead >= x.Duration)
                 .ToList();
-            var childrenToExecute  = childrenGroupedBySkip
+            var childrenToExecute = childrenGroupedBySkip
                 .SingleOrDefault(x => !x.Key)
                 .ToList();
 
@@ -56,7 +56,9 @@ namespace WorkoutWotch.Models.Actions
                 .Select(x => x.ExecuteAsync(shadowedContext))
                 .ToList();
 
-            await Task.WhenAll(firstChildExecution.Concat(subsequentChildExecutions)).ContinueOnAnyContext();
+            await Task
+                .WhenAll(firstChildExecution.Concat(subsequentChildExecutions))
+                .ContinueOnAnyContext();
         }
 
         private static ExecutionContext CreateShadowExecutionContext(ExecutionContext context)
@@ -88,4 +90,3 @@ namespace WorkoutWotch.Models.Actions
         }
     }
 }
-
