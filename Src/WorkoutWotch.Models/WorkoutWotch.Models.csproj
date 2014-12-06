@@ -54,6 +54,7 @@
     <Compile Include="Actions\SequenceAction.cs" />
     <Compile Include="Actions\ParallelAction.cs" />
     <Compile Include="Actions\WaitAction.cs" />
+    <Compile Include="Actions\SayAction.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
