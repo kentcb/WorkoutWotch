@@ -1,14 +1,13 @@
-﻿using System;
-using NUnit.Framework;
-using WorkoutWotch.Models.Actions;
-using WorkoutWotch.UnitTests.Services.Audio.Mocks;
-using System.Threading.Tasks;
-using WorkoutWotch.Models;
-using Kent.Boogaart.PCLMock;
-using System.Threading;
-
-namespace WorkoutWotch.UnitTests.Models.Actions
+﻿namespace WorkoutWotch.UnitTests.Models.Actions
 {
+    using System;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.PCLMock;
+    using NUnit.Framework;
+    using WorkoutWotch.Models;
+    using WorkoutWotch.Models.Actions;
+    using WorkoutWotch.UnitTests.Services.Audio.Mocks;
+
     [TestFixture]
     public class AudioActionFixture
     {
@@ -84,4 +83,3 @@ namespace WorkoutWotch.UnitTests.Models.Actions
         }
     }
 }
-
