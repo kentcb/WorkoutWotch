@@ -31,3 +31,5 @@ A repository for my video series on building an iOS app with C#. Here is a full 
   * [Video 09: Sequence Action](http://youtu.be/BZlbV4XxiCY)
   * [Video 10: Parallel Action](http://youtu.be/bHuBNTho8FU)
   * [Video 11: Wait Action](http://youtu.be/YFzeeR8PUKk)
+  * [Video 12: Say Action](http://youtu.be/lgYuwaa54SU)
+  * [Video 13: Audio Action](http://youtu.be/AQ_LRVwieB4)
