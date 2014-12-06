@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using WorkoutWotch.Services.Contracts.Speech;
-using Kent.Boogaart.HelperTrinity.Extensions;
-
-namespace WorkoutWotch.Models.Actions
+﻿namespace WorkoutWotch.Models.Actions
 {
+    using System;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using WorkoutWotch.Services.Contracts.Speech;
+
     public sealed class SayAction : IAction
     {
         private readonly ISpeechService speechService;
@@ -39,4 +39,3 @@ namespace WorkoutWotch.Models.Actions
         }
     }
 }
-

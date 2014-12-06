@@ -1,14 +1,14 @@
-﻿using System;
-using NUnit.Framework;
-using WorkoutWotch.Models.Actions;
-using WorkoutWotch.UnitTests.Services.Speech.Mocks;
-using WorkoutWotch.Models;
-using System.Threading.Tasks;
-using Kent.Boogaart.PCLMock;
-using System.Threading;
-
-namespace WorkoutWotch.UnitTests.Models.Actions
+﻿namespace WorkoutWotch.UnitTests.Models.Actions
 {
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.PCLMock;
+    using NUnit.Framework;
+    using WorkoutWotch.Models;
+    using WorkoutWotch.Models.Actions;
+    using WorkoutWotch.UnitTests.Services.Speech.Mocks;
+
     [TestFixture]
     public class SayActionFixture
     {
@@ -84,4 +84,3 @@ namespace WorkoutWotch.UnitTests.Models.Actions
         }
     }
 }
-
