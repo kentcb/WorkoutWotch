@@ -55,6 +55,7 @@
     <Compile Include="Actions\ParallelAction.cs" />
     <Compile Include="Actions\WaitAction.cs" />
     <Compile Include="Actions\SayAction.cs" />
+    <Compile Include="Actions\AudioAction.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
