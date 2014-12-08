@@ -78,6 +78,7 @@
     <Compile Include="Services\Speech\Mocks\SpeechServiceMock.cs" />
     <Compile Include="Models\Actions\SayActionFixture.cs" />
     <Compile Include="Models\Actions\AudioActionFixture.cs" />
+    <Compile Include="Models\Actions\MetronomeActionFixture.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
