@@ -89,8 +89,6 @@
 
             await sut.ExecuteAsync(new ExecutionContext());
 
-            var copy = actionsPerformed.ToList();
-
             Assert.AreEqual(8, actionsPerformed.Count);
             Assert.AreEqual("Played audio resource Audio/MetronomeBell.mp3", actionsPerformed[0]);
             Assert.AreEqual("Delayed for 00:00:00.0100000", actionsPerformed[1]);
