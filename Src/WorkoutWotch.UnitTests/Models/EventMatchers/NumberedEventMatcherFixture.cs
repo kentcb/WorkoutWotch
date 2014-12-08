@@ -1,11 +1,11 @@
-﻿using System;
-using NUnit.Framework;
-using WorkoutWotch.Models.EventMatchers;
-using WorkoutWotch.Models.Events;
-using WorkoutWotch.Models;
-
-namespace WorkoutWotch.UnitTests.Models.EventMatchers
+﻿namespace WorkoutWotch.UnitTests.Models.EventMatchers
 {
+    using System;
+    using NUnit.Framework;
+    using WorkoutWotch.Models;
+    using WorkoutWotch.Models.EventMatchers;
+    using WorkoutWotch.Models.Events;
+
     [TestFixture]
     public class NumberedEventMatcherFixture
     {
@@ -37,4 +37,3 @@ namespace WorkoutWotch.UnitTests.Models.EventMatchers
         }
     }
 }
-

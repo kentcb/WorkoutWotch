@@ -1,9 +1,9 @@
-﻿using System;
-using WorkoutWotch.Models.Events;
-using Kent.Boogaart.HelperTrinity.Extensions;
-
-namespace WorkoutWotch.Models.EventMatchers
+﻿namespace WorkoutWotch.Models.EventMatchers
 {
+    using System;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using WorkoutWotch.Models.Events;
+
     public sealed class NumberedEventMatcher<T> : IEventMatcher
         where T : NumberedEvent
     {
@@ -28,4 +28,3 @@ namespace WorkoutWotch.Models.EventMatchers
         }
     }
 }
-
