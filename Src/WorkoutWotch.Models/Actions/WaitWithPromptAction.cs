@@ -10,8 +10,6 @@
     public sealed class WaitWithPromptAction : IAction
     {
         private static readonly TimeSpan minimumBreakToIncludeReady = TimeSpan.FromSeconds(2);
-        private readonly IDelayService delayService;
-        private readonly ISpeechService speechService;
         private readonly SequenceAction innerAction;
 
         public WaitWithPromptAction(IDelayService delayService, ISpeechService speechService, TimeSpan duration, string promptSpeechText)
@@ -25,8 +23,6 @@
                 throw new ArgumentException("duration must be greater than or equal to zero.", "duration");
             }
 
-            this.delayService = delayService;
-            this.speechService = speechService;
             this.innerAction = new SequenceAction(GetInnerActions(delayService, speechService, duration, promptSpeechText));
         }
 
