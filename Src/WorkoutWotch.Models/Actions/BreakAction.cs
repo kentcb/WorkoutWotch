@@ -1,12 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using WorkoutWotch.Services.Contracts.Speech;
-using WorkoutWotch.Services.Contracts.Delay;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using System.Collections.Generic;
-
-namespace WorkoutWotch.Models.Actions
+﻿namespace WorkoutWotch.Models.Actions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using WorkoutWotch.Services.Contracts.Delay;
+    using WorkoutWotch.Services.Contracts.Speech;
+
     public sealed class BreakAction : IAction
     {
         private static readonly TimeSpan minimumBreakToIncludeReady = TimeSpan.FromSeconds(2);
@@ -63,4 +63,3 @@ namespace WorkoutWotch.Models.Actions
         }
     }
 }
-
