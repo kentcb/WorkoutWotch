@@ -5,13 +5,13 @@ using WorkoutWotch.Services.Contracts.Speech;
 
 namespace WorkoutWotch.Models.Actions
 {
-    public sealed class BreakAction : IAction
+    public sealed class PrepareAction : IAction
     {
         private readonly WaitWithPromptAction innerAction;
 
-        public BreakAction(IDelayService delayService, ISpeechService speechService, TimeSpan duration)
+        public PrepareAction(IDelayService delayService, ISpeechService speechService, TimeSpan duration)
         {
-            this.innerAction = new WaitWithPromptAction(delayService, speechService, duration, "break");
+            this.innerAction = new WaitWithPromptAction(delayService, speechService, duration, "prepare");
         }
 
         public TimeSpan Duration

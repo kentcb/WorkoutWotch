@@ -59,7 +59,9 @@
     <Compile Include="Actions\MetronomeAction.cs" />
     <Compile Include="Actions\MetronomeTick.cs" />
     <Compile Include="Actions\MetronomeTickType.cs" />
+    <Compile Include="Actions\WaitWithPromptAction.cs" />
     <Compile Include="Actions\BreakAction.cs" />
+    <Compile Include="Actions\PrepareAction.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
