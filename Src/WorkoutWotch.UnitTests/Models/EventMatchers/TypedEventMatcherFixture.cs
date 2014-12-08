@@ -1,14 +1,14 @@
-﻿using System;
-using NUnit.Framework;
-using WorkoutWotch.Models.EventMatchers;
-using WorkoutWotch.Models.Events;
-using WorkoutWotch.Models;
-using System.Linq;
-using WorkoutWotch.UnitTests.Services.Logger.Mocks;
-using Kent.Boogaart.PCLMock;
-
-namespace WorkoutWotch.UnitTests.Models.EventMatchers
+﻿namespace WorkoutWotch.UnitTests.Models.EventMatchers
 {
+    using System;
+    using System.Linq;
+    using Kent.Boogaart.PCLMock;
+    using NUnit.Framework;
+    using WorkoutWotch.Models;
+    using WorkoutWotch.Models.EventMatchers;
+    using WorkoutWotch.Models.Events;
+    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
+
     [TestFixture]
     public class TypedEventMatcherFixture
     {
@@ -40,4 +40,3 @@ namespace WorkoutWotch.UnitTests.Models.EventMatchers
         }
     }
 }
-

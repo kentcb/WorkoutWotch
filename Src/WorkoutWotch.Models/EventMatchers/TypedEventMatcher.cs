@@ -1,8 +1,7 @@
-﻿using System;
-using Kent.Boogaart.HelperTrinity.Extensions;
-
-namespace WorkoutWotch.Models.EventMatchers
+﻿namespace WorkoutWotch.Models.EventMatchers
 {
+    using Kent.Boogaart.HelperTrinity.Extensions;
+
     public sealed class TypedEventMatcher<T> : IEventMatcher
         where T : IEvent
     {
@@ -13,4 +12,3 @@ namespace WorkoutWotch.Models.EventMatchers
         }
     }
 }
-
