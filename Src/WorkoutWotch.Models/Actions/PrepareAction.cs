@@ -21,7 +21,10 @@
 
         public async Task ExecuteAsync(ExecutionContext context)
         {
-            await this.innerAction.ExecuteAsync(context);
+            await this
+                .innerAction
+                .ExecuteAsync(context)
+                .ContinueOnAnyContext();
         }
     }
 }
