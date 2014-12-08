@@ -80,6 +80,7 @@
     <Compile Include="Models\Actions\AudioActionFixture.cs" />
     <Compile Include="Models\Actions\MetronomeActionFixture.cs" />
     <Compile Include="Models\Actions\WaitWithPromptActionFixture.cs" />
+    <Compile Include="Models\EventMatchers\TypedEventMatcherFixture.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -143,6 +144,7 @@
     <Folder Include="Services\Audio\Mocks\" />
     <Folder Include="Services\Delay\Mocks\" />
     <Folder Include="Services\Speech\Mocks\" />
+    <Folder Include="Models\EventMatchers\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WorkoutWotch.Services\WorkoutWotch.Services.csproj">

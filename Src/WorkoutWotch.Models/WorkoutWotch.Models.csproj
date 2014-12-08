@@ -62,6 +62,7 @@
     <Compile Include="Actions\WaitWithPromptAction.cs" />
     <Compile Include="Actions\BreakAction.cs" />
     <Compile Include="Actions\PrepareAction.cs" />
+    <Compile Include="EventMatchers\TypedEventMatcher.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -106,5 +107,6 @@
   <ItemGroup>
     <Folder Include="Events\" />
     <Folder Include="Actions\" />
+    <Folder Include="EventMatchers\" />
   </ItemGroup>
 </Project>
