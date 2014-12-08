@@ -1,17 +1,17 @@
-﻿using System;
-using NUnit.Framework;
-using WorkoutWotch.UnitTests.Services.Delay.Mocks;
-using WorkoutWotch.Models.Actions;
-using System.Linq;
-using WorkoutWotch.UnitTests.Services.Audio.Mocks;
-using System.Collections.Generic;
-using Kent.Boogaart.PCLMock;
-using System.Threading;
-using System.Threading.Tasks;
-using WorkoutWotch.Models;
-
-namespace WorkoutWotch.UnitTests.Models.Actions
+﻿namespace WorkoutWotch.UnitTests.Models.Actions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.PCLMock;
+    using NUnit.Framework;
+    using WorkoutWotch.Models;
+    using WorkoutWotch.Models.Actions;
+    using WorkoutWotch.UnitTests.Services.Audio.Mocks;
+    using WorkoutWotch.UnitTests.Services.Delay.Mocks;
+
     [TestFixture]
     public class MetronomeActionFixture
     {
@@ -103,4 +103,3 @@ namespace WorkoutWotch.UnitTests.Models.Actions
         }
     }
 }
-

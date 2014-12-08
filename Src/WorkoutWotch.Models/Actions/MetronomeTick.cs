@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace WorkoutWotch.Models.Actions
+﻿namespace WorkoutWotch.Models.Actions
 {
+    using System;
+
     public struct MetronomeTick
     {
         private readonly TimeSpan periodBefore;
@@ -15,13 +15,12 @@ namespace WorkoutWotch.Models.Actions
 
         public TimeSpan PeriodBefore
         {
-            get{return this.periodBefore;}
+            get { return this.periodBefore; }
         }
 
         public MetronomeTickType Type
         {
-            get{return this.type;}
+            get { return this.type; }
         }
     }
 }
-
