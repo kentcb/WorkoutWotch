@@ -81,6 +81,7 @@
     <Compile Include="Models\Actions\MetronomeActionFixture.cs" />
     <Compile Include="Models\Actions\WaitWithPromptActionFixture.cs" />
     <Compile Include="Models\EventMatchers\TypedEventMatcherFixture.cs" />
+    <Compile Include="Models\EventMatchers\NumberedEventMatcherFixture.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

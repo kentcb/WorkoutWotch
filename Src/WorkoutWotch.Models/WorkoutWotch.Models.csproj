@@ -63,6 +63,7 @@
     <Compile Include="Actions\BreakAction.cs" />
     <Compile Include="Actions\PrepareAction.cs" />
     <Compile Include="EventMatchers\TypedEventMatcher.cs" />
+    <Compile Include="EventMatchers\NumberedEventMatcher.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
