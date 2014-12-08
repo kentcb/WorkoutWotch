@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using WorkoutWotch.Services.Contracts.Delay;
-using WorkoutWotch.Services.Contracts.Speech;
-
-namespace WorkoutWotch.Models.Actions
+﻿namespace WorkoutWotch.Models.Actions
 {
+    using System;
+    using System.Threading.Tasks;
+    using WorkoutWotch.Services.Contracts.Delay;
+    using WorkoutWotch.Services.Contracts.Speech;
+
     public sealed class PrepareAction : IAction
     {
         private readonly WaitWithPromptAction innerAction;
@@ -25,4 +25,3 @@ namespace WorkoutWotch.Models.Actions
         }
     }
 }
-
