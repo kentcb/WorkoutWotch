@@ -33,3 +33,8 @@ A repository for my video series on building an iOS app with C#. Here is a full 
   * [Video 11: Wait Action](http://youtu.be/YFzeeR8PUKk)
   * [Video 12: Say Action](http://youtu.be/lgYuwaa54SU)
   * [Video 13: Audio Action](http://youtu.be/AQ_LRVwieB4)
+  * [Video 14: Metronome Action](http://youtu.be/QeO9k40c0hc)
+  * [Video 15: Break Action](http://youtu.be/TzZiCB9hLO4)
+  * [Video 16: Prepare Action](http://youtu.be/9-S3tyZ9kpc)
+  * [Video 17: Typed Event Matcher](http://youtu.be/ysFaLQp2Ym0)
+  * [Video 18: Numbered Event Matcher](http://youtu.be/UukmAbk-5Ic)
