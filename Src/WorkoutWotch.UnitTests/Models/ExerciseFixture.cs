@@ -1,13 +1,11 @@
-﻿using WorkoutWotch.UnitTests.Services.Speech.Mocks;
-using System.Threading;
-
-namespace WorkoutWotch.UnitTests.Models
+﻿namespace WorkoutWotch.UnitTests.Models
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reactive.Linq;
     using System.Reactive.Threading.Tasks;
+    using System.Threading;
     using System.Threading.Tasks;
     using Kent.Boogaart.PCLMock;
     using NUnit.Framework;
@@ -16,6 +14,7 @@ namespace WorkoutWotch.UnitTests.Models
     using WorkoutWotch.Models.Events;
     using WorkoutWotch.UnitTests.Models.Mocks;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
+    using WorkoutWotch.UnitTests.Services.Speech.Mocks;
 
     [TestFixture]
     public class ExerciseFixture

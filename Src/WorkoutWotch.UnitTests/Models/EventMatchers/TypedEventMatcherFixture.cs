@@ -1,6 +1,4 @@
-﻿using WorkoutWotch.UnitTests.Services.Speech.Mocks;
-
-namespace WorkoutWotch.UnitTests.Models.EventMatchers
+﻿namespace WorkoutWotch.UnitTests.Models.EventMatchers
 {
     using System;
     using System.Linq;
@@ -10,6 +8,7 @@ namespace WorkoutWotch.UnitTests.Models.EventMatchers
     using WorkoutWotch.Models.EventMatchers;
     using WorkoutWotch.Models.Events;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
+    using WorkoutWotch.UnitTests.Services.Speech.Mocks;
 
     [TestFixture]
     public class TypedEventMatcherFixture

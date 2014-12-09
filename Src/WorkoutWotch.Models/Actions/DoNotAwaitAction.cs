@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using WorkoutWotch.Services.Contracts.Logger;
-using Kent.Boogaart.HelperTrinity.Extensions;
-
-namespace WorkoutWotch.Models.Actions
+﻿namespace WorkoutWotch.Models.Actions
 {
+    using System;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using WorkoutWotch.Services.Contracts.Logger;
+
     public sealed class DoNotAwaitAction : IAction
     {
         private readonly ILogger logger;
@@ -43,4 +43,3 @@ namespace WorkoutWotch.Models.Actions
         }
     }
 }
-

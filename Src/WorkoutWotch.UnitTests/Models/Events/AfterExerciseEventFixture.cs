@@ -1,6 +1,4 @@
-﻿using WorkoutWotch.UnitTests.Services.Speech.Mocks;
-
-namespace WorkoutWotch.UnitTests.Models.Events
+﻿namespace WorkoutWotch.UnitTests.Models.Events
 {
     using System.Linq;
     using Kent.Boogaart.PCLMock;
@@ -8,6 +6,7 @@ namespace WorkoutWotch.UnitTests.Models.Events
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Events;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
+    using WorkoutWotch.UnitTests.Services.Speech.Mocks;
 
     [TestFixture]
     public class AfterExerciseEventFixture

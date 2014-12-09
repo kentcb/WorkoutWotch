@@ -1,6 +1,4 @@
-﻿using WorkoutWotch.UnitTests.Services.Logger.Mocks;
-
-namespace WorkoutWotch.UnitTests.Models.Actions
+﻿namespace WorkoutWotch.UnitTests.Models.Actions
 {
     using System;
     using System.Collections.Generic;
@@ -13,6 +11,7 @@ namespace WorkoutWotch.UnitTests.Models.Actions
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.UnitTests.Services.Audio.Mocks;
     using WorkoutWotch.UnitTests.Services.Delay.Mocks;
+    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
 
     [TestFixture]
     public class MetronomeActionFixture

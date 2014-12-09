@@ -1,15 +1,15 @@
-﻿using System;
-using NUnit.Framework;
-using WorkoutWotch.Models.Actions;
-using WorkoutWotch.UnitTests.Models.Mocks;
-using Kent.Boogaart.PCLMock;
-using WorkoutWotch.Models;
-using System.Threading.Tasks;
-using WorkoutWotch.UnitTests.Services.Logger.Mocks;
-using System.Threading;
-
-namespace WorkoutWotch.UnitTests.Models.Actions
+﻿namespace WorkoutWotch.UnitTests.Models.Actions
 {
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.PCLMock;
+    using NUnit.Framework;
+    using WorkoutWotch.Models;
+    using WorkoutWotch.Models.Actions;
+    using WorkoutWotch.UnitTests.Models.Mocks;
+    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
+
     [TestFixture]
     public class DoNotAwaitActionFixture
     {
@@ -75,4 +75,3 @@ namespace WorkoutWotch.UnitTests.Models.Actions
         }
     }
 }
-

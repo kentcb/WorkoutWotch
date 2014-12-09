@@ -1,6 +1,4 @@
-﻿using WorkoutWotch.Services.Contracts.Logger;
-
-namespace WorkoutWotch.Models.Actions
+﻿namespace WorkoutWotch.Models.Actions
 {
     using System;
     using System.Collections.Generic;
@@ -8,6 +6,7 @@ namespace WorkoutWotch.Models.Actions
     using Kent.Boogaart.HelperTrinity.Extensions;
     using WorkoutWotch.Services.Contracts.Audio;
     using WorkoutWotch.Services.Contracts.Delay;
+    using WorkoutWotch.Services.Contracts.Logger;
 
     public sealed class MetronomeAction : IAction
     {

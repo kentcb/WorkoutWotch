@@ -1,6 +1,4 @@
-﻿using WorkoutWotch.UnitTests.Services.Speech.Mocks;
-
-namespace WorkoutWotch.UnitTests.Models
+﻿namespace WorkoutWotch.UnitTests.Models
 {
     using System;
     using System.Collections.Generic;
@@ -12,6 +10,7 @@ namespace WorkoutWotch.UnitTests.Models
     using WorkoutWotch.Models.Events;
     using WorkoutWotch.UnitTests.Models.Mocks;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
+    using WorkoutWotch.UnitTests.Services.Speech.Mocks;
 
     [TestFixture]
     public class ExerciseProgramFixture

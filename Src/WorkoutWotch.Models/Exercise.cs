@@ -1,6 +1,3 @@
-using WorkoutWotch.Services.Contracts.Speech;
-using WorkoutWotch.Models.Actions;
-
 namespace WorkoutWotch.Models
 {
     using System;
@@ -10,6 +7,8 @@ namespace WorkoutWotch.Models
     using System.Threading.Tasks;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using WorkoutWotch.Services.Contracts.Logger;
+    using WorkoutWotch.Services.Contracts.Speech;
+    using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Models.Events;
 
 	public sealed class Exercise

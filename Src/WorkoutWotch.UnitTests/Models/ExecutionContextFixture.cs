@@ -1,6 +1,4 @@
-﻿using WorkoutWotch.UnitTests.Services.Speech.Mocks;
-
-namespace WorkoutWotch.UnitTests.Models
+﻿namespace WorkoutWotch.UnitTests.Models
 {
     using System;
     using System.Linq;
@@ -10,6 +8,7 @@ namespace WorkoutWotch.UnitTests.Models
     using ReactiveUI;
     using WorkoutWotch.Models;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
+    using WorkoutWotch.UnitTests.Services.Speech.Mocks;
 
     [TestFixture]
     public class ExecutionContextFixture
