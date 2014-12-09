@@ -38,3 +38,4 @@ A repository for my video series on building an iOS app with C#. Here is a full 
   * [Video 16: Prepare Action](http://youtu.be/9-S3tyZ9kpc)
   * [Video 17: Typed Event Matcher](http://youtu.be/ysFaLQp2Ym0)
   * [Video 18: Numbered Event Matcher](http://youtu.be/UukmAbk-5Ic)
+  * [Video 19: Review](http://youtu.be/qHNEc0BVRhc)
