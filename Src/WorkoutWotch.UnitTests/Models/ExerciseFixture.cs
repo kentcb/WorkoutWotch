@@ -1,4 +1,7 @@
-﻿namespace WorkoutWotch.UnitTests.Models
+﻿using WorkoutWotch.UnitTests.Services.Speech.Mocks;
+using System.Threading;
+
+namespace WorkoutWotch.UnitTests.Models
 {
     using System;
     using System.Collections.Generic;
@@ -20,58 +23,64 @@
         [Test]
         public void ctor_throws_if_logger_service_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new Exercise(null, "name", 3, 10, Enumerable.Empty<MatcherWithAction>()));
+            Assert.Throws<ArgumentNullException>(() => new Exercise(null, new SpeechServiceMock(), "name", 3, 10, Enumerable.Empty<MatcherWithAction>()));
+        }
+
+        [Test]
+        public void ctor_throws_if_speech_service_is_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new Exercise(new LoggerServiceMock(), null, "name", 3, 10, Enumerable.Empty<MatcherWithAction>()));
         }
 
         [Test]
         public void ctor_throws_if_name_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), null, 3, 10, Enumerable.Empty<MatcherWithAction>()));
+            Assert.Throws<ArgumentNullException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), null, 3, 10, Enumerable.Empty<MatcherWithAction>()));
         }
 
         [Test]
         public void ctor_throws_if_set_count_is_less_than_zero()
         {
-            Assert.Throws<ArgumentException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", -3, 10, Enumerable.Empty<MatcherWithAction>()));
+            Assert.Throws<ArgumentException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "name", -3, 10, Enumerable.Empty<MatcherWithAction>()));
         }
 
         [Test]
         public void ctor_throws_if_repetition_count_is_less_than_zero()
         {
-            Assert.Throws<ArgumentException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 3, -10, Enumerable.Empty<MatcherWithAction>()));
+            Assert.Throws<ArgumentException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "name", 3, -10, Enumerable.Empty<MatcherWithAction>()));
         }
 
         [Test]
         public void ctor_throws_if_matchers_with_actions_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 3, 10, null));
+            Assert.Throws<ArgumentNullException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "name", 3, 10, null));
         }
 
         [Test]
         public void name_gets_name_passed_into_ctor()
         {
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
             Assert.AreEqual("some name", sut.Name);
         }
 
         [Test]
         public void set_count_gets_set_count_passed_into_ctor()
         {
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
             Assert.AreEqual(3, sut.SetCount);
         }
 
         [Test]
         public void repetition_count_gets_repetition_count_passed_into_ctor()
         {
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
             Assert.AreEqual(10, sut.RepetitionCount);
         }
 
         [Test]
         public void duration_returns_zero_if_there_are_no_actions()
         {
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
             Assert.AreEqual(TimeSpan.Zero, sut.Duration);
         }
 
@@ -96,14 +105,14 @@
                 new MatcherWithAction(eventMatcher2, action2),
                 new MatcherWithAction(eventMatcher3, action3),
             };
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "name", 2, 3, matchersWithActions);
             Assert.AreEqual(TimeSpan.FromSeconds(30), sut.Duration);
         }
 
         [Test]
         public void execute_async_throws_if_execution_context_is_null()
         {
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, Enumerable.Empty<MatcherWithAction>());
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "name", 2, 3, Enumerable.Empty<MatcherWithAction>());
             Assert.Throws<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
@@ -125,7 +134,7 @@
                 new MatcherWithAction(eventMatcher2, action2),
                 new MatcherWithAction(eventMatcher3, action3),
             };
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
 
             using (var executionContext = new ExecutionContext())
             {
@@ -147,7 +156,7 @@
             {
                 new MatcherWithAction(eventMatcher, action)
             };
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
 
             using (var executionContext = new ExecutionContext())
             {
@@ -179,7 +188,7 @@
                 new MatcherWithAction(eventMatcher2, action2),
                 new MatcherWithAction(eventMatcher3, action3),
             };
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
 
             using (var executionContext = new ExecutionContext(TimeSpan.FromSeconds(13)))
             {
@@ -212,7 +221,7 @@
                 new MatcherWithAction(eventMatcher2, action2),
                 new MatcherWithAction(eventMatcher3, action3),
             };
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
 
             using (var executionContext = new ExecutionContext(TimeSpan.FromSeconds(13)))
             {
@@ -226,7 +235,7 @@
         [Test]
         public async Task execute_async_updates_the_current_exercise_in_the_context()
         {
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 2, 3, Enumerable.Empty<MatcherWithAction>());
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), "name", 2, 3, Enumerable.Empty<MatcherWithAction>());
             var context = new ExecutionContext();
 
             await sut.ExecuteAsync(context);
@@ -237,7 +246,7 @@
         [Test]
         public async Task execute_async_updates_the_current_set_in_the_context()
         {
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 3, 5, Enumerable.Empty<MatcherWithAction>());
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), "name", 3, 5, Enumerable.Empty<MatcherWithAction>());
             var context = new ExecutionContext();
             var currentSetsTask = context
                 .ObservableForProperty(x => x.CurrentSet)
@@ -258,7 +267,7 @@
         [Test]
         public async Task execute_async_updates_the_current_repetitions_in_the_context()
         {
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 3, 5, Enumerable.Empty<MatcherWithAction>());
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), "name", 3, 5, Enumerable.Empty<MatcherWithAction>());
             var context = new ExecutionContext();
             var currentRepetitionsTask = context
                 .ObservableForProperty(x => x.CurrentRepetition)
@@ -276,6 +285,17 @@
             Assert.AreEqual(3, currentRepetitions[2]);
             Assert.AreEqual(4, currentRepetitions[3]);
             Assert.AreEqual(5, currentRepetitions[4]);
+        }
+
+        [Test]
+        public async Task execute_async_says_exercise_name_first()
+        {
+            var speechService = new SpeechServiceMock(MockBehavior.Loose);
+            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), speechService, "some name", 3, 5, Enumerable.Empty<MatcherWithAction>());
+
+            await sut.ExecuteAsync(new ExecutionContext());
+
+            speechService.Verify(x => x.SpeakAsync(It.Is("some name"), It.IsAny<CancellationToken>())).WasCalledExactlyOnce();
         }
     }
 }

@@ -1,3 +1,6 @@
+using WorkoutWotch.Services.Contracts.Speech;
+using WorkoutWotch.Models.Actions;
+
 namespace WorkoutWotch.Models
 {
     using System;
@@ -12,15 +15,17 @@ namespace WorkoutWotch.Models
 	public sealed class Exercise
 	{
         private readonly ILogger logger;
+        private readonly ISpeechService speechService;
         private readonly string name;
         private readonly int setCount;
         private readonly int repetitionCount;
         private readonly IImmutableList<MatcherWithAction> matchersWithActions;
         private readonly TimeSpan duration;
 
-        public Exercise(ILoggerService loggerService, string name, int setCount, int repetitionCount, IEnumerable<MatcherWithAction> matchersWithActions)
+        public Exercise(ILoggerService loggerService, ISpeechService speechService, string name, int setCount, int repetitionCount, IEnumerable<MatcherWithAction> matchersWithActions)
         {
             loggerService.AssertNotNull("loggerService");
+            speechService.AssertNotNull("speechService");
             name.AssertNotNull("name");
             matchersWithActions.AssertNotNull("matchersWithActions");
 
@@ -35,6 +40,7 @@ namespace WorkoutWotch.Models
             }
 
             this.logger = loggerService.GetLogger(this.GetType());
+            this.speechService = speechService;
             this.name = name;
             this.setCount = setCount;
             this.repetitionCount = repetitionCount;
@@ -128,10 +134,22 @@ namespace WorkoutWotch.Models
 
         private IEnumerable<IAction> GetActionsForEvent(IEvent @event)
         {
-            return this
-                .matchersWithActions
-                .Where(x => x.Matcher.Matches(@event))
-                .Select(x => x.Action);
+            BeforeExerciseEvent beforeExerciseEvent;
+
+            if ((beforeExerciseEvent = @event as BeforeExerciseEvent) != null)
+            {
+                yield return new SayAction(this.speechService, beforeExerciseEvent.Exercise.Name);
+            }
+
+            foreach (var matcherWithAction in this.matchersWithActions)
+            {
+                if (!matcherWithAction.Matcher.Matches(@event))
+                {
+                    continue;
+                }
+
+                yield return matcherWithAction.Action;
+            }
         }
 
         private struct EventWithActions

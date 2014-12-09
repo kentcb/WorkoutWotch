@@ -1,4 +1,6 @@
-﻿namespace WorkoutWotch.Models.Actions
+﻿using WorkoutWotch.Services.Contracts.Logger;
+
+namespace WorkoutWotch.Models.Actions
 {
     using System;
     using System.Collections.Generic;
@@ -11,13 +13,14 @@
     {
         private readonly SequenceAction innerAction;
 
-        public MetronomeAction(IAudioService audioService, IDelayService delayService, IEnumerable<MetronomeTick> ticks)
+        public MetronomeAction(IAudioService audioService, IDelayService delayService, ILoggerService loggerService, IEnumerable<MetronomeTick> ticks)
         {
             audioService.AssertNotNull("audioService");
             delayService.AssertNotNull("delayService");
+            loggerService.AssertNotNull("loggerService");
             ticks.AssertNotNull("ticks");
 
-            this.innerAction = new SequenceAction(GetInnerActions(audioService, delayService, ticks));
+            this.innerAction = new SequenceAction(GetInnerActions(audioService, delayService, loggerService, ticks));
         }
 
         public TimeSpan Duration
@@ -35,7 +38,7 @@
                 .ContinueOnAnyContext();
         }
 
-        private static IEnumerable<IAction> GetInnerActions(IAudioService audioService, IDelayService delayService, IEnumerable<MetronomeTick> ticks)
+        private static IEnumerable<IAction> GetInnerActions(IAudioService audioService, IDelayService delayService, ILoggerService loggerService, IEnumerable<MetronomeTick> ticks)
         {
             foreach (var tick in ticks)
             {
@@ -44,10 +47,10 @@
                 switch (tick.Type)
                 {
                     case MetronomeTickType.Click:
-                        yield return new AudioAction(audioService, "Audio/MetronomeClick.mp3");
+                        yield return new DoNotAwaitAction(loggerService, new AudioAction(audioService, "Audio/MetronomeClick.mp3"));
                         break;
                     case MetronomeTickType.Bell:
-                        yield return new AudioAction(audioService, "Audio/MetronomeBell.mp3");
+                        yield return new DoNotAwaitAction(loggerService, new AudioAction(audioService, "Audio/MetronomeBell.mp3"));
                         break;
                 }
             }

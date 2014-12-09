@@ -1,4 +1,6 @@
-﻿namespace WorkoutWotch.UnitTests.Models
+﻿using WorkoutWotch.UnitTests.Services.Speech.Mocks;
+
+namespace WorkoutWotch.UnitTests.Models
 {
     using System;
     using System.Collections.Generic;
@@ -155,7 +157,7 @@
                 matchers.Add(new MatcherWithAction(matcher, beforeExerciseAction));
             }
 
-            return new Exercise(new LoggerServiceMock(MockBehavior.Loose), name, 0, 0, matchers);
+            return new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), name, 0, 0, matchers);
         }
 
         #endregion

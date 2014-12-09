@@ -1,4 +1,6 @@
-﻿namespace WorkoutWotch.UnitTests.Models.EventMatchers
+﻿using WorkoutWotch.UnitTests.Services.Speech.Mocks;
+
+namespace WorkoutWotch.UnitTests.Models.EventMatchers
 {
     using System;
     using System.Linq;
@@ -22,14 +24,14 @@
         public void matches_returns_false_if_the_event_is_of_a_different_type()
         {
             var sut = new TypedEventMatcher<BeforeExerciseEvent>();
-            Assert.False(sut.Matches(new AfterExerciseEvent(new ExecutionContext(), new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 0, 0, Enumerable.Empty<MatcherWithAction>()))));
+            Assert.False(sut.Matches(new AfterExerciseEvent(new ExecutionContext(), new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), "name", 0, 0, Enumerable.Empty<MatcherWithAction>()))));
         }
 
         [Test]
         public void matches_returns_true_if_the_event_is_of_the_same_type()
         {
             var sut = new TypedEventMatcher<AfterExerciseEvent>();
-            Assert.True(sut.Matches(new AfterExerciseEvent(new ExecutionContext(), new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 0, 0, Enumerable.Empty<MatcherWithAction>()))));
+            Assert.True(sut.Matches(new AfterExerciseEvent(new ExecutionContext(), new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), "name", 0, 0, Enumerable.Empty<MatcherWithAction>()))));
         }
 
         [Test]

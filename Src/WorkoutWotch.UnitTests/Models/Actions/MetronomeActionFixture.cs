@@ -1,4 +1,6 @@
-﻿namespace WorkoutWotch.UnitTests.Models.Actions
+﻿using WorkoutWotch.UnitTests.Services.Logger.Mocks;
+
+namespace WorkoutWotch.UnitTests.Models.Actions
 {
     using System;
     using System.Collections.Generic;
@@ -18,25 +20,31 @@
         [Test]
         public void ctor_throws_if_audio_service_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new MetronomeAction(null, new DelayServiceMock(), Enumerable.Empty<MetronomeTick>()));
+            Assert.Throws<ArgumentNullException>(() => new MetronomeAction(null, new DelayServiceMock(), new LoggerServiceMock(), Enumerable.Empty<MetronomeTick>()));
         }
 
         [Test]
         public void ctor_throws_if_delay_service_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new MetronomeAction(new AudioServiceMock(), null, Enumerable.Empty<MetronomeTick>()));
+            Assert.Throws<ArgumentNullException>(() => new MetronomeAction(new AudioServiceMock(), null, new LoggerServiceMock(), Enumerable.Empty<MetronomeTick>()));
+        }
+
+        [Test]
+        public void ctor_throws_if_logger_service_is_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new MetronomeAction(new AudioServiceMock(), new DelayServiceMock(), null, Enumerable.Empty<MetronomeTick>()));
         }
 
         [Test]
         public void ctor_throws_if_ticks_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new MetronomeAction(new AudioServiceMock(), new DelayServiceMock(), null));
+            Assert.Throws<ArgumentNullException>(() => new MetronomeAction(new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(), null));
         }
 
         [Test]
         public void duration_is_zero_if_there_are_no_ticks()
         {
-            Assert.AreEqual(TimeSpan.Zero, new MetronomeAction(new AudioServiceMock(), new DelayServiceMock(), Enumerable.Empty<MetronomeTick>()).Duration);
+            Assert.AreEqual(TimeSpan.Zero, new MetronomeAction(new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose), Enumerable.Empty<MetronomeTick>()).Duration);
         }
 
         [Test]
@@ -50,7 +58,7 @@
                 new MetronomeTick(TimeSpan.FromMilliseconds(500))
             };
 
-            var sut = new MetronomeAction(new AudioServiceMock(), new DelayServiceMock(), ticks);
+            var sut = new MetronomeAction(new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose), ticks);
 
             Assert.AreEqual(TimeSpan.FromSeconds(3.5), sut.Duration);
         }
@@ -58,7 +66,7 @@
         [Test]
         public void execute_async_throws_if_context_is_null()
         {
-            Assert.Throws<ArgumentNullException>(async () => await new MetronomeAction(new AudioServiceMock(), new DelayServiceMock(), Enumerable.Empty<MetronomeTick>()).ExecuteAsync(null));
+            Assert.Throws<ArgumentNullException>(async () => await new MetronomeAction(new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose), Enumerable.Empty<MetronomeTick>()).ExecuteAsync(null));
         }
 
         [Test]
@@ -85,7 +93,7 @@
                 new MetronomeTick(TimeSpan.FromMilliseconds(50), MetronomeTickType.Bell),
                 new MetronomeTick(TimeSpan.FromMilliseconds(30), MetronomeTickType.None)
             };
-            var sut = new MetronomeAction(audioService, delayService, ticks);
+            var sut = new MetronomeAction(audioService, delayService, new LoggerServiceMock(MockBehavior.Loose), ticks);
 
             await sut.ExecuteAsync(new ExecutionContext());
 

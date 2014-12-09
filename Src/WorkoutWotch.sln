@@ -177,6 +177,6 @@ Global
 		{FF31957D-CE68-4633-9683-4D285C12F3F1}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = WorkoutWotch.UI.TestHarness\WorkoutWotch.UI.TestHarness.csproj
+		StartupItem = WorkoutWotch.UI.iOS\WorkoutWotch.UI.iOS.csproj
 	EndGlobalSection
 EndGlobal

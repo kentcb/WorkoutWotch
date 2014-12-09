@@ -1,4 +1,6 @@
-﻿namespace WorkoutWotch.UnitTests.Models
+﻿using WorkoutWotch.UnitTests.Services.Speech.Mocks;
+
+namespace WorkoutWotch.UnitTests.Models
 {
     using System;
     using System.Linq;
@@ -147,11 +149,11 @@
         public void setting_current_exercise_resets_the_current_exercise_progress_to_zero()
         {
             var sut = new ExecutionContext();
-            sut.SetCurrentExercise(new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 3, 10, Enumerable.Empty<MatcherWithAction>()));
+            sut.SetCurrentExercise(new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), "name", 3, 10, Enumerable.Empty<MatcherWithAction>()));
             sut.AddProgress(TimeSpan.FromMilliseconds(100));
             Assert.AreEqual(TimeSpan.FromMilliseconds(100), sut.CurrentExerciseProgress);
 
-            sut.SetCurrentExercise(new Exercise(new LoggerServiceMock(MockBehavior.Loose), "name", 3, 10, Enumerable.Empty<MatcherWithAction>()));
+            sut.SetCurrentExercise(new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), "name", 3, 10, Enumerable.Empty<MatcherWithAction>()));
             Assert.AreEqual(TimeSpan.Zero, sut.CurrentExerciseProgress);
 
             sut.AddProgress(TimeSpan.FromMilliseconds(150));
