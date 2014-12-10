@@ -39,3 +39,7 @@ A repository for my video series on building an iOS app with C#. Here is a full 
   * [Video 17: Typed Event Matcher](http://youtu.be/ysFaLQp2Ym0)
   * [Video 18: Numbered Event Matcher](http://youtu.be/UukmAbk-5Ic)
   * [Video 19: Review](http://youtu.be/qHNEc0BVRhc)
+  * [Video 20: Parsing Overview](http://youtu.be/Wx7FvPESEKs)
+  * [Video 21: String Literal Parser](http://youtu.be/D8SuTLoRlU8)
+  * [Video 22: New Line Parser](http://youtu.be/ugSu3bpEir8)
+  * [Video 23: TimeSpan Parser](http://youtu.be/2pixgW18IpI)
