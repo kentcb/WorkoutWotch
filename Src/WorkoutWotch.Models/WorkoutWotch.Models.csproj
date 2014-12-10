@@ -68,6 +68,7 @@
     <Compile Include="Parsers\StringLiteralParser.cs" />
     <Compile Include="Parsers\NewLineParser.cs" />
     <Compile Include="Parsers\NewLineType.cs" />
+    <Compile Include="Parsers\TimeSpanParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
