@@ -1,8 +1,8 @@
-﻿using System;
-using Sprache;
-
-namespace WorkoutWotch.Models.Parsers
+﻿namespace WorkoutWotch.Models.Parsers
 {
+    using System;
+    using Sprache;
+
     internal static class TimeSpanParser
     {
         private static readonly Parser<int> hoursParser = Parse.Number.Then(x => Parse.IgnoreCase('h').Return(int.Parse(x)));
@@ -21,4 +21,3 @@ namespace WorkoutWotch.Models.Parsers
             select new TimeSpan(hours.GetOrDefault(), minutes.GetOrDefault(), 0) + TimeSpan.FromSeconds(seconds.GetOrDefault());
     }
 }
-
