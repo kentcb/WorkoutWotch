@@ -17,8 +17,11 @@ namespace WorkoutWotch.UnitTests.Models.Parsers
         [TestCase("3s", 3 * msInSecond)]
         [TestCase("3h 4m", 3 * msInHour + 4 * msInMinute)]
         [TestCase("3h 4s", 3 * msInHour + 4 * msInSecond)]
+        [TestCase("3h4s", 3 * msInHour + 4 * msInSecond)]
         [TestCase("4m 10s", 4 * msInMinute + 10 * msInSecond)]
+        [TestCase("4m10s", 4 * msInMinute + 10 * msInSecond)]
         [TestCase("3h 4m 10s", 3 * msInHour + 4 * msInMinute + 10 * msInSecond)]
+        [TestCase("3h4m10s", 3 * msInHour + 4 * msInMinute + 10 * msInSecond)]
         [TestCase("3.5s", (int)(3.5 * msInSecond))]
         [TestCase("0.5s", (int)(0.5 * msInSecond))]
         [TestCase(".5s", (int)(0.5 * msInSecond))]
@@ -32,10 +35,13 @@ namespace WorkoutWotch.UnitTests.Models.Parsers
         [TestCase("3M", 3 * msInMinute)]
         [TestCase("3S", 3 * msInSecond)]
         [TestCase("3h 4M", 3 * msInHour + 4 * msInMinute)]
+        [TestCase("3h4M", 3 * msInHour + 4 * msInMinute)]
         [TestCase("3H 4s", 3 * msInHour + 4 * msInSecond)]
         [TestCase("4M 10S", 4 * msInMinute + 10 * msInSecond)]
+        [TestCase("4M10S", 4 * msInMinute + 10 * msInSecond)]
         [TestCase("3H 4m 10S", 3 * msInHour + 4 * msInMinute + 10 * msInSecond)]
         [TestCase("3H 4M 10S", 3 * msInHour + 4 * msInMinute + 10 * msInSecond)]
+        [TestCase("3H4m10S", 3 * msInHour + 4 * msInMinute + 10 * msInSecond)]
         public void parsing_is_case_insensitive(string input, int expectedMilliseconds)
         {
             var result = TimeSpanParser.Parser.Parse(input);
@@ -58,7 +64,6 @@ namespace WorkoutWotch.UnitTests.Models.Parsers
         [TestCase("3h\r10s")]
         [TestCase("3h\n10s")]
         [TestCase("3h\r\n10s")]
-        [TestCase("3h10s1m")]
         public void cannot_parse_invalid_input(string input)
         {
             var result = TimeSpanParser.Parser(new Input(input));
