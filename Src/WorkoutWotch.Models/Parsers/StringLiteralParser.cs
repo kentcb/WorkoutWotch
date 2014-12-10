@@ -16,7 +16,7 @@
                     return Result.Failure<string>(
                         i,
                         "unexpected end of input",
-                        new string[] { string.Format(CultureInfo.InvariantCulture, "string delimitered by {0}", delimiter) });
+                        new string[] { string.Format(CultureInfo.InvariantCulture, "string delimited by {0}", delimiter) });
                 }
 
                 if (i.Current != delimiter)
@@ -39,7 +39,7 @@
                         return Result.Failure<string>(
                             i,
                             "unexpected end of input",
-                            new string[] { string.Format(CultureInfo.InvariantCulture, "continued string contents or '{0}'", delimiter) });
+                            new string[] { string.Format(CultureInfo.InvariantCulture, "continued string contents or {0}", delimiter) });
                     }
 
                     if (i.Current == '\\')
