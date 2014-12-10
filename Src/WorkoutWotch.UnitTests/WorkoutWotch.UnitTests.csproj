@@ -84,6 +84,7 @@
     <Compile Include="Models\EventMatchers\NumberedEventMatcherFixture.cs" />
     <Compile Include="Models\Actions\DoNotAwaitActionFixture.cs" />
     <Compile Include="Models\Parsers\StringLiteralParserFixture.cs" />
+    <Compile Include="Models\Parsers\NewLineParserFixture.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
