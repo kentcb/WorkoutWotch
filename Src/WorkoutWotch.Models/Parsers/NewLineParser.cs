@@ -1,8 +1,7 @@
-﻿using System;
-using Sprache;
-
-namespace WorkoutWotch.Models.Parsers
+﻿namespace WorkoutWotch.Models.Parsers
 {
+    using Sprache;
+
     internal static class NewLineParser
     {
         public static readonly Parser<NewLineType> Parser = Parse.Char('\r').Then(_ => Parse.Char('\n')).Select(_ => NewLineType.Windows)
@@ -10,4 +9,3 @@ namespace WorkoutWotch.Models.Parsers
             .Or(Parse.Char('\r').Select(_ => NewLineType.ClassicMac));
     }
 }
-

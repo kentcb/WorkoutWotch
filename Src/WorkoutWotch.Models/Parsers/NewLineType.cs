@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WorkoutWotch.Models.Parsers
+﻿namespace WorkoutWotch.Models.Parsers
 {
     public enum NewLineType
     {
@@ -9,4 +7,3 @@ namespace WorkoutWotch.Models.Parsers
         ClassicMac
     }
 }
-
