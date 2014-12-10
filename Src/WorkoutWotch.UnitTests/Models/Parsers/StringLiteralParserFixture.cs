@@ -1,10 +1,10 @@
-﻿using System;
-using NUnit.Framework;
-using WorkoutWotch.Models.Parsers;
-using Sprache;
-
-namespace WorkoutWotch.UnitTests.Models.Parsers
+﻿namespace WorkoutWotch.UnitTests.Models.Parsers
 {
+    using System;
+    using NUnit.Framework;
+    using Sprache;
+    using WorkoutWotch.Models.Parsers;
+
     [TestFixture]
     public class StringLiteralParserFixture
     {
@@ -68,4 +68,3 @@ namespace WorkoutWotch.UnitTests.Models.Parsers
         }
     }
 }
-

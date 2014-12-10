@@ -1,10 +1,10 @@
-﻿using System;
-using Sprache;
-using System.Globalization;
-using System.Text;
-
-namespace WorkoutWotch.Models.Parsers
+﻿namespace WorkoutWotch.Models.Parsers
 {
+    using System;
+    using System.Globalization;
+    using System.Text;
+    using Sprache;
+
     internal static class StringLiteralParser
     {
         private static Parser<string> GetStringLiteralParser(char delimiter)
@@ -80,4 +80,3 @@ namespace WorkoutWotch.Models.Parsers
             .Or(GetStringLiteralParser('\''));
     }
 }
-
