@@ -43,3 +43,7 @@ A repository for my video series on building an iOS app with C#. Here is a full 
   * [Video 21: String Literal Parser](http://youtu.be/D8SuTLoRlU8)
   * [Video 22: New Line Parser](http://youtu.be/ugSu3bpEir8)
   * [Video 23: TimeSpan Parser](http://youtu.be/2pixgW18IpI)
+  * [Video 24: Wait Action Parser](http://youtu.be/_q97aASrB1o)
+  * [Video 25: Say Action Parser](http://youtu.be/RJ6jcyIE9lo)
+  * [Video 26: Break Action Parser](http://youtu.be/5z7UbopQ1H0)
+  * [Video 27: Prepare Action Parser](http://youtu.be/6sLKVYKxxxc)
