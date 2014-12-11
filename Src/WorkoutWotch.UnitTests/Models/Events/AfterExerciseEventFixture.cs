@@ -11,9 +11,12 @@
     [TestFixture]
     public class AfterExerciseEventFixture
     {
-        [Test]
-        public void to_string_returns_correct_representation(
-            [Values("", "  ", "Push-ups", "Chin-ups", "Sit-ups")]string exerciseName)
+        [TestCase("")]
+        [TestCase("  ")]
+        [TestCase("Push-ups")]
+        [TestCase("Chin-ups")]
+        [TestCase("Sit-ups")]
+        public void to_string_returns_correct_representation(string exerciseName)
         {
             var exercise = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), exerciseName, 0, 0, Enumerable.Empty<MatcherWithAction>());
             var sut = new AfterExerciseEvent(new ExecutionContext(), exercise);
