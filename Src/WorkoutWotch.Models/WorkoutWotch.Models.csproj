@@ -72,6 +72,7 @@
     <Compile Include="Parsers\WaitActionParser.cs" />
     <Compile Include="Parsers\SayActionParser.cs" />
     <Compile Include="Parsers\BreakActionParser.cs" />
+    <Compile Include="Parsers\PrepareActionParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
