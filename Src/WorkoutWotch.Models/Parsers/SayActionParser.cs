@@ -1,11 +1,10 @@
-﻿using System;
-using WorkoutWotch.Services.Contracts.Speech;
-using WorkoutWotch.Models.Actions;
-using Sprache;
-using Kent.Boogaart.HelperTrinity.Extensions;
-
-namespace WorkoutWotch.Models.Parsers
+﻿namespace WorkoutWotch.Models.Parsers
 {
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Sprache;
+    using WorkoutWotch.Services.Contracts.Speech;
+    using WorkoutWotch.Models.Actions;
+
     internal static class SayActionParser
     {
         public static Parser<SayAction> GetParser(ISpeechService speechService)
@@ -20,4 +19,3 @@ namespace WorkoutWotch.Models.Parsers
         }
     }
 }
-

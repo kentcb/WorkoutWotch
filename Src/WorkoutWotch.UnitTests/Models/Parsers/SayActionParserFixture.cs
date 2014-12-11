@@ -1,11 +1,11 @@
-﻿using System;
-using NUnit.Framework;
-using WorkoutWotch.Models.Parsers;
-using Sprache;
-using WorkoutWotch.UnitTests.Services.Speech.Mocks;
-
-namespace WorkoutWotch.UnitTests.Models.Parsers
+﻿namespace WorkoutWotch.UnitTests.Models.Parsers
 {
+    using System;
+    using NUnit.Framework;
+    using Sprache;
+    using WorkoutWotch.Models.Parsers;
+    using WorkoutWotch.UnitTests.Services.Speech.Mocks;
+
     [TestFixture]
     public class SayActionParserFixture
     {
@@ -39,4 +39,3 @@ namespace WorkoutWotch.UnitTests.Models.Parsers
         }
     }
 }
-
