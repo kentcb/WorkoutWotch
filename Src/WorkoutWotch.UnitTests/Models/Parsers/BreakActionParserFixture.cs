@@ -1,12 +1,12 @@
-﻿using System;
-using NUnit.Framework;
-using WorkoutWotch.UnitTests.Services.Speech.Mocks;
-using WorkoutWotch.Models.Parsers;
-using WorkoutWotch.UnitTests.Services.Delay.Mocks;
-using Sprache;
-
-namespace WorkoutWotch.UnitTests.Models.Parsers
+﻿namespace WorkoutWotch.UnitTests.Models.Parsers
 {
+    using System;
+    using NUnit.Framework;
+    using Sprache;
+    using WorkoutWotch.Models.Parsers;
+    using WorkoutWotch.UnitTests.Services.Delay.Mocks;
+    using WorkoutWotch.UnitTests.Services.Speech.Mocks;
+
     [TestFixture]
     public class BreakActionParserFixture
     {
@@ -47,4 +47,3 @@ namespace WorkoutWotch.UnitTests.Models.Parsers
         }
     }
 }
-

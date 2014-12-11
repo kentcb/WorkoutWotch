@@ -1,12 +1,11 @@
-﻿using System;
-using Sprache;
-using WorkoutWotch.Models.Actions;
-using WorkoutWotch.Services.Contracts.Delay;
-using WorkoutWotch.Services.Contracts.Speech;
-using Kent.Boogaart.HelperTrinity.Extensions;
-
-namespace WorkoutWotch.Models.Parsers
+﻿namespace WorkoutWotch.Models.Parsers
 {
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Sprache;
+    using WorkoutWotch.Services.Contracts.Delay;
+    using WorkoutWotch.Services.Contracts.Speech;
+    using WorkoutWotch.Models.Actions;
+
     internal static class BreakActionParser
     {
         public static Parser<BreakAction> GetParser(IDelayService delayService, ISpeechService speechService)
@@ -24,4 +23,3 @@ namespace WorkoutWotch.Models.Parsers
         }
     }
 }
-
