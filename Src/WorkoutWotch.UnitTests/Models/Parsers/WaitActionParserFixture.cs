@@ -33,6 +33,9 @@
 
         [TestCase("Wayte for 1m")]
         [TestCase("Wait for abc")]
+        [TestCase("WaitFor 1m")]
+        [TestCase("Wait For1m")]
+        [TestCase("WaitFor1m")]
         [TestCase("Wait 1m")]
         [TestCase("for 1m")]
         [TestCase("")]
