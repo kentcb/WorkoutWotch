@@ -1,11 +1,10 @@
-﻿using System;
-using Sprache;
-using WorkoutWotch.Models.Actions;
-using WorkoutWotch.Services.Contracts.Delay;
-using Kent.Boogaart.HelperTrinity.Extensions;
-
-namespace WorkoutWotch.Models.Parsers
+﻿namespace WorkoutWotch.Models.Parsers
 {
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Sprache;
+    using WorkoutWotch.Services.Contracts.Delay;
+    using WorkoutWotch.Models.Actions;
+
     internal static class WaitActionParser
     {
         public static Parser<WaitAction> GetParser(IDelayService delayService)
@@ -22,4 +21,3 @@ namespace WorkoutWotch.Models.Parsers
         }
     }
 }
-
