@@ -24,6 +24,11 @@
             get { return TimeSpan.Zero; }
         }
 
+        public string SpeechText
+        {
+            get { return this.speechText; }
+        }
+
         public async Task ExecuteAsync(ExecutionContext context)
         {
             context.AssertNotNull("context");

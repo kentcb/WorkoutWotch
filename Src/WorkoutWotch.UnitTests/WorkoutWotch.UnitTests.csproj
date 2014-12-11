@@ -87,6 +87,7 @@
     <Compile Include="Models\Parsers\NewLineParserFixture.cs" />
     <Compile Include="Models\Parsers\TimeSpanParserFixture.cs" />
     <Compile Include="Models\Parsers\WaitActionParserFixture.cs" />
+    <Compile Include="Models\Parsers\SayActionParserFixture.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

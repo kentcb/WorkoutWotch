@@ -70,6 +70,7 @@
     <Compile Include="Parsers\NewLineType.cs" />
     <Compile Include="Parsers\TimeSpanParser.cs" />
     <Compile Include="Parsers\WaitActionParser.cs" />
+    <Compile Include="Parsers\SayActionParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
