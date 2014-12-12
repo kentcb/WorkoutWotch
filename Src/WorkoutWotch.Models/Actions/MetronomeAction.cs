@@ -1,4 +1,6 @@
-﻿namespace WorkoutWotch.Models.Actions
+﻿using System.Collections.Immutable;
+
+namespace WorkoutWotch.Models.Actions
 {
     using System;
     using System.Collections.Generic;
@@ -10,6 +12,7 @@
 
     public sealed class MetronomeAction : IAction
     {
+        private readonly IImmutableList<MetronomeTick> ticks;
         private readonly SequenceAction innerAction;
 
         public MetronomeAction(IAudioService audioService, IDelayService delayService, ILoggerService loggerService, IEnumerable<MetronomeTick> ticks)
@@ -19,12 +22,18 @@
             loggerService.AssertNotNull("loggerService");
             ticks.AssertNotNull("ticks");
 
-            this.innerAction = new SequenceAction(GetInnerActions(audioService, delayService, loggerService, ticks));
+            this.ticks = ticks.ToImmutableList();
+            this.innerAction = new SequenceAction(GetInnerActions(audioService, delayService, loggerService, this.ticks));
         }
 
         public TimeSpan Duration
         {
             get { return this.innerAction.Duration; }
+        }
+
+        public IImmutableList<MetronomeTick> Ticks
+        {
+            get { return this.ticks; }
         }
 
         public async Task ExecuteAsync(ExecutionContext context)
