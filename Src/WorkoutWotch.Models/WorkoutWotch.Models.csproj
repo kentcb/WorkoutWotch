@@ -74,6 +74,7 @@
     <Compile Include="Parsers\BreakActionParser.cs" />
     <Compile Include="Parsers\PrepareActionParser.cs" />
     <Compile Include="Parsers\MetronomeActionParser.cs" />
+    <Compile Include="Parsers\ActionParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
