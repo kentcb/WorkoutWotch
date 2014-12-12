@@ -1,9 +1,8 @@
-﻿using System.Collections.Immutable;
-
-namespace WorkoutWotch.Models.Actions
+﻿namespace WorkoutWotch.Models.Actions
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Threading.Tasks;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using WorkoutWotch.Services.Contracts.Audio;

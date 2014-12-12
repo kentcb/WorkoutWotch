@@ -1,16 +1,16 @@
-﻿using System;
-using System.Linq;
-using NUnit.Framework;
-using WorkoutWotch.UnitTests.Services.Delay.Mocks;
-using WorkoutWotch.UnitTests.Services.Audio.Mocks;
-using WorkoutWotch.Models.Parsers;
-using WorkoutWotch.Models.Actions;
-using Sprache;
-using WorkoutWotch.UnitTests.Services.Logger.Mocks;
-using Kent.Boogaart.PCLMock;
-
-namespace WorkoutWotch.UnitTests.Models.Parsers
+﻿namespace WorkoutWotch.UnitTests.Models.Parsers
 {
+    using System;
+    using System.Linq;
+    using Kent.Boogaart.PCLMock;
+    using NUnit.Framework;
+    using Sprache;
+    using WorkoutWotch.Models.Actions;
+    using WorkoutWotch.Models.Parsers;
+    using WorkoutWotch.UnitTests.Services.Audio.Mocks;
+    using WorkoutWotch.UnitTests.Services.Delay.Mocks;
+    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
+
     [TestFixture]
     public class MetronomeActionParserFixture
     {
@@ -65,9 +65,14 @@ namespace WorkoutWotch.UnitTests.Models.Parsers
                     .Select(x => TimeSpan.FromMilliseconds(x))
                     .SequenceEqual(
                         result
-                        .Ticks
-                        .Select(x => x.PeriodBefore)));
-            Assert.True(expectedTickTypes.SequenceEqual(result.Ticks.Select(x => x.Type)));
+                            .Ticks
+                            .Select(x => x.PeriodBefore)));
+            Assert.True(
+                expectedTickTypes
+                    .SequenceEqual(
+                        result
+                            .Ticks
+                            .Select(x => x.Type)));
         }
 
         [TestCase("Metronome at")]
@@ -80,4 +85,3 @@ namespace WorkoutWotch.UnitTests.Models.Parsers
         }
     }
 }
-

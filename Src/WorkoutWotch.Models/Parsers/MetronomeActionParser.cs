@@ -1,13 +1,12 @@
-﻿using System;
-using WorkoutWotch.Models.Actions;
-using Sprache;
-using WorkoutWotch.Services.Contracts.Audio;
-using WorkoutWotch.Services.Contracts.Delay;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using WorkoutWotch.Services.Contracts.Logger;
-
-namespace WorkoutWotch.Models.Parsers
+﻿namespace WorkoutWotch.Models.Parsers
 {
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Sprache;
+    using WorkoutWotch.Services.Contracts.Audio;
+    using WorkoutWotch.Services.Contracts.Delay;
+    using WorkoutWotch.Services.Contracts.Logger;
+    using WorkoutWotch.Models.Actions;
+
     internal static class MetronomeActionParser
     {
         private static Parser<MetronomeTick> metronomeTickParser =
@@ -44,4 +43,3 @@ namespace WorkoutWotch.Models.Parsers
         }
     }
 }
-
