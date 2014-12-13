@@ -29,7 +29,7 @@
             speechService.AssertNotNull("speechService");
 
             return
-                (from _ in Parse.String(new string(' ', indentLevel * 2))
+                (from _ in Parse.String("  ").Repeat(indentLevel)
                  from __ in Parse.String("* ")
                  from action in ActionParser.GetParser(indentLevel, audioService, delayService, loggerService, speechService)
                  from ___ in Parse.WhiteSpace.Except(NewLineParser.Parser).Many()

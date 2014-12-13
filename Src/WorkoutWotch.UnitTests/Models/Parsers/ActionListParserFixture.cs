@@ -47,31 +47,43 @@
 
         [TestCase(
             "* Wait for 2s\n* Break for 1m",
+            0,
             new [] { typeof(WaitAction), typeof(BreakAction) })]
         [TestCase(
             "* Wait for 2s  \n* Break for 1m   \t  ",
+            0,
             new [] { typeof(WaitAction), typeof(BreakAction) })]
         [TestCase(
             "* Say 'foo'\n* Wait for 1s\n* Wait for 2s\n* Break for 1m",
+            0,
             new [] { typeof(SayAction), typeof(WaitAction), typeof(WaitAction), typeof(BreakAction) })]
-        public void can_parse_valid_input(string input, Type[] expectedActionTypes)
+        [TestCase(
+            "  * Wait for 2s\n  * Break for 1m",
+            1,
+            new [] { typeof(WaitAction), typeof(BreakAction) })]
+        [TestCase(
+            "      * Wait for 2s\n      * Break for 1m",
+            3,
+            new [] { typeof(WaitAction), typeof(BreakAction) })]
+        public void can_parse_valid_input(string input, int indentLevel, Type[] expectedActionTypes)
         {
             var result = ActionListParser
-                .GetParser(0, new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock())
+                .GetParser(indentLevel, new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock())
                 .Parse(input);
 
             Assert.NotNull(result);
             Assert.True(result.Select(x => x.GetType()).SequenceEqual(expectedActionTypes));
         }
 
-        [TestCase("")]
-        [TestCase("* ")]
-        [TestCase("Wait for 2s")]
-        [TestCase(" * Wait for 2s")]
-        public void cannot_parse_invalid_input(string input)
+        [TestCase("", 0)]
+        [TestCase("* ", 0)]
+        [TestCase("Wait for 2s", 0)]
+        [TestCase("  * Wait for 2s", 0)]
+        [TestCase("* Wait for 2s", 1)]
+        public void cannot_parse_invalid_input(string input, int indentLevel)
         {
             var result = ActionListParser
-                .GetParser(0, new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock())(new Input(input));
+                .GetParser(indentLevel, new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock())(new Input(input));
 
             Assert.False(result.WasSuccessful);
         }
