@@ -1,17 +1,17 @@
-﻿using System;
-using System.Linq;
-using NUnit.Framework;
-using WorkoutWotch.UnitTests.Services.Audio.Mocks;
-using WorkoutWotch.Models.Parsers;
-using WorkoutWotch.UnitTests.Services.Delay.Mocks;
-using WorkoutWotch.UnitTests.Services.Logger.Mocks;
-using WorkoutWotch.UnitTests.Services.Speech.Mocks;
-using Kent.Boogaart.PCLMock;
-using Sprache;
-using WorkoutWotch.Models.Actions;
-
-namespace WorkoutWotch.UnitTests.Models.Parsers
+﻿namespace WorkoutWotch.UnitTests.Models.Parsers
 {
+    using System;
+    using System.Linq;
+    using Kent.Boogaart.PCLMock;
+    using NUnit.Framework;
+    using Sprache;
+    using WorkoutWotch.Models.Actions;
+    using WorkoutWotch.Models.Parsers;
+    using WorkoutWotch.UnitTests.Services.Audio.Mocks;
+    using WorkoutWotch.UnitTests.Services.Delay.Mocks;
+    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
+    using WorkoutWotch.UnitTests.Services.Speech.Mocks;
+
     [TestFixture]
     public class ActionListParserFixture
     {
@@ -77,4 +77,3 @@ namespace WorkoutWotch.UnitTests.Models.Parsers
         }
     }
 }
-
