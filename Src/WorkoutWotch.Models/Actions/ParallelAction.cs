@@ -31,6 +31,11 @@
             get { return this.duration; }
         }
 
+        public IImmutableList<IAction> Children
+        {
+            get { return this.children; }
+        }
+
         public async Task ExecuteAsync(ExecutionContext context)
         {
             context.AssertNotNull("context");

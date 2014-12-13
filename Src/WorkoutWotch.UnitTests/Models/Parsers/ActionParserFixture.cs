@@ -50,7 +50,7 @@
         [TestCase("Say 'foo'", typeof(SayAction))]
         [TestCase("Wait for 10s", typeof(WaitAction))]
         [TestCase("Sequence:\n  * Say 'foo'\n  * Say 'bar'", typeof(SequenceAction))]
-//        [TestCase("Parallel:\n  * Say 'foo'\n  * Say 'bar'", typeof(ParallelAction))]
+        [TestCase("Parallel:\n  * Say 'foo'\n  * Say 'bar'", typeof(ParallelAction))]
         public void can_parse_valid_input(string input, Type expectedType)
         {
             var result = ActionParser.GetParser(0, new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock())(new Input(input));

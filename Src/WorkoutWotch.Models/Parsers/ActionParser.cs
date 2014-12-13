@@ -27,7 +27,7 @@
                 .Or<IAction>(PrepareActionParser.GetParser(delayService, speechService))
                 .Or<IAction>(SayActionParser.GetParser(speechService))
                 .Or<IAction>(WaitActionParser.GetParser(delayService))
-                //.Or<IAction>(ParallelActionParser.GetParser(indentLevel, audioService, delayService, loggerService, speechService))
+                .Or<IAction>(ParallelActionParser.GetParser(indentLevel, audioService, delayService, loggerService, speechService))
                 .Or<IAction>(SequenceActionParser.GetParser(indentLevel, audioService, delayService, loggerService, speechService));
         }
     }
