@@ -49,7 +49,7 @@
         [TestCase("Prepare for 10s", typeof(PrepareAction))]
         [TestCase("Say 'foo'", typeof(SayAction))]
         [TestCase("Wait for 10s", typeof(WaitAction))]
-//        [TestCase("Sequence:\n  * Say 'foo'\n  * Say 'bar'", typeof(SequenceAction))]
+        [TestCase("Sequence:\n  * Say 'foo'\n  * Say 'bar'", typeof(SequenceAction))]
 //        [TestCase("Parallel:\n  * Say 'foo'\n  * Say 'bar'", typeof(ParallelAction))]
         public void can_parse_valid_input(string input, Type expectedType)
         {

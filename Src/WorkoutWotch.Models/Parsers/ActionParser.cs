@@ -26,9 +26,9 @@
                 .Or<IAction>(MetronomeActionParser.GetParser(audioService, delayService, loggerService))
                 .Or<IAction>(PrepareActionParser.GetParser(delayService, speechService))
                 .Or<IAction>(SayActionParser.GetParser(speechService))
-                .Or<IAction>(WaitActionParser.GetParser(delayService));
-                //.Or<IAction>(ParallelActionParser.GetParser(indentLevel + 1, audioService, delayService, loggerService, speechService))
-                //.Or<IAction>(SequenceActionParser.GetParser(indentLevel + 1, audioService, delayService, loggerService, speechService))
+                .Or<IAction>(WaitActionParser.GetParser(delayService))
+                //.Or<IAction>(ParallelActionParser.GetParser(indentLevel, audioService, delayService, loggerService, speechService))
+                .Or<IAction>(SequenceActionParser.GetParser(indentLevel, audioService, delayService, loggerService, speechService));
         }
     }
 }

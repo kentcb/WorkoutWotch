@@ -93,6 +93,7 @@
     <Compile Include="Models\Parsers\MetronomeActionParserFixture.cs" />
     <Compile Include="Models\Parsers\ActionParserFixture.cs" />
     <Compile Include="Models\Parsers\ActionListParserFixture.cs" />
+    <Compile Include="Models\Parsers\SequenceActionParserFixture.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

@@ -65,14 +65,19 @@
             "      * Wait for 2s\n      * Break for 1m",
             3,
             new [] { typeof(WaitAction), typeof(BreakAction) })]
+        [TestCase(
+            "* Sequence:\n  * Say 'foo'\n  * Sequence:\n    * Say 'bar'",
+            0,
+            new [] { typeof(SequenceAction) })]
         public void can_parse_valid_input(string input, int indentLevel, Type[] expectedActionTypes)
         {
             var result = ActionListParser
-                .GetParser(indentLevel, new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock())
-                .Parse(input);
+                .GetParser(indentLevel, new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock())(new Input(input));
 
-            Assert.NotNull(result);
-            Assert.True(result.Select(x => x.GetType()).SequenceEqual(expectedActionTypes));
+            Assert.True(result.WasSuccessful);
+            Assert.True(result.Remainder.AtEnd);
+            Assert.NotNull(result.Value);
+            Assert.True(result.Value.Select(x => x.GetType()).SequenceEqual(expectedActionTypes));
         }
 
         [TestCase("", 0)]
