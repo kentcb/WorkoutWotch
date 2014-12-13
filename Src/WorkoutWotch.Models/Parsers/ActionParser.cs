@@ -1,13 +1,13 @@
-﻿using System;
-using Sprache;
-using WorkoutWotch.Services.Contracts.Speech;
-using WorkoutWotch.Services.Contracts.Logger;
-using WorkoutWotch.Services.Contracts.Delay;
-using WorkoutWotch.Services.Contracts.Audio;
-using Kent.Boogaart.HelperTrinity.Extensions;
-
-namespace WorkoutWotch.Models.Parsers
+﻿namespace WorkoutWotch.Models.Parsers
 {
+    using System;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Sprache;
+    using WorkoutWotch.Services.Contracts.Audio;
+    using WorkoutWotch.Services.Contracts.Delay;
+    using WorkoutWotch.Services.Contracts.Logger;
+    using WorkoutWotch.Services.Contracts.Speech;
+
     internal static class ActionParser
     {
         public static Parser<IAction> GetParser(int indentLevel, IAudioService audioService, IDelayService delayService, ILoggerService loggerService, ISpeechService speechService)
@@ -32,4 +32,3 @@ namespace WorkoutWotch.Models.Parsers
         }
     }
 }
-
