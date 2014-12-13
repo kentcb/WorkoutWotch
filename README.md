@@ -47,3 +47,5 @@ A repository for my video series on building an iOS app with C#. Here is a full 
   * [Video 25: Say Action Parser](http://youtu.be/RJ6jcyIE9lo)
   * [Video 26: Break Action Parser](http://youtu.be/5z7UbopQ1H0)
   * [Video 27: Prepare Action Parser](http://youtu.be/6sLKVYKxxxc)
+  * [Video 28: Metronome Action Parser](http://youtu.be/4jZkNy5pc6s)
+  * [Video 29: Action Parser](http://youtu.be/91PUhKLjuBY)
