@@ -95,6 +95,7 @@
     <Compile Include="Models\Parsers\ActionListParserFixture.cs" />
     <Compile Include="Models\Parsers\SequenceActionParserFixture.cs" />
     <Compile Include="Models\Parsers\ParallelActionParserFixture.cs" />
+    <Compile Include="Models\Parsers\NumericalConstraintParserFixture.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
