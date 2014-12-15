@@ -1,7 +1,7 @@
-﻿using Kent.Boogaart.HelperTrinity.Extensions;
-
-namespace Sprache
+﻿namespace Sprache
 {
+    using Kent.Boogaart.HelperTrinity.Extensions;
+
     public static class ParserExtensions
     {
         public static Parser<T> Token<T, U>(this Parser<T> @this, Parser<U> whitespace)
@@ -17,4 +17,3 @@ namespace Sprache
         }
     }
 }
-

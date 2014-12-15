@@ -1,12 +1,12 @@
-﻿using System;
-using NUnit.Framework;
-using WorkoutWotch.Models.Parsers;
-using Sprache;
-using WorkoutWotch.Models.Events;
-using WorkoutWotch.Models;
-
-namespace WorkoutWotch.UnitTests.Models.Parsers
+﻿namespace WorkoutWotch.UnitTests.Models.Parsers
 {
+    using System;
+    using NUnit.Framework;
+    using Sprache;
+    using WorkoutWotch.Models;
+    using WorkoutWotch.Models.Events;
+    using WorkoutWotch.Models.Parsers;
+
     [TestFixture]
     public class NumericalConstraintParserFixture
     {
@@ -110,4 +110,3 @@ namespace WorkoutWotch.UnitTests.Models.Parsers
         }
     }
 }
-

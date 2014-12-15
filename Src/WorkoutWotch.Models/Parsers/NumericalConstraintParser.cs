@@ -1,9 +1,9 @@
-﻿using System;
-using Sprache;
-using WorkoutWotch.Models.Events;
-
-namespace WorkoutWotch.Models.Parsers
+﻿namespace WorkoutWotch.Models.Parsers
 {
+    using System;
+    using Sprache;
+    using WorkoutWotch.Models.Events;
+
     internal static class NumericalConstraintParser
     {
         // parses a literal number from the input, like "3" or "10"
@@ -118,15 +118,15 @@ namespace WorkoutWotch.Models.Parsers
                 .DelimitedBy(Parse.Char(',').Token(Parse.WhiteSpace.Except(NewLineParser.Parser)))
                 .Select(x => (Func<T, bool>)(e =>
                 {
-                        foreach (var atom in x)
+                    foreach (var atom in x)
+                    {
+                        if (atom(e))
                         {
-                            if (atom(e))
-                            {
-                                return true;
-                            }
+                            return true;
                         }
+                    }
 
-                        return false;
+                    return false;
                 }));
         }
 
@@ -135,9 +135,9 @@ namespace WorkoutWotch.Models.Parsers
         {
             return
                 from not in Parse.Char('^').Then(_ => Parse.WhiteSpace.Except(NewLineParser.Parser).Many()).Optional()
-                         from mathematicalSet in GetMathematicalSetParser<T>(getCurrent, getFirst, getLast)
-                         select (Func<T, bool>)(e =>
-            {
+                from mathematicalSet in GetMathematicalSetParser<T>(getCurrent, getFirst, getLast)
+                select (Func<T, bool>)(e =>
+                {
                     var result = mathematicalSet(e);
 
                     if (not.IsDefined)
@@ -146,7 +146,7 @@ namespace WorkoutWotch.Models.Parsers
                     }
 
                     return result;
-            });
+                });
         }
 
         public static Parser<Func<T, bool>> GetParser<T>(Func<ExecutionContext, int> getCurrent, Func<ExecutionContext, int> getFirst, Func<ExecutionContext, int> getLast)
@@ -156,4 +156,3 @@ namespace WorkoutWotch.Models.Parsers
         }
     }
 }
-
