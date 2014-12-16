@@ -12,8 +12,11 @@
     {
         private static readonly Parser<string> nameParser =
             from _ in Parse.String("#")
-            from name in Parse.AnyChar.Until(NewLineParser.Parser)
-            select new string(name.ToArray()).Trim();
+            from __ in Parse.WhiteSpace.Except(NewLineParser.Parser).AtLeastOnce()
+            from name in Parse.AnyChar.Except(NewLineParser.Parser).AtLeastOnce()
+            from ___ in NewLineParser.Parser
+            let nameString = new string(name.ToArray()).TrimEnd()
+            select nameString;
 
         public static Parser<ExerciseProgram> GetParser(IAudioService audioService, IDelayService delayService, ILoggerService loggerService, ISpeechService speechService)
         {

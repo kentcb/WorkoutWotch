@@ -17,8 +17,11 @@
     {
         private static readonly Parser<string> nameParser =
             from _ in Parse.String("##")
-            from name in Parse.AnyChar.Until(NewLineParser.Parser)
-            select new string(name.ToArray()).Trim();
+            from __ in Parse.WhiteSpace.Except(NewLineParser.Parser).AtLeastOnce()
+            from name in Parse.AnyChar.Except(NewLineParser.Parser).AtLeastOnce()
+            from ___ in NewLineParser.Parser
+            let nameString = new string(name.ToArray()).TrimEnd()
+            select nameString;
 
         private static readonly Parser<Tuple<int, int>> setAndRepetitionCountParser =
             from _ in Parse.String("*")

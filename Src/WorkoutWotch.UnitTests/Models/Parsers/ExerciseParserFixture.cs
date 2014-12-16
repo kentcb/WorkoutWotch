@@ -43,6 +43,7 @@
         [TestCase("## foo\n* 1 set x 1 rep\n", "foo")]
         [TestCase("## Foo\n* 1 set x 1 rep\n", "Foo")]
         [TestCase("## Foo bar\n* 1 set x 1 rep\n", "Foo bar")]
+        [TestCase("## !@$%^&*()-_=+[{]};:'\",<.>/?\n* 1 set x 1 rep\n", "!@$%^&*()-_=+[{]};:'\",<.>/?")]
         [TestCase("##    \t Foo   bar  \t \n* 1 set x 1 rep\n", "Foo   bar")]
         public void can_parse_name(string input, string expectedName)
         {
@@ -129,6 +130,8 @@
 
         [TestCase("# only one hash\n* 1 set x 1 rep")]
         [TestCase("##\n* 1 set x 1 rep")]
+        [TestCase("##no space after hashes\n")]
+        [TestCase("  ## leading whitespace\n")]
         [TestCase("## name\n* 1 set")]
         [TestCase("## name\n* 1 rep")]
         [TestCase("## name\n* 1 set x 1 rep\n* foo:")]

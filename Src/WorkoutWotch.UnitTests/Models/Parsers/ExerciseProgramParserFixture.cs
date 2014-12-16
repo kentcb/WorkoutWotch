@@ -40,6 +40,7 @@
         [TestCase("# foo\n", "foo")]
         [TestCase("# Foo\n", "Foo")]
         [TestCase("# Foo bar\n", "Foo bar")]
+        [TestCase("# !@$%^&*()-_=+[{]};:'\",<.>/?\n", "!@$%^&*()-_=+[{]};:'\",<.>/?")]
         [TestCase("#    \t Foo   bar  \t \n", "Foo   bar")]
         public void can_parse_name(string input, string expectedName)
         {
@@ -54,7 +55,7 @@
         [TestCase("# ignore\n", 0)]
         [TestCase("# ignore\n## Exercise 1\n* 1 set x 1 rep\n", 1)]
         [TestCase("# ignore\n## Exercise 1\n* 1 set x 1 rep\n## Exercise 2\n* 1 set x 1 rep\n", 2)]
-        [TestCase("# ignore\n## Exercise 1\n* 1 set x 1 rep\n\n\n\n## Exercise 2\n* 1 set x 1 rep\n", 2)]
+        [TestCase("# ignore\n## Exercise 1\n* 1 set x 1 rep\n  \n  \t  \n\n## Exercise 2\n* 1 set x 1 rep\n", 2)]
         public void can_parse_exercises(string input, int expectedExerciseCount)
         {
             var result = ExerciseProgramParser
@@ -63,6 +64,17 @@
 
             Assert.NotNull(result);
             Assert.AreEqual(expectedExerciseCount, result.Exercises.Count);
+        }
+
+        [TestCase("## two hashes\n")]
+        [TestCase("#\n")]
+        [TestCase("#no space after hash\n")]
+        [TestCase("  # leading whitespace\n")]
+        public void cannot_parse_invalid_input(string input)
+        {
+            var result = ExerciseProgramParser
+                .GetParser(new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock())(new Input(input));
+            Assert.True(!result.WasSuccessful || !result.Remainder.AtEnd);
         }
     }
 }
