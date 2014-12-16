@@ -71,6 +71,11 @@ namespace WorkoutWotch.Models
             get { return this.repetitionCount; }
         }
 
+        public IImmutableList<MatcherWithAction> MatchersWithActions
+        {
+            get { return this.matchersWithActions; }
+        }
+
         public TimeSpan Duration
         {
             get { return this.duration; }

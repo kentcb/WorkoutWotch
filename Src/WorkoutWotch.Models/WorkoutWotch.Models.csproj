@@ -79,6 +79,7 @@
     <Compile Include="Parsers\SequenceActionParser.cs" />
     <Compile Include="Parsers\ParallelActionParser.cs" />
     <Compile Include="Parsers\NumericalConstraintParser.cs" />
+    <Compile Include="Parsers\ExerciseParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

@@ -1,5 +1,6 @@
 ﻿namespace Sprache
 {
+    using System;
     using Kent.Boogaart.HelperTrinity.Extensions;
 
     public static class ParserExtensions
@@ -14,6 +15,27 @@
                 from item in @this
                 from __ in whitespace.Many()
                 select item;
+        }
+
+        public static Parser<T> Do<T>(this Parser<T> @this, Action<T> action)
+        {
+            @this.AssertNotNull("@this");
+            action.AssertNotNull("action");
+
+            return @this.Then(
+                x =>
+                {
+                    action(x);
+                    return Parse.Return(x);
+                });
+        }
+    }
+
+    public static class ParseExt
+    {
+        public static Parser<T> Default<T>()
+        {
+            return i => Result.Success(default(T), i);
         }
     }
 }
