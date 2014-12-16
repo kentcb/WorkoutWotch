@@ -1,18 +1,18 @@
-﻿using System;
-using System.Linq;
-using NUnit.Framework;
-using WorkoutWotch.Models.Parsers;
-using WorkoutWotch.UnitTests.Services.Audio.Mocks;
-using WorkoutWotch.UnitTests.Services.Delay.Mocks;
-using WorkoutWotch.UnitTests.Services.Logger.Mocks;
-using WorkoutWotch.UnitTests.Services.Speech.Mocks;
-using Sprache;
-using Kent.Boogaart.PCLMock;
-using WorkoutWotch.Models.Events;
-using WorkoutWotch.Models.EventMatchers;
-
-namespace WorkoutWotch.UnitTests.Models.Parsers
+﻿namespace WorkoutWotch.UnitTests.Models.Parsers
 {
+    using System;
+    using System.Linq;
+    using Kent.Boogaart.PCLMock;
+    using NUnit.Framework;
+    using Sprache;
+    using WorkoutWotch.Models.EventMatchers;
+    using WorkoutWotch.Models.Events;
+    using WorkoutWotch.Models.Parsers;
+    using WorkoutWotch.UnitTests.Services.Audio.Mocks;
+    using WorkoutWotch.UnitTests.Services.Delay.Mocks;
+    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
+    using WorkoutWotch.UnitTests.Services.Speech.Mocks;
+
     [TestFixture]
     public class ExerciseParserFixture
     {
@@ -128,4 +128,3 @@ namespace WorkoutWotch.UnitTests.Models.Parsers
         }
     }
 }
-

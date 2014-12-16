@@ -1,18 +1,18 @@
-﻿using System;
-using WorkoutWotch.Services.Contracts.Speech;
-using WorkoutWotch.Services.Contracts.Logger;
-using WorkoutWotch.Services.Contracts.Delay;
-using WorkoutWotch.Services.Contracts.Audio;
-using Sprache;
-using System.Linq;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using System.Collections.Generic;
-using WorkoutWotch.Models.Actions;
-using WorkoutWotch.Models.EventMatchers;
-using WorkoutWotch.Models.Events;
-
-namespace WorkoutWotch.Models.Parsers
+﻿namespace WorkoutWotch.Models.Parsers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Sprache;
+    using WorkoutWotch.Services.Contracts.Audio;
+    using WorkoutWotch.Services.Contracts.Delay;
+    using WorkoutWotch.Services.Contracts.Logger;
+    using WorkoutWotch.Services.Contracts.Speech;
+    using WorkoutWotch.Models.Actions;
+    using WorkoutWotch.Models.EventMatchers;
+    using WorkoutWotch.Models.Events;
+
     internal static class ExerciseParser
     {
         private static readonly Parser<string> nameParser =
@@ -127,4 +127,3 @@ namespace WorkoutWotch.Models.Parsers
         }
     }
 }
-
