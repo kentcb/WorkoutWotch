@@ -53,3 +53,5 @@ A repository for my video series on building an iOS app with C#. Here is a full 
   * [Video 31: Sequence Action Parser](http://youtu.be/uNqMVS0SFjA)
   * [Video 32: Parallel Action Parser](http://youtu.be/WcNzHl4mVXM)
   * [Video 33: Numerical Constraint Parser](http://youtu.be/jhO1ePC2t-c)
+  * [Video 34: Exercise Parser](http://youtu.be/7pE1uRhZL6g)
+  * [Video 35: Exercise Program Parser](http://youtu.be/fKa16E5lUEY)
