@@ -126,5 +126,17 @@
             Assert.NotNull(result);
             Assert.True(result.MatchersWithActions.Select(x => x.Matcher.GetType()).SequenceEqual(expectedMatcherTypes));
         }
+
+        [TestCase("# only one hash\n* 1 set x 1 rep")]
+        [TestCase("##\n* 1 set x 1 rep")]
+        [TestCase("## name\n* 1 set")]
+        [TestCase("## name\n* 1 rep")]
+        [TestCase("## name\n* 1 set x 1 rep\n* foo:")]
+        public void cannot_parse_invalid_input(string input)
+        {
+            var result = ExerciseParser
+                .GetParser(new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock())(new Input(input));
+            Assert.True(!result.WasSuccessful || !result.Remainder.AtEnd);
+        }
     }
 }
