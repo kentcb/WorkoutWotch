@@ -1,4 +1,8 @@
-﻿namespace WorkoutWotch.UnitTests.Models
+﻿using WorkoutWotch.UnitTests.Services.Delay.Mocks;
+using WorkoutWotch.UnitTests.Services.Speech.Mocks;
+using WorkoutWotch.UnitTests.Services.Audio.Mocks;
+
+namespace WorkoutWotch.UnitTests.Models
 {
     using System;
     using System.Linq;
@@ -42,6 +46,50 @@
             Assert.AreSame(programs[0], sut.Programs[0]);
             Assert.AreSame(programs[1], sut.Programs[1]);
             Assert.AreSame(programs[2], sut.Programs[2]);
+        }
+
+        [Test]
+        public void parse_throws_if_input_is_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.Parse(null, new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(), new SpeechServiceMock()));
+        }
+
+        [Test]
+        public void parse_throws_if_audio_service_is_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.Parse("input", null, new DelayServiceMock(), new LoggerServiceMock(), new SpeechServiceMock()));
+        }
+
+        [Test]
+        public void parse_throws_if_delay_service_is_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.Parse("input", new AudioServiceMock(), null, new LoggerServiceMock(), new SpeechServiceMock()));
+        }
+
+        [Test]
+        public void parse_throws_if_logger_service_is_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.Parse("input", new AudioServiceMock(), new DelayServiceMock(), null, new SpeechServiceMock()));
+        }
+
+        [Test]
+        public void parse_throws_if_speech_service_is_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.Parse("input", new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(), null));
+        }
+
+        [TestCase(
+            "# first\n",
+            new [] { "first" })]
+        [TestCase(
+            "# first\n# second\n# third\n",
+            new [] { "first", "second", "third" })]
+        public void parse_returns_an_appropriate_exercise_programs_instance(string input, string[] expectedProgramNames)
+        {
+            var result = ExercisePrograms.Parse(input, new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock());
+
+            Assert.NotNull(result);
+            Assert.True(result.Programs.Select(x => x.Name).SequenceEqual(expectedProgramNames));
         }
 
         #region Supporting Members

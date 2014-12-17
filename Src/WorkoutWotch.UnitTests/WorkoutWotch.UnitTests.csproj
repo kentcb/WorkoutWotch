@@ -98,6 +98,7 @@
     <Compile Include="Models\Parsers\NumericalConstraintParserFixture.cs" />
     <Compile Include="Models\Parsers\ExerciseParserFixture.cs" />
     <Compile Include="Models\Parsers\ExerciseProgramParserFixture.cs" />
+    <Compile Include="Models\Parsers\ExerciseProgramsParserFixture.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
