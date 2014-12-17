@@ -79,41 +79,53 @@ namespace WorkoutWotch.UI.iOS
             var audioService = new AudioService();
             var delayService = new DelayService();
             var speechService = new SpeechService();
+            var input = @"# Example Program
+## Push-ups
+* 3 sets x 5 reps
+* Before set ^first:
+  * Break for 7s
+* During rep:
+  * Metronome at 0s*, .5s, .75s, .5s-
+* After rep last-2:
+  * Say 'two left'
+";
 
-            return new ExerciseProgram(
-                loggerService,
-                "Example Program",
-                new[]
-                {
-                    new Exercise(
-                        loggerService,
-                        speechService,
-                        "Push-ups",
-                        3,
-                        5,
-                        new[]
-                        {
-                            new MatcherWithAction(
-                                new NumberedEventMatcher<BeforeSetEvent>(e => e.Number > 1),
-                                new BreakAction(delayService, speechService, TimeSpan.FromSeconds(7))),
-                            new MatcherWithAction(
-                                new TypedEventMatcher<DuringRepetitionEvent>(),
-                                new MetronomeAction(
-                                    audioService,
-                                    delayService,
-                                    loggerService,
-                                    new[]
-                                    {
-                                        new MetronomeTick(TimeSpan.Zero, MetronomeTickType.Bell),
-                                        new MetronomeTick(TimeSpan.FromMilliseconds(500), MetronomeTickType.Click),
-                                        new MetronomeTick(TimeSpan.FromMilliseconds(750), MetronomeTickType.Click),
-                                        new MetronomeTick(TimeSpan.FromMilliseconds(500), MetronomeTickType.None)
-                                    })),
-                            new MatcherWithAction(
-                                new NumberedEventMatcher<AfterRepetitionEvent>(e => e.Number == e.ExecutionContext.CurrentExercise.RepetitionCount - 2),
-                                new SayAction(speechService, "Two left"))
-                        })
-                });
+            return ExercisePrograms.Parse(input, audioService, delayService, loggerService, speechService).Programs[0];
+
+//            return new ExerciseProgram(
+//                loggerService,
+//                "Example Program",
+//                new[]
+//                {
+//                    new Exercise(
+//                        loggerService,
+//                        speechService,
+//                        "Push-ups",
+//                        3,
+//                        5,
+//                        new[]
+//                        {
+//                            new MatcherWithAction(
+//                                new NumberedEventMatcher<BeforeSetEvent>(e => e.Number > 1),
+//                                new BreakAction(delayService, speechService, TimeSpan.FromSeconds(7))),
+//                            new MatcherWithAction(
+//                                new TypedEventMatcher<DuringRepetitionEvent>(),
+//                                new MetronomeAction(
+//                                    audioService,
+//                                    delayService,
+//                                    loggerService,
+//                                    new[]
+//                                    {
+//                                        new MetronomeTick(TimeSpan.Zero, MetronomeTickType.Bell),
+//                                        new MetronomeTick(TimeSpan.FromMilliseconds(500), MetronomeTickType.Click),
+//                                        new MetronomeTick(TimeSpan.FromMilliseconds(750), MetronomeTickType.Click),
+//                                        new MetronomeTick(TimeSpan.FromMilliseconds(500), MetronomeTickType.None)
+//                                    })),
+//                            new MatcherWithAction(
+//                                new NumberedEventMatcher<AfterRepetitionEvent>(e => e.Number == e.ExecutionContext.CurrentExercise.RepetitionCount - 2),
+//                                new SayAction(speechService, "Two left"))
+//                        })
+//                });
         }
     }
 
