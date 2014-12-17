@@ -1,15 +1,14 @@
-﻿using WorkoutWotch.Models.Parsers;
-using WorkoutWotch.Services.Contracts.Audio;
-using WorkoutWotch.Services.Contracts.Delay;
-using WorkoutWotch.Services.Contracts.Logger;
-using WorkoutWotch.Services.Contracts.Speech;
-using Sprache;
-
-namespace WorkoutWotch.Models
+﻿namespace WorkoutWotch.Models
 {
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using Kent.Boogaart.HelperTrinity.Extensions;
+    using Sprache;
+    using WorkoutWotch.Services.Contracts.Audio;
+    using WorkoutWotch.Services.Contracts.Delay;
+    using WorkoutWotch.Services.Contracts.Logger;
+    using WorkoutWotch.Services.Contracts.Speech;
+    using WorkoutWotch.Models.Parsers;
 
     public sealed class ExercisePrograms
     {

@@ -1,14 +1,13 @@
-﻿using System;
-using Sprache;
-using WorkoutWotch.Services.Contracts.Audio;
-using WorkoutWotch.Services.Contracts.Delay;
-using WorkoutWotch.Services.Contracts.Logger;
-using WorkoutWotch.Services.Contracts.Speech;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using System.Linq;
-
-namespace WorkoutWotch.Models.Parsers
+﻿namespace WorkoutWotch.Models.Parsers
 {
+    using System.Linq;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Sprache;
+    using WorkoutWotch.Services.Contracts.Audio;
+    using WorkoutWotch.Services.Contracts.Delay;
+    using WorkoutWotch.Services.Contracts.Logger;
+    using WorkoutWotch.Services.Contracts.Speech;
+
     internal static class ExerciseProgramsParser
     {
         public static Parser<ExercisePrograms> GetParser(IAudioService audioService, IDelayService delayService, ILoggerService loggerService, ISpeechService speechService)
@@ -23,7 +22,5 @@ namespace WorkoutWotch.Models.Parsers
                 from _ in Parse.WhiteSpace.Many().End()
                 select new ExercisePrograms(exercisePrograms.GetOrElse(Enumerable.Empty<ExerciseProgram>()));
         }
-
     }
 }
-
