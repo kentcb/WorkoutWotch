@@ -129,9 +129,6 @@
     <Reference Include="ReactiveUI">
       <HintPath>..\packages\reactiveui-core.6.2.1.1\lib\Portable-Net45+Win8+WP8+WPA81\ReactiveUI.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="Akavache">
       <HintPath>..\packages\akavache.core.4.0.4\lib\Portable-Net45+Win8+WP8+Wpa81\Akavache.dll</HintPath>
     </Reference>
@@ -140,6 +137,9 @@
     </Reference>
     <Reference Include="Sprache">
       <HintPath>..\packages\Sprache.2.0.0.44\lib\portable-net4+netcore45+win8+wp8+sl5+MonoAndroid1+MonoTouch1\Sprache.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\portable-net45+wp80+win8+wpa81+aspnetcore50\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
