@@ -3,36 +3,25 @@
     using System;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using Sprache;
-    using WorkoutWotch.Services.Contracts.Audio;
-    using WorkoutWotch.Services.Contracts.Delay;
-    using WorkoutWotch.Services.Contracts.Logger;
-    using WorkoutWotch.Services.Contracts.Speech;
     using WorkoutWotch.Models.Actions;
+    using WorkoutWotch.Services.Contracts.Container;
 
     internal static class ParallelActionParser
     {
-        public static Parser<ParallelAction> GetParser(
-            int indentLevel,
-            IAudioService audioService,
-            IDelayService delayService,
-            ILoggerService loggerService,
-            ISpeechService speechService)
+        public static Parser<ParallelAction> GetParser(int indentLevel, IContainerService containerService)
         {
             if (indentLevel < 0)
             {
                 throw new ArgumentException("indentLevel must be greater than or equal to 0.", "indentLevel");
             }
 
-            audioService.AssertNotNull("audioService");
-            delayService.AssertNotNull("delayService");
-            loggerService.AssertNotNull("loggerService");
-            speechService.AssertNotNull("speechService");
+            containerService.AssertNotNull("containerService");
 
             return
                 from _ in Parse.IgnoreCase("parallel:")
                 from __ in Parse.WhiteSpace.Except(NewLineParser.Parser).Many()
                 from ___ in NewLineParser.Parser
-                from actions in ActionListParser.GetParser(indentLevel + 1, audioService, delayService, loggerService, speechService)
+                from actions in ActionListParser.GetParser(indentLevel + 1, containerService)
                 select new ParallelAction(actions);
         }
     }

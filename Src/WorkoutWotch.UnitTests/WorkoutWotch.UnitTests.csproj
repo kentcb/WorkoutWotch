@@ -99,6 +99,9 @@
     <Compile Include="Models\Parsers\ExerciseParserFixture.cs" />
     <Compile Include="Models\Parsers\ExerciseProgramParserFixture.cs" />
     <Compile Include="Models\Parsers\ExerciseProgramsParserFixture.cs" />
+    <Compile Include="Services\Container\Mocks\ContainerServiceMock.cs" />
+    <Compile Include="Services\Scheduler\Mocks\SchedulerServiceMock.cs" />
+    <Compile Include="Services\Scheduler\Mocks\SchedulerMock.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -167,6 +170,10 @@
     <Folder Include="Services\Speech\Mocks\" />
     <Folder Include="Models\EventMatchers\" />
     <Folder Include="Models\Parsers\" />
+    <Folder Include="Services\Container\" />
+    <Folder Include="Services\Container\Mocks\" />
+    <Folder Include="Services\Scheduler\" />
+    <Folder Include="Services\Scheduler\Mocks\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WorkoutWotch.Services\WorkoutWotch.Services.csproj">

@@ -1,10 +1,11 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Parsers
 {
     using System;
+    using Kent.Boogaart.PCLMock;
     using NUnit.Framework;
     using Sprache;
     using WorkoutWotch.Models.Parsers;
-    using WorkoutWotch.UnitTests.Services.Delay.Mocks;
+    using WorkoutWotch.UnitTests.Services.Container.Mocks;
 
     [TestFixture]
     public class WaitActionParserFixture
@@ -14,7 +15,7 @@
         private const int msInHour = 60 * msInMinute;
 
         [Test]
-        public void get_parser_throws_if_delay_service_is_null()
+        public void get_parser_throws_if_container_service_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => WaitActionParser.GetParser(null));
         }
@@ -26,7 +27,7 @@
         [TestCase("Wait    \t for \t   3s", 3 * msInSecond)]
         public void can_parse_correctly_formatted_input(string input, int expectedMilliseconds)
         {
-            var result = WaitActionParser.GetParser(new DelayServiceMock()).Parse(input);
+            var result = WaitActionParser.GetParser(new ContainerServiceMock(MockBehavior.Loose)).Parse(input);
             Assert.NotNull(result);
             Assert.AreEqual(TimeSpan.FromMilliseconds(expectedMilliseconds), result.Duration);
         }
@@ -42,7 +43,7 @@
         [TestCase("whatever")]
         public void cannot_parse_incorrectly_formatted_input(string input)
         {
-            var result = WaitActionParser.GetParser(new DelayServiceMock())(new Input(input));
+            var result = WaitActionParser.GetParser(new ContainerServiceMock(MockBehavior.Loose))(new Input(input));
             Assert.False(result.WasSuccessful);
         }
     }

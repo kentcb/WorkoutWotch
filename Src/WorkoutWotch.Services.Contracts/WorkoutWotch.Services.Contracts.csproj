@@ -44,6 +44,7 @@
     <Compile Include="ExerciseDocument\IExerciseDocumentService.cs" />
     <Compile Include="Audio\IAudioService.cs" />
     <Compile Include="Speech\ISpeechService.cs" />
+    <Compile Include="Container\IContainerService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -54,6 +55,7 @@
     <Folder Include="ExerciseDocument\" />
     <Folder Include="Audio\" />
     <Folder Include="Speech\" />
+    <Folder Include="Container\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Reactive.Interfaces">

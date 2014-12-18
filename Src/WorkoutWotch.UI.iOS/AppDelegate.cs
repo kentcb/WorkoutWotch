@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TinyIoC;
 
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -16,6 +17,11 @@ using WorkoutWotch.Services.Delay;
 using WorkoutWotch.Models.EventMatchers;
 using WorkoutWotch.Models.Events;
 using WorkoutWotch.Models.Actions;
+using WorkoutWotch.Services.Contracts.Container;
+using WorkoutWotch.Services.Contracts.Speech;
+using WorkoutWotch.Services.Contracts.Logger;
+using WorkoutWotch.Services.Contracts.Delay;
+using WorkoutWotch.Services.Contracts.Audio;
 
 namespace WorkoutWotch.UI.iOS
 {
@@ -75,10 +81,12 @@ namespace WorkoutWotch.UI.iOS
 
         private ExerciseProgram CreateExerciseProgram()
         {
-            var loggerService = new LoggerService();
-            var audioService = new AudioService();
-            var delayService = new DelayService();
-            var speechService = new SpeechService();
+            var container = new TinyIoCContainer();
+            container.Register<IAudioService, AudioService>();
+            container.Register<IDelayService, DelayService>();
+            container.Register<ILoggerService, LoggerService>();
+            container.Register<ISpeechService, SpeechService>();
+
             var input = @"# Example Program
 ## Push-ups
 * 3 sets x 5 reps
@@ -90,7 +98,7 @@ namespace WorkoutWotch.UI.iOS
   * Say 'two left'
 ";
 
-            return ExercisePrograms.Parse(input, audioService, delayService, loggerService, speechService).Programs[0];
+            return ExercisePrograms.Parse(input, container).Programs[0];
 
 //            return new ExerciseProgram(
 //                loggerService,

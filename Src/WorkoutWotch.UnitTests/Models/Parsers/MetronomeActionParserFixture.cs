@@ -7,9 +7,7 @@
     using Sprache;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Models.Parsers;
-    using WorkoutWotch.UnitTests.Services.Audio.Mocks;
-    using WorkoutWotch.UnitTests.Services.Delay.Mocks;
-    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
+    using WorkoutWotch.UnitTests.Services.Container.Mocks;
 
     [TestFixture]
     public class MetronomeActionParserFixture
@@ -19,21 +17,9 @@
         private const int msInHour = 60 * msInMinute;
 
         [Test]
-        public void get_parser_throws_if_audio_service_is_null()
+        public void get_parser_throws_if_container_service_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => MetronomeActionParser.GetParser(null, new DelayServiceMock(), new LoggerServiceMock()));
-        }
-
-        [Test]
-        public void get_parser_throws_if_delay_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => MetronomeActionParser.GetParser(new AudioServiceMock(), null, new LoggerServiceMock()));
-        }
-
-        [Test]
-        public void get_parser_throws_if_logger_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => MetronomeActionParser.GetParser(new AudioServiceMock(), new DelayServiceMock(), null));
+            Assert.Throws<ArgumentNullException>(() => MetronomeActionParser.GetParser(null));
         }
 
         [TestCase(
@@ -56,7 +42,7 @@
         {
             Assert.AreEqual(expectedPeriodsBeforeMilliseconds.Length, expectedTickTypes.Length);
 
-            var result = MetronomeActionParser.GetParser(new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose)).Parse(input);
+            var result = MetronomeActionParser.GetParser(new ContainerServiceMock(MockBehavior.Loose)).Parse(input);
             Assert.NotNull(result);
             Assert.AreEqual(expectedPeriodsBeforeMilliseconds.Length, result.Ticks.Count);
 
@@ -80,7 +66,7 @@
         [TestCase("Metronomeat 1s")]
         public void cannot_parse_incorrectly_formatted_input(string input)
         {
-            var result = MetronomeActionParser.GetParser(new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose))(new Input(input));
+            var result = MetronomeActionParser.GetParser(new ContainerServiceMock(MockBehavior.Loose))(new Input(input));
             Assert.False(result.WasSuccessful);
         }
     }

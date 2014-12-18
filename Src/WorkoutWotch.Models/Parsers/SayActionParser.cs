@@ -2,20 +2,21 @@
 {
     using Kent.Boogaart.HelperTrinity.Extensions;
     using Sprache;
-    using WorkoutWotch.Services.Contracts.Speech;
     using WorkoutWotch.Models.Actions;
+    using WorkoutWotch.Services.Contracts.Container;
+    using WorkoutWotch.Services.Contracts.Speech;
 
     internal static class SayActionParser
     {
-        public static Parser<SayAction> GetParser(ISpeechService speechService)
+        public static Parser<SayAction> GetParser(IContainerService containerService)
         {
-            speechService.AssertNotNull("speechService");
+            containerService.AssertNotNull("containerService");
 
             return
                 from _ in Parse.IgnoreCase("say")
                 from __ in Parse.WhiteSpace.AtLeastOnce()
                 from speechText in StringLiteralParser.Parser
-                select new SayAction(speechService, speechText);
+                select new SayAction(containerService.Resolve<ISpeechService>(), speechText);
         }
     }
 }

@@ -2,16 +2,16 @@
 {
     using Kent.Boogaart.HelperTrinity.Extensions;
     using Sprache;
+    using WorkoutWotch.Models.Actions;
+    using WorkoutWotch.Services.Contracts.Container;
     using WorkoutWotch.Services.Contracts.Delay;
     using WorkoutWotch.Services.Contracts.Speech;
-    using WorkoutWotch.Models.Actions;
 
     internal static class PrepareActionParser
     {
-        public static Parser<PrepareAction> GetParser(IDelayService delayService, ISpeechService speechService)
+        public static Parser<PrepareAction> GetParser(IContainerService containerService)
         {
-            delayService.AssertNotNull("delayService");
-            speechService.AssertNotNull("speechService");
+            containerService.AssertNotNull("containerService");
 
             return
                 from _ in Parse.IgnoreCase("prepare")
@@ -19,7 +19,10 @@
                 from ___ in Parse.IgnoreCase("for")
                 from ____ in Parse.WhiteSpace.AtLeastOnce()
                 from duration in TimeSpanParser.Parser
-                select new PrepareAction(delayService, speechService, duration);
+                select new PrepareAction(
+                    containerService.Resolve<IDelayService>(),
+                    containerService.Resolve<ISpeechService>(),
+                    duration);
         }
     }
 }

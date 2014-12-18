@@ -4,11 +4,8 @@
     using System.Collections.Immutable;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using Sprache;
-    using WorkoutWotch.Services.Contracts.Audio;
-    using WorkoutWotch.Services.Contracts.Delay;
-    using WorkoutWotch.Services.Contracts.Logger;
-    using WorkoutWotch.Services.Contracts.Speech;
     using WorkoutWotch.Models.Parsers;
+    using WorkoutWotch.Services.Contracts.Container;
 
     public sealed class ExercisePrograms
     {
@@ -25,15 +22,12 @@
             get { return this.programs; }
         }
 
-        public static ExercisePrograms Parse(string input, IAudioService audioService, IDelayService delayService, ILoggerService loggerService, ISpeechService speechService)
+        public static ExercisePrograms Parse(string input, IContainerService containerService)
         {
             input.AssertNotNull("input");
-            audioService.AssertNotNull("audioService");
-            delayService.AssertNotNull("delayService");
-            loggerService.AssertNotNull("loggerService");
-            speechService.AssertNotNull("speechService");
+            containerService.AssertNotNull("containerService");
 
-            return ExerciseProgramsParser.GetParser(audioService, delayService, loggerService, speechService).Parse(input);
+            return ExerciseProgramsParser.GetParser(containerService).Parse(input);
         }
     }
 }

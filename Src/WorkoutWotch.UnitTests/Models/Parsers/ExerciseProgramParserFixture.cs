@@ -5,36 +5,15 @@
     using NUnit.Framework;
     using Sprache;
     using WorkoutWotch.Models.Parsers;
-    using WorkoutWotch.UnitTests.Services.Audio.Mocks;
-    using WorkoutWotch.UnitTests.Services.Delay.Mocks;
-    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
-    using WorkoutWotch.UnitTests.Services.Speech.Mocks;
+    using WorkoutWotch.UnitTests.Services.Container.Mocks;
 
     [TestFixture]
     public class ExerciseProgramParserFixture
     {
         [Test]
-        public void get_parser_throws_if_audio_service_is_null()
+        public void get_parser_throws_if_container_service_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => ExerciseProgramParser.GetParser(null, new DelayServiceMock(), new LoggerServiceMock(), new SpeechServiceMock()));
-        }
-
-        [Test]
-        public void get_parser_throws_if_delay_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExerciseProgramParser.GetParser(new AudioServiceMock(), null, new LoggerServiceMock(), new SpeechServiceMock()));
-        }
-
-        [Test]
-        public void get_parser_throws_if_logger_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExerciseProgramParser.GetParser(new AudioServiceMock(), new DelayServiceMock(), null, new SpeechServiceMock()));
-        }
-
-        [Test]
-        public void get_parser_throws_if_speech_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExerciseProgramParser.GetParser(new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(), null));
+            Assert.Throws<ArgumentNullException>(() => ExerciseProgramParser.GetParser(null));
         }
 
         [TestCase("# foo\n", "foo")]
@@ -45,7 +24,7 @@
         public void can_parse_name(string input, string expectedName)
         {
             var result = ExerciseProgramParser
-                .GetParser(new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock())
+                .GetParser(new ContainerServiceMock(MockBehavior.Loose))
                 .Parse(input);
 
             Assert.NotNull(result);
@@ -59,7 +38,7 @@
         public void can_parse_exercises(string input, int expectedExerciseCount)
         {
             var result = ExerciseProgramParser
-                .GetParser(new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock())
+                .GetParser(new ContainerServiceMock(MockBehavior.Loose))
                 .Parse(input);
 
             Assert.NotNull(result);
@@ -73,7 +52,7 @@
         public void cannot_parse_invalid_input(string input)
         {
             var result = ExerciseProgramParser
-                .GetParser(new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock())(new Input(input));
+                .GetParser(new ContainerServiceMock(MockBehavior.Loose))(new Input(input));
             Assert.True(!result.WasSuccessful || !result.Remainder.AtEnd);
         }
     }

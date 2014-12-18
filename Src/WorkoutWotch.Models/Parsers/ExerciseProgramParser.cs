@@ -3,10 +3,8 @@
     using System.Linq;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using Sprache;
-    using WorkoutWotch.Services.Contracts.Audio;
-    using WorkoutWotch.Services.Contracts.Delay;
+    using WorkoutWotch.Services.Contracts.Container;
     using WorkoutWotch.Services.Contracts.Logger;
-    using WorkoutWotch.Services.Contracts.Speech;
 
     internal static class ExerciseProgramParser
     {
@@ -18,17 +16,14 @@
             let nameString = new string(name.ToArray()).TrimEnd()
             select nameString;
 
-        public static Parser<ExerciseProgram> GetParser(IAudioService audioService, IDelayService delayService, ILoggerService loggerService, ISpeechService speechService)
+        public static Parser<ExerciseProgram> GetParser(IContainerService containerService)
         {
-            audioService.AssertNotNull("audioService");
-            delayService.AssertNotNull("delayService");
-            loggerService.AssertNotNull("loggerService");
-            speechService.AssertNotNull("speechService");
+            containerService.AssertNotNull("containerService");
 
             return
                 from name in nameParser
-                from exercises in ExerciseParser.GetParser(audioService, delayService, loggerService, speechService).DelimitedBy(Parse.WhiteSpace.Many()).Optional()
-                select new ExerciseProgram(loggerService, name, exercises.GetOrElse(Enumerable.Empty<Exercise>()));
+                from exercises in ExerciseParser.GetParser(containerService).DelimitedBy(Parse.WhiteSpace.Many()).Optional()
+                select new ExerciseProgram(containerService.Resolve<ILoggerService>(), name, exercises.GetOrElse(Enumerable.Empty<Exercise>()));
         }
     }
 }

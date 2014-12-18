@@ -1,14 +1,11 @@
-﻿using WorkoutWotch.UnitTests.Services.Delay.Mocks;
-using WorkoutWotch.UnitTests.Services.Speech.Mocks;
-using WorkoutWotch.UnitTests.Services.Audio.Mocks;
-
-namespace WorkoutWotch.UnitTests.Models
+﻿namespace WorkoutWotch.UnitTests.Models
 {
     using System;
     using System.Linq;
     using Kent.Boogaart.PCLMock;
     using NUnit.Framework;
     using WorkoutWotch.Models;
+    using WorkoutWotch.UnitTests.Services.Container.Mocks;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
 
     [TestFixture]
@@ -51,31 +48,13 @@ namespace WorkoutWotch.UnitTests.Models
         [Test]
         public void parse_throws_if_input_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.Parse(null, new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(), new SpeechServiceMock()));
+            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.Parse(null, new ContainerServiceMock()));
         }
 
         [Test]
-        public void parse_throws_if_audio_service_is_null()
+        public void parse_throws_if_container_service_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.Parse("input", null, new DelayServiceMock(), new LoggerServiceMock(), new SpeechServiceMock()));
-        }
-
-        [Test]
-        public void parse_throws_if_delay_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.Parse("input", new AudioServiceMock(), null, new LoggerServiceMock(), new SpeechServiceMock()));
-        }
-
-        [Test]
-        public void parse_throws_if_logger_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.Parse("input", new AudioServiceMock(), new DelayServiceMock(), null, new SpeechServiceMock()));
-        }
-
-        [Test]
-        public void parse_throws_if_speech_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.Parse("input", new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(), null));
+            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.Parse("input", null));
         }
 
         [TestCase(
@@ -86,7 +65,7 @@ namespace WorkoutWotch.UnitTests.Models
             new [] { "first", "second", "third" })]
         public void parse_returns_an_appropriate_exercise_programs_instance(string input, string[] expectedProgramNames)
         {
-            var result = ExercisePrograms.Parse(input, new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock());
+            var result = ExercisePrograms.Parse(input, new ContainerServiceMock(MockBehavior.Loose));
 
             Assert.NotNull(result);
             Assert.True(result.Programs.Select(x => x.Name).SequenceEqual(expectedProgramNames));
