@@ -19,8 +19,7 @@
 
             return
                 from _ in Parse.IgnoreCase("parallel:")
-                from __ in Parse.WhiteSpace.Except(NewLineParser.Parser).Many()
-                from ___ in NewLineParser.Parser
+                from __ in VerticalSeparationParser.Parser.AtLeastOnce()
                 from actions in ActionListParser.GetParser(indentLevel + 1, containerService)
                 select new ParallelAction(actions);
         }

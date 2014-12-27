@@ -15,9 +15,9 @@
 
             return
                 from _ in Parse.IgnoreCase("prepare")
-                from __ in Parse.WhiteSpace.AtLeastOnce()
+                from __ in HorizontalWhitespaceParser.Parser.AtLeastOnce()
                 from ___ in Parse.IgnoreCase("for")
-                from ____ in Parse.WhiteSpace.AtLeastOnce()
+                from ____ in HorizontalWhitespaceParser.Parser.AtLeastOnce()
                 from duration in TimeSpanParser.Parser
                 select new PrepareAction(
                     containerService.Resolve<IDelayService>(),

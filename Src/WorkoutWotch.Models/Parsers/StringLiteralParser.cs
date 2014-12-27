@@ -41,6 +41,13 @@
                             "unexpected end of input",
                             new string[] { string.Format(CultureInfo.InvariantCulture, "continued string contents or {0}", delimiter) });
                     }
+                    else if (i.Current == '\n' || i.Current == '\r')
+                    {
+                        return Result.Failure<string>(
+                            i,
+                            "unexpected end of line",
+                            new string[] { string.Format(CultureInfo.InvariantCulture, "continued string contents or {0}", delimiter) });
+                    }
 
                     if (i.Current == '\\')
                     {

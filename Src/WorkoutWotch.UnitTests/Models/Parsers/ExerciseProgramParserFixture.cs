@@ -31,10 +31,13 @@
             Assert.AreEqual(expectedName, result.Name);
         }
 
+        [TestCase("# ignore", 0)]
         [TestCase("# ignore\n", 0)]
+        [TestCase("# ignore\n## Exercise 1\n* 1 set x 1 rep", 1)]
         [TestCase("# ignore\n## Exercise 1\n* 1 set x 1 rep\n", 1)]
-        [TestCase("# ignore\n## Exercise 1\n* 1 set x 1 rep\n## Exercise 2\n* 1 set x 1 rep\n", 2)]
-        [TestCase("# ignore\n## Exercise 1\n* 1 set x 1 rep\n  \n  \t  \n\n## Exercise 2\n* 1 set x 1 rep\n", 2)]
+        [TestCase("# ignore\n\n\n\n\n\t  \t\t  \n \t \n\n \n## Exercise 1\n* 1 set x 1 rep", 1)]
+        [TestCase("# ignore\n## Exercise 1\n* 1 set x 1 rep\n## Exercise 2\n* 1 set x 1 rep", 2)]
+        [TestCase("# ignore\n## Exercise 1\n* 1 set x 1 rep\n  \n  \t  \n\n## Exercise 2\n* 1 set x 1 rep", 2)]
         public void can_parse_exercises(string input, int expectedExerciseCount)
         {
             var result = ExerciseProgramParser
@@ -49,11 +52,12 @@
         [TestCase("#\n")]
         [TestCase("#no space after hash\n")]
         [TestCase("  # leading whitespace\n")]
+        [TestCase("# ignore\n## Exercise 1\n* 1 set x 1 rep  ## Exercise 2\n* 1 set x 1 rep")]
         public void cannot_parse_invalid_input(string input)
         {
             var result = ExerciseProgramParser
                 .GetParser(new ContainerServiceMock(MockBehavior.Loose))(new Input(input));
-            Assert.True(!result.WasSuccessful || !result.Remainder.AtEnd);
+            Assert.False(result.WasSuccessful && result.Remainder.AtEnd);
         }
     }
 }

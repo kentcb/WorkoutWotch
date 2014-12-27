@@ -33,7 +33,15 @@
             1,
             new [] { typeof(SayAction), typeof(WaitAction) })]
         [TestCase(
+            "SEQUENCE:\n  * Say 'foo'\n  * Wait for 2s",
+            0,
+            new [] { typeof(SayAction), typeof(WaitAction) })]
+        [TestCase(
             "Sequence:  \t  \n  * Say 'foo'\n  * Say 'bar'\n  * Say 'biz'",
+            0,
+            new [] { typeof(SayAction), typeof(SayAction), typeof(SayAction) })]
+        [TestCase(
+            "Sequence:\n\n\t\t  \n    \n\n  * Say 'foo'\n  * Say 'bar'\n  * Say 'biz'",
             0,
             new [] { typeof(SayAction), typeof(SayAction), typeof(SayAction) })]
         public void can_parse_valid_input(string input, int indentLevel, Type[] expectedActionTypes)
@@ -47,13 +55,14 @@
         }
 
         [TestCase("Seequence:\n  * Say 'foo'", 0)]
+        [TestCase("  Sequence:\n  * Say 'foo'", 0)]
         [TestCase("Sequence:\n", 0)]
         [TestCase("Sequence:\n  * Say 'foo'", 1)]
         public void cannot_parse_invalid_input(string input, int indentLevel)
         {
             var result = SequenceActionParser
                 .GetParser(indentLevel, new ContainerServiceMock(MockBehavior.Loose))(new Input(input));
-            Assert.False(result.WasSuccessful);
+            Assert.False(result.WasSuccessful && result.Remainder.AtEnd);
         }
     }
 }

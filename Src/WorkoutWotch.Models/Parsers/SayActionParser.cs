@@ -14,7 +14,7 @@
 
             return
                 from _ in Parse.IgnoreCase("say")
-                from __ in Parse.WhiteSpace.AtLeastOnce()
+                from __ in HorizontalWhitespaceParser.Parser.AtLeastOnce()
                 from speechText in StringLiteralParser.Parser
                 select new SayAction(containerService.Resolve<ISpeechService>(), speechText);
         }

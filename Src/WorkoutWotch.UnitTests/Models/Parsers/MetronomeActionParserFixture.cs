@@ -61,13 +61,18 @@
                             .Select(x => x.Type)));
         }
 
+        [TestCase("  Metronome at 1s")]
+        [TestCase("Metronome at 1s\n")]
         [TestCase("Metronome at")]
         [TestCase("Metronome at abc")]
         [TestCase("Metronomeat 1s")]
+        [TestCase("Metronome\n at 1s")]
+        [TestCase("Metronome at\n 1s")]
+        [TestCase("Metronome at 1s,\n2s")]
         public void cannot_parse_incorrectly_formatted_input(string input)
         {
             var result = MetronomeActionParser.GetParser(new ContainerServiceMock(MockBehavior.Loose))(new Input(input));
-            Assert.False(result.WasSuccessful);
+            Assert.False(result.WasSuccessful && result.Remainder.AtEnd);
         }
     }
 }

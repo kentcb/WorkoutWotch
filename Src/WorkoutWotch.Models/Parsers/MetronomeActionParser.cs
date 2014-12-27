@@ -21,10 +21,10 @@
 
             return
                 from _ in Parse.IgnoreCase("metronome")
-                from __ in Parse.WhiteSpace.AtLeastOnce()
+                from __ in HorizontalWhitespaceParser.Parser.AtLeastOnce()
                 from ___ in Parse.IgnoreCase("at")
-                from ____ in Parse.WhiteSpace.AtLeastOnce()
-                from ticks in metronomeTickParser.DelimitedBy(Parse.Char(',').Token())
+                from ____ in HorizontalWhitespaceParser.Parser.AtLeastOnce()
+                from ticks in metronomeTickParser.DelimitedBy(Parse.Char(',').Token(HorizontalWhitespaceParser.Parser))
                 select new MetronomeAction(
                     containerService.Resolve<IAudioService>(),
                     containerService.Resolve<IDelayService>(),

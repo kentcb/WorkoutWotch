@@ -6,7 +6,6 @@
     using Sprache;
     using WorkoutWotch.Models.Parsers;
     using WorkoutWotch.UnitTests.Services.Container.Mocks;
-    using WorkoutWotch.UnitTests.Services.Speech.Mocks;
 
     [TestFixture]
     public class PrepareActionParserFixture
@@ -31,6 +30,9 @@
             Assert.AreEqual(TimeSpan.FromMilliseconds(expectedMilliseconds), result.Duration);
         }
 
+        [TestCase("  Prepare for 24s")]
+        [TestCase("Prepare\n for 24s")]
+        [TestCase("Prepare for\n 24s")]
         [TestCase("Preapre for 24s")]
         [TestCase("Preparefor 24s")]
         [TestCase("Prepare for")]
@@ -38,7 +40,7 @@
         public void cannot_parse_invalid_input(string input)
         {
             var result = PrepareActionParser.GetParser(new ContainerServiceMock(MockBehavior.Loose))(new Input(input));
-            Assert.False(result.WasSuccessful);
+            Assert.False(result.WasSuccessful && result.Remainder.AtEnd);
         }
     }
 }

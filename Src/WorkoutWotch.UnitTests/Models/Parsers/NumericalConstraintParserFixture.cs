@@ -116,18 +116,23 @@
 
         [TestCase("")]
         [TestCase("frist")]
-        [TestCase("1..\n3")]
         [TestCase("first,\nlast")]
         [TestCase("first\n,last")]
-        [TestCase("^\n3")]
         [TestCase("first+\n1")]
         [TestCase("last-\n1")]
         [TestCase("first-1")]
         [TestCase("last+1")]
+        [TestCase("1..\n3")]
+        [TestCase("1\n..3")]
+        [TestCase("1. .3")]
+        [TestCase("1..2..\n3")]
+        [TestCase("1..2. .3")]
+        [TestCase("1,\n2")]
+        [TestCase("^\n3")]
         public void cannot_parse_invalid_input(string input)
         {
             var result = NumericalConstraintParser.GetParser(ec => 0, ec => 0, ec => 0)(new Input(input));
-            Assert.True(!result.WasSuccessful || !result.Remainder.AtEnd);
+            Assert.False(result.WasSuccessful && result.Remainder.AtEnd);
         }
     }
 }

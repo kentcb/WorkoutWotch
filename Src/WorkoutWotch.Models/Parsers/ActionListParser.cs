@@ -18,10 +18,9 @@
             containerService.AssertNotNull("containerService");
 
             return
-                (from _ in Parse.String("  ").Repeat(indentLevel)
+                (from _ in Parse.String("  ").Or(Parse.String("\t")).Repeat(indentLevel)
                  from __ in Parse.String("* ")
-                 from action in ActionParser.GetParser(indentLevel, containerService)
-                 from ___ in Parse.WhiteSpace.Except(NewLineParser.Parser).Many()
+                 from action in ActionParser.GetParser(indentLevel, containerService).Token(HorizontalWhitespaceParser.Parser)
                  select action).DelimitedBy(NewLineParser.Parser);
         }
     }

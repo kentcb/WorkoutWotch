@@ -30,14 +30,18 @@
             Assert.AreEqual(TimeSpan.FromMilliseconds(expectedMilliseconds), result.Duration);
         }
 
+        [TestCase("  Break for 24s")]
         [TestCase("Brake for 24s")]
         [TestCase("Breakfor 24s")]
+        [TestCase("Break for24s")]
         [TestCase("Break for")]
         [TestCase("Break for tea")]
+        [TestCase("Break\nfor 24s")]
+        [TestCase("Break for\n24s")]
         public void cannot_parse_invalid_input(string input)
         {
             var result = BreakActionParser.GetParser(new ContainerServiceMock(MockBehavior.Loose))(new Input(input));
-            Assert.False(result.WasSuccessful);
+            Assert.False(result.WasSuccessful && result.Remainder.AtEnd);
         }
     }
 }

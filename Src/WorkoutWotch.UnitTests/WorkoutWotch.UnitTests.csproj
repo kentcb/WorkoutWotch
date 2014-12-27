@@ -102,6 +102,9 @@
     <Compile Include="Services\Container\Mocks\ContainerServiceMock.cs" />
     <Compile Include="Services\Scheduler\Mocks\SchedulerServiceMock.cs" />
     <Compile Include="Services\Scheduler\Mocks\SchedulerMock.cs" />
+    <Compile Include="Models\Parsers\HeadingParserFixture.cs" />
+    <Compile Include="Models\Parsers\HorizontalWhitespaceParserFixture.cs" />
+    <Compile Include="Models\Parsers\VerticalSeparationParserFixture.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

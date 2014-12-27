@@ -33,7 +33,15 @@
             1,
             new [] { typeof(SayAction), typeof(WaitAction) })]
         [TestCase(
+            "PARALLEL:\n  * Say 'foo'\n  * Wait for 2s",
+            0,
+            new [] { typeof(SayAction), typeof(WaitAction) })]
+        [TestCase(
             "Parallel:  \t  \n  * Say 'foo'\n  * Say 'bar'\n  * Say 'biz'",
+            0,
+            new [] { typeof(SayAction), typeof(SayAction), typeof(SayAction) })]
+        [TestCase(
+            "Parallel:\n\n\t\t  \n    \n\n  * Say 'foo'\n  * Say 'bar'\n  * Say 'biz'",
             0,
             new [] { typeof(SayAction), typeof(SayAction), typeof(SayAction) })]
         public void can_parse_valid_input(string input, int indentLevel, Type[] expectedActionTypes)
@@ -47,13 +55,14 @@
         }
 
         [TestCase("Parallal:\n  * Say 'foo'", 0)]
+        [TestCase("  Parallel:\n  * Say 'foo'", 0)]
         [TestCase("Parallel:\n", 0)]
         [TestCase("Parallel:\n  * Say 'foo'", 1)]
         public void cannot_parse_invalid_input(string input, int indentLevel)
         {
             var result = ParallelActionParser
                 .GetParser(indentLevel, new ContainerServiceMock(MockBehavior.Loose))(new Input(input));
-            Assert.False(result.WasSuccessful);
+            Assert.False(result.WasSuccessful && result.Remainder.AtEnd);
         }
     }
 }

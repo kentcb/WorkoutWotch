@@ -23,16 +23,18 @@
             Assert.Throws<ArgumentNullException>(() => ActionParser.GetParser(0, null));
         }
 
-        [TestCase("Break for 10s", typeof(BreakAction))]
-        [TestCase("Metronome at 1s, 2s, 3s", typeof(MetronomeAction))]
-        [TestCase("Prepare for 10s", typeof(PrepareAction))]
-        [TestCase("Say 'foo'", typeof(SayAction))]
-        [TestCase("Wait for 10s", typeof(WaitAction))]
-        [TestCase("Sequence:\n  * Say 'foo'\n  * Say 'bar'", typeof(SequenceAction))]
-        [TestCase("Parallel:\n  * Say 'foo'\n  * Say 'bar'", typeof(ParallelAction))]
-        public void can_parse_valid_input(string input, Type expectedType)
+        [TestCase("Break for 10s", 0, typeof(BreakAction))]
+        [TestCase("Metronome at 1s, 2s, 3s", 0, typeof(MetronomeAction))]
+        [TestCase("Prepare for 10s", 0, typeof(PrepareAction))]
+        [TestCase("Say 'foo'", 0, typeof(SayAction))]
+        [TestCase("Wait for 10s", 0, typeof(WaitAction))]
+        [TestCase("Sequence:\n  * Say 'foo'\n  * Say 'bar'", 0, typeof(SequenceAction))]
+        [TestCase("Parallel:\n  * Say 'foo'\n  * Say 'bar'", 0, typeof(ParallelAction))]
+        [TestCase("Sequence:\n      * Say 'foo'\n      * Say 'bar'", 2, typeof(SequenceAction))]
+        [TestCase("Parallel:\n      * Say 'foo'\n      * Say 'bar'", 2, typeof(ParallelAction))]
+        public void can_parse_valid_input(string input, int indentLevel, Type expectedType)
         {
-            var result = ActionParser.GetParser(0, new ContainerServiceMock(MockBehavior.Loose))(new Input(input));
+            var result = ActionParser.GetParser(indentLevel, new ContainerServiceMock(MockBehavior.Loose))(new Input(input));
             Assert.True(result.WasSuccessful);
             Assert.True(result.Remainder.AtEnd);
             Assert.NotNull(result.Value);

@@ -82,6 +82,9 @@
     <Compile Include="Parsers\ExerciseParser.cs" />
     <Compile Include="Parsers\ExerciseProgramParser.cs" />
     <Compile Include="Parsers\ExerciseProgramsParser.cs" />
+    <Compile Include="Parsers\HorizontalWhitespaceParser.cs" />
+    <Compile Include="Parsers\HeadingParser.cs" />
+    <Compile Include="Parsers\VerticalSeparationParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

@@ -41,8 +41,20 @@
             1,
             new [] { typeof(WaitAction), typeof(BreakAction) })]
         [TestCase(
+            "\t* Wait for 2s\n\t* Break for 1m",
+            1,
+            new [] { typeof(WaitAction), typeof(BreakAction) })]
+        [TestCase(
+            "\t* Wait for 2s\n  * Break for 1m",
+            1,
+            new [] { typeof(WaitAction), typeof(BreakAction) })]
+        [TestCase(
             "      * Wait for 2s\n      * Break for 1m",
             3,
+            new [] { typeof(WaitAction), typeof(BreakAction) })]
+        [TestCase(
+            "    *       Wait for 2s  \t \n    *  \t Break for 1m  \t\t  ",
+            2,
             new [] { typeof(WaitAction), typeof(BreakAction) })]
         [TestCase(
             "* Sequence:\n  * Say 'foo'\n  * Sequence:\n    * Say 'bar'",
@@ -63,13 +75,14 @@
         [TestCase("* ", 0)]
         [TestCase("Wait for 2s", 0)]
         [TestCase("  * Wait for 2s", 0)]
+        [TestCase("\t* Wait for 2s", 0)]
         [TestCase("* Wait for 2s", 1)]
+        [TestCase("* Wait for 2s* Wait for 3s", 0)]
         public void cannot_parse_invalid_input(string input, int indentLevel)
         {
             var result = ActionListParser
                 .GetParser(indentLevel, new ContainerServiceMock(MockBehavior.Loose))(new Input(input));
-
-            Assert.False(result.WasSuccessful);
+            Assert.False(result.WasSuccessful && result.Remainder.AtEnd);
         }
     }
 }

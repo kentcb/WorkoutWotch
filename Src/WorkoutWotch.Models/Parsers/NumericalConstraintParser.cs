@@ -35,7 +35,7 @@
         {
             return
                 from first in GetFirstSymbolParser(getFirst)
-                from numberToAdd in Parse.Char('+').Token(Parse.WhiteSpace.Except(NewLineParser.Parser)).Then(_ => Parse.Number.Select(int.Parse)).Optional()
+                from numberToAdd in Parse.Char('+').Token(HorizontalWhitespaceParser.Parser).Then(_ => Parse.Number.Select(int.Parse)).Optional()
                 select (Func<ExecutionContext, int>)(ec => first(ec) + (numberToAdd.IsDefined ? numberToAdd.Get() : 0));
         }
 
@@ -45,7 +45,7 @@
         {
             return
                 from last in GetLastSymbolParser(getLast)
-                from numberToSubtract in Parse.Char('-').Token(Parse.WhiteSpace.Except(NewLineParser.Parser)).Then(_ => Parse.Number.Select(int.Parse)).Optional()
+                from numberToSubtract in Parse.Char('-').Token(HorizontalWhitespaceParser.Parser).Then(_ => Parse.Number.Select(int.Parse)).Optional()
                 select (Func<ExecutionContext, int>)(ec => last(ec) - (numberToSubtract.IsDefined ? numberToSubtract.Get() : 0));
         }
 
@@ -77,8 +77,8 @@
         {
             return
                 from getFirstNumber in GetNumberParser(getFirst, getLast)
-                from getSecondNumber in Parse.String("..").Token(Parse.WhiteSpace.Except(NewLineParser.Parser)).Then(_ => GetNumberParser(getFirst, getLast))
-                from getThirdNumber in Parse.String("..").Token(Parse.WhiteSpace.Except(NewLineParser.Parser)).Then(_ => GetNumberParser(getFirst, getLast)).Optional()
+                from getSecondNumber in Parse.String("..").Token(HorizontalWhitespaceParser.Parser).Then(_ => GetNumberParser(getFirst, getLast))
+                from getThirdNumber in Parse.String("..").Token(HorizontalWhitespaceParser.Parser).Then(_ => GetNumberParser(getFirst, getLast)).Optional()
                 let getStart = getFirstNumber
                 let getEnd = getThirdNumber.IsDefined ? getThirdNumber.Get() : getSecondNumber
                 let getSkip = getThirdNumber.IsDefined ? getSecondNumber : (Func<ExecutionContext, int>)(_ => 1)
@@ -113,7 +113,7 @@
         private static Parser<Func<ExecutionContext, bool>> GetMathematicalSetParser(Func<ExecutionContext, int> getActual, Func<ExecutionContext, int> getFirst, Func<ExecutionContext, int> getLast)
         {
             return GetAtomParser(getActual, getFirst, getLast)
-                .DelimitedBy(Parse.Char(',').Token(Parse.WhiteSpace.Except(NewLineParser.Parser)))
+                .DelimitedBy(Parse.Char(',').Token(HorizontalWhitespaceParser.Parser))
                 .Select(x => (Func<ExecutionContext, bool>)(ec =>
                 {
                     foreach (var atom in x)
@@ -133,7 +133,7 @@
         private static Parser<Func<ExecutionContext, bool>> GetExpressionParser(Func<ExecutionContext, int> getActual, Func<ExecutionContext, int> getFirst, Func<ExecutionContext, int> getLast)
         {
             return
-                from not in Parse.Char('^').Then(_ => Parse.WhiteSpace.Except(NewLineParser.Parser).Many()).Optional()
+                from not in Parse.Char('^').Then(_ => HorizontalWhitespaceParser.Parser.Many()).Optional()
                 from mathematicalSet in GetMathematicalSetParser(getActual, getFirst, getLast)
                 select (Func<ExecutionContext, bool>)(ec =>
                 {

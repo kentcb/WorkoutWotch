@@ -32,6 +32,9 @@
             Assert.AreEqual(TimeSpan.FromMilliseconds(expectedMilliseconds), result.Duration);
         }
 
+        [TestCase("  Wait for 1m")]
+        [TestCase("Wait\n for 1m")]
+        [TestCase("Wait for\n 1m")]
         [TestCase("Wayte for 1m")]
         [TestCase("Wait for abc")]
         [TestCase("WaitFor 1m")]
@@ -44,7 +47,7 @@
         public void cannot_parse_incorrectly_formatted_input(string input)
         {
             var result = WaitActionParser.GetParser(new ContainerServiceMock(MockBehavior.Loose))(new Input(input));
-            Assert.False(result.WasSuccessful);
+            Assert.False(result.WasSuccessful && result.Remainder.AtEnd);
         }
     }
 }

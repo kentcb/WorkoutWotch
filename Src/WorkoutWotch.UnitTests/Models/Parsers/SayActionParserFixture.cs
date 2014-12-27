@@ -29,6 +29,8 @@
             Assert.AreEqual(expectedSpeechText, result.SpeechText);
         }
 
+        [TestCase("  Say 'hello'")]
+        [TestCase("Say\n 'hello'")]
         [TestCase("Say")]
         [TestCase("Say hello")]
         [TestCase("Sai 'hello'")]
@@ -36,7 +38,7 @@
         public void cannot_parse_incorrectly_formatted_input(string input)
         {
             var result = SayActionParser.GetParser(new ContainerServiceMock(MockBehavior.Loose))(new Input(input));
-            Assert.False(result.WasSuccessful);
+            Assert.False(result.WasSuccessful && result.Remainder.AtEnd);
         }
     }
 }

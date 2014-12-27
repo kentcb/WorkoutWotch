@@ -76,6 +76,21 @@
             Assert.AreEqual("unexpected end of input", result.Message);
             Assert.AreEqual(1, result.Expectations.Count());
             Assert.AreEqual("continued string contents or " + delimiter, result.Expectations.ElementAt(0));
-       }
+        }
+
+        [TestCase('\'', "\n")]
+        [TestCase('\'', "\r")]
+        [TestCase('\'', "\r\n")]
+        [TestCase('"', "\n")]
+        [TestCase('"', "\r")]
+        [TestCase('"', "\r\n")]
+        public void cannot_parse_newlines_within_literal(char delimiter, string newLine)
+        {
+            var result = StringLiteralParser.Parser(new Input(delimiter + "hello" + newLine + "world" + delimiter));
+            Assert.False(result.WasSuccessful);
+            Assert.AreEqual("unexpected end of line", result.Message);
+            Assert.AreEqual(1, result.Expectations.Count());
+            Assert.AreEqual("continued string contents or " + delimiter, result.Expectations.ElementAt(0));
+        }
     }
 }

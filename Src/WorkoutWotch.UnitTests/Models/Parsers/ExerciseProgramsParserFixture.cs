@@ -17,7 +17,11 @@
         }
 
         [TestCase("", 0)]
+        [TestCase(" \n\t\t  \n\n\n\n\t\n        \n", 0)]
+        [TestCase("# first", 1)]
         [TestCase("# first\n", 1)]
+        [TestCase("\n\n\n  \t\t \t \n\t\n\t\n\n   \n# first", 1)]
+        [TestCase("# first\n# second", 2)]
         [TestCase("# first\n# second\n", 2)]
         [TestCase("# first\n\n\n# second\n", 2)]
         [TestCase("# first\n\n\n# second\n\n  \t \n  \t\t\t \n\n \t", 2)]
@@ -33,11 +37,12 @@
 
         [TestCase("abc")]
         [TestCase("# first\n bla bla")]
+        [TestCase("  # first")]
         public void cannot_parse_invalid_input(string input)
         {
             var result = ExerciseProgramsParser
                 .GetParser(new ContainerServiceMock(MockBehavior.Loose))(new Input(input));
-            Assert.True(!result.WasSuccessful || !result.Remainder.AtEnd);
+            Assert.False(result.WasSuccessful && result.Remainder.AtEnd);
         }
     }
 }
