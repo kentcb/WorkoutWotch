@@ -85,6 +85,7 @@
     <Compile Include="Parsers\HorizontalWhitespaceParser.cs" />
     <Compile Include="Parsers\HeadingParser.cs" />
     <Compile Include="Parsers\VerticalSeparationParser.cs" />
+    <Compile Include="Parsers\DoNotAwaitActionParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

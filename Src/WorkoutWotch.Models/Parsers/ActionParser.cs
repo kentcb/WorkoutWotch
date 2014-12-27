@@ -21,6 +21,7 @@
                 .Or<IAction>(PrepareActionParser.GetParser(containerService))
                 .Or<IAction>(SayActionParser.GetParser(containerService))
                 .Or<IAction>(WaitActionParser.GetParser(containerService))
+                .Or<IAction>(DoNotAwaitActionParser.GetParser(indentLevel, containerService))
                 .Or<IAction>(ParallelActionParser.GetParser(indentLevel, containerService))
                 .Or<IAction>(SequenceActionParser.GetParser(indentLevel, containerService));
         }

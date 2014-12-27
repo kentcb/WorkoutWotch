@@ -105,6 +105,7 @@
     <Compile Include="Models\Parsers\HeadingParserFixture.cs" />
     <Compile Include="Models\Parsers\HorizontalWhitespaceParserFixture.cs" />
     <Compile Include="Models\Parsers\VerticalSeparationParserFixture.cs" />
+    <Compile Include="Models\Parsers\DoNotAwaitActionParserFixture.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

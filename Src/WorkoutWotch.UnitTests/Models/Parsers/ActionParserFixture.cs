@@ -32,6 +32,7 @@
         [TestCase("Parallel:\n  * Say 'foo'\n  * Say 'bar'", 0, typeof(ParallelAction))]
         [TestCase("Sequence:\n      * Say 'foo'\n      * Say 'bar'", 2, typeof(SequenceAction))]
         [TestCase("Parallel:\n      * Say 'foo'\n      * Say 'bar'", 2, typeof(ParallelAction))]
+        [TestCase("Don't wait:\n      * Say 'foo'\n      * Say 'bar'", 2, typeof(DoNotAwaitAction))]
         public void can_parse_valid_input(string input, int indentLevel, Type expectedType)
         {
             var result = ActionParser.GetParser(indentLevel, new ContainerServiceMock(MockBehavior.Loose))(new Input(input));

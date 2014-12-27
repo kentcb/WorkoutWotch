@@ -24,6 +24,11 @@
             get { return TimeSpan.Zero; }
         }
 
+        public IAction InnerAction
+        {
+            get { return this.innerAction; }
+        }
+
         public Task ExecuteAsync(ExecutionContext context)
         {
             context.AssertNotNull("context");
