@@ -1,6 +1,3 @@
-using System;
-using ReactiveUI;
-
 namespace WorkoutWotch.ViewModels
 {
 	public enum ExerciseProgramsViewModelStatus
@@ -11,6 +8,4 @@ namespace WorkoutWotch.ViewModels
         LoadedFromCache,
         LoadedFromCloud
 	}
-
 }
-

@@ -1,20 +1,19 @@
-﻿using System;
-using System.Linq;
-using System.Reactive.Threading.Tasks;
-using ReactiveUI;
-using WorkoutWotch.Services.Contracts.ExerciseDocument;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using System.Reactive.Linq;
-using WorkoutWotch.Services.Contracts.Scheduler;
-using System.Reactive.Disposables;
-using WorkoutWotch.Utility;
-using WorkoutWotch.Models;
-using WorkoutWotch.Services.Contracts.Container;
-using WorkoutWotch.Services.Contracts.State;
-using System.Threading.Tasks;
-
-namespace WorkoutWotch.ViewModels
+﻿namespace WorkoutWotch.ViewModels
 {
+    using System;
+    using System.Reactive.Disposables;
+    using System.Reactive.Linq;
+    using System.Reactive.Threading.Tasks;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using ReactiveUI;
+    using WorkoutWotch.Models;
+    using WorkoutWotch.Services.Contracts.Container;
+    using WorkoutWotch.Services.Contracts.ExerciseDocument;
+    using WorkoutWotch.Services.Contracts.Scheduler;
+    using WorkoutWotch.Services.Contracts.State;
+    using WorkoutWotch.Utility;
+
     public sealed class ExerciseProgramsViewModel : DisposableReactiveObject
     {
         private const string exerciseProgramsCacheKey = "ExerciseProgramsDocument";
@@ -49,6 +48,7 @@ namespace WorkoutWotch.ViewModels
                 .ObserveOn(schedulerService.SynchronizationContextScheduler)
                 .Subscribe(async x => await this.OnDocumentReceivedAsync(x), _ => this.Status = ExerciseProgramsViewModelStatus.LoadFailed)
                 .AddTo(this.disposables);
+
             this.programs = this.WhenAnyValue(x => x.Model)
                 .Select(x => x == null ? null : x.Programs.CreateDerivedCollection(y => new ExerciseProgramViewModel()))
                 .ToProperty(this, x => x.Programs);
@@ -152,4 +152,3 @@ namespace WorkoutWotch.ViewModels
         }
     }
 }
-

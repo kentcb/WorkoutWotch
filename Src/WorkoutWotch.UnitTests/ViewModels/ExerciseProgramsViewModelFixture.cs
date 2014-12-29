@@ -1,17 +1,16 @@
-﻿using System;
-using System.Linq;
-using NUnit.Framework;
-using WorkoutWotch.ViewModels;
-using WorkoutWotch.UnitTests.Services.ExerciseDocument.Mocks;
-using System.Reactive.Linq;
-using WorkoutWotch.UnitTests.Reactive;
-using WorkoutWotch.UnitTests.Services.Container.Mocks;
-using Kent.Boogaart.PCLMock;
-using WorkoutWotch.UnitTests.Services.State.Mocks;
-using System.Threading.Tasks;
-
-namespace WorkoutWotch.UnitTests.ViewModels
+﻿namespace WorkoutWotch.UnitTests.ViewModels
 {
+    using System;
+    using System.Reactive.Linq;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.PCLMock;
+    using NUnit.Framework;
+    using WorkoutWotch.UnitTests.Reactive;
+    using WorkoutWotch.UnitTests.Services.Container.Mocks;
+    using WorkoutWotch.UnitTests.Services.ExerciseDocument.Mocks;
+    using WorkoutWotch.UnitTests.Services.State.Mocks;
+    using WorkoutWotch.ViewModels;
+
     [TestFixture]
     public class ExerciseProgramsViewModelFixture
     {
@@ -301,4 +300,3 @@ namespace WorkoutWotch.UnitTests.ViewModels
         #endregion
     }
 }
-
