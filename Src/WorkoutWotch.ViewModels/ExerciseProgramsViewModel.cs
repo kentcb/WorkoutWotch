@@ -4,9 +4,9 @@
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Reactive.Threading.Tasks;
-    using System.Threading.Tasks;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using ReactiveUI;
+    using Sprache;
     using WorkoutWotch.Models;
     using WorkoutWotch.Services.Contracts.Container;
     using WorkoutWotch.Services.Contracts.ExerciseDocument;
@@ -23,9 +23,9 @@
         private readonly IStateService stateService;
         private readonly CompositeDisposable disposables;
         private readonly ObservableAsPropertyHelper<IReadOnlyReactiveList<ExerciseProgramViewModel>> programs;
-        private ExerciseProgramsViewModelStatus status;
-        private string parseErrorMessage;
-        private ExercisePrograms model;
+        private readonly ObservableAsPropertyHelper<string> parseErrorMessage;
+        private readonly ObservableAsPropertyHelper<ExerciseProgramsViewModelStatus> status;
+        private readonly ObservableAsPropertyHelper<ExercisePrograms> model;
         private ExerciseProgramViewModel selectedProgram;
 
         public ExerciseProgramsViewModel(
@@ -44,21 +44,66 @@
             this.stateService = stateService;
             this.disposables = new CompositeDisposable();
 
-            this.Documents
+            var documentsFromCache = this.stateService
+                .GetAsync<string>(exerciseProgramsCacheKey)
+                .ToObservable()
+                .Where(x => x != null)
+                .Select(x => new DocumentSourceWith<string>(DocumentSource.Cache, x));
+
+            var documentsFromCloud = this.exerciseDocumentService
+                .ExerciseDocument
+                .Select(x => new DocumentSourceWith<string>(DocumentSource.Cloud, x));
+
+            var documents = documentsFromCache
+                .Catch(Observable.Empty<DocumentSourceWith<string>>())
+                .Concat(documentsFromCloud)
+                .Publish();
+
+            var safeDocuments = documents
+                .Catch(Observable.Empty<DocumentSourceWith<string>>());
+
+            var results = documents
+                .Select(x => new DocumentSourceWith<IResult<ExercisePrograms>>(x.Source, ExercisePrograms.TryParse(x.Item, this.containerService)));
+
+            var safeResults = results
+                .Catch(Observable.Empty<DocumentSourceWith<IResult<ExercisePrograms>>>());
+
+            this.parseErrorMessage = safeResults
+                .Select(x => x.Item.WasSuccessful ? null : x.Item.ToString())
                 .ObserveOn(schedulerService.SynchronizationContextScheduler)
-                .Subscribe(async x => await this.OnDocumentReceivedAsync(x), _ => this.Status = ExerciseProgramsViewModelStatus.LoadFailed)
+                .ToProperty(this, x => x.ParseErrorMessage)
+                .AddTo(this.disposables);
+
+            this.status = results
+                .Select(x => !x.Item.WasSuccessful ? ExerciseProgramsViewModelStatus.ParseFailed : x.Source == DocumentSource.Cache ? ExerciseProgramsViewModelStatus.LoadedFromCache : ExerciseProgramsViewModelStatus.LoadedFromCloud)
+                .Catch(Observable.Return(ExerciseProgramsViewModelStatus.LoadFailed))
+                .ObserveOn(schedulerService.SynchronizationContextScheduler)
+                .ToProperty(this, x => x.Status)
+                .AddTo(this.disposables);
+
+            this.model = safeResults
+                .Select(x => x.Item.WasSuccessful ? x.Item.Value : null)
+                .ObserveOn(schedulerService.SynchronizationContextScheduler)
+                .ToProperty(this, x => x.Model)
                 .AddTo(this.disposables);
 
             this.programs = this.WhenAnyValue(x => x.Model)
                 .Select(x => x == null ? null : x.Programs.CreateDerivedCollection(y => new ExerciseProgramViewModel()))
+                .ObserveOn(schedulerService.SynchronizationContextScheduler)
                 .ToProperty(this, x => x.Programs)
                 .AddTo(this.disposables);
+
+            safeDocuments
+                .Where(x => x.Source == DocumentSource.Cloud)
+                .Subscribe(async x => await this.stateService.SetAsync(exerciseProgramsCacheKey, x.Item))
+                .AddTo(this.disposables);
+
+            documents.Connect();
         }
 
         public ExerciseProgramsViewModelStatus Status
         {
-            get { return this.status; }
-            private set { this.RaiseAndSetIfChanged(ref this.status, value); }
+            get { return this.status.Value; }
         }
 
         public ExerciseProgramViewModel SelectedProgram
@@ -69,8 +114,7 @@
 
         public string ParseErrorMessage
         {
-            get { return this.parseErrorMessage; }
-            private set { this.RaiseAndSetIfChanged(ref this.parseErrorMessage, value); }
+            get { return this.parseErrorMessage.Value; }
         }
 
         public IReadOnlyReactiveList<ExerciseProgramViewModel> Programs
@@ -80,40 +124,7 @@
 
         private ExercisePrograms Model
         {
-            get { return this.model; }
-            set { this.RaiseAndSetIfChanged(ref this.model, value); }
-        }
-
-        private IObservable<Tuple<DocumentSource, string>> DocumentsFromCache
-        {
-            get
-            {
-                return this.stateService
-                    .GetAsync<string>(exerciseProgramsCacheKey)
-                    .ToObservable()
-                    .Where(x => x != null)
-                    .Select(x => Tuple.Create(DocumentSource.Cache, x));
-            }
-        }
-
-        private IObservable<Tuple<DocumentSource, string>> DocumentsFromCloud
-        {
-            get
-            {
-                return this.exerciseDocumentService
-                    .ExerciseDocument
-                    .Select(x => Tuple.Create(DocumentSource.Cloud, x));
-            }
-        }
-
-        private IObservable<Tuple<DocumentSource, string>> Documents
-        {
-            get
-            {
-                return this.DocumentsFromCache
-                    .Catch(Observable.Empty<Tuple<DocumentSource, string>>())
-                    .Concat(this.DocumentsFromCloud);
-            }
+            get { return this.model.Value; }
         }
 
         protected override void Dispose(bool disposing)
@@ -126,31 +137,42 @@
             }
         }
 
-        private async Task OnDocumentReceivedAsync(Tuple<DocumentSource, string> document)
-        {
-            var result = ExercisePrograms.TryParse(document.Item2, this.containerService);
-
-            if (!result.WasSuccessful)
-            {
-                this.ParseErrorMessage = result.ToString();
-                this.Status = ExerciseProgramsViewModelStatus.ParseFailed;
-                return;
-            }
-
-            this.ParseErrorMessage = null;
-            this.Model = result.Value;
-            this.Status = document.Item1 == DocumentSource.Cache ? ExerciseProgramsViewModelStatus.LoadedFromCache : ExerciseProgramsViewModelStatus.LoadedFromCloud;
-
-            if (document.Item1 == DocumentSource.Cloud)
-            {
-                await this.stateService.SetAsync(exerciseProgramsCacheKey, document.Item2);
-            }
-        }
-
         private enum DocumentSource
         {
             Cache,
             Cloud
+        }
+
+        private struct DocumentSourceWith<T>
+        {
+            private readonly DocumentSource source;
+            private readonly T item;
+
+            public DocumentSourceWith(DocumentSource source, T item)
+            {
+                this.source = source;
+                this.item = item;
+            }
+
+            public DocumentSource Source
+            {
+                get { return this.source; }
+            }
+
+            public T Item
+            {
+                get { return this.item; }
+            }
+
+            public override bool Equals(object obj)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override int GetHashCode()
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }
