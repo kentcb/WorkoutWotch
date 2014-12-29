@@ -51,7 +51,8 @@
 
             this.programs = this.WhenAnyValue(x => x.Model)
                 .Select(x => x == null ? null : x.Programs.CreateDerivedCollection(y => new ExerciseProgramViewModel()))
-                .ToProperty(this, x => x.Programs);
+                .ToProperty(this, x => x.Programs)
+                .AddTo(this.disposables);
         }
 
         public ExerciseProgramsViewModelStatus Status
