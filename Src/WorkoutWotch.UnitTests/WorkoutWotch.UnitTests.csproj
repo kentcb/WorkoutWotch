@@ -106,6 +106,7 @@
     <Compile Include="Models\Parsers\HorizontalWhitespaceParserFixture.cs" />
     <Compile Include="Models\Parsers\VerticalSeparationParserFixture.cs" />
     <Compile Include="Models\Parsers\DoNotAwaitActionParserFixture.cs" />
+    <Compile Include="ViewModels\ExerciseProgramsViewModelFixture.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -178,6 +179,7 @@
     <Folder Include="Services\Container\Mocks\" />
     <Folder Include="Services\Scheduler\" />
     <Folder Include="Services\Scheduler\Mocks\" />
+    <Folder Include="ViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WorkoutWotch.Services\WorkoutWotch.Services.csproj">
@@ -195,6 +197,10 @@
     <ProjectReference Include="..\WorkoutWotch.Models\WorkoutWotch.Models.csproj">
       <Project>{74685F96-6BFE-403C-B046-CDE90E52DA70}</Project>
       <Name>WorkoutWotch.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WorkoutWotch.ViewModels\WorkoutWotch.ViewModels.csproj">
+      <Project>{FCB4C356-C2D8-4C9B-BDAC-D802EC2CA0FE}</Project>
+      <Name>WorkoutWotch.ViewModels</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

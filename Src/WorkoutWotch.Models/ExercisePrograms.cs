@@ -29,5 +29,13 @@
 
             return ExerciseProgramsParser.GetParser(containerService).Parse(input);
         }
+
+        public static IResult<ExercisePrograms> TryParse(string input, IContainerService containerService)
+        {
+            input.AssertNotNull("input");
+            containerService.AssertNotNull("containerService");
+
+            return ExerciseProgramsParser.GetParser(containerService).TryParse(input);
+        }
     }
 }
