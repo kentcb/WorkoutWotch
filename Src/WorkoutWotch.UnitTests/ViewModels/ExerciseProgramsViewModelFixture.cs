@@ -2,6 +2,7 @@
 {
     using System;
     using System.Reactive.Linq;
+    using System.Reactive.Subjects;
     using System.Threading.Tasks;
     using Kent.Boogaart.PCLMock;
     using NUnit.Framework;
@@ -66,15 +67,34 @@
         }
 
         [Test]
-        public void programs_yields_any_successfully_parsed_programs()
+        public void parse_error_message_is_null_if_a_document_is_successfully_parsed_after_one_fails_to_parse()
         {
-            var document = @"# First Program
+            var badDocument = @"# First Program
 
 ## First Exercise
 
-* 3 sets x 10 reps
-* Before:
-  * Say 'hello'";
+ whatever!";
+            var goodDocument = "# First Program";
+            var documents = new Subject<string>();
+            var exerciseDocumentService = new ExerciseDocumentServiceMock();
+            exerciseDocumentService.When(x => x.ExerciseDocument).Return(documents);
+            var stateService = this.GetStateService(null);
+            var scheduler = new TestSchedulerService();
+            var sut = new ExerciseProgramsViewModel(new ContainerServiceMock(MockBehavior.Loose), exerciseDocumentService, scheduler, stateService);
+            documents.OnNext(badDocument);
+
+            scheduler.Start();
+            Assert.NotNull(sut.ParseErrorMessage);
+
+            documents.OnNext(goodDocument);
+            scheduler.Start();
+            Assert.Null(sut.ParseErrorMessage);
+        }
+
+        [Test]
+        public void programs_yields_any_successfully_parsed_programs()
+        {
+            var document = "# First Program";
             var exerciseDocumentService = new ExerciseDocumentServiceMock();
             exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Return(document));
             var stateService = this.GetStateService(null);
@@ -103,14 +123,7 @@
         [Test]
         public void programs_is_populated_from_cache_if_cache_is_populated_and_cloud_is_empty()
         {
-            var document = @"# First Program
-
-## First Exercise
-
-* 3 sets x 10 reps
-* Before:
-  * Say 'hello'";
-
+            var document = "# First Program";
             var exerciseDocumentService = new ExerciseDocumentServiceMock();
             exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Never<string>());
             var stateService = this.GetStateService(document);
@@ -125,14 +138,7 @@
         [Test]
         public void programs_is_populated_from_cloud_if_cache_is_empty_and_cloud_is_populated()
         {
-            var document = @"# First Program
-
-## First Exercise
-
-* 3 sets x 10 reps
-* Before:
-  * Say 'hello'";
-
+            var document = "# First Program";
             var exerciseDocumentService = new ExerciseDocumentServiceMock();
             exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Return(document));
             var stateService = this.GetStateService(null);
@@ -145,20 +151,28 @@
         }
 
         [Test]
+        public void programs_is_populated_from_cloud_if_cache_errors_and_cloud_is_populated()
+        {
+            var document = "# First Program";
+            var exerciseDocumentService = new ExerciseDocumentServiceMock();
+            exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Return(document));
+            var stateService = this.GetStateService(null);
+            stateService.When(x => x.GetAsync<string>(It.IsAny<string>())).Return(Task.Run<string>(() => { throw new InvalidOperationException(); }));
+            var scheduler = new TestSchedulerService();
+            var sut = new ExerciseProgramsViewModel(new ContainerServiceMock(MockBehavior.Loose), exerciseDocumentService, scheduler, stateService);
+
+            scheduler.Start();
+            Assert.NotNull(sut.Programs);
+            Assert.AreEqual(1, sut.Programs.Count);
+        }
+
+        [Test]
         public void programs_is_populated_from_cloud_if_cache_is_populated_and_cloud_is_populated()
         {
-            var cacheDocument = @"# First Program
-
-## First Exercise
-
-* 3 sets x 10 reps
-* Before:
-  * Say 'hello'";
-
-            var cloudDocument = @"# First Program
-
+            var cacheDocument = "# First Program";
+            var cloudDocument = @"
+# First Program
 # Second Program";
-
             var exerciseDocumentService = new ExerciseDocumentServiceMock();
             exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Return(cloudDocument));
             var stateService = this.GetStateService(cacheDocument);
@@ -191,14 +205,7 @@
         [Test]
         public void status_is_loaded_from_cache_if_document_is_successfully_loaded_from_cache()
         {
-            var document = @"# First Program
-
-## First Exercise
-
-* 3 sets x 10 reps
-* Before:
-  * Say 'hello'";
-
+            var document = "# First Program";
             var exerciseDocumentService = new ExerciseDocumentServiceMock();
             exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Never<string>());
             var stateService = this.GetStateService(document);
@@ -212,14 +219,7 @@
         [Test]
         public void status_is_loaded_from_cloud_if_document_is_successfully_loaded_from_cloud()
         {
-            var document = @"# First Program
-
-## First Exercise
-
-* 3 sets x 10 reps
-* Before:
-  * Say 'hello'";
-
+            var document = "# First Program";
             var exerciseDocumentService = new ExerciseDocumentServiceMock();
             exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Return(document));
             var stateService = this.GetStateService(null);
@@ -246,14 +246,7 @@
         [Test]
         public void document_is_stored_in_cache_if_successfully_loaded_from_cloud()
         {
-            var document = @"# First Program
-
-## First Exercise
-
-* 3 sets x 10 reps
-* Before:
-  * Say 'hello'";
-
+            var document = "# First Program";
             var exerciseDocumentService = new ExerciseDocumentServiceMock();
             exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Return(document));
             var stateService = this.GetStateService(null);
@@ -268,14 +261,7 @@
         [Test]
         public void document_is_not_stored_in_cache_if_loaded_from_cache()
         {
-            var document = @"# First Program
-
-## First Exercise
-
-* 3 sets x 10 reps
-* Before:
-  * Say 'hello'";
-
+            var document = "# First Program";
             var exerciseDocumentService = new ExerciseDocumentServiceMock();
             exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Never<string>());
             var stateService = this.GetStateService(document);

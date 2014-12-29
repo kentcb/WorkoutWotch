@@ -137,6 +137,7 @@
                 return;
             }
 
+            this.ParseErrorMessage = null;
             this.Model = result.Value;
             this.Status = document.Item1 == DocumentSource.Cache ? ExerciseProgramsViewModelStatus.LoadedFromCache : ExerciseProgramsViewModelStatus.LoadedFromCloud;
 

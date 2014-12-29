@@ -71,6 +71,33 @@
             Assert.True(result.Programs.Select(x => x.Name).SequenceEqual(expectedProgramNames));
         }
 
+        [Test]
+        public void try_parse_throws_if_input_is_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.TryParse(null, new ContainerServiceMock()));
+        }
+
+        [Test]
+        public void try_parse_throws_if_container_service_is_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.TryParse("input", null));
+        }
+
+        [TestCase(
+            "# first\n",
+            new [] { "first" })]
+        [TestCase(
+            "# first\n# second\n# third\n",
+            new [] { "first", "second", "third" })]
+        public void try_parse_returns_an_appropriate_exercise_programs_instance(string input, string[] expectedProgramNames)
+        {
+            var result = ExercisePrograms.TryParse(input, new ContainerServiceMock(MockBehavior.Loose));
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Value);
+            Assert.True(result.Value.Programs.Select(x => x.Name).SequenceEqual(expectedProgramNames));
+        }
+
         #region Supporting Members
 
         private ExerciseProgram CreateExerciseProgram(string name)
