@@ -59,5 +59,6 @@ A repository for my video series on building an iOS app with C#. Here is a full 
   * [Video 37: Summary and Demo](http://youtu.be/GuuH-2yNrjk)
 * Module 06: View Models
   * [Video 01: Overview](http://youtu.be/sla6K5J8PVs)
+  * [Video 02: Exercise Programs View Model](http://youtu.be/dTFyZ2HJqNE)
 
 For details on writing an exercise program document, see [writing exercise programs](Doc/writing-exercise-programs.md).
