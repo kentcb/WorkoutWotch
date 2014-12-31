@@ -1,17 +1,17 @@
-using System;
-using System.Linq;
-using ReactiveUI;
-using WorkoutWotch.Utility;
-using WorkoutWotch.Models;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
-using WorkoutWotch.Services.Contracts.Scheduler;
-
 namespace WorkoutWotch.ViewModels
 {
-	public sealed class ExerciseProgramViewModel : DisposableReactiveObject
+    using System;
+    using System.Linq;
+    using System.Reactive.Disposables;
+    using System.Reactive.Linq;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using ReactiveUI;
+    using WorkoutWotch.Models;
+    using WorkoutWotch.Services.Contracts.Scheduler;
+    using WorkoutWotch.Utility;
+
+    public sealed class ExerciseProgramViewModel : DisposableReactiveObject
 	{
         // if an exercise has progressed less that this threshold and the user skips backwards, we will skip to the prior exercise
         // otherwise, we'll return to the start of the current exercise
@@ -365,4 +365,3 @@ namespace WorkoutWotch.ViewModels
         }
 	}
 }
-

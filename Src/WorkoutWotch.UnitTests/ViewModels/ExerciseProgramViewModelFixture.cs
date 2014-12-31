@@ -1,25 +1,25 @@
-﻿using System;
-using System.Reactive.Linq;
-using NUnit.Framework;
-using WorkoutWotch.ViewModels;
-using WorkoutWotch.Models;
-using WorkoutWotch.UnitTests.Services.Logger.Mocks;
-using Kent.Boogaart.PCLMock;
-using System.Linq;
-using WorkoutWotch.UnitTests.Services.Speech.Mocks;
-using WorkoutWotch.Models.EventMatchers;
-using WorkoutWotch.Models.Actions;
-using WorkoutWotch.UnitTests.Services.Delay.Mocks;
-using WorkoutWotch.Models.Events;
-using ReactiveUI;
-using System.Reactive.Threading.Tasks;
-using System.Threading.Tasks;
-using WorkoutWotch.UnitTests.Reactive;
-using WorkoutWotch.Services.Delay;
-using WorkoutWotch.UnitTests.Models.Mocks;
-
-namespace WorkoutWotch.UnitTests.ViewModels
+﻿namespace WorkoutWotch.UnitTests.ViewModels
 {
+    using System;
+    using System.Linq;
+    using System.Reactive.Linq;
+    using System.Reactive.Threading.Tasks;
+    using System.Threading.Tasks;
+    using Kent.Boogaart.PCLMock;
+    using NUnit.Framework;
+    using ReactiveUI;
+    using WorkoutWotch.Models;
+    using WorkoutWotch.Models.Actions;
+    using WorkoutWotch.Models.EventMatchers;
+    using WorkoutWotch.Models.Events;
+    using WorkoutWotch.Services.Delay;
+    using WorkoutWotch.UnitTests.Models.Mocks;
+    using WorkoutWotch.UnitTests.Reactive;
+    using WorkoutWotch.UnitTests.Services.Delay.Mocks;
+    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
+    using WorkoutWotch.UnitTests.Services.Speech.Mocks;
+    using WorkoutWotch.ViewModels;
+
     [TestFixture]
     public class ExerciseProgramViewModelFixture
     {
@@ -55,12 +55,12 @@ namespace WorkoutWotch.UnitTests.ViewModels
             var speechService = new SpeechServiceMock();
             var delayService = new DelayServiceMock();
             var exercise = new Exercise(
-                               loggerService,
-                               speechService,
-                               "Exercise name",
-                               1,
-                               1,
-                               new [] { new MatcherWithAction(new TypedEventMatcher<BeforeExerciseEvent>(), new WaitAction(delayService, duration)) });
+               loggerService,
+               speechService,
+               "Exercise name",
+               1,
+               1,
+               new [] { new MatcherWithAction(new TypedEventMatcher<BeforeExerciseEvent>(), new WaitAction(delayService, duration)) });
             var model = new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "Name", new [] { exercise });
             var sut = new ExerciseProgramViewModel(new TestSchedulerService(), model);
 
