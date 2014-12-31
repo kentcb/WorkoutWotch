@@ -29,8 +29,8 @@ namespace WorkoutWotch.ViewModels
         private readonly ObservableAsPropertyHelper<double> progress;
         private readonly ObservableAsPropertyHelper<ExerciseViewModel> currentExercise;
         private readonly IReactiveCommand startCommand;
-        private readonly ReactiveCommand<object> pauseCommand;
-        private readonly ReactiveCommand<object> resumeCommand;
+        private readonly IReactiveCommand<object> pauseCommand;
+        private readonly IReactiveCommand<object> resumeCommand;
         private readonly IReactiveCommand skipBackwardsCommand;
         private readonly IReactiveCommand skipForwardsCommand;
         private ExecutionContext executionContext;
