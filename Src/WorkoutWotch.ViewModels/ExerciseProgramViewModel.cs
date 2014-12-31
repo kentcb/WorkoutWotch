@@ -8,6 +8,7 @@ namespace WorkoutWotch.ViewModels
     using Kent.Boogaart.HelperTrinity.Extensions;
     using ReactiveUI;
     using WorkoutWotch.Models;
+    using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.Contracts.Scheduler;
     using WorkoutWotch.Utility;
 
@@ -17,6 +18,7 @@ namespace WorkoutWotch.ViewModels
         // otherwise, we'll return to the start of the current exercise
         private static readonly TimeSpan skipBackwardsThreshold = TimeSpan.FromMilliseconds(500);
 
+        private readonly ILogger logger;
         private readonly ExerciseProgram model;
         private readonly CompositeDisposable disposables;
         private readonly IReadOnlyReactiveList<ExerciseViewModel> exercises;
@@ -35,11 +37,13 @@ namespace WorkoutWotch.ViewModels
         private readonly IReactiveCommand skipForwardsCommand;
         private ExecutionContext executionContext;
 
-        public ExerciseProgramViewModel(ISchedulerService schedulerService, ExerciseProgram model)
+        public ExerciseProgramViewModel(ILoggerService loggerService, ISchedulerService schedulerService, ExerciseProgram model)
         {
+            loggerService.AssertNotNull("loggerService");
             schedulerService.AssertNotNull("schedulerService");
             model.AssertNotNull("model");
 
+            this.logger = loggerService.GetLogger(this.GetType());
             this.model = model;
             this.disposables = new CompositeDisposable();
             this.exercises = this.model.Exercises.CreateDerivedCollection(x => new ExerciseViewModel(x));
@@ -337,7 +341,12 @@ namespace WorkoutWotch.ViewModels
                 currentExerciseProgress -
                 (currentExerciseProgress < skipBackwardsThreshold && priorExercise != null ? priorExercise.Duration : TimeSpan.Zero);
 
+            // we do not want to await the task
+            #pragma warning disable 4014
+
             this.StartAsync(skipTo, isPaused);
+
+            #pragma warning restore 4014
         }
 
         private async Task SkipForwardsAsync()
@@ -356,12 +365,20 @@ namespace WorkoutWotch.ViewModels
 
             await this.StopAsync();
 
+            // we do not want to await the task
+            #pragma warning disable 4014
+
             this.StartAsync(totalProgress - currentExerciseProgress + currentExercise.Duration, isPaused);
+
+            #pragma warning restore 4014
         }
 
         private void OnThrownException(Exception exception)
         {
-            System.Diagnostics.Debug.WriteLine(exception.ToString());
+            this.logger.Error(exception, "An unhandled exception occurred in a command handler.");
+
+            // don't just swallow it - now that we've logged it, make sure it isn't ignored
+            throw new InvalidOperationException("Unhandled exception in command handler.", exception);
         }
 	}
 }

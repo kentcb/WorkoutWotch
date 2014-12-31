@@ -10,6 +10,7 @@
     using WorkoutWotch.Models;
     using WorkoutWotch.Services.Contracts.Container;
     using WorkoutWotch.Services.Contracts.ExerciseDocument;
+    using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.Contracts.Scheduler;
     using WorkoutWotch.Services.Contracts.State;
     using WorkoutWotch.Utility;
@@ -31,11 +32,13 @@
         public ExerciseProgramsViewModel(
             IContainerService containerService,
             IExerciseDocumentService exerciseDocumentService,
+            ILoggerService loggerService,
             ISchedulerService schedulerService,
             IStateService stateService)
         {
             containerService.AssertNotNull("containerService");
             exerciseDocumentService.AssertNotNull("exerciseDocumentService");
+            loggerService.AssertNotNull("loggerService");
             schedulerService.AssertNotNull("schedulerService");
             stateService.AssertNotNull("stateService");
 
@@ -88,7 +91,7 @@
                 .AddTo(this.disposables);
 
             this.programs = this.WhenAnyValue(x => x.Model)
-                .Select(x => x == null ? null : x.Programs.CreateDerivedCollection(y => new ExerciseProgramViewModel(schedulerService, y)))
+                .Select(x => x == null ? null : x.Programs.CreateDerivedCollection(y => new ExerciseProgramViewModel(loggerService, schedulerService, y)))
                 .ObserveOn(schedulerService.SynchronizationContextScheduler)
                 .ToProperty(this, x => x.Programs)
                 .AddTo(this.disposables);
