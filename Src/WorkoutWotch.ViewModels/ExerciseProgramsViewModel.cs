@@ -88,7 +88,7 @@
                 .AddTo(this.disposables);
 
             this.programs = this.WhenAnyValue(x => x.Model)
-                .Select(x => x == null ? null : x.Programs.CreateDerivedCollection(y => new ExerciseProgramViewModel()))
+                .Select(x => x == null ? null : x.Programs.CreateDerivedCollection(y => new ExerciseProgramViewModel(schedulerService, y)))
                 .ObserveOn(schedulerService.SynchronizationContextScheduler)
                 .ToProperty(this, x => x.Programs)
                 .AddTo(this.disposables);

@@ -37,6 +37,7 @@
     <Compile Include="ExerciseProgramsViewModel.cs" />
     <Compile Include="ExerciseProgramsViewModelStatus.cs" />
     <Compile Include="ExerciseProgramViewModel.cs" />
+    <Compile Include="ExerciseViewModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

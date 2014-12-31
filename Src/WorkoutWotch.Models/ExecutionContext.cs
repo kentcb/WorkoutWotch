@@ -16,15 +16,15 @@ namespace WorkoutWotch.Models
         private readonly CompositeDisposable disposables;
         private readonly CancellationTokenSource cancellationTokenSource;
         private readonly ObservableAsPropertyHelper<bool> isCancelled;
-        private readonly ObservableAsPropertyHelper<TimeSpan> progress;
         private readonly ObservableAsPropertyHelper<TimeSpan> currentExerciseProgress;
-        private readonly ObservableAsPropertyHelper<TimeSpan> skipAhead;
         private readonly Subject<Unit> cancelRequested;
         private readonly Subject<TimeSpan> progressDeltas;
         private bool isPaused;
         private Exercise currentExercise;
         private int currentSet;
         private int currentRepetition;
+        private TimeSpan progress;
+        private TimeSpan skipAhead;
 
         public ExecutionContext(TimeSpan skipAhead = default(TimeSpan))
         {
@@ -46,9 +46,9 @@ namespace WorkoutWotch.Models
                 .Subscribe(_ => this.cancellationTokenSource.Cancel())
                 .AddTo(this.disposables);
 
-            this.progress = this.progressDeltas
+            this.progressDeltas
                 .Scan((running, next) => running + next)
-                .ToProperty(this, x => x.Progress)
+                .Subscribe(x => this.Progress = x)
                 .AddTo(this.disposables);
 
             this.currentExerciseProgress = this.WhenAnyValue(x => x.CurrentExercise)
@@ -57,11 +57,11 @@ namespace WorkoutWotch.Models
                 .ToProperty(this, x => x.CurrentExerciseProgress)
                 .AddTo(this.disposables);
 
-            this.skipAhead = this.progressDeltas
+            this.progressDeltas
                 .StartWith(skipAhead)
                 .Scan((running, next) => running - next)
                 .Select(x => x < TimeSpan.Zero ? TimeSpan.Zero : x)
-                .ToProperty(this, x => x.SkipAhead)
+                .Subscribe(x => this.SkipAhead = x)
                 .AddTo(this.disposables);
         }
 
@@ -101,7 +101,8 @@ namespace WorkoutWotch.Models
 
         public TimeSpan Progress
         {
-            get { return this.progress.Value; }
+            get { return this.progress; }
+            private set { this.RaiseAndSetIfChanged(ref this.progress, value); }
         }
 
         public TimeSpan CurrentExerciseProgress
@@ -111,7 +112,8 @@ namespace WorkoutWotch.Models
 
         public TimeSpan SkipAhead
         {
-            get { return this.skipAhead.Value; }
+            get { return this.skipAhead; }
+            private set { this.RaiseAndSetIfChanged(ref this.skipAhead, value); }
         }
 
         public Task WaitWhilePausedAsync()

@@ -1,6 +1,7 @@
 ﻿namespace WorkoutWotch.UnitTests.ViewModels
 {
     using System;
+    using System.Linq;
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
     using System.Threading.Tasks;
@@ -104,7 +105,7 @@
             scheduler.Start();
             Assert.NotNull(sut.Programs);
             Assert.AreEqual(1, sut.Programs.Count);
-            //Assert.AreEqual("First Program", sut.Programs.ElementAt(0).Name);
+            Assert.AreEqual("First Program", sut.Programs.ElementAt(0).Name);
         }
 
         [Test]
