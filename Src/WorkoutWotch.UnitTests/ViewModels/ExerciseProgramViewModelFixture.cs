@@ -508,7 +508,7 @@
             {
                 sut.StartCommand.Execute(null);
 
-                await sut.SkipBackwardsCommand.CanExecuteObservable
+                await sut.WhenAnyValue(x => x.IsPaused)
                     .Where(x => x)
                     .Timeout(TimeSpan.FromSeconds(3))
                     .FirstAsync();
@@ -566,11 +566,6 @@
                     .Timeout(TimeSpan.FromSeconds(3))
                     .FirstAsync();
 
-                await sut.SkipBackwardsCommand.CanExecuteObservable
-                    .Where(x => x)
-                    .Timeout(TimeSpan.FromSeconds(3))
-                    .FirstAsync();
-
                 sut.SkipBackwardsCommand.Execute(null);
 
                 var progress = await progressTask;
@@ -613,7 +608,7 @@
             {
                 sut.StartCommand.Execute(null);
 
-                await sut.SkipForwardsCommand.CanExecuteObservable
+                await sut.WhenAnyValue(x => x.IsPaused)
                     .Where(x => x)
                     .Timeout(TimeSpan.FromSeconds(3))
                     .FirstAsync();
@@ -668,11 +663,6 @@
                     .Timeout(TimeSpan.FromSeconds(3))
                     .FirstAsync();
 
-                await sut.SkipForwardsCommand.CanExecuteObservable
-                    .Where(x => x)
-                    .Timeout(TimeSpan.FromSeconds(3))
-                    .FirstAsync();
-
                 sut.SkipForwardsCommand.Execute(null);
 
                 var progress = await progressTask;
@@ -721,22 +711,22 @@
             {
                 sut.StartCommand.Execute(null);
 
-                await sut.SkipForwardsCommand.CanExecuteObservable
+                await sut.WhenAnyValue(x => x.IsPaused)
                     .Where(x => x)
                     .Timeout(TimeSpan.FromSeconds(3))
                     .FirstAsync();
 
                 sut.SkipForwardsCommand.Execute(null);
 
-                await sut.SkipForwardsCommand.CanExecuteObservable
-                    .Where(x => x)
+                await sut.SkipForwardsCommand.IsExecuting
+                    .Where(x => !x)
                     .Timeout(TimeSpan.FromSeconds(3))
                     .FirstAsync();
 
                 sut.SkipForwardsCommand.Execute(null);
 
-                await sut.SkipBackwardsCommand.CanExecuteObservable
-                    .Where(x => x)
+                await sut.SkipBackwardsCommand.IsExecuting
+                    .Where(x => !x)
                     .Timeout(TimeSpan.FromSeconds(3))
                     .FirstAsync();
 
