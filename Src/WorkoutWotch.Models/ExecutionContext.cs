@@ -11,11 +11,12 @@ namespace WorkoutWotch.Models
     using ReactiveUI;
     using WorkoutWotch.Utility;
 
-	public sealed class ExecutionContext : DisposableReactiveObject
+    public sealed class ExecutionContext : DisposableReactiveObject
 	{
         private readonly CompositeDisposable disposables;
         private readonly CancellationTokenSource cancellationTokenSource;
         private readonly ObservableAsPropertyHelper<bool> isCancelled;
+        private readonly ObservableAsPropertyHelper<TimeSpan> progress;
         private readonly ObservableAsPropertyHelper<TimeSpan> currentExerciseProgress;
         private readonly Subject<Unit> cancelRequested;
         private readonly Subject<TimeSpan> progressDeltas;
@@ -23,7 +24,6 @@ namespace WorkoutWotch.Models
         private Exercise currentExercise;
         private int currentSet;
         private int currentRepetition;
-        private TimeSpan progress;
         private TimeSpan skipAhead;
 
         public ExecutionContext(TimeSpan skipAhead = default(TimeSpan))
@@ -46,9 +46,9 @@ namespace WorkoutWotch.Models
                 .Subscribe(_ => this.cancellationTokenSource.Cancel())
                 .AddTo(this.disposables);
 
-            this.progressDeltas
+            this.progress = this.progressDeltas
                 .Scan((running, next) => running + next)
-                .Subscribe(x => this.Progress = x)
+                .ToProperty(this, x => x.Progress)
                 .AddTo(this.disposables);
 
             this.currentExerciseProgress = this.WhenAnyValue(x => x.CurrentExercise)
@@ -57,6 +57,7 @@ namespace WorkoutWotch.Models
                 .ToProperty(this, x => x.CurrentExerciseProgress)
                 .AddTo(this.disposables);
 
+            // cannot use ToProperty without also "hacking in" the immediate scheduler - see https://github.com/reactiveui/ReactiveUI/issues/785
             this.progressDeltas
                 .StartWith(skipAhead)
                 .Scan((running, next) => running - next)
@@ -101,8 +102,7 @@ namespace WorkoutWotch.Models
 
         public TimeSpan Progress
         {
-            get { return this.progress; }
-            private set { this.RaiseAndSetIfChanged(ref this.progress, value); }
+            get { return this.progress.Value; }
         }
 
         public TimeSpan CurrentExerciseProgress

@@ -331,12 +331,16 @@
             var action = new ActionMock(MockBehavior.Loose);
             action
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
-                .Do<ExecutionContext>(ec =>
-                {
-                    ec.AddProgress(TimeSpan.FromSeconds(1));
-                    ec.AddProgress(TimeSpan.FromSeconds(3));
-                })
-                .Return(Task.FromResult(true));
+                .Return<ExecutionContext>(
+                    ec =>
+                        Task.Run(async () =>
+                        {
+                            ec.AddProgress(TimeSpan.FromSeconds(1));
+                            ec.AddProgress(TimeSpan.FromSeconds(3));
+
+                            ec.IsPaused = true;
+                            await ec.WaitWhilePausedAsync();
+                        }));
             var matchersWithActions = new []
             {
                 new MatcherWithAction(new TypedEventMatcher<BeforeExerciseEvent>(), action)
@@ -371,12 +375,16 @@
             action.When(x => x.Duration).Return(TimeSpan.FromMinutes(1));
             action
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
-                .Do<ExecutionContext>(ec =>
-                {
-                    ec.AddProgress(TimeSpan.FromSeconds(15));
-                    ec.AddProgress(TimeSpan.FromSeconds(30));
-                })
-                .Return(Task.FromResult(true));
+                .Return<ExecutionContext>(
+                    ec =>
+                    Task.Run(async () =>
+                    {
+                        ec.AddProgress(TimeSpan.FromSeconds(15));
+                        ec.AddProgress(TimeSpan.FromSeconds(30));
+
+                        ec.IsPaused = true;
+                        await ec.WaitWhilePausedAsync();
+                    }));
             var matchersWithActions = new []
             {
                 new MatcherWithAction(new TypedEventMatcher<BeforeExerciseEvent>(), action)
