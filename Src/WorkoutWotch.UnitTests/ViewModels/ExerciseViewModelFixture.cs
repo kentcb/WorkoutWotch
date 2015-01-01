@@ -139,6 +139,24 @@
         }
 
         [Test]
+        public void progress_is_reset_to_zero_if_the_execution_context_changes_to_null()
+        {
+            var model = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "Name", 1, 1, Enumerable.Empty<MatcherWithAction>());
+            var executionContext = new ExecutionContext();
+            var executionContextSubject = new Subject<ExecutionContext>();
+            var sut = new ExerciseViewModel(model, executionContextSubject);
+
+            executionContextSubject.OnNext(executionContext);
+            executionContext.SetCurrentExercise(model);
+
+            executionContext.AddProgress(TimeSpan.FromSeconds(3));
+            Assert.AreEqual(TimeSpan.FromSeconds(3), sut.Progress);
+
+            executionContextSubject.OnNext(null);
+            Assert.AreEqual(TimeSpan.Zero, sut.Progress);
+        }
+
+        [Test]
         public void is_active_is_false_if_there_is_no_execution_context()
         {
             var model = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "Name", 1, 1, Enumerable.Empty<MatcherWithAction>());
