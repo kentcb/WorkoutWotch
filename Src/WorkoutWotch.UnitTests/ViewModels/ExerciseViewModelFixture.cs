@@ -1,19 +1,19 @@
-﻿using System;
-using NUnit.Framework;
-using WorkoutWotch.ViewModels;
-using WorkoutWotch.Models;
-using WorkoutWotch.UnitTests.Services.Logger.Mocks;
-using Kent.Boogaart.PCLMock;
-using WorkoutWotch.UnitTests.Services.Speech.Mocks;
-using System.Linq;
-using WorkoutWotch.UnitTests.Models.Mocks;
-using WorkoutWotch.Models.EventMatchers;
-using WorkoutWotch.Models.Events;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-
-namespace WorkoutWotch.UnitTests.ViewModels
+﻿namespace WorkoutWotch.UnitTests.ViewModels
 {
+    using System;
+    using System.Linq;
+    using System.Reactive.Linq;
+    using System.Reactive.Subjects;
+    using Kent.Boogaart.PCLMock;
+    using NUnit.Framework;
+    using WorkoutWotch.Models;
+    using WorkoutWotch.Models.EventMatchers;
+    using WorkoutWotch.Models.Events;
+    using WorkoutWotch.UnitTests.Models.Mocks;
+    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
+    using WorkoutWotch.UnitTests.Services.Speech.Mocks;
+    using WorkoutWotch.ViewModels;
+
     [TestFixture]
     public class ExerciseViewModelFixture
     {
@@ -173,4 +173,3 @@ namespace WorkoutWotch.UnitTests.ViewModels
         }
     }
 }
-

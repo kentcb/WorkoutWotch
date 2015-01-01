@@ -1,13 +1,13 @@
-using System;
-using ReactiveUI;
-using WorkoutWotch.Utility;
-using WorkoutWotch.Models;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using System.Reactive.Linq;
-using System.Reactive.Disposables;
-
 namespace WorkoutWotch.ViewModels
 {
+    using System;
+    using System.Reactive.Disposables;
+    using System.Reactive.Linq;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using ReactiveUI;
+    using WorkoutWotch.Models;
+    using WorkoutWotch.Utility;
+
 	public sealed class ExerciseViewModel : DisposableReactiveObject
 	{
         private readonly CompositeDisposable disposables;
