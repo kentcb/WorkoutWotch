@@ -108,6 +108,7 @@
     <Compile Include="Models\Parsers\DoNotAwaitActionParserFixture.cs" />
     <Compile Include="ViewModels\ExerciseProgramsViewModelFixture.cs" />
     <Compile Include="ViewModels\ExerciseProgramViewModelFixture.cs" />
+    <Compile Include="ViewModels\ExerciseViewModelFixture.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

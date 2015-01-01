@@ -46,7 +46,7 @@ namespace WorkoutWotch.ViewModels
             this.logger = loggerService.GetLogger(this.GetType());
             this.model = model;
             this.disposables = new CompositeDisposable();
-            this.exercises = this.model.Exercises.CreateDerivedCollection(x => new ExerciseViewModel(x));
+            this.exercises = this.model.Exercises.CreateDerivedCollection(x => new ExerciseViewModel(x, this.WhenAnyValue(y => y.ExecutionContext)));
 
             this.isStarted = this.WhenAnyValue(x => x.ExecutionContext)
                 .Select(x => x != null)
