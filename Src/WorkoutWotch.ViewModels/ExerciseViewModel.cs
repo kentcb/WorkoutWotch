@@ -35,6 +35,8 @@ namespace WorkoutWotch.ViewModels
                 .ToProperty(this, x => x.IsActive)
                 .AddTo(this.disposables);
 
+            // TODO: HACK: why can't I use currentExercise instead of this.ExecutionContext.CurrentExercise below?
+            // Rx seems to be passing through the old exercise for currentExercise with the new value for currentExerciseProgress
             this.progress = this.WhenAnyValue(x => x.ExecutionContext)
                 .Select(
                     _ => this.WhenAnyValue(
