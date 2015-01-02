@@ -1,20 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-
-namespace WorkoutWotch.UI.iOS
+﻿namespace WorkoutWotch.UI.iOS
 {
-    public class Application
+    using System;
+    using MonoTouch.UIKit;
+    using TinyIoC;
+    using WorkoutWotch.Services.Contracts.State;
+    using WorkoutWotch.Services.Logger;
+
+    public static class Application
     {
-        // This is the main entry point of the application.
+        public static readonly string UnhandledExceptionKey = "UnhandledException";
+
         static void Main(string[] args)
         {
-            // if you want to use a different Application Delegate class from "AppDelegate"
-            // you can specify it here.
-            UIApplication.Main(args, null, "AppDelegate");
+            AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+
+            try
+            {
+                UIApplication.Main(args, null, "AppDelegate");
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+                throw;
+            }
+        }
+
+        private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            HandleException(e.ExceptionObject as Exception);
+        }
+
+        private static void HandleException(Exception exception)
+        {
+            new LoggerService().GetLogger(typeof(Application)).Error(exception, "Unhandled exception.");
+
+            IStateService stateService;
+
+            if (!TinyIoCContainer.Current.TryResolve<IStateService>(out stateService))
+            {
+                return;
+            }
+
+            stateService.SetAsync(UnhandledExceptionKey, exception.ToString());
         }
     }
 }

@@ -1,169 +1,126 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using TinyIoC;
-
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-using WorkoutWotch.Services.iOS.Audio;
-using WorkoutWotch.Services.iOS.Speech;
-using WorkoutWotch.Services.iOS.SystemNotifications;
-using ReactiveUI;
-using System.Threading.Tasks;
-using System.Drawing;
-using WorkoutWotch.Models;
-using WorkoutWotch.Services.Logger;
-using WorkoutWotch.Services.Delay;
-using WorkoutWotch.Models.EventMatchers;
-using WorkoutWotch.Models.Events;
-using WorkoutWotch.Models.Actions;
-using WorkoutWotch.Services.Contracts.Container;
-using WorkoutWotch.Services.Contracts.Speech;
-using WorkoutWotch.Services.Contracts.Logger;
-using WorkoutWotch.Services.Contracts.Delay;
-using WorkoutWotch.Services.Contracts.Audio;
-
-namespace WorkoutWotch.UI.iOS
+﻿namespace WorkoutWotch.UI.iOS
 {
-    // The UIApplicationDelegate for the application. This class is responsible for launching the
-    // User Interface of the application, as well as listening (and optionally responding) to
-    // application events from iOS.
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Threading.Tasks;
+    using Akavache;
+    using MonoTouch.Foundation;
+    using MonoTouch.UIKit;
+    using TinyIoC;
+    using WorkoutWotch.Services.Contracts.Logger;
+    using WorkoutWotch.Services.Contracts.State;
+
     [Register("AppDelegate")]
     public partial class AppDelegate : UIApplicationDelegate
     {
-        // class-level declarations
-        UIWindow window;
+        private UIWindow window;
 
-        //
-        // This method is invoked when the application has loaded and is ready to run. In this
-        // method you should instantiate the window, load the UI into it and then make the window
-        // visible.
-        //
-        // You have 17 seconds to return from this method, or iOS will terminate your application.
-        //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            this.InitializeAppearanceManager();
+            this.InitializeAkavache();
+            this.InitializeIoc();
+            this.ConfigureLogging();
+
+            #if DEBUG
+            // we do not want to await the task
+            #pragma warning disable 4014
+
+            this.CheckForPreviouslyUnhandledExceptions();
+
+            #pragma warning restore 4014
+            #endif
+
             // create a new window instance based on the screen size
             window = new UIWindow(UIScreen.MainScreen.Bounds);
-            
-            // If you have defined a root view controller, set it here:
-            window.RootViewController = new TestView();
 
-            // make the window visible
+            var label = ControlFactory.CreateLabel();
+            label.Text = "Hello";
+            var view = new UIViewController { View = label };
+            var navigationController = new UINavigationController(view);
+
+            window.RootViewController = navigationController;
             window.MakeKeyAndVisible();
-            
+
             return true;
         }
-    }
 
-    public class TestViewModel : ReactiveObject
-    {
-        private readonly IReactiveCommand testCommand;
-        private readonly ExerciseProgram exerciseProgram;
-        private ExecutionContext ec;
-
-        public TestViewModel()
+        public override void DidEnterBackground(UIApplication application)
         {
-            this.exerciseProgram = this.CreateExerciseProgram();
-            this.testCommand = ReactiveCommand.CreateAsyncTask(this.OnTestAsync);
+            var taskId = UIApplication.SharedApplication.BeginBackgroundTask(null);
+
+            this.SaveStateAsync()
+                .ContinueWith(_ => UIApplication.SharedApplication.EndBackgroundTask(taskId));
         }
 
-        public IReactiveCommand TestCommand
+        private void InitializeAppearanceManager()
         {
-            get { return this.testCommand; }
+            AppearanceManager.Configure();
         }
 
-        private async Task OnTestAsync(object parameter)
+        private void InitializeAkavache()
         {
-            this.ec = new ExecutionContext();
-            await this.exerciseProgram.ExecuteAsync(this.ec);
+            BlobCache.ApplicationName = "Workout Wotch";
         }
 
-        private ExerciseProgram CreateExerciseProgram()
+        private void InitializeIoc()
         {
-            var container = new TinyIoCContainer();
-            container.Register<IAudioService, AudioService>();
-            container.Register<IDelayService, DelayService>();
-            container.Register<ILoggerService, LoggerService>();
-            container.Register<ISpeechService, SpeechService>();
-
-            var input = @"# Example Program
-## Push-ups
-* 3 sets x 5 reps
-* Before set ^first:
-  * Break for 7s
-* During rep:
-  * Metronome at 0s*, .5s, .75s, .5s-
-* After rep last-2:
-  * Say 'two left'
-";
-
-            return ExercisePrograms.Parse(input, container).Programs[0];
-
-//            return new ExerciseProgram(
-//                loggerService,
-//                "Example Program",
-//                new[]
-//                {
-//                    new Exercise(
-//                        loggerService,
-//                        speechService,
-//                        "Push-ups",
-//                        3,
-//                        5,
-//                        new[]
-//                        {
-//                            new MatcherWithAction(
-//                                new NumberedEventMatcher<BeforeSetEvent>(e => e.Number > 1),
-//                                new BreakAction(delayService, speechService, TimeSpan.FromSeconds(7))),
-//                            new MatcherWithAction(
-//                                new TypedEventMatcher<DuringRepetitionEvent>(),
-//                                new MetronomeAction(
-//                                    audioService,
-//                                    delayService,
-//                                    loggerService,
-//                                    new[]
-//                                    {
-//                                        new MetronomeTick(TimeSpan.Zero, MetronomeTickType.Bell),
-//                                        new MetronomeTick(TimeSpan.FromMilliseconds(500), MetronomeTickType.Click),
-//                                        new MetronomeTick(TimeSpan.FromMilliseconds(750), MetronomeTickType.Click),
-//                                        new MetronomeTick(TimeSpan.FromMilliseconds(500), MetronomeTickType.None)
-//                                    })),
-//                            new MatcherWithAction(
-//                                new NumberedEventMatcher<AfterRepetitionEvent>(e => e.Number == e.ExecutionContext.CurrentExercise.RepetitionCount - 2),
-//                                new SayAction(speechService, "Two left"))
-//                        })
-//                });
-        }
-    }
-
-    public class TestView : ReactiveViewController, IViewFor<TestViewModel>
-    {
-        private TestViewModel vm = new TestViewModel();
-        private UIButton button;
-
-        public override void ViewDidLoad()
-        {
-            base.ViewDidLoad();
-
-            button = new UIButton(this.View.Frame);
-            button.SetTitle("Test", UIControlState.Normal);
-            this.View.AddSubview(button);
-
-            this.BindCommand(this.ViewModel, x => x.TestCommand, x => x.button);
+            this.RegisterServices(TinyIoCContainer.Current);
+            this.RegisterViewModels(TinyIoCContainer.Current);
         }
 
-        public TestViewModel ViewModel
+        private void ConfigureLogging()
         {
-            get { return this.vm; }
-            set { this.RaiseAndSetIfChanged(ref this.vm, value); }
+            var loggerService = TinyIoCContainer.Current.Resolve<ILoggerService>();
+
+            #if DEBUG
+
+            loggerService.Threshold = LogLevel.Debug;
+
+            #else
+
+            loggerService.Threshold = LogLevel.Info;
+
+            #endif
+
+            loggerService.Entries.Subscribe(x => Console.WriteLine("[{0}] {1} #{2} {3}", x.Level, x.Name, x.ThreadId, x.Message));
         }
 
-        object IViewFor.ViewModel
+        private async Task SaveStateAsync()
         {
-            get { return this.ViewModel; }
-            set { this.ViewModel = (TestViewModel)value; }
+            IStateService stateService;
+
+            if (!TinyIoCContainer.Current.TryResolve<IStateService>(out stateService))
+            {
+                return;
+            }
+
+            await stateService.SaveAsync();
         }
+
+        #if DEBUG
+
+        // if the app crashed in a prior run, we may have captured the exception details and this will enable us to see those details
+        private async Task CheckForPreviouslyUnhandledExceptions()
+        {
+            var stateService = TinyIoCContainer.Current.Resolve<IStateService>();
+            var loggerService = TinyIoCContainer.Current.Resolve<ILoggerService>();
+
+            try
+            {
+                var unhandledException = await stateService.GetAsync<string>(Application.UnhandledExceptionKey).ConfigureAwait(continueOnCapturedContext: false);
+                loggerService.GetLogger(this.GetType()).Error("Recovered details of a previously unhandled exception: {0}", unhandledException);
+                Debugger.Break();
+
+                await stateService.RemoveAsync<string>(Application.UnhandledExceptionKey).ConfigureAwait(continueOnCapturedContext: false);
+            }
+            catch (KeyNotFoundException)
+            {
+                // swallow - no previously unhandled exception to deal with
+            }
+        }
+
+        #endif
     }
 }
-
