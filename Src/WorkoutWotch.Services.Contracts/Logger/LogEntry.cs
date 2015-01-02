@@ -2,8 +2,8 @@ namespace WorkoutWotch.Services.Contracts.Logger
 {
     using System;
 
-	public struct LogEntry
-	{
+    public struct LogEntry
+    {
         private readonly DateTime timestamp;
         private readonly string name;
         private readonly LogLevel level;
@@ -43,5 +43,5 @@ namespace WorkoutWotch.Services.Contracts.Logger
         {
             get { return this.message; }
         }
-	}
+    }
 }

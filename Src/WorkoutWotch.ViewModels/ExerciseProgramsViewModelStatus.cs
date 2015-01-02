@@ -1,11 +1,11 @@
 namespace WorkoutWotch.ViewModels
 {
-	public enum ExerciseProgramsViewModelStatus
-	{
+    public enum ExerciseProgramsViewModelStatus
+    {
         Loading,
         ParseFailed,
         LoadFailed,
         LoadedFromCache,
         LoadedFromCloud
-	}
+    }
 }

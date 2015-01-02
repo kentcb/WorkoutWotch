@@ -2,8 +2,8 @@ namespace WorkoutWotch.Models
 {
     using Kent.Boogaart.HelperTrinity.Extensions;
 
-	public sealed class MatcherWithAction 
-	{
+    public sealed class MatcherWithAction 
+    {
         private readonly IEventMatcher matcher;
         private readonly IAction action;
 
@@ -25,5 +25,5 @@ namespace WorkoutWotch.Models
         {
             get { return this.action; }
         }
-	}
+    }
 }

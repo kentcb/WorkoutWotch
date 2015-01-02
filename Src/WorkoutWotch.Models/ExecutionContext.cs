@@ -12,7 +12,7 @@ namespace WorkoutWotch.Models
     using WorkoutWotch.Utility;
 
     public sealed class ExecutionContext : DisposableReactiveObject
-	{
+    {
         private readonly CompositeDisposable disposables;
         private readonly CancellationTokenSource cancellationTokenSource;
         private readonly ObservableAsPropertyHelper<bool> isCancelled;
@@ -158,5 +158,5 @@ namespace WorkoutWotch.Models
                 this.disposables.Dispose();
             }
         }
-	}
+    }
 }

@@ -11,8 +11,8 @@ namespace WorkoutWotch.Models
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Models.Events;
 
-	public sealed class Exercise
-	{
+    public sealed class Exercise
+    {
         private readonly ILogger logger;
         private readonly ISpeechService speechService;
         private readonly string name;
@@ -177,5 +177,5 @@ namespace WorkoutWotch.Models
                 get { return this.actions; }
             }
         }
-	}
+    }
 }

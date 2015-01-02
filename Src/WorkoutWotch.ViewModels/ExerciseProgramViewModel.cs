@@ -13,7 +13,7 @@ namespace WorkoutWotch.ViewModels
     using WorkoutWotch.Utility;
 
     public sealed class ExerciseProgramViewModel : DisposableReactiveObject
-	{
+    {
         // if an exercise has progressed less that this threshold and the user skips backwards, we will skip to the prior exercise
         // otherwise, we'll return to the start of the current exercise
         private static readonly TimeSpan skipBackwardsThreshold = TimeSpan.FromMilliseconds(500);
@@ -380,5 +380,5 @@ namespace WorkoutWotch.ViewModels
             // don't just swallow it - now that we've logged it, make sure it isn't ignored
             throw new InvalidOperationException("Unhandled exception in command handler.", exception);
         }
-	}
+    }
 }

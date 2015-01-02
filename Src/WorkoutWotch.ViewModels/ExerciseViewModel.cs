@@ -8,8 +8,8 @@ namespace WorkoutWotch.ViewModels
     using WorkoutWotch.Models;
     using WorkoutWotch.Utility;
 
-	public sealed class ExerciseViewModel : DisposableReactiveObject
-	{
+    public sealed class ExerciseViewModel : DisposableReactiveObject
+    {
         private readonly CompositeDisposable disposables;
         private readonly Exercise model;
         private readonly ObservableAsPropertyHelper<ExecutionContext> executionContext;
@@ -90,5 +90,5 @@ namespace WorkoutWotch.ViewModels
                 this.disposables.Dispose();
             }
         }
-	}
+    }
 }

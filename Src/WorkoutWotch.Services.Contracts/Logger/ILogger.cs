@@ -2,8 +2,8 @@ namespace WorkoutWotch.Services.Contracts.Logger
 {
     using System;
 
-	public interface ILogger
-	{
+    public interface ILogger
+    {
         string Name
         {
             get;
@@ -61,5 +61,5 @@ namespace WorkoutWotch.Services.Contracts.Logger
         void Error(string format, params object[] args);
 
         void Error(Exception exception, string format, params object[] args);
-	}
+    }
 }

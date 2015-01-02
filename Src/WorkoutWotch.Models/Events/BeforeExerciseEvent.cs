@@ -3,8 +3,8 @@ namespace WorkoutWotch.Models.Events
     using System.Globalization;
     using Kent.Boogaart.HelperTrinity.Extensions;
 
-	public sealed class BeforeExerciseEvent : EventBase
-	{
+    public sealed class BeforeExerciseEvent : EventBase
+    {
         private readonly Exercise exercise;
 
         public BeforeExerciseEvent(ExecutionContext executionContext, Exercise exercise)
@@ -23,5 +23,5 @@ namespace WorkoutWotch.Models.Events
         {
             return string.Format(CultureInfo.InvariantCulture, "Before Exercise '{0}'", this.exercise.Name);
         }
-	}
+    }
 }
