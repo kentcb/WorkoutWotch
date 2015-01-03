@@ -1,4 +1,6 @@
-﻿namespace WorkoutWotch.UI.iOS
+﻿using WorkoutWotch.UI.iOS.Views.ExercisePrograms;
+
+namespace WorkoutWotch.UI.iOS
 {
     using System;
     using System.Collections.Generic;
@@ -35,9 +37,7 @@
             // create a new window instance based on the screen size
             window = new UIWindow(UIScreen.MainScreen.Bounds);
 
-            var label = ControlFactory.CreateLabel();
-            label.Text = "Hello";
-            var view = new UIViewController { View = label };
+            var view = TinyIoCContainer.Current.Resolve<ExerciseProgramsHostView>();
             var navigationController = new UINavigationController(view);
 
             window.RootViewController = navigationController;

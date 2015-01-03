@@ -20,7 +20,7 @@
         private static readonly string defaultDocumentContents = @"";
 
         private readonly ILogger logger;
-        private readonly Subject<string> exerciseDocument;
+        private readonly BehaviorSubject<string> exerciseDocument;
         private readonly object sync;
         private int initialized;
         private NSUrl ubiquityContainerUrl;
@@ -30,7 +30,7 @@
             loggerService.AssertNotNull("loggerService");
 
             this.logger = loggerService.GetLogger(this.GetType());
-            this.exerciseDocument = new Subject<string>();
+            this.exerciseDocument = new BehaviorSubject<string>(null);
             this.sync = new object();
         }
 

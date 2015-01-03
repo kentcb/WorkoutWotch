@@ -3,6 +3,7 @@
     using Akavache;
     using TinyIoC;
     using WorkoutWotch.Services.Contracts.Audio;
+    using WorkoutWotch.Services.Contracts.Container;
     using WorkoutWotch.Services.Contracts.Delay;
     using WorkoutWotch.Services.Contracts.ExerciseDocument;
     using WorkoutWotch.Services.Contracts.Logger;
@@ -25,6 +26,7 @@
         {
             container.Register<IBlobCache>(BlobCache.UserAccount);
             container.Register<IAudioService, AudioService>();
+            container.Register<IContainerService>(container);
             container.Register<IDelayService, DelayService>();
             container.Register<IExerciseDocumentService, iCloudExerciseDocumentService>();
             container.Register<ILoggerService, LoggerService>();

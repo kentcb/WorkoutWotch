@@ -55,6 +55,7 @@
 
             var documentsFromCloud = this.exerciseDocumentService
                 .ExerciseDocument
+                .Where(x => x != null)
                 .Select(x => new DocumentSourceWith<string>(DocumentSource.Cloud, x));
 
             var documents = documentsFromCache

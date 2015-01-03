@@ -159,6 +159,9 @@
     <Compile Include="Utility\ViewControllerBase.cs" />
     <Compile Include="AkavacheSqliteLinkerOverride.cs" />
     <Compile Include="AppDelegate.Registrations.cs" />
+    <Compile Include="Views\ExercisePrograms\ExerciseProgramsHostView.cs" />
+    <Compile Include="Views\ExercisePrograms\ExerciseProgramsView.cs" />
+    <Compile Include="Views\ExercisePrograms\ExerciseProgramView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
@@ -166,6 +169,8 @@
     <Folder Include="Audio\" />
     <Folder Include="Controls\" />
     <Folder Include="Utility\" />
+    <Folder Include="Views\" />
+    <Folder Include="Views\ExercisePrograms\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Audio\MetronomeBell.mp3" />
