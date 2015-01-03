@@ -81,4 +81,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ExerciseDocument\DefaultExerciseDocument.mkd" />
+  </ItemGroup>
 </Project>

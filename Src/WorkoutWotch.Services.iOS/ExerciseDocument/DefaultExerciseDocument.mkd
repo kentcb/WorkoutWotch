@@ -1,0 +1,74 @@
+﻿# Upper Body Strength (Sample Exercise Program)
+
+## Push-ups
+
+* 3 sets x 15 reps
+* After set ^last:
+  * Break for 15s
+* During rep:
+  * Metronome at 0s*, 1s, .75s, .75s-
+* Before rep last-1:
+  * Don't wait:
+    * Say 'two more'
+* After:
+  * Break for 1m
+
+## Sit-ups
+
+* 3 sets x 10 reps
+* After set ^last:
+  * Break for 30s
+* During reps first..last-3:
+  * Metronome at 0s*, 1s, .75s, .75s-
+* After rep last-3:
+  * Don't wait:
+    * Say 'faster'
+* During reps last-2..last:
+  * Metronome at 0s*, .75s, .5s, .5s-
+* After:
+  * Break for 1m
+
+## Pull-ups
+
+* 6 sets x 15 reps
+* Before set 1,4:
+  * Say 'biceps'
+* Before set 2,5:
+  * Say 'triceps'
+* Before set 3,6:
+  * Say 'back'
+* Before set ^first:
+  * Break for 15s
+* During rep:
+  * Metronome at 0s*, 1.5s, .1s, .75s-
+* Before rep last-1:
+  * Don't wait:
+    * Say 'two more'
+* After:
+  * Say 'well done'
+
+# Lower Body Strength (Sample Exercise Program)
+
+## Squats
+
+* 3 sets x 15 reps
+* Before:
+  * Prepare for 10s
+* After sets ^last:
+  * Break for 25s
+* During rep:
+  * Metronome at 0s*, 2s, 1.5s, 1.5s-
+
+## Forward Lunges
+
+* 2 sets x 20 reps
+* Before:
+  * Break for 30s
+* Before set first:
+  * Say 'right leg forward'
+* Before set last:
+  * Say 'left leg forward'
+* After sets ^last:
+  * Break for 15s
+* During rep:
+  * Metronome at 0s*, 1.25s, 2s, 2s-

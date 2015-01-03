@@ -7,7 +7,6 @@
     using System.Threading.Tasks;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using MonoTouch.Foundation;
-    using MonoTouch.ObjCRuntime;
     using MonoTouch.UIKit;
     using WorkoutWotch.Services.Contracts.ExerciseDocument;
     using WorkoutWotch.Services.Contracts.Logger;
@@ -15,9 +14,6 @@
     public sealed class iCloudExerciseDocumentService : NSObject, IExerciseDocumentService
     {
         private static readonly string documentFilename = "Workout Wotch Exercise Programs.mkd";
-
-        // TODO: fill this in
-        private static readonly string defaultDocumentContents = @"";
 
         private readonly ILogger logger;
         private readonly BehaviorSubject<string> exerciseDocument;
@@ -184,7 +180,7 @@
                 var url = new NSUrl(documentPath, isDir: false);
                 var exerciseCloudDocument = new ExerciseCloudDocument(url)
                 {
-                    Data = defaultDocumentContents
+                    Data = GetDefaultExerciseDocument()
                 };
 
                 exerciseCloudDocument.Save(
@@ -207,6 +203,15 @@
 
             // register for document updates
             NSNotificationCenter.DefaultCenter.AddObserver(UIDocument.StateChangedNotification, this.OnDocumentUpdated);
+        }
+
+        private static string GetDefaultExerciseDocument()
+        {
+            using (var stream = typeof(iCloudExerciseDocumentService).Assembly.GetManifestResourceStream("WorkoutWotch.Services.iOS.ExerciseDocument.DefaultExerciseDocument.mkd"))
+            using (var streamReader = new StreamReader(stream))
+            {
+                return streamReader.ReadToEnd();
+            }
         }
 
         private sealed class ExerciseCloudDocument : UIDocument
