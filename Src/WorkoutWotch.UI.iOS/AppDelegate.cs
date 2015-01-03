@@ -1,6 +1,4 @@
-﻿using WorkoutWotch.UI.iOS.Views.ExercisePrograms;
-
-namespace WorkoutWotch.UI.iOS
+﻿namespace WorkoutWotch.UI.iOS
 {
     using System;
     using System.Collections.Generic;
@@ -12,6 +10,7 @@ namespace WorkoutWotch.UI.iOS
     using TinyIoC;
     using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.Contracts.State;
+    using WorkoutWotch.UI.iOS.Views.ExercisePrograms;
 
     [Register("AppDelegate")]
     public partial class AppDelegate : UIApplicationDelegate

@@ -1,15 +1,14 @@
-using System;
-using WorkoutWotch.ViewModels;
-using WorkoutWotch.UI.iOS.Utility;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using MonoTouch.UIKit;
-using System.Reactive.Disposables;
-using MonoTouch.Foundation;
-using WorkoutWotch.UI.iOS.Controls;
-using ReactiveUI;
-
 namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
 {
+    using System;
+    using System.Reactive.Disposables;
+    using MonoTouch.Foundation;
+    using MonoTouch.UIKit;
+    using ReactiveUI;
+    using WorkoutWotch.UI.iOS.Controls;
+    using WorkoutWotch.UI.iOS.Utility;
+    using WorkoutWotch.ViewModels;
+
     public class ExerciseProgramView : TableViewCellBase<ExerciseProgramViewModel>
     {
         public static readonly NSString Key = new NSString("key");
@@ -29,8 +28,14 @@ namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
             this.SelectedBackgroundView = selectedBackgroundView;
             this.AccessoryView = new CellDisclosureAccessory();
 
-            this.nameLabel = ControlFactory.CreateLabel().AddTo(this.Disposables);
-            this.durationLabel = ControlFactory.CreateLabel(PreferredFont.Caption1).AddTo(this.Disposables);
+            this.nameLabel = ControlFactory
+                .CreateLabel()
+                .AddTo(this.Disposables);
+
+            this.durationLabel = ControlFactory
+                .CreateLabel(PreferredFont.Caption1)
+                .AddTo(this.Disposables);
+
             this.durationLabel.TextColor = Resources.ThemeDarkColor;
 
             this.ContentView.AddSubviews(this.nameLabel, this.durationLabel);
@@ -50,9 +55,11 @@ namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
 
         protected override void CreateBindings()
         {
-            this.OneWayBind(this.ViewModel, x => x.Name, x => x.nameLabel.Text).AddTo(this.Disposables);
-            this.OneWayBind(this.ViewModel, x => x.Duration, x => x.durationLabel.Text, x => x.ToString("mm\\:ss")).AddTo(this.Disposables);
+            this.OneWayBind(this.ViewModel, x => x.Name, x => x.nameLabel.Text)
+                .AddTo(this.Disposables);
+
+            this.OneWayBind(this.ViewModel, x => x.Duration, x => x.durationLabel.Text, x => x.ToString("mm\\:ss"))
+                .AddTo(this.Disposables);
         }
     }
 }
-

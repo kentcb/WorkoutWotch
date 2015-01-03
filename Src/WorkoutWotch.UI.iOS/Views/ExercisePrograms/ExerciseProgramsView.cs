@@ -1,17 +1,16 @@
-using System;
-using WorkoutWotch.ViewModels;
-using WorkoutWotch.UI.iOS.Utility;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using MonoTouch.UIKit;
-using System.Reactive.Disposables;
-using ReactiveUI;
-using System.Reactive.Linq;
-using TinyIoC;
-
 namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
 {
+    using System;
+    using System.Reactive.Disposables;
+    using System.Reactive.Linq;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using MonoTouch.UIKit;
+    using ReactiveUI;
+    using WorkoutWotch.UI.iOS.Utility;
+    using WorkoutWotch.ViewModels;
+
     public sealed class ExerciseProgramsView : TableViewControllerBase<ExerciseProgramsViewModel>
-	{
+    {
         private IObservable<UIViewController> navigationRequests;
 
         public ExerciseProgramsView(ExerciseProgramsViewModel viewModel)
@@ -87,7 +86,5 @@ namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
             this.ViewModel.SelectedProgram = null;
             base.ViewWillAppear(animated);
         }
-	}
-
+    }
 }
-

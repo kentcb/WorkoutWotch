@@ -1,14 +1,13 @@
-﻿using System;
-using WorkoutWotch.ViewModels;
-using WorkoutWotch.UI.iOS.Utility;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using MonoTouch.UIKit;
-using System.Reactive.Disposables;
-using WorkoutWotch.UI.iOS.Utility;
-using ReactiveUI;
-
-namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
+﻿namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
 {
+    using System;
+    using System.Reactive.Disposables;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using MonoTouch.UIKit;
+    using ReactiveUI;
+    using WorkoutWotch.UI.iOS.Utility;
+    using WorkoutWotch.ViewModels;
+
     public sealed class ExerciseProgramsHostView : ViewControllerBase<ExerciseProgramsViewModel>
     {
         private ExerciseProgramsView exerciseProgramsView;
@@ -33,15 +32,24 @@ namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
             this.View.BackgroundColor = Resources.ThemeLightColor;
             this.EdgesForExtendedLayout = UIRectEdge.None;
 
-            this.activityIndicatorView = ControlFactory.CreateActivityIndicator().AddTo(this.Disposables);
+            this.activityIndicatorView = ControlFactory
+                .CreateActivityIndicator()
+                .AddTo(this.Disposables);
+
+            this.errorLabel = ControlFactory
+                .CreateLabel()
+                .AddTo(this.Disposables);
+
+            this.detailErrorLabel = ControlFactory
+                .CreateLabel(PreferredFont.Caption1)
+                .AddTo(this.Disposables);
+
             this.activityIndicatorView.StartAnimating();
 
-            this.errorLabel = ControlFactory.CreateLabel().AddTo(this.Disposables);
             this.errorLabel.TextAlignment = UITextAlignment.Center;
             this.errorLabel.Lines = 0;
             this.errorLabel.LineBreakMode = UILineBreakMode.WordWrap;
 
-            this.detailErrorLabel = ControlFactory.CreateLabel(PreferredFont.Caption1).AddTo(this.Disposables);
             this.detailErrorLabel.TextAlignment = UITextAlignment.Center;
 
             this.exerciseProgramsView = new ExerciseProgramsView(this.ViewModel);
@@ -69,13 +77,23 @@ namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
         {
             base.ViewDidLoad();
 
-            this.OneWayBind(this.ViewModel, x => x.Status, x => x.activityIndicatorView.Hidden, x => !IsLoadingStatus(x)).AddTo(this.Disposables);
-            this.OneWayBind(this.ViewModel, x => x.Status, x => x.errorLabel.Hidden, x => !IsErrorStatus(x)).AddTo(this.Disposables);
-            this.OneWayBind(this.ViewModel, x => x.Status, x => x.detailErrorLabel.Hidden, x => !IsErrorStatus(x)).AddTo(this.Disposables);
-            this.OneWayBind(this.ViewModel, x => x.Status, x => x.exerciseProgramsView.TableView.Hidden, x => IsLoadingStatus(x) || IsErrorStatus(x)).AddTo(this.Disposables);
+            this.OneWayBind(this.ViewModel, x => x.Status, x => x.activityIndicatorView.Hidden, x => !IsLoadingStatus(x))
+                .AddTo(this.Disposables);
 
-            this.OneWayBind(this.ViewModel, x => x.Status, x => x.errorLabel.Text, x => GetErrorMessage(x)).AddTo(this.Disposables);
-            this.OneWayBind(this.ViewModel, x => x.ParseErrorMessage, x => x.detailErrorLabel.Text).AddTo(this.Disposables);
+            this.OneWayBind(this.ViewModel, x => x.Status, x => x.errorLabel.Hidden, x => !IsErrorStatus(x))
+                .AddTo(this.Disposables);
+
+            this.OneWayBind(this.ViewModel, x => x.Status, x => x.detailErrorLabel.Hidden, x => !IsErrorStatus(x))
+                .AddTo(this.Disposables);
+
+            this.OneWayBind(this.ViewModel, x => x.Status, x => x.exerciseProgramsView.TableView.Hidden, x => IsLoadingStatus(x) || IsErrorStatus(x))
+                .AddTo(this.Disposables);
+
+            this.OneWayBind(this.ViewModel, x => x.Status, x => x.errorLabel.Text, x => GetErrorMessage(x))
+                .AddTo(this.Disposables);
+
+            this.OneWayBind(this.ViewModel, x => x.ParseErrorMessage, x => x.detailErrorLabel.Text)
+                .AddTo(this.Disposables);
 
             this.exerciseProgramsView.NavigationRequests
                 .Subscribe(x => this.NavigationController.PushViewController(x, true))
@@ -106,4 +124,3 @@ namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
         }
     }
 }
-
