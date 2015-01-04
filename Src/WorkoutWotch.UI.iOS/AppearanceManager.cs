@@ -22,7 +22,7 @@
             });
 
             // UIButton
-            UIButton.Appearance.SetTitleColor(Resources.ThemeLightColor, UIControlState.Normal);
+            UIButton.Appearance.SetTitleColor(Resources.ThemeDarkestColor, UIControlState.Normal);
             UIButton.Appearance.SetTitleColor(Resources.DisabledColor, UIControlState.Disabled);
             UIButton.Appearance.SetTitleColor(Resources.ThemeDarkColor, UIControlState.Highlighted);
             UIButton.Appearance.SetTitleColor(Resources.ThemeDarkColor, UIControlState.Selected);

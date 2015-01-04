@@ -46,7 +46,7 @@ namespace WorkoutWotch.ViewModels
             this.logger = loggerService.GetLogger(this.GetType());
             this.model = model;
             this.disposables = new CompositeDisposable();
-            this.exercises = this.model.Exercises.CreateDerivedCollection(x => new ExerciseViewModel(x, this.WhenAnyValue(y => y.ExecutionContext)));
+            this.exercises = this.model.Exercises.CreateDerivedCollection(x => new ExerciseViewModel(schedulerService, x, this.WhenAnyValue(y => y.ExecutionContext)));
 
             this.isStarted = this.WhenAnyValue(x => x.ExecutionContext)
                 .Select(x => x != null)
@@ -154,6 +154,16 @@ namespace WorkoutWotch.ViewModels
                 .AddTo(this.disposables);
 
             this.resumeCommand
+                .ThrownExceptions
+                .Subscribe(this.OnThrownException)
+                .AddTo(this.disposables);
+
+            this.skipBackwardsCommand
+                .ThrownExceptions
+                .Subscribe(this.OnThrownException)
+                .AddTo(this.disposables);
+
+            this.skipForwardsCommand
                 .ThrownExceptions
                 .Subscribe(this.OnThrownException)
                 .AddTo(this.disposables);
@@ -272,6 +282,8 @@ namespace WorkoutWotch.ViewModels
 
         private async Task StartAsync(TimeSpan skipTo = default(TimeSpan), bool isPaused = false)
         {
+            this.logger.Debug("Starting {0} from {1}.", isPaused ? "paused" : "unpaused", skipTo);
+
             var executionContext = new ExecutionContext(skipTo)
             {
                 IsPaused = isPaused
@@ -285,21 +297,26 @@ namespace WorkoutWotch.ViewModels
                 {
                     await this.model.ExecuteAsync(executionContext);
                 }
-                catch (TaskCanceledException)
+                catch (OperationCanceledException)
                 {
                     // swallow
                 }
             }
 
             this.ExecutionContext = null;
+
+            this.logger.Debug("Start completed.");
         }
 
-        private async Task StopAsync()
+        public async Task StopAsync()
         {
+            this.logger.Debug("Stopping.");
+
             var executionContext = this.ExecutionContext;
 
             if (executionContext == null)
             {
+                this.logger.Warn("Execution context is null - cannot stop.");
                 return;
             }
 
@@ -308,14 +325,19 @@ namespace WorkoutWotch.ViewModels
             await this.WhenAnyValue(x => x.IsStarted)
                 .Where(x => !x)
                 .FirstAsync();
+
+            this.logger.Debug("Stop completed.");
         }
 
         private async Task SkipBackwardsAsync()
         {
+            this.logger.Debug("Skipping backwards.");
+
             var executionContext = this.ExecutionContext;
 
             if (executionContext == null)
             {
+                this.logger.Warn("Execution context is null - cannot skip backwards.");
                 return;
             }
 
@@ -347,14 +369,19 @@ namespace WorkoutWotch.ViewModels
             this.StartAsync(skipTo, isPaused);
 
             #pragma warning restore 4014
+
+            this.logger.Debug("Skip backwards completed.");
         }
 
         private async Task SkipForwardsAsync()
         {
+            this.logger.Debug("Skipping forwards.");
+
             var executionContext = this.ExecutionContext;
 
             if (executionContext == null)
             {
+                this.logger.Warn("Execution context is null - cannot skip forwards.");
                 return;
             }
 
@@ -371,6 +398,8 @@ namespace WorkoutWotch.ViewModels
             this.StartAsync(totalProgress - currentExerciseProgress + currentExercise.Duration, isPaused);
 
             #pragma warning restore 4014
+
+            this.logger.Debug("Skip forwards completed.");
         }
 
         private void OnThrownException(Exception exception)

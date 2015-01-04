@@ -1,3 +1,5 @@
+using WorkoutWotch.Services.Contracts.Scheduler;
+
 namespace WorkoutWotch.ViewModels
 {
     using System;
@@ -13,11 +15,13 @@ namespace WorkoutWotch.ViewModels
         private readonly CompositeDisposable disposables;
         private readonly Exercise model;
         private readonly ObservableAsPropertyHelper<ExecutionContext> executionContext;
-        private readonly ObservableAsPropertyHelper<TimeSpan> progress;
+        private readonly ObservableAsPropertyHelper<TimeSpan> progressTimeSpan;
+        private readonly ObservableAsPropertyHelper<double> progress;
         private readonly ObservableAsPropertyHelper<bool> isActive;
 
-        public ExerciseViewModel(Exercise model, IObservable<ExecutionContext> executionContext)
+        public ExerciseViewModel(ISchedulerService schedulerService, Exercise model, IObservable<ExecutionContext> executionContext)
         {
+            schedulerService.AssertNotNull("schedulerService");
             model.AssertNotNull("model");
             executionContext.AssertNotNull("executionContext");
 
@@ -37,7 +41,7 @@ namespace WorkoutWotch.ViewModels
 
             // TODO: HACK: why can't I use currentExercise instead of this.ExecutionContext.CurrentExercise below?
             // Rx seems to be passing through the old exercise for currentExercise with the new value for currentExerciseProgress
-            this.progress = this.WhenAnyValue(x => x.ExecutionContext)
+            this.progressTimeSpan = this.WhenAnyValue(x => x.ExecutionContext)
                 .Select(
                     _ => this.WhenAnyValue(
                         x => x.ExecutionContext.CurrentExercise,
@@ -47,6 +51,17 @@ namespace WorkoutWotch.ViewModels
                     .Select(x => x.Value)
                     .StartWith(TimeSpan.Zero))
                 .Switch()
+                .ToProperty(this, x => x.ProgressTimeSpan)
+                .AddTo(this.disposables);
+
+            this.progress = this.WhenAny(
+                    x => x.Duration,
+                    x => x.ProgressTimeSpan,
+                    (duration, progressTimeSpan) => progressTimeSpan.Value.TotalMilliseconds / duration.Value.TotalMilliseconds)
+                .Select(x => double.IsNaN(x) || double.IsInfinity(x) ? 0d : x)
+                .Select(x => Math.Min(1d, x))
+                .Select(x => Math.Max(0d, x))
+                .ObserveOn(schedulerService.SynchronizationContextScheduler)
                 .ToProperty(this, x => x.Progress)
                 .AddTo(this.disposables);
         }
@@ -66,7 +81,12 @@ namespace WorkoutWotch.ViewModels
             get { return this.model.Duration; }
         }
 
-        public TimeSpan Progress
+        public TimeSpan ProgressTimeSpan
+        {
+            get { return this.progressTimeSpan.Value; }
+        }
+
+        public double Progress
         {
             get { return this.progress.Value; }
         }

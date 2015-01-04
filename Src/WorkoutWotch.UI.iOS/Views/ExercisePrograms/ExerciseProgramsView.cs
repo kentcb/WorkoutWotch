@@ -1,3 +1,5 @@
+using TinyIoC;
+
 namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
 {
     using System;
@@ -37,15 +39,9 @@ namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
                             return null;
                         }
 
-//                        var view = TinyIoCContainer.Current.Resolve<ExerciseProgramView>();
-//                        view.ViewModel = x;
-//                        return view;
-
-                        var tempView = new UIViewController();
-                        var label = ControlFactory.CreateLabel();
-                        label.Text = "Testing";
-                        tempView.View.AddSubview(label);
-                        return tempView;
+                    var view = TinyIoCContainer.Current.Resolve<Views.ExerciseProgram.ExerciseProgramView>();
+                        view.ViewModel = x;
+                        return view;
                     })
                 .Where(x => x != null);
 
