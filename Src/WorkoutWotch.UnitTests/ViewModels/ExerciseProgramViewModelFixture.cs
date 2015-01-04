@@ -702,9 +702,9 @@
             };
             var loggerService = new LoggerServiceMock(MockBehavior.Loose);
             var scheduler = new TestSchedulerService();
-            var exercise1 = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Exercise 1", 1, 1, matchersWithActions.ToList());
-            var exercise2 = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Exercise 2", 1, 1, matchersWithActions.ToList());
-            var exercise3 = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Exercise 3", 1, 1, matchersWithActions.ToList());
+            var exercise1 = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Exercise 1", 1, 1, matchersWithActions);
+            var exercise2 = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Exercise 2", 1, 1, matchersWithActions);
+            var exercise3 = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Exercise 3", 1, 1, matchersWithActions);
             var exerciseProgram = new ExerciseProgram(loggerService, "Name", new [] { exercise1, exercise2, exercise3 });
             var sut = new ExerciseProgramViewModel(loggerService, scheduler, exerciseProgram);
 
@@ -733,7 +733,7 @@
 
                 sut.SkipForwardsCommand.Execute(null);
 
-                await sut.SkipBackwardsCommand.IsExecuting
+                await sut.SkipForwardsCommand.IsExecuting
                     .Where(x => !x)
                     .Timeout(TimeSpan.FromSeconds(3))
                     .FirstAsync();
@@ -742,10 +742,10 @@
 
                 var currentExercises = await currentExercisesTask;
 
-//                Assert.AreEqual("Exercise 1", currentExercises[0].Name);
-//                Assert.AreEqual("Exercise 2", currentExercises[1].Name);
-//                Assert.AreEqual("Exercise 3", currentExercises[2].Name);
-//                Assert.AreEqual("Exercise 2", currentExercises[3].Name);
+                Assert.AreEqual("Exercise 1", currentExercises[0].Name);
+                Assert.AreEqual("Exercise 2", currentExercises[1].Name);
+                Assert.AreEqual("Exercise 3", currentExercises[2].Name);
+                Assert.AreEqual("Exercise 2", currentExercises[3].Name);
             }
         }
     }
