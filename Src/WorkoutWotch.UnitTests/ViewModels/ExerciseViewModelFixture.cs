@@ -184,7 +184,7 @@
         [TestCase(10000, 9500, 0.95d)]
         [TestCase(10000, 10000, 1d)]
         [TestCase(10000, 11000, 1d)]
-        public async Task progress_is_calculated_based_on_duration_and_progress_time_span(int durationInMs, int progressInMs, double expectedProgress)
+        public void progress_is_calculated_based_on_duration_and_progress_time_span(int durationInMs, int progressInMs, double expectedProgress)
         {
             var action = new ActionMock(MockBehavior.Loose);
             action.When(x => x.Duration).Return(TimeSpan.FromMilliseconds(durationInMs));
