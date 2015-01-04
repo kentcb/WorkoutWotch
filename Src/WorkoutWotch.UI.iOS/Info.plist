@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDisplayName</key>
-	<string>WorkoutWotch.UI.iOS</string>
+	<string>Workout Wotch</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.kentboogaart.workoutwotch</string>
 	<key>CFBundleShortVersionString</key>
