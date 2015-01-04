@@ -1,13 +1,13 @@
-﻿using System;
-using WorkoutWotch.UI.iOS.Utility;
-using WorkoutWotch.ViewModels;
-using MonoTouch.UIKit;
-using System.Reactive.Disposables;
-using ReactiveUI;
-using System.Reactive.Linq;
-
-namespace WorkoutWotch.UI.iOS.Views.ExerciseProgram
+﻿namespace WorkoutWotch.UI.iOS.Views.ExerciseProgram
 {
+    using System;
+    using System.Reactive.Disposables;
+    using System.Reactive.Linq;
+    using MonoTouch.UIKit;
+    using ReactiveUI;
+    using WorkoutWotch.UI.iOS.Utility;
+    using WorkoutWotch.ViewModels;
+
     public sealed class ExerciseProgramView : ViewControllerBase<ExerciseProgramViewModel>
     {
         private UIButton startButton;
@@ -29,20 +29,37 @@ namespace WorkoutWotch.UI.iOS.Views.ExerciseProgram
 
             this.View.BackgroundColor = Resources.ThemeLightColor;
 
-            this.startButton = ControlFactory.CreateButton().AddTo(this.Disposables);
-            this.pauseButton = ControlFactory.CreateButton().AddTo(this.Disposables);
-            this.resumeButton = ControlFactory.CreateButton().AddTo(this.Disposables);
-            this.skipBackwardsButton = ControlFactory.CreateButton().AddTo(this.Disposables);
-            this.skipForwardsButton = ControlFactory.CreateButton().AddTo(this.Disposables);
+            this.startButton = ControlFactory
+                .CreateButton()
+                .AddTo(this.Disposables);
+
+            this.pauseButton = ControlFactory
+                .CreateButton()
+                .AddTo(this.Disposables);
+
+            this.resumeButton = ControlFactory
+                .CreateButton()
+                .AddTo(this.Disposables);
+
+            this.skipBackwardsButton = ControlFactory
+                .CreateButton()
+                .AddTo(this.Disposables);
+
+            this.skipForwardsButton = ControlFactory
+                .CreateButton()
+                .AddTo(this.Disposables);
+
+            this.progressView = ControlFactory
+                .CreateProgressView()
+                .AddTo(this.Disposables);
+
+            this.exercisesView = new ExercisesView(this.ViewModel);
 
             this.startButton.SetTitle("START", UIControlState.Normal);
             this.pauseButton.SetTitle("PAUSE", UIControlState.Normal);
             this.resumeButton.SetTitle("RESUME", UIControlState.Normal);
             this.skipBackwardsButton.SetTitle("<< SKIP", UIControlState.Normal);
             this.skipForwardsButton.SetTitle("SKIP >>", UIControlState.Normal);
-
-            this.progressView = ControlFactory.CreateProgressView().AddTo(this.Disposables);
-            this.exercisesView = new ExercisesView(this.ViewModel);
 
             this.AddChildViewController(this.exercisesView);
 
@@ -80,16 +97,32 @@ namespace WorkoutWotch.UI.iOS.Views.ExerciseProgram
         {
             base.ViewDidLoad();
 
-            this.OneWayBind(this.ViewModel, x => x.Progress, x => x.progressView.Progress).AddTo(this.Disposables);
-            this.OneWayBind(this.ViewModel, x => x.IsStartVisible, x => x.startButton.Hidden, x => !x).AddTo(this.Disposables);
-            this.OneWayBind(this.ViewModel, x => x.IsPauseVisible, x => x.pauseButton.Hidden, x => !x).AddTo(this.Disposables);
-            this.OneWayBind(this.ViewModel, x => x.IsResumeVisible, x => x.resumeButton.Hidden, x => !x).AddTo(this.Disposables);
+            this.OneWayBind(this.ViewModel, x => x.Progress, x => x.progressView.Progress)
+                .AddTo(this.Disposables);
 
-            this.BindCommand(this.ViewModel, x => x.StartCommand, x => x.startButton).AddTo(this.Disposables);
-            this.BindCommand(this.ViewModel, x => x.PauseCommand, x => x.pauseButton).AddTo(this.Disposables);
-            this.BindCommand(this.ViewModel, x => x.ResumeCommand, x => x.resumeButton).AddTo(this.Disposables);
-            this.BindCommand(this.ViewModel, x => x.SkipBackwardsCommand, x => x.skipBackwardsButton).AddTo(this.Disposables);
-            this.BindCommand(this.ViewModel, x => x.SkipForwardsCommand, x => x.skipForwardsButton).AddTo(this.Disposables);
+            this.OneWayBind(this.ViewModel, x => x.IsStartVisible, x => x.startButton.Hidden, x => !x)
+                .AddTo(this.Disposables);
+
+            this.OneWayBind(this.ViewModel, x => x.IsPauseVisible, x => x.pauseButton.Hidden, x => !x)
+                .AddTo(this.Disposables);
+
+            this.OneWayBind(this.ViewModel, x => x.IsResumeVisible, x => x.resumeButton.Hidden, x => !x)
+                .AddTo(this.Disposables);
+
+            this.BindCommand(this.ViewModel, x => x.StartCommand, x => x.startButton)
+                .AddTo(this.Disposables);
+
+            this.BindCommand(this.ViewModel, x => x.PauseCommand, x => x.pauseButton)
+                .AddTo(this.Disposables);
+
+            this.BindCommand(this.ViewModel, x => x.ResumeCommand, x => x.resumeButton)
+                .AddTo(this.Disposables);
+
+            this.BindCommand(this.ViewModel, x => x.SkipBackwardsCommand, x => x.skipBackwardsButton)
+                .AddTo(this.Disposables);
+
+            this.BindCommand(this.ViewModel, x => x.SkipForwardsCommand, x => x.skipForwardsButton)
+                .AddTo(this.Disposables);
 
             this.WhenAnyValue(x => x.ViewModel)
                 .Where(x => x != null)
@@ -104,4 +137,3 @@ namespace WorkoutWotch.UI.iOS.Views.ExerciseProgram
         }
     }
 }
-

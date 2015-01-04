@@ -1,19 +1,17 @@
-﻿using WorkoutWotch.UnitTests.Reactive;
-using System.Threading.Tasks;
-using ReactiveUI;
-
-namespace WorkoutWotch.UnitTests.ViewModels
+﻿namespace WorkoutWotch.UnitTests.ViewModels
 {
     using System;
     using System.Linq;
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
+    using System.Threading.Tasks;
     using Kent.Boogaart.PCLMock;
     using NUnit.Framework;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.EventMatchers;
     using WorkoutWotch.Models.Events;
     using WorkoutWotch.UnitTests.Models.Mocks;
+    using WorkoutWotch.UnitTests.Reactive;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
     using WorkoutWotch.UnitTests.Services.Speech.Mocks;
     using WorkoutWotch.ViewModels;

@@ -1,16 +1,15 @@
-using System;
-using WorkoutWotch.UI.iOS.Utility;
-using WorkoutWotch.ViewModels;
-using MonoTouch.UIKit;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using ReactiveUI;
-using System.Reactive.Linq;
-using System.Reactive.Disposables;
-
 namespace WorkoutWotch.UI.iOS.Views.ExerciseProgram
 {
+    using System.Reactive.Disposables;
+    using System.Reactive.Linq;
+    using Kent.Boogaart.HelperTrinity.Extensions;
+    using MonoTouch.UIKit;
+    using ReactiveUI;
+    using WorkoutWotch.UI.iOS.Utility;
+    using WorkoutWotch.ViewModels;
+
     public sealed class ExercisesView : TableViewControllerBase<ExerciseProgramViewModel>
-	{
+    {
         public ExercisesView(ExerciseProgramViewModel viewModel)
         {
             viewModel.AssertNotNull("viewModel");
@@ -32,7 +31,5 @@ namespace WorkoutWotch.UI.iOS.Views.ExerciseProgram
                 .BindTo(this.TableView, x => x.Source)
                 .AddTo(this.Disposables);
         }
-	}
-
+    }
 }
-

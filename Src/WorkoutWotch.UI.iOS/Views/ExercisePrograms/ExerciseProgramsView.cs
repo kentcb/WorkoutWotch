@@ -1,5 +1,3 @@
-using TinyIoC;
-
 namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
 {
     using System;
@@ -8,6 +6,7 @@ namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
     using Kent.Boogaart.HelperTrinity.Extensions;
     using MonoTouch.UIKit;
     using ReactiveUI;
+    using TinyIoC;
     using WorkoutWotch.UI.iOS.Utility;
     using WorkoutWotch.ViewModels;
 
@@ -39,7 +38,7 @@ namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
                             return null;
                         }
 
-                    var view = TinyIoCContainer.Current.Resolve<Views.ExerciseProgram.ExerciseProgramView>();
+                        var view = TinyIoCContainer.Current.Resolve<Views.ExerciseProgram.ExerciseProgramView>();
                         view.ViewModel = x;
                         return view;
                     })

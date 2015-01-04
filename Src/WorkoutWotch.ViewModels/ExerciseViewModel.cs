@@ -1,5 +1,3 @@
-using WorkoutWotch.Services.Contracts.Scheduler;
-
 namespace WorkoutWotch.ViewModels
 {
     using System;
@@ -8,6 +6,7 @@ namespace WorkoutWotch.ViewModels
     using Kent.Boogaart.HelperTrinity.Extensions;
     using ReactiveUI;
     using WorkoutWotch.Models;
+    using WorkoutWotch.Services.Contracts.Scheduler;
     using WorkoutWotch.Utility;
 
     public sealed class ExerciseViewModel : DisposableReactiveObject

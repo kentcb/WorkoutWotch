@@ -1,16 +1,15 @@
-using System;
-using WorkoutWotch.UI.iOS.Utility;
-using WorkoutWotch.ViewModels;
-using MonoTouch.UIKit;
-using Kent.Boogaart.HelperTrinity.Extensions;
-using MonoTouch.Foundation;
-using System.Reactive.Disposables;
-using ReactiveUI;
-
 namespace WorkoutWotch.UI.iOS.Views.ExerciseProgram
 {
+    using System;
+    using System.Reactive.Disposables;
+    using MonoTouch.Foundation;
+    using MonoTouch.UIKit;
+    using ReactiveUI;
+    using WorkoutWotch.UI.iOS.Utility;
+    using WorkoutWotch.ViewModels;
+
     public sealed class ExerciseView : TableViewCellBase<ExerciseViewModel>
-	{
+    {
         public static readonly NSString Key = new NSString("key");
 
         private UILabel nameLabel;
@@ -53,13 +52,17 @@ namespace WorkoutWotch.UI.iOS.Views.ExerciseProgram
 
         protected override void CreateBindings()
         {
-            this.OneWayBind(this.ViewModel, x => x.Name, x => x.nameLabel.Text).AddTo(this.Disposables);
-            this.OneWayBind(this.ViewModel, x => x.Duration, x => x.durationLabel.Text, x => x.ToString("mm\\:ss")).AddTo(this.Disposables);
-            this.OneWayBind(this.ViewModel, x => x.Progress, x => x.progressView.Progress).AddTo(this.Disposables);
-            this.OneWayBind(this.ViewModel, x => x.IsActive, x => x.progressView.Hidden, x => !x).AddTo(this.Disposables);
+            this.OneWayBind(this.ViewModel, x => x.Name, x => x.nameLabel.Text)
+                .AddTo(this.Disposables);
+
+            this.OneWayBind(this.ViewModel, x => x.Duration, x => x.durationLabel.Text, x => x.ToString("mm\\:ss"))
+                .AddTo(this.Disposables);
+
+            this.OneWayBind(this.ViewModel, x => x.Progress, x => x.progressView.Progress)
+                .AddTo(this.Disposables);
+
+            this.OneWayBind(this.ViewModel, x => x.IsActive, x => x.progressView.Hidden, x => !x)
+                .AddTo(this.Disposables);
         }
-	}
-
-
+    }
 }
-
