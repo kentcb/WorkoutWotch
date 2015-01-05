@@ -34,6 +34,10 @@
             container.Register<ISpeechService, SpeechService>();
             container.Register<IStateService, StateService>();
             container.Register<ISystemNotificationsService, SystemNotificationsService>();
+
+            // uncomment this if you want return a "canned" exercise document that can only be changed in code
+            // this is useful if you don't want to have to set up iCloud integration
+//            container.Register<IExerciseDocumentService, CannedExerciseDocumentService>();
         }
 
         private void RegisterViewModels(TinyIoCContainer container)

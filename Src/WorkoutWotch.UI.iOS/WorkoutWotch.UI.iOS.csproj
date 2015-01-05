@@ -75,6 +75,11 @@
     <BuildIpa>true</BuildIpa>
     <CodesignProvision>Automatic:AdHoc</CodesignProvision>
     <CodesignKey>iPhone Distribution</CodesignKey>
+    <MtouchExtraArgs>--xml=${ProjectDir}/Linker.xml</MtouchExtraArgs>
+    <MtouchI18n>
+    </MtouchI18n>
+    <MtouchArch>ARMv7</MtouchArch>
+    <MtouchLink>Full</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
     <DebugType>full</DebugType>
@@ -139,6 +144,7 @@
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
     <None Include="packages.config" />
+    <None Include="Linker.xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -207,5 +213,39 @@
       <Project>{FCB4C356-C2D8-4C9B-BDAC-D802EC2CA0FE}</Project>
       <Name>WorkoutWotch.ViewModels</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\29.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\58.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\87.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\80.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\120.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\57.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\114.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\180.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\40.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\50.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\100.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\72.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\144.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\76.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\152.png" />
+    <ImageAsset Include="Resources\Images.xcassets\Play.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\Play.imageset\Play.png" />
+    <ImageAsset Include="Resources\Images.xcassets\Play.imageset\Play%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\Play.imageset\Play%403x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\Pause.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\Pause.imageset\Pause.png" />
+    <ImageAsset Include="Resources\Images.xcassets\Pause.imageset\Pause%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\Pause.imageset\Pause%403x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\SkipForward.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\SkipForward.imageset\SkipForward.png" />
+    <ImageAsset Include="Resources\Images.xcassets\SkipForward.imageset\SkipForward%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\SkipForward.imageset\SkipForward%403x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\SkipBackward.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\SkipBackward.imageset\SkipBackward.png" />
+    <ImageAsset Include="Resources\Images.xcassets\SkipBackward.imageset\SkipBackward%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\SkipBackward.imageset\SkipBackward%403x.png" />
   </ItemGroup>
 </Project>

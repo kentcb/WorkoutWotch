@@ -29,24 +29,19 @@
 
             this.View.BackgroundColor = Resources.ThemeLightColor;
 
-            this.startButton = ControlFactory
-                .CreateButton()
+            this.startButton = new ControlButton("Play")
                 .AddTo(this.Disposables);
 
-            this.pauseButton = ControlFactory
-                .CreateButton()
+            this.pauseButton = new ControlButton("Pause")
                 .AddTo(this.Disposables);
 
-            this.resumeButton = ControlFactory
-                .CreateButton()
+            this.resumeButton = new ControlButton("Play")
                 .AddTo(this.Disposables);
 
-            this.skipBackwardsButton = ControlFactory
-                .CreateButton()
+            this.skipBackwardsButton = new ControlButton("SkipBackward")
                 .AddTo(this.Disposables);
 
-            this.skipForwardsButton = ControlFactory
-                .CreateButton()
+            this.skipForwardsButton = new ControlButton("SkipForward")
                 .AddTo(this.Disposables);
 
             this.progressView = ControlFactory
@@ -54,12 +49,6 @@
                 .AddTo(this.Disposables);
 
             this.exercisesView = new ExercisesView(this.ViewModel);
-
-            this.startButton.SetTitle("START", UIControlState.Normal);
-            this.pauseButton.SetTitle("PAUSE", UIControlState.Normal);
-            this.resumeButton.SetTitle("RESUME", UIControlState.Normal);
-            this.skipBackwardsButton.SetTitle("<< SKIP", UIControlState.Normal);
-            this.skipForwardsButton.SetTitle("SKIP >>", UIControlState.Normal);
 
             this.AddChildViewController(this.exercisesView);
 
@@ -79,9 +68,9 @@
                 this.pauseButton.Top() == this.startButton.Top() &&
                 this.resumeButton.CenterX() == this.startButton.CenterX() &&
                 this.resumeButton.Top() == this.startButton.Top() &&
-                this.skipBackwardsButton.Right() == this.startButton.Left() - Layout.StandardSiblingViewSpacing &&
+                this.skipBackwardsButton.Right() == this.startButton.Left() + Layout.StandardSiblingViewSpacing &&
                 this.skipBackwardsButton.CenterY() == this.startButton.CenterY() &&
-                this.skipForwardsButton.Left() == this.startButton.Right() + Layout.StandardSiblingViewSpacing &&
+                this.skipForwardsButton.Left() == this.startButton.Right() - Layout.StandardSiblingViewSpacing &&
                 this.skipForwardsButton.CenterY() == this.startButton.CenterY() &&
                 this.progressView.Left() == this.View.Left() + Layout.StandardSuperviewSpacing &&
                 this.progressView.Right() == this.View.Right() - Layout.StandardSuperviewSpacing &&
@@ -134,6 +123,41 @@
         {
             base.ViewDidDisappear(animated);
             this.ViewModel.StopAsync();
+        }
+
+        private sealed class ControlButton : UIButton
+        {
+            public ControlButton(string imageResource)
+                : base(UIButtonType.System)
+            {
+                this.SetImage(UIImage.FromBundle(imageResource), UIControlState.Normal);
+                this.UpdateTintColor();
+            }
+
+            public override bool Enabled
+            {
+                get
+                {
+                    return base.Enabled;
+                }
+                set
+                {
+                    base.Enabled = value;
+                    this.UpdateTintColor();
+                }
+            }
+
+            private void UpdateTintColor()
+            {
+                var tintColor = Resources.ThemeDarkColor;
+
+                if (!this.Enabled)
+                {
+                    tintColor = Resources.DisabledColor;
+                }
+
+                this.TintColor = tintColor;
+            }
         }
     }
 }
