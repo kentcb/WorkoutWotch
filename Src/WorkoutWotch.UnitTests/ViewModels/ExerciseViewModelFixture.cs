@@ -105,12 +105,15 @@
 
             executionContext.SetCurrentExercise(model);
 
+            scheduler.Start();
             Assert.AreEqual(TimeSpan.Zero, sut.ProgressTimeSpan);
 
             executionContext.AddProgress(TimeSpan.FromSeconds(3));
+            scheduler.Start();
             Assert.AreEqual(TimeSpan.FromSeconds(3), sut.ProgressTimeSpan);
 
             executionContext.AddProgress(TimeSpan.FromSeconds(2));
+            scheduler.Start();
             Assert.AreEqual(TimeSpan.FromSeconds(5), sut.ProgressTimeSpan);
         }
 
@@ -126,12 +129,15 @@
             executionContext.SetCurrentExercise(model1);
             executionContext.AddProgress(TimeSpan.FromSeconds(3));
 
+            scheduler.Start();
             Assert.AreEqual(TimeSpan.FromSeconds(3), sut.ProgressTimeSpan);
 
             executionContext.SetCurrentExercise(model2);
+            scheduler.Start();
             Assert.AreEqual(TimeSpan.FromSeconds(3), sut.ProgressTimeSpan);
 
             executionContext.AddProgress(TimeSpan.FromSeconds(3));
+            scheduler.Start();
             Assert.AreEqual(TimeSpan.FromSeconds(3), sut.ProgressTimeSpan);
         }
 
@@ -148,9 +154,11 @@
             executionContext.SetCurrentExercise(model);
 
             executionContext.AddProgress(TimeSpan.FromSeconds(3));
+            scheduler.Start();
             Assert.AreEqual(TimeSpan.FromSeconds(3), sut.ProgressTimeSpan);
 
             executionContextSubject.OnNext(new ExecutionContext());
+            scheduler.Start();
             Assert.AreEqual(TimeSpan.Zero, sut.ProgressTimeSpan);
         }
 
@@ -167,9 +175,11 @@
             executionContext.SetCurrentExercise(model);
 
             executionContext.AddProgress(TimeSpan.FromSeconds(3));
+            scheduler.Start();
             Assert.AreEqual(TimeSpan.FromSeconds(3), sut.ProgressTimeSpan);
 
             executionContextSubject.OnNext(null);
+            scheduler.Start();
             Assert.AreEqual(TimeSpan.Zero, sut.ProgressTimeSpan);
         }
 
@@ -212,6 +222,7 @@
             var model = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "Name", 1, 1, Enumerable.Empty<MatcherWithAction>());
             var sut = new ExerciseViewModel(scheduler, model, Observable.Never<ExecutionContext>());
 
+            scheduler.Start();
             Assert.False(sut.IsActive);
         }
 
@@ -223,8 +234,11 @@
             var executionContext = new ExecutionContext();
             var sut = new ExerciseViewModel(scheduler, model, Observable.Return(executionContext));
 
+            scheduler.Start();
             Assert.False(sut.IsActive);
+
             executionContext.SetCurrentExercise(model);
+            scheduler.Start();
             Assert.True(sut.IsActive);
         }
 
@@ -237,8 +251,11 @@
             var executionContext = new ExecutionContext();
             var sut = new ExerciseViewModel(scheduler, model1, Observable.Return(executionContext));
 
+            scheduler.Start();
             Assert.False(sut.IsActive);
+
             executionContext.SetCurrentExercise(model2);
+            scheduler.Start();
             Assert.False(sut.IsActive);
         }
     }

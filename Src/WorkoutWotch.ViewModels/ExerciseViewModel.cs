@@ -28,6 +28,7 @@ namespace WorkoutWotch.ViewModels
             this.model = model;
 
             this.executionContext = executionContext
+                .ObserveOn(schedulerService.SynchronizationContextScheduler)
                 .ToProperty(this, x => x.ExecutionContext)
                 .AddTo(this.disposables);
 
@@ -35,6 +36,7 @@ namespace WorkoutWotch.ViewModels
                     x => x.ExecutionContext,
                     x => x.ExecutionContext.CurrentExercise,
                     (ec, currentExercise) => ec != null && currentExercise == this.model)
+                .ObserveOn(schedulerService.SynchronizationContextScheduler)
                 .ToProperty(this, x => x.IsActive)
                 .AddTo(this.disposables);
 
@@ -50,6 +52,7 @@ namespace WorkoutWotch.ViewModels
                     .Select(x => x.Value)
                     .StartWith(TimeSpan.Zero))
                 .Switch()
+                .ObserveOn(schedulerService.SynchronizationContextScheduler)
                 .ToProperty(this, x => x.ProgressTimeSpan)
                 .AddTo(this.disposables);
 
