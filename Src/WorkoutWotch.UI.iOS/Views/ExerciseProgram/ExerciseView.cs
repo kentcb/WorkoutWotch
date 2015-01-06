@@ -2,6 +2,7 @@ namespace WorkoutWotch.UI.iOS.Views.ExerciseProgram
 {
     using System;
     using System.Reactive.Disposables;
+    using System.Reactive.Linq;
     using MonoTouch.Foundation;
     using MonoTouch.UIKit;
     using ReactiveUI;
@@ -11,6 +12,7 @@ namespace WorkoutWotch.UI.iOS.Views.ExerciseProgram
     public sealed class ExerciseView : TableViewCellBase<ExerciseViewModel>
     {
         public static readonly NSString Key = new NSString("key");
+        private const float inactiveAlpha = 0.4f;
 
         private UILabel nameLabel;
         private UILabel durationLabel;
@@ -62,6 +64,19 @@ namespace WorkoutWotch.UI.iOS.Views.ExerciseProgram
                 .AddTo(this.Disposables);
 
             this.OneWayBind(this.ViewModel, x => x.IsActive, x => x.progressView.Hidden, x => !x)
+                .AddTo(this.Disposables);
+
+            this.WhenAnyValue(x => x.ViewModel)
+                .Where(x => x != null)
+                .Select(x => x.WhenAnyValue(y => y.IsActive))
+                .Switch()
+                .Subscribe(x =>
+                    UIView.Animate(
+                        0.5d,
+                        0d,
+                        UIViewAnimationOptions.CurveEaseInOut,
+                        () => this.ContentView.Alpha = x ? 1 : inactiveAlpha,
+                        () => { }))
                 .AddTo(this.Disposables);
         }
     }
