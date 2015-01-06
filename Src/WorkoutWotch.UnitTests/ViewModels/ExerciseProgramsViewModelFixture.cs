@@ -50,9 +50,8 @@
         [Test]
         public void parse_error_message_is_null_by_default()
         {
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var stateService = this.GetStateService(null);
-            var sut = new ExerciseProgramsViewModel(new ContainerServiceMock(), new ExerciseDocumentServiceMock(MockBehavior.Loose), loggerService, new TestSchedulerService(), stateService);
+            var sut = new ExerciseProgramsViewModelBuilder().Build();
+
             Assert.Null(sut.ParseErrorMessage);
         }
 
@@ -64,12 +63,12 @@
 ## First Exercise
 
  whatever!";
-            var exerciseDocumentService = new ExerciseDocumentServiceMock();
-            exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Return(document));
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var stateService = this.GetStateService(null);
             var scheduler = new TestSchedulerService();
-            var sut = new ExerciseProgramsViewModel(new ContainerServiceMock(MockBehavior.Loose), exerciseDocumentService, loggerService, scheduler, stateService);
+
+            var sut = new ExerciseProgramsViewModelBuilder()
+                .WithCloudDocument(document)
+                .WithSchedulerService(scheduler)
+                .Build();
 
             scheduler.Start();
             Assert.NotNull(sut.ParseErrorMessage);
@@ -87,11 +86,17 @@
             var goodDocument = "# First Program";
             var documents = new Subject<string>();
             var exerciseDocumentService = new ExerciseDocumentServiceMock();
-            exerciseDocumentService.When(x => x.ExerciseDocument).Return(documents);
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var stateService = this.GetStateService(null);
             var scheduler = new TestSchedulerService();
-            var sut = new ExerciseProgramsViewModel(new ContainerServiceMock(MockBehavior.Loose), exerciseDocumentService, loggerService, scheduler, stateService);
+
+            exerciseDocumentService
+                .When(x => x.ExerciseDocument)
+                .Return(documents);
+
+            var sut = new ExerciseProgramsViewModelBuilder()
+                .WithExerciseDocumentService(exerciseDocumentService)
+                .WithSchedulerService(scheduler)
+                .Build();
+
             documents.OnNext(badDocument);
 
             scheduler.Start();
@@ -106,12 +111,12 @@
         public void programs_yields_any_successfully_parsed_programs()
         {
             var document = "# First Program";
-            var exerciseDocumentService = new ExerciseDocumentServiceMock();
-            exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Return(document));
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var stateService = this.GetStateService(null);
             var scheduler = new TestSchedulerService();
-            var sut = new ExerciseProgramsViewModel(new ContainerServiceMock(MockBehavior.Loose), exerciseDocumentService, loggerService, scheduler, stateService);
+
+            var sut = new ExerciseProgramsViewModelBuilder()
+                .WithCloudDocument(document)
+                .WithSchedulerService(scheduler)
+                .Build();
 
             scheduler.Start();
             Assert.NotNull(sut.Programs);
@@ -122,12 +127,11 @@
         [Test]
         public void programs_is_null_if_both_cache_and_cloud_are_empty()
         {
-            var exerciseDocumentService = new ExerciseDocumentServiceMock();
-            exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Never<string>());
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var stateService = this.GetStateService(null);
             var scheduler = new TestSchedulerService();
-            var sut = new ExerciseProgramsViewModel(new ContainerServiceMock(MockBehavior.Loose), exerciseDocumentService, loggerService, scheduler, stateService);
+
+            var sut = new ExerciseProgramsViewModelBuilder()
+                .WithSchedulerService(scheduler)
+                .Build();
 
             scheduler.Start();
             Assert.Null(sut.Programs);
@@ -137,12 +141,12 @@
         public void programs_is_populated_from_cache_if_cache_is_populated_and_cloud_is_empty()
         {
             var document = "# First Program";
-            var exerciseDocumentService = new ExerciseDocumentServiceMock();
-            exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Never<string>());
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var stateService = this.GetStateService(document);
             var scheduler = new TestSchedulerService();
-            var sut = new ExerciseProgramsViewModel(new ContainerServiceMock(MockBehavior.Loose), exerciseDocumentService, loggerService, scheduler, stateService);
+
+            var sut = new ExerciseProgramsViewModelBuilder()
+                .WithSchedulerService(scheduler)
+                .WithCachedDocument(document)
+                .Build();
 
             scheduler.Start();
             Assert.NotNull(sut.Programs);
@@ -153,12 +157,12 @@
         public void programs_is_populated_from_cloud_if_cache_is_empty_and_cloud_is_populated()
         {
             var document = "# First Program";
-            var exerciseDocumentService = new ExerciseDocumentServiceMock();
-            exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Return(document));
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var stateService = this.GetStateService(null);
             var scheduler = new TestSchedulerService();
-            var sut = new ExerciseProgramsViewModel(new ContainerServiceMock(MockBehavior.Loose), exerciseDocumentService, loggerService, scheduler, stateService);
+
+            var sut = new ExerciseProgramsViewModelBuilder()
+                .WithCloudDocument(document)
+                .WithSchedulerService(scheduler)
+                .Build();
 
             scheduler.Start();
             Assert.NotNull(sut.Programs);
@@ -169,13 +173,22 @@
         public void programs_is_populated_from_cloud_if_cache_errors_and_cloud_is_populated()
         {
             var document = "# First Program";
-            var exerciseDocumentService = new ExerciseDocumentServiceMock();
-            exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Return(document));
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var stateService = this.GetStateService(null);
-            stateService.When(x => x.GetAsync<string>(It.IsAny<string>())).Return(Task.Run<string>(() => { throw new InvalidOperationException(); }));
+            var stateService = new StateServiceMock();
             var scheduler = new TestSchedulerService();
-            var sut = new ExerciseProgramsViewModel(new ContainerServiceMock(MockBehavior.Loose), exerciseDocumentService, loggerService, scheduler, stateService);
+
+            stateService
+                .When(x => x.GetAsync<string>(It.IsAny<string>()))
+                .Return(Task.Run<string>(() => { throw new InvalidOperationException(); }));
+
+            stateService
+                .When(x => x.SetAsync<string>(It.IsAny<string>(), It.IsAny<string>()))
+                .Return(Task.FromResult(true));
+
+            var sut = new ExerciseProgramsViewModelBuilder()
+                .WithCloudDocument(document)
+                .WithSchedulerService(scheduler)
+                .WithStateService(stateService)
+                .Build();
 
             scheduler.Start();
             Assert.NotNull(sut.Programs);
@@ -189,12 +202,13 @@
             var cloudDocument = @"
 # First Program
 # Second Program";
-            var exerciseDocumentService = new ExerciseDocumentServiceMock();
-            exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Return(cloudDocument));
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var stateService = this.GetStateService(cacheDocument);
             var scheduler = new TestSchedulerService();
-            var sut = new ExerciseProgramsViewModel(new ContainerServiceMock(MockBehavior.Loose), exerciseDocumentService, loggerService, scheduler, stateService);
+
+            var sut = new ExerciseProgramsViewModelBuilder()
+                .WithCloudDocument(cloudDocument)
+                .WithCachedDocument(cacheDocument)
+                .WithSchedulerService(scheduler)
+                .Build();
 
             scheduler.Start();
             Assert.NotNull(sut.Programs);
@@ -209,12 +223,12 @@
 ## First Exercise
 
  whatever!";
-            var exerciseDocumentService = new ExerciseDocumentServiceMock();
-            exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Return(document));
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var stateService = this.GetStateService(null);
             var scheduler = new TestSchedulerService();
-            var sut = new ExerciseProgramsViewModel(new ContainerServiceMock(MockBehavior.Loose), exerciseDocumentService, loggerService, scheduler, stateService);
+
+            var sut = new ExerciseProgramsViewModelBuilder()
+                .WithCloudDocument(document)
+                .WithSchedulerService(scheduler)
+                .Build();
 
             scheduler.Start();
             Assert.AreEqual(ExerciseProgramsViewModelStatus.ParseFailed, sut.Status);
@@ -224,12 +238,12 @@
         public void status_is_loaded_from_cache_if_document_is_successfully_loaded_from_cache()
         {
             var document = "# First Program";
-            var exerciseDocumentService = new ExerciseDocumentServiceMock();
-            exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Never<string>());
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var stateService = this.GetStateService(document);
             var scheduler = new TestSchedulerService();
-            var sut = new ExerciseProgramsViewModel(new ContainerServiceMock(MockBehavior.Loose), exerciseDocumentService, loggerService, scheduler, stateService);
+
+            var sut = new ExerciseProgramsViewModelBuilder()
+                .WithCachedDocument(document)
+                .WithSchedulerService(scheduler)
+                .Build();
 
             scheduler.Start();
             Assert.AreEqual(ExerciseProgramsViewModelStatus.LoadedFromCache, sut.Status);
@@ -239,12 +253,12 @@
         public void status_is_loaded_from_cloud_if_document_is_successfully_loaded_from_cloud()
         {
             var document = "# First Program";
-            var exerciseDocumentService = new ExerciseDocumentServiceMock();
-            exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Return(document));
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var stateService = this.GetStateService(null);
             var scheduler = new TestSchedulerService();
-            var sut = new ExerciseProgramsViewModel(new ContainerServiceMock(MockBehavior.Loose), exerciseDocumentService, loggerService, scheduler, stateService);
+
+            var sut = new ExerciseProgramsViewModelBuilder()
+                .WithCloudDocument(document)
+                .WithSchedulerService(scheduler)
+                .Build();
 
             scheduler.Start();
             Assert.AreEqual(ExerciseProgramsViewModelStatus.LoadedFromCloud, sut.Status);
@@ -254,11 +268,16 @@
         public void status_is_load_failed_if_the_document_fails_to_load_altogether()
         {
             var exerciseDocumentService = new ExerciseDocumentServiceMock();
-            exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Throw<string>(new InvalidOperationException()));
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var stateService = this.GetStateService(null);
             var scheduler = new TestSchedulerService();
-            var sut = new ExerciseProgramsViewModel(new ContainerServiceMock(MockBehavior.Loose), exerciseDocumentService, loggerService, scheduler, stateService);
+
+            exerciseDocumentService
+                .When(x => x.ExerciseDocument)
+                .Return(Observable.Throw<string>(new InvalidOperationException()));
+
+            var sut = new ExerciseProgramsViewModelBuilder()
+                .WithExerciseDocumentService(exerciseDocumentService)
+                .WithSchedulerService(scheduler)
+                .Build();
 
             scheduler.Start();
             Assert.AreEqual(ExerciseProgramsViewModelStatus.LoadFailed, sut.Status);
@@ -268,44 +287,57 @@
         public void document_is_stored_in_cache_if_successfully_loaded_from_cloud()
         {
             var document = "# First Program";
-            var exerciseDocumentService = new ExerciseDocumentServiceMock();
-            exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Return(document));
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var stateService = this.GetStateService(null);
             var scheduler = new TestSchedulerService();
-            var sut = new ExerciseProgramsViewModel(new ContainerServiceMock(MockBehavior.Loose), exerciseDocumentService, loggerService, scheduler, stateService);
+            var stateService = new StateServiceMock();
+
+            stateService
+                .When(x => x.GetAsync<string>(It.IsAny<string>()))
+                .Return(Task.FromResult<string>(null));
+
+            stateService
+                .When(x => x.SetAsync<string>(It.IsAny<string>(), It.IsAny<string>()))
+                .Return(Task.FromResult(true));
+
+            var sut = new ExerciseProgramsViewModelBuilder()
+                .WithCloudDocument(document)
+                .WithSchedulerService(scheduler)
+                .WithStateService(stateService)
+                .Build();
 
             scheduler.Start();
             Assert.AreEqual(ExerciseProgramsViewModelStatus.LoadedFromCloud, sut.Status);
-            stateService.Verify(x => x.SetAsync<string>("ExerciseProgramsDocument", It.Is(document))).WasCalledExactlyOnce();
+
+            stateService
+                .Verify(x => x.SetAsync<string>("ExerciseProgramsDocument", It.Is(document)))
+                .WasCalledExactlyOnce();
         }
 
         [Test]
         public void document_is_not_stored_in_cache_if_loaded_from_cache()
         {
             var document = "# First Program";
-            var exerciseDocumentService = new ExerciseDocumentServiceMock();
-            exerciseDocumentService.When(x => x.ExerciseDocument).Return(Observable.Never<string>());
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var stateService = this.GetStateService(document);
             var scheduler = new TestSchedulerService();
-            var sut = new ExerciseProgramsViewModel(new ContainerServiceMock(MockBehavior.Loose), exerciseDocumentService, loggerService, scheduler, stateService);
+            var stateService = new StateServiceMock();
+
+            stateService
+                .When(x => x.GetAsync<string>(It.IsAny<string>()))
+                .Return(Task.FromResult<string>(document));
+
+            stateService
+                .When(x => x.SetAsync<string>(It.IsAny<string>(), It.IsAny<string>()))
+                .Return(Task.FromResult(true));
+
+            var sut = new ExerciseProgramsViewModelBuilder()
+                .WithSchedulerService(scheduler)
+                .WithStateService(stateService)
+                .Build();
 
             scheduler.Start();
             Assert.AreEqual(ExerciseProgramsViewModelStatus.LoadedFromCache, sut.Status);
-            stateService.Verify(x => x.SetAsync<string>("ExerciseProgramsDocument", document)).WasNotCalled();
+
+            stateService
+                .Verify(x => x.SetAsync<string>("ExerciseProgramsDocument", document))
+                .WasNotCalled();
         }
-
-        #region Supporting Members
-
-        private StateServiceMock GetStateService(string document)
-        {
-            var stateService = new StateServiceMock();
-            stateService.When(x => x.GetAsync<string>(It.IsAny<string>())).Return(Task.FromResult(document));
-            stateService.When(x => x.SetAsync<string>(It.IsAny<string>(), It.IsAny<string>())).Return(Task.FromResult(true));
-            return stateService;
-        }
-
-        #endregion
     }
 }

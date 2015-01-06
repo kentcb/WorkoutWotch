@@ -1,7 +1,6 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Actions
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
     using Kent.Boogaart.PCLMock;
     using NUnit.Framework;
@@ -21,7 +20,9 @@
         [Test]
         public void duration_is_zero_if_there_are_no_children()
         {
-            Assert.AreEqual(TimeSpan.Zero, new ParallelAction(Enumerable.Empty<IAction>()).Duration);
+            var sut = new ParallelActionBuilder().Build();
+
+            Assert.AreEqual(TimeSpan.Zero, sut.Duration);
         }
 
         [Test]
@@ -31,19 +32,38 @@
             var action2 = new ActionMock();
             var action3 = new ActionMock();
             var action4 = new ActionMock();
-            action1.When(x => x.Duration).Return(TimeSpan.FromMilliseconds(150));
-            action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(3));
-            action3.When(x => x.Duration).Return(TimeSpan.FromSeconds(5));
-            action4.When(x => x.Duration).Return(TimeSpan.FromMilliseconds(550));
 
-            var sut = new ParallelAction(new [] { action1, action2, action3, action4 });
+            action1
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromMilliseconds(150));
+
+            action2
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(3));
+
+            action3
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(5));
+
+            action4
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromMilliseconds(550));
+
+            var sut = new ParallelActionBuilder()
+                .AddChild(action1)
+                .AddChild(action2)
+                .AddChild(action3)
+                .AddChild(action4)
+                .Build();
+
             Assert.AreEqual(TimeSpan.FromSeconds(5), sut.Duration);
         }
 
         [Test]
         public void execute_async_throws_if_the_execution_context_is_null()
         {
-            var sut = new ParallelAction(Enumerable.Empty<IAction>());
+            var sut = new ParallelActionBuilder().Build();
+
             Assert.Throws<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
@@ -54,20 +74,49 @@
             var action2 = new ActionMock(MockBehavior.Loose);
             var action3 = new ActionMock(MockBehavior.Loose);
             var action4 = new ActionMock(MockBehavior.Loose);
-            action1.When(x => x.Duration).Return(TimeSpan.FromSeconds(1));
-            action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(2));
-            action3.When(x => x.Duration).Return(TimeSpan.FromSeconds(3));
-            action4.When(x => x.Duration).Return(TimeSpan.FromSeconds(4));
-            var sut = new ParallelAction(new [] { action1, action2, action3, action4 });
+
+            action1
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(1));
+
+            action2
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(2));
+
+            action3
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(3));
+
+            action4
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(4));
+
+            var sut = new ParallelActionBuilder()
+                .AddChild(action1)
+                .AddChild(action2)
+                .AddChild(action3)
+                .AddChild(action4)
+                .Build();
 
             using (var context = new ExecutionContext())
             {
                 await sut.ExecuteAsync(context);
 
-                action1.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasCalledExactlyOnce();
-                action2.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasCalledExactlyOnce();
-                action3.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasCalledExactlyOnce();
-                action4.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasCalledExactlyOnce();
+                action1
+                    .Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                    .WasCalledExactlyOnce();
+
+                action2
+                    .Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                    .WasCalledExactlyOnce();
+
+                action3
+                    .Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                    .WasCalledExactlyOnce();
+
+                action4
+                    .Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                    .WasCalledExactlyOnce();
             }
         }
 
@@ -77,18 +126,40 @@
             var action1 = new ActionMock(MockBehavior.Loose);
             var action2 = new ActionMock(MockBehavior.Loose);
             var action3 = new ActionMock(MockBehavior.Loose);
-            action1.When(x => x.Duration).Return(TimeSpan.FromMinutes(1));
-            action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(10));
-            action3.When(x => x.Duration).Return(TimeSpan.FromSeconds(71));
-            var sut = new ParallelAction(new [] { action1, action2, action3 });
+
+            action1
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromMinutes(1));
+
+            action2
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(10));
+
+            action3
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(71));
+
+            var sut = new ParallelActionBuilder()
+                .AddChild(action1)
+                .AddChild(action2)
+                .AddChild(action3)
+                .Build();
 
             using (var context = new ExecutionContext(TimeSpan.FromSeconds(70)))
             {
                 await sut.ExecuteAsync(context);
 
-                action1.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasNotCalled();
-                action2.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasNotCalled();
-                action3.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasCalledExactlyOnce();
+                action1
+                    .Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                    .WasNotCalled();
+
+                action2
+                    .Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                    .WasNotCalled();
+
+                action3
+                    .Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                    .WasCalledExactlyOnce();
             }
         }
 
@@ -98,19 +169,41 @@
             var action1 = new ActionMock(MockBehavior.Loose);
             var action2 = new ActionMock(MockBehavior.Loose);
             var action3 = new ActionMock(MockBehavior.Loose);
-            action1.When(x => x.Duration).Return(TimeSpan.FromMinutes(1));
-            action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(10));
-            action3.When(x => x.Duration).Return(TimeSpan.FromSeconds(71));
-            var sut = new ParallelAction(new [] { action1, action2, action3 });
+
+            action1
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromMinutes(1));
+
+            action2
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(10));
+
+            action3
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(71));
+
+            var sut = new ParallelActionBuilder()
+                .AddChild(action1)
+                .AddChild(action2)
+                .AddChild(action3)
+                .Build();
 
             using (var context = new ExecutionContext(TimeSpan.FromSeconds(70)))
             {
                 context.IsPaused = true;
                 await sut.ExecuteAsync(context);
 
-                action1.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasNotCalled();
-                action2.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasNotCalled();
-                action3.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasCalledExactlyOnce();
+                action1
+                    .Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                    .WasNotCalled();
+
+                action2
+                    .Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                    .WasNotCalled();
+
+                action3
+                    .Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                    .WasCalledExactlyOnce();
             }
         }
 
@@ -120,18 +213,40 @@
             var action1 = new ActionMock(MockBehavior.Loose);
             var action2 = new ActionMock(MockBehavior.Loose);
             var action3 = new ActionMock(MockBehavior.Loose);
-            action1.When(x => x.Duration).Return(TimeSpan.FromMinutes(1));
-            action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(10));
-            action3.When(x => x.Duration).Return(TimeSpan.FromSeconds(71));
-            var sut = new ParallelAction(new [] { action1, action2, action3 });
+
+            action1
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromMinutes(1));
+
+            action2
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(10));
+
+            action3
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(71));
+
+            var sut = new ParallelActionBuilder()
+                .AddChild(action1)
+                .AddChild(action2)
+                .AddChild(action3)
+                .Build();
 
             using (var context = new ExecutionContext(TimeSpan.FromMinutes(3)))
             {
                 await sut.ExecuteAsync(context);
 
-                action1.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasNotCalled();
-                action2.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasNotCalled();
-                action3.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasNotCalled();
+                action1
+                    .Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                    .WasNotCalled();
+
+                action2
+                    .Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                    .WasNotCalled();
+
+                action3
+                    .Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                    .WasNotCalled();
 
                 Assert.AreEqual(TimeSpan.FromSeconds(71), context.Progress);
             }
@@ -144,15 +259,49 @@
             var action2 = new ActionMock();
             var action3 = new ActionMock();
             var action4 = new ActionMock();
-            action1.When(x => x.Duration).Return(TimeSpan.FromSeconds(1));
-            action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(1));
-            action3.When(x => x.Duration).Return(TimeSpan.FromSeconds(2));
-            action4.When(x => x.Duration).Return(TimeSpan.FromSeconds(1));
-            action1.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.AddProgress(action1.Duration)).Return(Task.FromResult(true));
-            action2.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.AddProgress(action2.Duration)).Return(Task.FromResult(true));
-            action3.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.AddProgress(action3.Duration)).Return(Task.FromResult(true));
-            action4.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.AddProgress(action4.Duration)).Return(Task.FromResult(true));
-            var sut = new ParallelAction(new [] { action1, action2, action3, action4 });
+
+            action1
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(1));
+
+            action2
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(1));
+
+            action3
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(2));
+
+            action4
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(1));
+
+            action1
+                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .Do<ExecutionContext>(ec => ec.AddProgress(action1.Duration))
+                .Return(Task.FromResult(true));
+
+            action2
+                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .Do<ExecutionContext>(ec => ec.AddProgress(action2.Duration))
+                .Return(Task.FromResult(true));
+
+            action3
+                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .Do<ExecutionContext>(ec => ec.AddProgress(action3.Duration))
+                .Return(Task.FromResult(true));
+
+            action4
+                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .Do<ExecutionContext>(ec => ec.AddProgress(action4.Duration))
+                .Return(Task.FromResult(true));
+
+            var sut = new ParallelActionBuilder()
+                .AddChild(action1)
+                .AddChild(action2)
+                .AddChild(action3)
+                .AddChild(action4)
+                .Build();
 
             using (var context = new ExecutionContext())
             {
@@ -169,15 +318,49 @@
             var action2 = new ActionMock();
             var action3 = new ActionMock();
             var action4 = new ActionMock();
-            action1.When(x => x.Duration).Return(TimeSpan.FromSeconds(3));
-            action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(8));
-            action3.When(x => x.Duration).Return(TimeSpan.FromSeconds(10));
-            action4.When(x => x.Duration).Return(TimeSpan.FromSeconds(4));
-            action1.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.AddProgress(action1.Duration)).Return(Task.FromResult(true));
-            action2.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.AddProgress(action2.Duration)).Return(Task.FromResult(true));
-            action3.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.AddProgress(action3.Duration)).Return(Task.FromResult(true));
-            action4.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.AddProgress(action4.Duration)).Return(Task.FromResult(true));
-            var sut = new ParallelAction(new [] { action1, action2, action3, action4 });
+
+            action1
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(3));
+
+            action2
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(8));
+
+            action3
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(10));
+
+            action4
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(4));
+
+            action1
+                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .Do<ExecutionContext>(ec => ec.AddProgress(action1.Duration))
+                .Return(Task.FromResult(true));
+
+            action2
+                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .Do<ExecutionContext>(ec => ec.AddProgress(action2.Duration))
+                .Return(Task.FromResult(true));
+
+            action3
+                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .Do<ExecutionContext>(ec => ec.AddProgress(action3.Duration))
+                .Return(Task.FromResult(true));
+
+            action4
+                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .Do<ExecutionContext>(ec => ec.AddProgress(action4.Duration))
+                .Return(Task.FromResult(true));
+
+            var sut = new ParallelActionBuilder()
+                .AddChild(action1)
+                .AddChild(action2)
+                .AddChild(action3)
+                .AddChild(action4)
+                .Build();
 
             using (var context = new ExecutionContext(TimeSpan.FromSeconds(5)))
             {
@@ -185,8 +368,13 @@
 
                 Assert.AreEqual(TimeSpan.FromSeconds(10), context.Progress);
 
-                action1.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasNotCalled();
-                action4.Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).WasNotCalled();
+                action1
+                    .Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                    .WasNotCalled();
+
+                action4
+                    .Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                    .WasNotCalled();
             }
         }
 
@@ -195,10 +383,24 @@
         {
             var action1 = new ActionMock(MockBehavior.Loose);
             var action2 = new ActionMock(MockBehavior.Loose);
-            action1.When(x => x.Duration).Return(TimeSpan.FromSeconds(13));
-            action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(8));
-            action1.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.Cancel()).Return(Task.FromResult(true));
-            var sut = new ParallelAction(new [] { action1, action2 });
+
+            action1
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(13));
+
+            action2
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(8));
+
+            action1
+                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .Do<ExecutionContext>(ec => ec.Cancel())
+                .Return(Task.FromResult(true));
+
+            var sut = new ParallelActionBuilder()
+                .AddChild(action1)
+                .AddChild(action2)
+                .Build();
 
             using (var context = new ExecutionContext())
             {
@@ -214,10 +416,24 @@
         {
             var action1 = new ActionMock(MockBehavior.Loose);
             var action2 = new ActionMock(MockBehavior.Loose);
-            action1.When(x => x.Duration).Return(TimeSpan.FromSeconds(8));
-            action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(13));
-            action1.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.Cancel()).Return(Task.FromResult(true));
-            var sut = new ParallelAction(new [] { action1, action2 });
+
+            action1
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(8));
+
+            action2
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(13));
+
+            action1
+                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .Do<ExecutionContext>(ec => ec.Cancel())
+                .Return(Task.FromResult(true));
+
+            var sut = new ParallelActionBuilder()
+                .AddChild(action1)
+                .AddChild(action2)
+                .Build();
 
             using (var context = new ExecutionContext())
             {
@@ -233,10 +449,24 @@
         {
             var action1 = new ActionMock(MockBehavior.Loose);
             var action2 = new ActionMock(MockBehavior.Loose);
-            action1.When(x => x.Duration).Return(TimeSpan.FromSeconds(13));
-            action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(8));
-            action1.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.IsPaused = true).Return(Task.FromResult(true));
-            var sut = new ParallelAction(new [] { action1, action2 });
+
+            action1
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(13));
+
+            action2
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(8));
+
+            action1
+                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .Do<ExecutionContext>(ec => ec.IsPaused = true)
+                .Return(Task.FromResult(true));
+
+            var sut = new ParallelActionBuilder()
+                .AddChild(action1)
+                .AddChild(action2)
+                .Build();
 
             using (var context = new ExecutionContext())
             {
@@ -252,10 +482,24 @@
         {
             var action1 = new ActionMock(MockBehavior.Loose);
             var action2 = new ActionMock(MockBehavior.Loose);
-            action1.When(x => x.Duration).Return(TimeSpan.FromSeconds(8));
-            action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(13));
-            action1.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Do<ExecutionContext>(ec => ec.IsPaused = true).Return(Task.FromResult(true));
-            var sut = new ParallelAction(new [] { action1, action2 });
+
+            action1
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(8));
+
+            action2
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(13));
+
+            action1
+                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .Do<ExecutionContext>(ec => ec.IsPaused = true)
+                .Return(Task.FromResult(true));
+
+            var sut = new ParallelActionBuilder()
+                .AddChild(action1)
+                .AddChild(action2)
+                .Build();
 
             using (var context = new ExecutionContext())
             {

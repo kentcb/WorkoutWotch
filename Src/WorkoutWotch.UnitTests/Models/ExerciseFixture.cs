@@ -55,31 +55,43 @@
             Assert.Throws<ArgumentNullException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "name", 3, 10, null));
         }
 
-        [Test]
-        public void name_gets_name_passed_into_ctor()
+        [TestCase("Name")]
+        [TestCase("Some longer name")]
+        [TestCase("An exercise name with !@*&(*$#&^$).,/.<?][:[]; weird characters")]
+        public void name_yields_the_name_passed_into_ctor(string name)
         {
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
-            Assert.AreEqual("some name", sut.Name);
+            var sut = new ExerciseBuilder()
+                .WithName(name)
+                .Build();
+            Assert.AreEqual(name, sut.Name);
         }
 
-        [Test]
-        public void set_count_gets_set_count_passed_into_ctor()
+        [TestCase(1)]
+        [TestCase(3)]
+        [TestCase(10)]
+        public void set_count_yields_the_set_count_passed_into_ctor(int setCount)
         {
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
-            Assert.AreEqual(3, sut.SetCount);
+            var sut = new ExerciseBuilder()
+                .WithSetCount(setCount)
+                .Build();
+            Assert.AreEqual(setCount, sut.SetCount);
         }
 
-        [Test]
-        public void repetition_count_gets_repetition_count_passed_into_ctor()
+        [TestCase(1)]
+        [TestCase(3)]
+        [TestCase(10)]
+        public void repetition_count_yields_the_repetition_count_passed_into_ctor(int repetitionCount)
         {
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
-            Assert.AreEqual(10, sut.RepetitionCount);
+            var sut = new ExerciseBuilder()
+                .WithRepetitionCount(repetitionCount)
+                .Build();
+            Assert.AreEqual(repetitionCount, sut.RepetitionCount);
         }
 
         [Test]
         public void duration_returns_zero_if_there_are_no_actions()
         {
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "some name", 3, 10, Enumerable.Empty<MatcherWithAction>());
+            var sut = new ExerciseBuilder().Build();
             Assert.AreEqual(TimeSpan.Zero, sut.Duration);
         }
 
@@ -89,29 +101,50 @@
             var action1 = new ActionMock();
             var action2 = new ActionMock();
             var action3 = new ActionMock();
-            action1.When(x => x.Duration).Return(TimeSpan.FromSeconds(10));
-            action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(3));
-            action3.When(x => x.Duration).Return(TimeSpan.FromSeconds(1));
+
+            action1
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(10));
+
+            action2
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(3));
+
+            action3
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(1));
+
             var eventMatcher1 = new EventMatcherMock();
             var eventMatcher2 = new EventMatcherMock();
             var eventMatcher3 = new EventMatcherMock();
-            eventMatcher1.When(x => x.Matches(It.IsAny<IEvent>())).Return((IEvent @event) => @event is BeforeExerciseEvent);
-            eventMatcher2.When(x => x.Matches(It.IsAny<IEvent>())).Return((IEvent @event) => @event is DuringRepetitionEvent);
-            eventMatcher3.When(x => x.Matches(It.IsAny<IEvent>())).Return((IEvent @event) => @event is AfterSetEvent);
-            var matchersWithActions = new List<MatcherWithAction>
-            {
-                new MatcherWithAction(eventMatcher1, action1),
-                new MatcherWithAction(eventMatcher2, action2),
-                new MatcherWithAction(eventMatcher3, action3),
-            };
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "name", 2, 3, matchersWithActions);
+
+            eventMatcher1
+                .When(x => x.Matches(It.IsAny<IEvent>()))
+                .Return((IEvent @event) => @event is BeforeExerciseEvent);
+
+            eventMatcher2
+                .When(x => x.Matches(It.IsAny<IEvent>()))
+                .Return((IEvent @event) => @event is DuringRepetitionEvent);
+
+            eventMatcher3
+                .When(x => x.Matches(It.IsAny<IEvent>()))
+                .Return((IEvent @event) => @event is AfterSetEvent);
+
+            var sut = new ExerciseBuilder()
+                .WithSetCount(2)
+                .WithRepetitionCount(3)
+                .AddMatcherWithAction(new MatcherWithAction(eventMatcher1, action1))
+                .AddMatcherWithAction(new MatcherWithAction(eventMatcher2, action2))
+                .AddMatcherWithAction(new MatcherWithAction(eventMatcher3, action3))
+                .Build();
+
             Assert.AreEqual(TimeSpan.FromSeconds(30), sut.Duration);
         }
 
         [Test]
         public void execute_async_throws_if_execution_context_is_null()
         {
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "name", 2, 3, Enumerable.Empty<MatcherWithAction>());
+            var sut = new ExerciseBuilder().Build();
             Assert.Throws<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
@@ -124,24 +157,42 @@
             var eventMatcher1 = new EventMatcherMock();
             var eventMatcher2 = new EventMatcherMock();
             var eventMatcher3 = new EventMatcherMock();
-            eventMatcher1.When(x => x.Matches(It.IsAny<IEvent>())).Return((IEvent @event) => @event is BeforeExerciseEvent);
-            eventMatcher2.When(x => x.Matches(It.IsAny<IEvent>())).Return((IEvent @event) => @event is DuringRepetitionEvent);
-            eventMatcher3.When(x => x.Matches(It.IsAny<IEvent>())).Return((IEvent @event) => @event is AfterSetEvent);
-            var matchersWithActions = new List<MatcherWithAction>
-            {
-                new MatcherWithAction(eventMatcher1, action1),
-                new MatcherWithAction(eventMatcher2, action2),
-                new MatcherWithAction(eventMatcher3, action3),
-            };
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
+
+            eventMatcher1
+                .When(x => x.Matches(It.IsAny<IEvent>()))
+                .Return((IEvent @event) => @event is BeforeExerciseEvent);
+
+            eventMatcher2
+                .When(x => x.Matches(It.IsAny<IEvent>()))
+                .Return((IEvent @event) => @event is DuringRepetitionEvent);
+
+            eventMatcher3
+                .When(x => x.Matches(It.IsAny<IEvent>()))
+                .Return((IEvent @event) => @event is AfterSetEvent);
+
+            var sut = new ExerciseBuilder()
+                .WithSetCount(2)
+                .WithRepetitionCount(3)
+                .AddMatcherWithAction(new MatcherWithAction(eventMatcher1, action1))
+                .AddMatcherWithAction(new MatcherWithAction(eventMatcher2, action2))
+                .AddMatcherWithAction(new MatcherWithAction(eventMatcher3, action3))
+                .Build();
 
             using (var executionContext = new ExecutionContext())
             {
                 await sut.ExecuteAsync(executionContext);
 
-                action1.Verify(x => x.ExecuteAsync(It.Is(executionContext))).WasCalledExactlyOnce();
-                action2.Verify(x => x.ExecuteAsync(It.Is(executionContext))).WasCalledExactly(times: 6);
-                action3.Verify(x => x.ExecuteAsync(It.Is(executionContext))).WasCalledExactly(times: 2);
+                action1
+                    .Verify(x => x.ExecuteAsync(It.Is(executionContext)))
+                    .WasCalledExactlyOnce();
+
+                action2
+                    .Verify(x => x.ExecuteAsync(It.Is(executionContext)))
+                    .WasCalledExactly(times: 6);
+
+                action3
+                    .Verify(x => x.ExecuteAsync(It.Is(executionContext)))
+                    .WasCalledExactly(times: 2);
             }
         }
 
@@ -150,17 +201,22 @@
         {
             var action = new ActionMock(MockBehavior.Loose);
             var eventMatcher = new EventMatcherMock();
-            eventMatcher.When(x => x.Matches(It.IsAny<IEvent>())).Return((IEvent @event) => @event is BeforeExerciseEvent);
-            var matchersWithActions = new List<MatcherWithAction>
-            {
-                new MatcherWithAction(eventMatcher, action)
-            };
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
+
+            eventMatcher
+                .When(x => x.Matches(It.IsAny<IEvent>()))
+                .Return((IEvent @event) => @event is BeforeExerciseEvent);
+
+            var sut = new ExerciseBuilder()
+                .AddMatcherWithAction(new MatcherWithAction(eventMatcher, action))
+                .Build();
 
             using (var executionContext = new ExecutionContext())
             {
                 await sut.ExecuteAsync(executionContext);
-                action.Verify(x => x.ExecuteAsync(It.Is(executionContext))).WasCalledExactlyOnce();
+
+                action
+                    .Verify(x => x.ExecuteAsync(It.Is(executionContext)))
+                    .WasCalledExactlyOnce();
             }
         }
 
@@ -173,27 +229,52 @@
             var eventMatcher1 = new EventMatcherMock();
             var eventMatcher2 = new EventMatcherMock();
             var eventMatcher3 = new EventMatcherMock();
-            action1.When(x => x.Duration).Return(TimeSpan.FromSeconds(10));
-            action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(3));
-            action3.When(x => x.Duration).Return(TimeSpan.FromSeconds(1));
-            action1.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Throw();
-            action2.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Throw();
-            eventMatcher1.When(x => x.Matches(It.IsAny<IEvent>())).Return((IEvent @event) => @event is BeforeExerciseEvent);
-            eventMatcher2.When(x => x.Matches(It.IsAny<IEvent>())).Return((IEvent @event) => @event is BeforeExerciseEvent);
-            eventMatcher3.When(x => x.Matches(It.IsAny<IEvent>())).Return((IEvent @event) => @event is BeforeExerciseEvent);
-            var matchersWithActions = new List<MatcherWithAction>
-            {
-                new MatcherWithAction(eventMatcher1, action1),
-                new MatcherWithAction(eventMatcher2, action2),
-                new MatcherWithAction(eventMatcher3, action3),
-            };
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
+
+            action1
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(10));
+
+            action2
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(3));
+
+            action3
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(1));
+
+            action1
+                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .Throw();
+
+            action2
+                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .Throw();
+
+            eventMatcher1
+                .When(x => x.Matches(It.IsAny<IEvent>()))
+                .Return((IEvent @event) => @event is BeforeExerciseEvent);
+
+            eventMatcher2
+                .When(x => x.Matches(It.IsAny<IEvent>()))
+                .Return((IEvent @event) => @event is BeforeExerciseEvent);
+
+            eventMatcher3
+                .When(x => x.Matches(It.IsAny<IEvent>()))
+                .Return((IEvent @event) => @event is BeforeExerciseEvent);
+
+            var sut = new ExerciseBuilder()
+                .AddMatcherWithAction(new MatcherWithAction(eventMatcher1, action1))
+                .AddMatcherWithAction(new MatcherWithAction(eventMatcher2, action2))
+                .AddMatcherWithAction(new MatcherWithAction(eventMatcher3, action3))
+                .Build();
 
             using (var executionContext = new ExecutionContext(TimeSpan.FromSeconds(13)))
             {
                 await sut.ExecuteAsync(executionContext);
 
-                action3.Verify(x => x.ExecuteAsync(It.Is(executionContext))).WasCalledExactlyOnce();
+                action3
+                    .Verify(x => x.ExecuteAsync(It.Is(executionContext)))
+                    .WasCalledExactlyOnce();
             }
         }
 
@@ -206,35 +287,60 @@
             var eventMatcher1 = new EventMatcherMock();
             var eventMatcher2 = new EventMatcherMock();
             var eventMatcher3 = new EventMatcherMock();
-            action1.When(x => x.Duration).Return(TimeSpan.FromSeconds(10));
-            action2.When(x => x.Duration).Return(TimeSpan.FromSeconds(3));
-            action3.When(x => x.Duration).Return(TimeSpan.FromSeconds(1));
-            action1.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Throw();
-            action2.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Throw();
-            eventMatcher1.When(x => x.Matches(It.IsAny<IEvent>())).Return((IEvent @event) => @event is BeforeExerciseEvent);
-            eventMatcher2.When(x => x.Matches(It.IsAny<IEvent>())).Return((IEvent @event) => @event is BeforeExerciseEvent);
-            eventMatcher3.When(x => x.Matches(It.IsAny<IEvent>())).Return((IEvent @event) => @event is BeforeExerciseEvent);
-            var matchersWithActions = new List<MatcherWithAction>
-            {
-                new MatcherWithAction(eventMatcher1, action1),
-                new MatcherWithAction(eventMatcher2, action2),
-                new MatcherWithAction(eventMatcher3, action3),
-            };
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), "name", 2, 3, matchersWithActions);
+
+            action1
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(10));
+
+            action2
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(3));
+
+            action3
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(1));
+
+            action1
+                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .Throw();
+
+            action2
+                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .Throw();
+
+            eventMatcher1
+                .When(x => x.Matches(It.IsAny<IEvent>()))
+                .Return((IEvent @event) => @event is BeforeExerciseEvent);
+
+            eventMatcher2
+                .When(x => x.Matches(It.IsAny<IEvent>()))
+                .Return((IEvent @event) => @event is BeforeExerciseEvent);
+
+            eventMatcher3
+                .When(x => x.Matches(It.IsAny<IEvent>()))
+                .Return((IEvent @event) => @event is BeforeExerciseEvent);
+
+            var sut = new ExerciseBuilder()
+                .AddMatcherWithAction(new MatcherWithAction(eventMatcher1, action1))
+                .AddMatcherWithAction(new MatcherWithAction(eventMatcher2, action2))
+                .AddMatcherWithAction(new MatcherWithAction(eventMatcher3, action3))
+                .Build();
 
             using (var executionContext = new ExecutionContext(TimeSpan.FromSeconds(13)))
             {
                 executionContext.IsPaused = true;
                 await sut.ExecuteAsync(executionContext);
 
-                action3.Verify(x => x.ExecuteAsync(It.Is(executionContext))).WasCalledExactlyOnce();
+                action3
+                    .Verify(x => x.ExecuteAsync(It.Is(executionContext)))
+                    .WasCalledExactlyOnce();
             }
         }
 
         [Test]
         public async Task execute_async_updates_the_current_exercise_in_the_context()
         {
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), "name", 2, 3, Enumerable.Empty<MatcherWithAction>());
+            var sut = new ExerciseBuilder().Build();
             var context = new ExecutionContext();
 
             await sut.ExecuteAsync(context);
@@ -245,7 +351,9 @@
         [Test]
         public async Task execute_async_updates_the_current_set_in_the_context()
         {
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), "name", 3, 5, Enumerable.Empty<MatcherWithAction>());
+            var sut = new ExerciseBuilder()
+                .WithSetCount(3)
+                .Build();
             var context = new ExecutionContext();
             var currentSetsTask = context
                 .ObservableForProperty(x => x.CurrentSet)
@@ -266,7 +374,9 @@
         [Test]
         public async Task execute_async_updates_the_current_repetitions_in_the_context()
         {
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), "name", 3, 5, Enumerable.Empty<MatcherWithAction>());
+            var sut = new ExerciseBuilder()
+                .WithRepetitionCount(5)
+                .Build();
             var context = new ExecutionContext();
             var currentRepetitionsTask = context
                 .ObservableForProperty(x => x.CurrentRepetition)
@@ -290,11 +400,16 @@
         public async Task execute_async_says_exercise_name_first()
         {
             var speechService = new SpeechServiceMock(MockBehavior.Loose);
-            var sut = new Exercise(new LoggerServiceMock(MockBehavior.Loose), speechService, "some name", 3, 5, Enumerable.Empty<MatcherWithAction>());
+            var sut = new ExerciseBuilder()
+                .WithName("some name")
+                .WithSpeechService(speechService)
+                .Build();
 
             await sut.ExecuteAsync(new ExecutionContext());
 
-            speechService.Verify(x => x.SpeakAsync(It.Is("some name"), It.IsAny<CancellationToken>())).WasCalledExactlyOnce();
+            speechService
+                .Verify(x => x.SpeakAsync(It.Is("some name"), It.IsAny<CancellationToken>()))
+                .WasCalledExactlyOnce();
         }
     }
 }

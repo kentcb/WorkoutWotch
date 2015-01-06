@@ -26,40 +26,34 @@
         [Test]
         public void duration_returns_zero()
         {
-            Assert.AreEqual(TimeSpan.Zero, new AudioAction(new AudioServiceMock(), "some_uri").Duration);
+            var sut = new AudioActionBuilder().Build();
+            Assert.AreEqual(TimeSpan.Zero, sut.Duration);
         }
 
         [Test]
         public void execute_async_throws_if_context_is_null()
         {
-            var sut = new AudioAction(new AudioServiceMock(), "some_uri");
+            var sut = new AudioActionBuilder().Build();
             Assert.Throws<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
         [Test]
-        public async Task execute_async_cancels_if_context_is_cancelled()
+        public void execute_async_cancels_if_context_is_cancelled()
         {
-            var sut = new AudioAction(new AudioServiceMock(), "some_uri");
+            var sut = new AudioActionBuilder().Build();
 
             using (var context = new ExecutionContext())
             {
                 context.Cancel();
 
-                try
-                {
-                    await sut.ExecuteAsync(context);
-                    Assert.Fail("Expecting operation canceled exception.");
-                }
-                catch (OperationCanceledException)
-                {
-                }
+                Assert.Throws<OperationCanceledException>(async () => await sut.ExecuteAsync(context));
             }
         }
 
         [Test]
         public void execute_async_pauses_if_context_is_paused()
         {
-            var sut = new AudioAction(new AudioServiceMock(), "some_uri");
+            var sut = new AudioActionBuilder().Build();
 
             using (var context = new ExecutionContext())
             {
@@ -71,15 +65,22 @@
             }
         }
 
-        [Test]
-        public async Task execute_async_passes_the_audio_resource_uri_onto_the_audio_service()
+        [TestCase("uri")]
+        [TestCase("some_uri")]
+        [TestCase("some/other/uri")]
+        public async Task execute_async_passes_the_audio_resource_uri_onto_the_audio_service(string audioResourceUri)
         {
             var audioService = new AudioServiceMock(MockBehavior.Loose);
-            var sut = new AudioAction(audioService, "some_uri");
+            var sut = new AudioActionBuilder()
+                .WithAudioService(audioService)
+                .WithAudioResourceUri(audioResourceUri)
+                .Build();
 
             await sut.ExecuteAsync(new ExecutionContext());
 
-            audioService.Verify(x => x.PlayAsync(It.Is("some_uri"))).WasCalledExactlyOnce();
+            audioService
+                .Verify(x => x.PlayAsync(It.Is(audioResourceUri)))
+                .WasCalledExactlyOnce();
         }
     }
 }

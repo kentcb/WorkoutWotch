@@ -27,40 +27,36 @@
         [Test]
         public void duration_returns_zero()
         {
-            Assert.AreEqual(TimeSpan.Zero, new SayAction(new SpeechServiceMock(), "something to say").Duration);
+            var sut = new SayActionBuilder().Build();
+
+            Assert.AreEqual(TimeSpan.Zero, sut.Duration);
         }
 
         [Test]
         public void execute_async_throws_if_context_is_null()
         {
-            var sut = new SayAction(new SpeechServiceMock(), "something to say");
+            var sut = new SayActionBuilder().Build();
+
             Assert.Throws<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
         [Test]
-        public async Task execute_async_cancels_if_context_is_cancelled()
+        public void execute_async_cancels_if_context_is_cancelled()
         {
-            var sut = new SayAction(new SpeechServiceMock(), "something to say");
+            var sut = new SayActionBuilder().Build();
 
             using (var context = new ExecutionContext())
             {
                 context.Cancel();
 
-                try
-                {
-                    await sut.ExecuteAsync(context);
-                    Assert.Fail("Expecting operation canceled exception.");
-                }
-                catch (OperationCanceledException)
-                {
-                }
+                Assert.Throws<OperationCanceledException>(async () => await sut.ExecuteAsync(context));
             }
         }
 
         [Test]
         public void execute_async_pauses_if_context_is_paused()
         {
-            var sut = new SayAction(new SpeechServiceMock(), "something to say");
+            var sut = new SayActionBuilder().Build();
 
             using (var context = new ExecutionContext())
             {
@@ -72,15 +68,22 @@
             }
         }
 
-        [Test]
-        public async Task execute_async_passes_the_speech_text_onto_the_speech_service()
+        [TestCase("hello")]
+        [TestCase("hello, world")]
+        [TestCase("you've got nothing to say. nothing but the one thing.")]
+        public async Task execute_async_passes_the_speech_text_onto_the_speech_service(string speechText)
         {
             var speechService = new SpeechServiceMock(MockBehavior.Loose);
-            var sut = new SayAction(speechService, "something to say");
+            var sut = new SayActionBuilder()
+                .WithSpeechService(speechService)
+                .WithSpeechText(speechText)
+                .Build();
 
             await sut.ExecuteAsync(new ExecutionContext());
 
-            speechService.Verify(x => x.SpeakAsync(It.Is("something to say"), It.IsAny<CancellationToken>())).WasCalledExactlyOnce();
+            speechService
+                .Verify(x => x.SpeakAsync(It.Is(speechText), It.IsAny<CancellationToken>()))
+                .WasCalledExactlyOnce();
         }
     }
 }

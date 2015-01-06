@@ -6,7 +6,6 @@
     using NUnit.Framework;
     using WorkoutWotch.Models;
     using WorkoutWotch.UnitTests.Services.Container.Mocks;
-    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
 
     [TestFixture]
     public class ExerciseProgramsFixture
@@ -20,29 +19,25 @@
         [Test]
         public void ctor_throws_if_any_program_is_null()
         {
-            Assert.Throws<ArgumentException>(() => new ExercisePrograms(
-                new []
-                {
-                    this.CreateExerciseProgram("first"),
-                    null
-                }));
+            Assert.Throws<ArgumentException>(() => new ExercisePrograms(new [] { new ExerciseProgramBuilder().Build(), null }));
         }
 
-        [Test]
-        public void programs_contains_programs_passed_into_ctor()
+        [TestCase(0)]
+        [TestCase(3)]
+        [TestCase(10)]
+        public void programs_yields_the_programs_passed_into_ctor(int programCount)
         {
-            var programs = new[]
-            {
-                this.CreateExerciseProgram("first"),
-                this.CreateExerciseProgram("second"),
-                this.CreateExerciseProgram("third")
-            };
-            var sut = new ExercisePrograms(programs);
+            var programs = Enumerable.Range(0, programCount)
+                .Select(x => new ExerciseProgramBuilder()
+                    .WithName("Program " + x)
+                    .Build())
+                .ToList();
+            var sut = new ExerciseProgramsBuilder()
+                .AddPrograms(programs)
+                .Build();
 
-            Assert.NotNull(sut.Programs);
-            Assert.AreSame(programs[0], sut.Programs[0]);
-            Assert.AreSame(programs[1], sut.Programs[1]);
-            Assert.AreSame(programs[2], sut.Programs[2]);
+            Assert.AreEqual(programCount, sut.Programs.Count);
+            Assert.True(sut.Programs.SequenceEqual(programs));
         }
 
         [Test]
@@ -97,14 +92,5 @@
             Assert.NotNull(result.Value);
             Assert.True(result.Value.Programs.Select(x => x.Name).SequenceEqual(expectedProgramNames));
         }
-
-        #region Supporting Members
-
-        private ExerciseProgram CreateExerciseProgram(string name)
-        {
-            return new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), name, Enumerable.Empty<Exercise>());
-        }
-
-        #endregion
     }
 }

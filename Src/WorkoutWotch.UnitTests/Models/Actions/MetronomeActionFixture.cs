@@ -43,21 +43,20 @@
         [Test]
         public void duration_is_zero_if_there_are_no_ticks()
         {
-            Assert.AreEqual(TimeSpan.Zero, new MetronomeAction(new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose), Enumerable.Empty<MetronomeTick>()).Duration);
+            var sut = new MetronomeActionBuilder().Build();
+
+            Assert.AreEqual(TimeSpan.Zero, sut.Duration);
         }
 
         [Test]
         public void duration_is_the_sum_of_all_tick_periods()
         {
-            var ticks = new[]
-            {
-                new MetronomeTick(TimeSpan.Zero),
-                new MetronomeTick(TimeSpan.FromSeconds(1)),
-                new MetronomeTick(TimeSpan.FromSeconds(2)),
-                new MetronomeTick(TimeSpan.FromMilliseconds(500))
-            };
-
-            var sut = new MetronomeAction(new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose), ticks);
+            var sut = new MetronomeActionBuilder()
+                .AddMetronomeTick(new MetronomeTick(TimeSpan.Zero))
+                .AddMetronomeTick(new MetronomeTick(TimeSpan.FromSeconds(1)))
+                .AddMetronomeTick(new MetronomeTick(TimeSpan.FromSeconds(2)))
+                .AddMetronomeTick(new MetronomeTick(TimeSpan.FromMilliseconds(500)))
+                .Build();
 
             Assert.AreEqual(TimeSpan.FromSeconds(3.5), sut.Duration);
         }
@@ -65,7 +64,9 @@
         [Test]
         public void execute_async_throws_if_context_is_null()
         {
-            Assert.Throws<ArgumentNullException>(async () => await new MetronomeAction(new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(MockBehavior.Loose), Enumerable.Empty<MetronomeTick>()).ExecuteAsync(null));
+            var sut = new MetronomeActionBuilder().Build();
+
+            Assert.Throws<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
         [Test]
@@ -79,20 +80,21 @@
                 .When(x => x.PlayAsync(It.IsAny<string>()))
                 .Do<string>((resource) => actionsPerformed.Add("Played audio resource " + resource))
                 .Return(Task.FromResult(true));
+
             delayService
                 .When(x => x.DelayAsync(It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()))
                 .Do<TimeSpan, CancellationToken>((period, ct) => actionsPerformed.Add("Delayed for " + period))
                 .Return(Task.FromResult(true));
 
-            var ticks = new[]
-            {
-                new MetronomeTick(TimeSpan.Zero, MetronomeTickType.Bell),
-                new MetronomeTick(TimeSpan.FromMilliseconds(10)),
-                new MetronomeTick(TimeSpan.FromMilliseconds(20)),
-                new MetronomeTick(TimeSpan.FromMilliseconds(50), MetronomeTickType.Bell),
-                new MetronomeTick(TimeSpan.FromMilliseconds(30), MetronomeTickType.None)
-            };
-            var sut = new MetronomeAction(audioService, delayService, new LoggerServiceMock(MockBehavior.Loose), ticks);
+            var sut = new MetronomeActionBuilder()
+                .WithAudioService(audioService)
+                .WithDelayService(delayService)
+                .AddMetronomeTick(new MetronomeTick(TimeSpan.Zero, MetronomeTickType.Bell))
+                .AddMetronomeTick(new MetronomeTick(TimeSpan.FromMilliseconds(10)))
+                .AddMetronomeTick(new MetronomeTick(TimeSpan.FromMilliseconds(20)))
+                .AddMetronomeTick(new MetronomeTick(TimeSpan.FromMilliseconds(50), MetronomeTickType.Bell))
+                .AddMetronomeTick(new MetronomeTick(TimeSpan.FromMilliseconds(30), MetronomeTickType.None))
+                .Build();
 
             await sut.ExecuteAsync(new ExecutionContext());
 

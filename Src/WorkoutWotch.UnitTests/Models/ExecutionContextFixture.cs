@@ -1,14 +1,10 @@
 ﻿namespace WorkoutWotch.UnitTests.Models
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
-    using Kent.Boogaart.PCLMock;
     using NUnit.Framework;
     using ReactiveUI;
     using WorkoutWotch.Models;
-    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
-    using WorkoutWotch.UnitTests.Services.Speech.Mocks;
 
     [TestFixture]
     public class ExecutionContextFixture
@@ -31,7 +27,8 @@
         {
             var sut = new ExecutionContext();
             var called = false;
-            sut.ObservableForProperty(x => x.IsCancelled).Subscribe(_ => called = true);
+            sut.ObservableForProperty(x => x.IsCancelled)
+                .Subscribe(_ => called = true);
 
             Assert.False(called);
             sut.Cancel();
@@ -68,16 +65,9 @@
             Assert.False(task.Wait(TimeSpan.FromMilliseconds(10)));
             sut.Cancel();
 
-            try
-            {
-                task.Wait(TimeSpan.FromMilliseconds(500));
-                Assert.Fail("Expected task cancelled exception.");
-            }
-            catch (AggregateException ex)
-            {
-                Assert.AreEqual(1, ex.InnerExceptions.Count);
-                Assert.True(ex.InnerExceptions[0] is TaskCanceledException);
-            }
+            var ex = Assert.Throws<AggregateException>(() => task.Wait(TimeSpan.FromMilliseconds(500)));
+            Assert.AreEqual(1, ex.InnerExceptions.Count);
+            Assert.True(ex.InnerExceptions[0] is TaskCanceledException);
         }
 
         [Test]
@@ -148,11 +138,18 @@
         public void setting_current_exercise_resets_the_current_exercise_progress_to_zero()
         {
             var sut = new ExecutionContext();
-            sut.SetCurrentExercise(new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), "name", 3, 10, Enumerable.Empty<MatcherWithAction>()));
+
+            sut.SetCurrentExercise(new ExerciseBuilder()
+                .WithSetCount(3)
+                .WithRepetitionCount(10)
+                .Build());
             sut.AddProgress(TimeSpan.FromMilliseconds(100));
             Assert.AreEqual(TimeSpan.FromMilliseconds(100), sut.CurrentExerciseProgress);
 
-            sut.SetCurrentExercise(new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(MockBehavior.Loose), "name", 3, 10, Enumerable.Empty<MatcherWithAction>()));
+            sut.SetCurrentExercise(new ExerciseBuilder()
+                .WithSetCount(3)
+                .WithRepetitionCount(10)
+                .Build());
             Assert.AreEqual(TimeSpan.Zero, sut.CurrentExerciseProgress);
 
             sut.AddProgress(TimeSpan.FromMilliseconds(150));

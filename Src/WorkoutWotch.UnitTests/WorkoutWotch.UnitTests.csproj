@@ -109,6 +109,21 @@
     <Compile Include="ViewModels\ExerciseProgramsViewModelFixture.cs" />
     <Compile Include="ViewModels\ExerciseProgramViewModelFixture.cs" />
     <Compile Include="ViewModels\ExerciseViewModelFixture.cs" />
+    <Compile Include="Models\ExerciseBuilder.cs" />
+    <Compile Include="Models\ExerciseProgramBuilder.cs" />
+    <Compile Include="Models\ExerciseProgramsBuilder.cs" />
+    <Compile Include="Models\Actions\AudioActionBuilder.cs" />
+    <Compile Include="Models\Actions\DoNotAwaitActionBuilder.cs" />
+    <Compile Include="Models\Actions\MetronomeActionBuilder.cs" />
+    <Compile Include="Models\Actions\ParallelActionBuilder.cs" />
+    <Compile Include="Models\Actions\SayActionBuilder.cs" />
+    <Compile Include="Models\Actions\SequenceActionBuilder.cs" />
+    <Compile Include="Models\Actions\WaitActionBuilder.cs" />
+    <Compile Include="Models\Actions\WaitWithPromptActionBuilder.cs" />
+    <Compile Include="Services\State\StateServiceBuilder.cs" />
+    <Compile Include="ViewModels\ExerciseProgramsViewModelBuilder.cs" />
+    <Compile Include="ViewModels\ExerciseProgramViewModelBuilder.cs" />
+    <Compile Include="ViewModels\ExerciseViewModelBuilder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

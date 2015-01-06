@@ -1,7 +1,6 @@
 ﻿namespace WorkoutWotch.UnitTests.ViewModels
 {
     using System;
-    using System.Linq;
     using System.Reactive.Linq;
     using System.Reactive.Threading.Tasks;
     using System.Threading.Tasks;
@@ -9,15 +8,12 @@
     using NUnit.Framework;
     using ReactiveUI;
     using WorkoutWotch.Models;
-    using WorkoutWotch.Models.Actions;
-    using WorkoutWotch.Models.EventMatchers;
-    using WorkoutWotch.Models.Events;
     using WorkoutWotch.Services.Delay;
+    using WorkoutWotch.UnitTests.Models;
+    using WorkoutWotch.UnitTests.Models.Actions;
     using WorkoutWotch.UnitTests.Models.Mocks;
     using WorkoutWotch.UnitTests.Reactive;
-    using WorkoutWotch.UnitTests.Services.Delay.Mocks;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
-    using WorkoutWotch.UnitTests.Services.Speech.Mocks;
     using WorkoutWotch.ViewModels;
 
     [TestFixture]
@@ -26,13 +22,13 @@
         [Test]
         public void ctor_throws_if_logger_service_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramViewModel(null, new TestSchedulerService(), new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", Enumerable.Empty<Exercise>())));
+            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramViewModel(null, new TestSchedulerService(), new ExerciseProgramBuilder().Build()));
         }
 
         [Test]
         public void ctor_throws_if_scheduler_service_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramViewModel(new LoggerServiceMock(), null, new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", Enumerable.Empty<Exercise>())));
+            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramViewModel(new LoggerServiceMock(), null, new ExerciseProgramBuilder().Build()));
         }
 
         [Test]
@@ -46,9 +42,11 @@
         [TestCase("Another name")]
         public void name_returns_name_in_model(string name)
         {
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var model = new ExerciseProgram(loggerService, name, Enumerable.Empty<Exercise>());
-            var sut = new ExerciseProgramViewModel(loggerService, new TestSchedulerService(), model);
+            var sut = new ExerciseProgramViewModelBuilder()
+                .WithModel(new ExerciseProgramBuilder()
+                    .WithName(name))
+                .Build();
+
             Assert.AreEqual(name, sut.Name);
         }
 
@@ -58,18 +56,12 @@
         public void duration_returns_duration_in_model(int durationInMs)
         {
             var duration = TimeSpan.FromMilliseconds(durationInMs);
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var speechService = new SpeechServiceMock();
-            var delayService = new DelayServiceMock();
-            var exercise = new Exercise(
-               loggerService,
-               speechService,
-               "Exercise name",
-               1,
-               1,
-               new [] { new MatcherWithAction(new TypedEventMatcher<BeforeExerciseEvent>(), new WaitAction(delayService, duration)) });
-            var model = new ExerciseProgram(loggerService, "Name", new [] { exercise });
-            var sut = new ExerciseProgramViewModel(loggerService, new TestSchedulerService(), model);
+            var sut = new ExerciseProgramViewModelBuilder()
+                .WithModel(new ExerciseProgramBuilder()
+                    .AddExercise(new ExerciseBuilder()
+                        .WithBeforeExerciseAction(new WaitActionBuilder()
+                            .WithDelay(duration))))
+                .Build();
 
             Assert.AreEqual(duration, sut.Duration);
         }
@@ -77,45 +69,35 @@
         [Test]
         public void exercises_returns_exercises_in_model()
         {
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var speechService = new SpeechServiceMock();
-            var exercise1 = new Exercise(
-                loggerService,
-                speechService,
-                "Exercise 1",
-                1,
-                1,
-                Enumerable.Empty<MatcherWithAction>());
-            var exercise2 = new Exercise(
-                loggerService,
-                speechService,
-                "Exercise 2",
-                1,
-                1,
-                Enumerable.Empty<MatcherWithAction>());
-            var model = new ExerciseProgram(loggerService, "Name", new [] { exercise1, exercise2 });
-            var sut = new ExerciseProgramViewModel(loggerService, new TestSchedulerService(), model);
+            var sut = new ExerciseProgramViewModelBuilder()
+                .WithModel(new ExerciseProgramBuilder()
+                    .AddExercise(new ExerciseBuilder()
+                        .WithName("Exercise 1"))
+                    .AddExercise(new ExerciseBuilder()
+                        .WithName("Exercise 2")))
+                .Build();
 
             Assert.NotNull(sut.Exercises);
             Assert.AreEqual(2, sut.Exercises.Count);
-//            Assert.AreEqual("Exercise 1", sut.Exercises[0].Name);
-//            Assert.AreEqual("Exercise 2", sut.Exercises[1].Name);
+            Assert.AreEqual("Exercise 1", sut.Exercises[0].Name);
+            Assert.AreEqual("Exercise 2", sut.Exercises[1].Name);
         }
 
         [Test]
         public void is_started_is_false_by_default()
         {
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var sut = new ExerciseProgramViewModel(loggerService, new TestSchedulerService(), new ExerciseProgram(loggerService, "Name", Enumerable.Empty<Exercise>()));
+            var sut = new ExerciseProgramViewModelBuilder().Build();
+
             Assert.False(sut.IsStarted);
         }
 
         [Test]
         public async Task is_started_cycles_correctly_if_start_command_is_executed()
         {
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
             var scheduler = new TestSchedulerService();
-            var sut = new ExerciseProgramViewModel(loggerService, scheduler, new ExerciseProgram(loggerService, "Name", Enumerable.Empty<Exercise>()));
+            var sut = new ExerciseProgramViewModelBuilder()
+                .WithSchedulerService(scheduler)
+                .Build();
 
             var isStartedTask = sut
                 .WhenAnyValue(x => x.IsStarted)
@@ -138,17 +120,18 @@
         [Test]
         public void is_start_visible_is_true_by_default()
         {
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var sut = new ExerciseProgramViewModel(loggerService, new TestSchedulerService(), new ExerciseProgram(loggerService, "Name", Enumerable.Empty<Exercise>()));
+            var sut = new ExerciseProgramViewModelBuilder().Build();
+
             Assert.True(sut.IsStartVisible);
         }
 
         [Test]
         public async Task is_start_visible_cycles_correctly_if_start_command_is_executed()
         {
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
             var scheduler = new TestSchedulerService();
-            var sut = new ExerciseProgramViewModel(loggerService, scheduler, new ExerciseProgram(loggerService, "Name", Enumerable.Empty<Exercise>()));
+            var sut = new ExerciseProgramViewModelBuilder()
+                .WithSchedulerService(scheduler)
+                .Build();
 
             var isStartVisibleTask = sut
                 .WhenAnyValue(x => x.IsStartVisible)
@@ -171,23 +154,23 @@
         [Test]
         public void is_paused_is_false_by_default()
         {
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var sut = new ExerciseProgramViewModel(loggerService, new TestSchedulerService(), new ExerciseProgram(loggerService, "Name", Enumerable.Empty<Exercise>()));
+            var sut = new ExerciseProgramViewModelBuilder().Build();
+
             Assert.False(sut.IsPaused);
         }
 
         [Test]
         public async Task is_paused_cycles_correctly_if_pause_command_is_executed()
         {
-            var action = new WaitAction(new DelayService(), TimeSpan.FromMinutes(1));
-            var matchersWithActions = new []
-            {
-                new MatcherWithAction(new TypedEventMatcher<BeforeExerciseEvent>(), action)
-            };
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
             var scheduler = new TestSchedulerService();
-            var exercise = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Name", 1, 1, matchersWithActions);
-            var sut = new ExerciseProgramViewModel(loggerService, scheduler, new ExerciseProgram(loggerService, "Name", new [] { exercise }));
+            var sut = new ExerciseProgramViewModelBuilder()
+                .WithModel(new ExerciseProgramBuilder()
+                    .AddExercise(new ExerciseBuilder()
+                        .WithBeforeExerciseAction(new WaitActionBuilder()
+                            .WithDelayService(new DelayService())
+                            .WithDelay(TimeSpan.FromMinutes(1)))))
+                .WithSchedulerService(scheduler)
+                .Build();
 
             using (scheduler.Pump())
             {
@@ -215,17 +198,18 @@
         [Test]
         public void is_pause_visible_is_false_by_default()
         {
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var sut = new ExerciseProgramViewModel(loggerService, new TestSchedulerService(), new ExerciseProgram(loggerService, "Name", Enumerable.Empty<Exercise>()));
+            var sut = new ExerciseProgramViewModelBuilder().Build();
+
             Assert.False(sut.IsPauseVisible);
         }
 
         [Test]
         public async Task is_pause_visible_cycles_correctly_if_start_command_is_executed()
         {
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
             var scheduler = new TestSchedulerService();
-            var sut = new ExerciseProgramViewModel(loggerService, scheduler, new ExerciseProgram(loggerService, "Name", Enumerable.Empty<Exercise>()));
+            var sut = new ExerciseProgramViewModelBuilder()
+                .WithSchedulerService(scheduler)
+                .Build();
 
             var isPauseVisibleTask = sut
                 .WhenAnyValue(x => x.IsPauseVisible)
@@ -248,15 +232,15 @@
         [Test]
         public async Task is_pause_visible_cycles_correctly_if_pause_command_is_executed()
         {
-            var action = new WaitAction(new DelayService(), TimeSpan.FromMinutes(1));
-            var matchersWithActions = new []
-            {
-                new MatcherWithAction(new TypedEventMatcher<BeforeExerciseEvent>(), action)
-            };
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
             var scheduler = new TestSchedulerService();
-            var exercise = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Name", 1, 1, matchersWithActions);
-            var sut = new ExerciseProgramViewModel(loggerService, scheduler, new ExerciseProgram(loggerService, "Name", new [] { exercise }));
+            var sut = new ExerciseProgramViewModelBuilder()
+                .WithModel(new ExerciseProgramBuilder()
+                    .AddExercise(new ExerciseBuilder()
+                        .WithBeforeExerciseAction(new WaitActionBuilder()
+                            .WithDelayService(new DelayService())
+                            .WithDelay(TimeSpan.FromMinutes(1)))))
+                .WithSchedulerService(scheduler)
+                .Build();
 
             using (scheduler.Pump())
             {
@@ -284,23 +268,23 @@
         [Test]
         public void is_resume_visible_is_false_by_default()
         {
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var sut = new ExerciseProgramViewModel(loggerService, new TestSchedulerService(), new ExerciseProgram(loggerService, "Name", Enumerable.Empty<Exercise>()));
+            var sut = new ExerciseProgramViewModelBuilder().Build();
+
             Assert.False(sut.IsResumeVisible);
         }
 
         [Test]
         public async Task is_resume_visible_cycles_correctly_if_start_command_is_executed_and_execution_is_paused()
         {
-            var action = new WaitAction(new DelayService(), TimeSpan.FromMinutes(1));
-            var matchersWithActions = new []
-            {
-                new MatcherWithAction(new TypedEventMatcher<BeforeExerciseEvent>(), action)
-            };
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
             var scheduler = new TestSchedulerService();
-            var exercise = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Name", 1, 1, matchersWithActions);
-            var sut = new ExerciseProgramViewModel(loggerService, scheduler, new ExerciseProgram(loggerService, "Name", new [] { exercise }));
+            var sut = new ExerciseProgramViewModelBuilder()
+                .WithModel(new ExerciseProgramBuilder()
+                    .AddExercise(new ExerciseBuilder()
+                        .WithBeforeExerciseAction(new WaitActionBuilder()
+                            .WithDelayService(new DelayService())
+                            .WithDelay(TimeSpan.FromMinutes(1)))))
+                .WithSchedulerService(scheduler)
+                .Build();
 
             using (scheduler.Pump())
             {
@@ -328,7 +312,9 @@
         [Test]
         public async Task progress_time_span_is_updated_throughout_execution()
         {
+            var scheduler = new TestSchedulerService();
             var action = new ActionMock(MockBehavior.Loose);
+
             action
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
@@ -341,14 +327,13 @@
                             ec.IsPaused = true;
                             await ec.WaitWhilePausedAsync();
                         }));
-            var matchersWithActions = new []
-            {
-                new MatcherWithAction(new TypedEventMatcher<BeforeExerciseEvent>(), action)
-            };
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var scheduler = new TestSchedulerService();
-            var exercise = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Name", 1, 1, matchersWithActions);
-            var sut = new ExerciseProgramViewModel(loggerService, scheduler, new ExerciseProgram(loggerService, "Name", new [] { exercise }));
+
+            var sut = new ExerciseProgramViewModelBuilder()
+                .WithModel(new ExerciseProgramBuilder()
+                    .AddExercise(new ExerciseBuilder()
+                        .WithBeforeExerciseAction(action)))
+                .WithSchedulerService(scheduler)
+                .Build();
 
             var progressTimeSpanTask = sut
                 .WhenAnyValue(x => x.ProgressTimeSpan)
@@ -371,28 +356,32 @@
         [Test]
         public async Task progress_is_updated_throughout_execution()
         {
+            var scheduler = new TestSchedulerService();
             var action = new ActionMock(MockBehavior.Loose);
-            action.When(x => x.Duration).Return(TimeSpan.FromMinutes(1));
+
+            action
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromMinutes(1));
+
             action
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
-                    Task.Run(async () =>
-                    {
-                        ec.AddProgress(TimeSpan.FromSeconds(15));
-                        ec.AddProgress(TimeSpan.FromSeconds(30));
+                        Task.Run(async () =>
+                        {
+                            ec.AddProgress(TimeSpan.FromSeconds(15));
+                            ec.AddProgress(TimeSpan.FromSeconds(30));
 
-                        ec.IsPaused = true;
-                        await ec.WaitWhilePausedAsync();
-                    }));
-            var matchersWithActions = new []
-            {
-                new MatcherWithAction(new TypedEventMatcher<BeforeExerciseEvent>(), action)
-            };
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var scheduler = new TestSchedulerService();
-            var exercise = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Name", 1, 1, matchersWithActions);
-            var sut = new ExerciseProgramViewModel(loggerService, scheduler, new ExerciseProgram(loggerService, "Name", new [] { exercise }));
+                            ec.IsPaused = true;
+                            await ec.WaitWhilePausedAsync();
+                        }));
+
+            var sut = new ExerciseProgramViewModelBuilder()
+                .WithModel(new ExerciseProgramBuilder()
+                    .AddExercise(new ExerciseBuilder()
+                        .WithBeforeExerciseAction(action)))
+                .WithSchedulerService(scheduler)
+                .Build();
 
             var progressTask = sut
                 .WhenAnyValue(x => x.Progress)
@@ -415,7 +404,9 @@
         [Test]
         public async Task skip_backwards_command_is_disabled_if_on_first_exercise()
         {
+            var scheduler = new TestSchedulerService();
             var action = new ActionMock(MockBehavior.Loose);
+
             action
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
@@ -425,15 +416,13 @@
                             ec.IsPaused = true;
                             await ec.WaitWhilePausedAsync();
                         }));
-            var matchersWithActions = new []
-            {
-                new MatcherWithAction(new TypedEventMatcher<BeforeExerciseEvent>(), action)
-            };
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var scheduler = new TestSchedulerService();
-            var exercise = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Name", 1, 1, matchersWithActions.ToList());
-            var exerciseProgram = new ExerciseProgram(loggerService, "Name", new [] { exercise });
-            var sut = new ExerciseProgramViewModel(loggerService, scheduler, exerciseProgram);
+
+            var sut = new ExerciseProgramViewModelBuilder()
+                .WithModel(new ExerciseProgramBuilder()
+                    .AddExercise(new ExerciseBuilder()
+                        .WithBeforeExerciseAction(action)))
+                .WithSchedulerService(scheduler)
+                .Build();
 
             using (scheduler.Pump())
             {
@@ -451,7 +440,9 @@
         [Test]
         public async Task skip_backwards_command_is_enabled_if_sufficient_progress_has_been_made_through_first_exercise()
         {
+            var scheduler = new TestSchedulerService();
             var action = new ActionMock(MockBehavior.Loose);
+
             action
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
@@ -462,15 +453,13 @@
                             ec.IsPaused = true;
                             await ec.WaitWhilePausedAsync();
                         }));
-            var matchersWithActions = new []
-            {
-                new MatcherWithAction(new TypedEventMatcher<BeforeExerciseEvent>(), action),
-            };
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var scheduler = new TestSchedulerService();
-            var exercise = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Name", 1, 1, matchersWithActions.ToList());
-            var exerciseProgram = new ExerciseProgram(loggerService, "Name", new [] { exercise });
-            var sut = new ExerciseProgramViewModel(loggerService, scheduler, exerciseProgram);
+
+            var sut = new ExerciseProgramViewModelBuilder()
+                .WithModel(new ExerciseProgramBuilder()
+                    .AddExercise(new ExerciseBuilder()
+                        .WithBeforeExerciseAction(action)))
+                .WithSchedulerService(scheduler)
+                .Build();
 
             using (scheduler.Pump())
             {
@@ -486,7 +475,9 @@
         [Test]
         public async Task skip_backwards_command_restarts_the_execution_context_from_the_start_of_the_current_exercise_if_sufficient_progress_has_been_made()
         {
+            var scheduler = new TestSchedulerService();
             var action = new ActionMock(MockBehavior.Loose);
+
             action
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
@@ -497,15 +488,13 @@
                             ec.IsPaused = true;
                             await ec.WaitWhilePausedAsync();
                         }));
-            var matchersWithActions = new []
-            {
-                new MatcherWithAction(new TypedEventMatcher<BeforeExerciseEvent>(), action),
-            };
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var scheduler = new TestSchedulerService();
-            var exercise = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Name", 1, 1, matchersWithActions.ToList());
-            var exerciseProgram = new ExerciseProgram(loggerService, "Name", new [] { exercise });
-            var sut = new ExerciseProgramViewModel(loggerService, scheduler, exerciseProgram);
+
+            var sut = new ExerciseProgramViewModelBuilder()
+                .WithModel(new ExerciseProgramBuilder()
+                    .AddExercise(new ExerciseBuilder()
+                        .WithBeforeExerciseAction(action)))
+                .WithSchedulerService(scheduler)
+                .Build();
 
             var progressTask = sut.WhenAnyValue(x => x.ProgressTimeSpan)
                 .Take(3)
@@ -534,10 +523,13 @@
         [Test]
         public async Task skip_backwards_command_restarts_the_execution_context_from_the_start_of_the_previous_exercise_if_the_current_exercise_if_only_recently_started()
         {
+            var scheduler = new TestSchedulerService();
             var action = new ActionMock();
+
             action
                 .When(x => x.Duration)
                 .Return(TimeSpan.FromSeconds(10));
+
             action
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
@@ -548,16 +540,23 @@
                             ec.IsPaused = true;
                             await ec.WaitWhilePausedAsync();
                         }));
-            var matchersWithActions = new []
-            {
-                new MatcherWithAction(new TypedEventMatcher<BeforeExerciseEvent>(), action),
-            };
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var scheduler = new TestSchedulerService();
-            var exercise1 = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Exercise 1", 1, 1, matchersWithActions.ToList());
-            var exercise2 = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Exercise 2", 1, 1, matchersWithActions.ToList());
-            var exerciseProgram = new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "Name", new [] { exercise1, exercise2 });
-            var sut = new ExerciseProgramViewModel(loggerService, scheduler, exerciseProgram);
+
+            var exercise1 = new ExerciseBuilder()
+                .WithName("Exercise 1")
+                .WithBeforeExerciseAction(action)
+                .Build();
+
+            var exercise2 = new ExerciseBuilder()
+                .WithName("Exercise 2")
+                .WithBeforeExerciseAction(action)
+                .Build();
+
+            var sut = new ExerciseProgramViewModelBuilder()
+                .WithModel(new ExerciseProgramBuilder()
+                    .AddExercise(exercise1)
+                    .AddExercise(exercise2))
+                .WithSchedulerService(scheduler)
+                .Build();
 
             var progressTask = sut.WhenAnyValue(x => x.ProgressTimeSpan)
                 .Take(4)
@@ -588,10 +587,13 @@
         [Test]
         public async Task skip_forwards_command_is_disabled_if_on_last_exercise()
         {
+            var scheduler = new TestSchedulerService();
             var action = new ActionMock();
+
             action
                 .When(x => x.Duration)
                 .Return(TimeSpan.FromSeconds(10));
+
             action
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
@@ -601,16 +603,23 @@
                             ec.IsPaused = true;
                             await ec.WaitWhilePausedAsync();
                         }));
-            var matchersWithActions = new []
-            {
-                new MatcherWithAction(new TypedEventMatcher<BeforeExerciseEvent>(), action),
-            };
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var scheduler = new TestSchedulerService();
-            var exercise1 = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Exercise 1", 1, 1, matchersWithActions.ToList());
-            var exercise2 = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Exercise 2", 1, 1, matchersWithActions.ToList());
-            var exerciseProgram = new ExerciseProgram(loggerService, "Name", new [] { exercise1, exercise2 });
-            var sut = new ExerciseProgramViewModel(loggerService, scheduler, exerciseProgram);
+
+            var exercise1 = new ExerciseBuilder()
+                .WithName("Exercise 1")
+                .WithBeforeExerciseAction(action)
+                .Build();
+
+            var exercise2 = new ExerciseBuilder()
+                .WithName("Exercise 2")
+                .WithBeforeExerciseAction(action)
+                .Build();
+
+            var sut = new ExerciseProgramViewModelBuilder()
+                .WithModel(new ExerciseProgramBuilder()
+                    .AddExercise(exercise1)
+                    .AddExercise(exercise2))
+                .WithSchedulerService(scheduler)
+                .Build();
 
             using (scheduler.Pump())
             {
@@ -633,10 +642,13 @@
         [Test]
         public async Task skip_forwards_command_skips_to_the_next_exercise()
         {
+            var scheduler = new TestSchedulerService();
             var action = new ActionMock();
+
             action
                 .When(x => x.Duration)
                 .Return(TimeSpan.FromSeconds(10));
+
             action
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
@@ -646,16 +658,23 @@
                             ec.IsPaused = true;
                             await ec.WaitWhilePausedAsync();
                         }));
-            var matchersWithActions = new []
-            {
-                new MatcherWithAction(new TypedEventMatcher<BeforeExerciseEvent>(), action),
-            };
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var scheduler = new TestSchedulerService();
-            var exercise1 = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Exercise 1", 1, 1, matchersWithActions.ToList());
-            var exercise2 = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Exercise 2", 1, 1, matchersWithActions.ToList());
-            var exerciseProgram = new ExerciseProgram(loggerService, "Name", new [] { exercise1, exercise2 });
-            var sut = new ExerciseProgramViewModel(loggerService, scheduler, exerciseProgram);
+
+            var exercise1 = new ExerciseBuilder()
+                .WithName("Exercise 1")
+                .WithBeforeExerciseAction(action)
+                .Build();
+
+            var exercise2 = new ExerciseBuilder()
+                .WithName("Exercise 2")
+                .WithBeforeExerciseAction(action)
+                .Build();
+
+            var sut = new ExerciseProgramViewModelBuilder()
+                .WithModel(new ExerciseProgramBuilder()
+                    .AddExercise(exercise1)
+                    .AddExercise(exercise2))
+                .WithSchedulerService(scheduler)
+                .Build();
 
             var progressTask = sut.WhenAnyValue(x => x.ProgressTimeSpan)
                 .Take(2)
@@ -683,10 +702,13 @@
         [Test]
         public async Task current_exercise_reflects_that_in_the_execution_context()
         {
+            var scheduler = new TestSchedulerService();
             var action = new ActionMock();
+
             action
                 .When(x => x.Duration)
                 .Return(TimeSpan.FromSeconds(10));
+
             action
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
@@ -696,17 +718,29 @@
                             ec.IsPaused = true;
                             await ec.WaitWhilePausedAsync();
                         }));
-            var matchersWithActions = new []
-            {
-                new MatcherWithAction(new TypedEventMatcher<BeforeExerciseEvent>(), action),
-            };
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var scheduler = new TestSchedulerService();
-            var exercise1 = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Exercise 1", 1, 1, matchersWithActions);
-            var exercise2 = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Exercise 2", 1, 1, matchersWithActions);
-            var exercise3 = new Exercise(loggerService, new SpeechServiceMock(MockBehavior.Loose), "Exercise 3", 1, 1, matchersWithActions);
-            var exerciseProgram = new ExerciseProgram(loggerService, "Name", new [] { exercise1, exercise2, exercise3 });
-            var sut = new ExerciseProgramViewModel(loggerService, scheduler, exerciseProgram);
+
+            var exercise1 = new ExerciseBuilder()
+                .WithName("Exercise 1")
+                .WithBeforeExerciseAction(action)
+                .Build();
+
+            var exercise2 = new ExerciseBuilder()
+                .WithName("Exercise 2")
+                .WithBeforeExerciseAction(action)
+                .Build();
+
+            var exercise3 = new ExerciseBuilder()
+                .WithName("Exercise 3")
+                .WithBeforeExerciseAction(action)
+                .Build();
+
+            var sut = new ExerciseProgramViewModelBuilder()
+                .WithModel(new ExerciseProgramBuilder()
+                    .AddExercise(exercise1)
+                    .AddExercise(exercise2)
+                    .AddExercise(exercise3))
+                .WithSchedulerService(scheduler)
+                .Build();
 
             var currentExercisesTask = sut.WhenAnyValue(x => x.CurrentExercise)
                 .Where(x => x != null)

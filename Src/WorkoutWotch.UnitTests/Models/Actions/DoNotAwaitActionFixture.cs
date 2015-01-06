@@ -29,16 +29,23 @@
         public void duration_always_returns_zero_regardless_of_inner_action_duration()
         {
             var action = new ActionMock();
-            action.When(x => x.Duration).Return(TimeSpan.FromSeconds(3));
 
-            var sut = new DoNotAwaitAction(new LoggerServiceMock(MockBehavior.Loose), action);
+            action
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromSeconds(3));
+
+            var sut = new DoNotAwaitActionBuilder()
+                .WithInnerAction(action)
+                .Build();
+
             Assert.AreEqual(TimeSpan.Zero, sut.Duration);
         }
 
         [Test]
         public void execute_async_throws_if_the_context_is_null()
         {
-            var sut = new DoNotAwaitAction(new LoggerServiceMock(MockBehavior.Loose), new ActionMock(MockBehavior.Loose));
+            var sut = new DoNotAwaitActionBuilder().Build();
+
             Assert.Throws<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
@@ -47,9 +54,15 @@
         {
             var action = new ActionMock();
             var tcs = new TaskCompletionSource<bool>();
-            action.When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>())).Return(tcs.Task);
 
-            var sut = new DoNotAwaitAction(new LoggerServiceMock(MockBehavior.Loose), action);
+            action
+                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .Return(tcs.Task);
+
+            var sut = new DoNotAwaitActionBuilder()
+                .WithInnerAction(action)
+                .Build();
+
             var task = sut.ExecuteAsync(new ExecutionContext());
 
             Assert.True(task.Wait(TimeSpan.FromSeconds(3)));
@@ -60,15 +73,26 @@
         {
             var waitHandle = new ManualResetEventSlim();
             var logger = new LoggerMock(MockBehavior.Loose);
-            logger.When(x => x.Error(It.IsAny<string>())).Do(waitHandle.Set);
             var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            loggerService.When(x => x.GetLogger(It.IsAny<Type>())).Return(logger);
             var action = new ActionMock(MockBehavior.Loose);
+
+            logger
+                .When(x => x.Error(It.IsAny<string>()))
+                .Do(waitHandle.Set);
+
+            loggerService
+                .When(x => x.GetLogger(It.IsAny<Type>()))
+                .Return(logger);
+
             action
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return(Task.Run(() => { throw new InvalidOperationException("Something bad happened"); }));
 
-            var sut = new DoNotAwaitAction(loggerService, action);
+            var sut = new DoNotAwaitActionBuilder()
+                .WithLoggerService(loggerService)
+                .WithInnerAction(action)
+                .Build();
+
             await sut.ExecuteAsync(new ExecutionContext());
 
             Assert.True(waitHandle.Wait(TimeSpan.FromSeconds(3)));
