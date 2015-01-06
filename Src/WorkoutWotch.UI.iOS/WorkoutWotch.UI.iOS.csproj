@@ -248,4 +248,8 @@
     <ImageAsset Include="Resources\Images.xcassets\SkipBackward.imageset\SkipBackward%402x.png" />
     <ImageAsset Include="Resources\Images.xcassets\SkipBackward.imageset\SkipBackward%403x.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ITunesArtwork Include="iTunesArtwork" />
+    <ITunesArtwork Include="iTunesArtwork%402x" />
+  </ItemGroup>
 </Project>
