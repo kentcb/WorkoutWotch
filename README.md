@@ -13,6 +13,8 @@ Once an exercise program has been selected, a second screen is displayed, which 
 
 ![Exercise Program](Art/ExerciseProgram.png "Exercise Program")
 
+No ability to edit exercise programs is provided within the app. Instead, changes can be made outside the app by editing a text file in iCloud. Once saved, the app will automatically refresh with the changes made. See below for more details.
+
 
 # How do I use it?
 
@@ -20,7 +22,7 @@ First, you will need to clone and build the code. Once built, you have a choice 
 
 **IMPORTANT**: regardless of whether you run with iCloud or not, you will want to run on an actual device rather than the simulator because speech synthesis is not currently supported in the simulator.
 
-## Running without iCloud integration
+## Running without iCloud Integration
 
 Running without iCloud integration saves you the hassle of setting up provisioning and entitlements, but does not give you the ability to dynamically modify your exercise documents. Instead, the exercise documents available in the application will come from a "hard-coded" file.
 
@@ -34,7 +36,7 @@ container.Register<IExerciseDocumentService, CannedExerciseDocumentService>();
 
 If you want to make changes to the exercise document, you'll need to modify the *DefaultExerciseDocument.mkd* file in the *WorkoutWotch.Services.iOS* project. See [writing exercise programs](Doc/writing-exercise-programs.md) for details on the syntax of the document.
 
-## Running with iCloud integration
+## Running with iCloud Integration
 
 If you decide you want the "full Workout Wotch experience", you'll need to follow these steps to appease the Apple gods. If you prefer, you can [follow the instructions in my video](http://www.youtube.com/watch?v=I_jherfsRKk&t=22m30s) instead.
 
@@ -53,7 +55,7 @@ To edit the exercise programs, open **Finder** on your Mac and search for a file
 See [writing exercise programs](Doc/writing-exercise-programs.md) for details on the syntax of the document.
 
 
-# Where are the videos?
+# Where are the Videos?
 
 The vast majority of the application was built as part of a video series I produced called *Building an iOS app with C#*. Below is a full list of the videos, grouped by their module. If you prefer, you can also use the [YouTube playlist](https://www.youtube.com/playlist?list=PLwqdWBgwaokVPpdPOOJ-GTGiHcqoG5alU).
 
@@ -121,7 +123,7 @@ The vast majority of the application was built as part of a video series I produ
 |8: Conclusion|Summary and Demo|http://youtu.be/R8DZPFD-bso|
 
 
-# What's the technology stack?
+# What's the Technology Stack?
 
 The app was written on a Mac using C# and the Xamarin tool chain. It is highly reactive - and often functional - in nature. Almost all code is covered by a comprehensive suite of unit tests.
 
