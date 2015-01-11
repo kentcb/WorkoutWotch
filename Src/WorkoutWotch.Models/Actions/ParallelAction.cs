@@ -16,7 +16,7 @@
 
         public ParallelAction(IEnumerable<IAction> children)
         {
-            children.AssertNotNull("children");
+            children.AssertNotNull("children", assertContentsNotNull: true);
 
             this.children = children.ToImmutableList();
             this.duration = this

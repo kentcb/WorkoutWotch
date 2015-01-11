@@ -18,6 +18,12 @@
         }
 
         [Test]
+        public void ctor_throws_if_any_child_is_null()
+        {
+            Assert.Throws<ArgumentException>(() => new ParallelAction(new [] { new ActionMock(), null, new ActionMock() }));
+        }
+
+        [Test]
         public void duration_is_zero_if_there_are_no_children()
         {
             var sut = new ParallelActionBuilder().Build();
