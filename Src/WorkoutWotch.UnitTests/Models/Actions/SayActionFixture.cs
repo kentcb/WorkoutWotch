@@ -82,7 +82,7 @@
             await sut.ExecuteAsync(new ExecutionContext());
 
             speechService
-                .Verify(x => x.SpeakAsync(It.Is(speechText), It.IsAny<CancellationToken>()))
+                .Verify(x => x.SpeakAsync(speechText, It.IsAny<CancellationToken>()))
                 .WasCalledExactlyOnce();
         }
     }

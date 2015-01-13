@@ -132,11 +132,11 @@
                 await sut.ExecuteAsync(executionContext);
 
                 action1
-                    .Verify(x => x.ExecuteAsync(It.Is(executionContext)))
+                    .Verify(x => x.ExecuteAsync(executionContext))
                     .WasCalledExactlyOnce();
 
                 action2
-                    .Verify(x => x.ExecuteAsync(It.Is(executionContext)))
+                    .Verify(x => x.ExecuteAsync(executionContext))
                     .WasCalledExactlyOnce();
             }
         }
@@ -185,7 +185,7 @@
                 await sut.ExecuteAsync(executionContext);
 
                 action3
-                    .Verify(x => x.ExecuteAsync(It.Is(executionContext)))
+                    .Verify(x => x.ExecuteAsync(executionContext))
                     .WasCalledExactlyOnce();
             }
         }

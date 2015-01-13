@@ -140,7 +140,7 @@
             await sut.ExecuteAsync(new ExecutionContext());
 
             speechService
-                .Verify(x => x.SpeakAsync(It.Is(promptSpeechText), It.IsAny<CancellationToken>()))
+                .Verify(x => x.SpeakAsync(promptSpeechText, It.IsAny<CancellationToken>()))
                 .WasCalledExactlyOnce();
         }
     }

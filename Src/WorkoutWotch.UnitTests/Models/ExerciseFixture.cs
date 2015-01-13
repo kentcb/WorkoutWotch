@@ -183,15 +183,15 @@
                 await sut.ExecuteAsync(executionContext);
 
                 action1
-                    .Verify(x => x.ExecuteAsync(It.Is(executionContext)))
+                    .Verify(x => x.ExecuteAsync(executionContext))
                     .WasCalledExactlyOnce();
 
                 action2
-                    .Verify(x => x.ExecuteAsync(It.Is(executionContext)))
+                    .Verify(x => x.ExecuteAsync(executionContext))
                     .WasCalledExactly(times: 6);
 
                 action3
-                    .Verify(x => x.ExecuteAsync(It.Is(executionContext)))
+                    .Verify(x => x.ExecuteAsync(executionContext))
                     .WasCalledExactly(times: 2);
             }
         }
@@ -215,7 +215,7 @@
                 await sut.ExecuteAsync(executionContext);
 
                 action
-                    .Verify(x => x.ExecuteAsync(It.Is(executionContext)))
+                    .Verify(x => x.ExecuteAsync(executionContext))
                     .WasCalledExactlyOnce();
             }
         }
@@ -273,7 +273,7 @@
                 await sut.ExecuteAsync(executionContext);
 
                 action3
-                    .Verify(x => x.ExecuteAsync(It.Is(executionContext)))
+                    .Verify(x => x.ExecuteAsync(executionContext))
                     .WasCalledExactlyOnce();
             }
         }
@@ -332,7 +332,7 @@
                 await sut.ExecuteAsync(executionContext);
 
                 action3
-                    .Verify(x => x.ExecuteAsync(It.Is(executionContext)))
+                    .Verify(x => x.ExecuteAsync(executionContext))
                     .WasCalledExactlyOnce();
             }
         }
@@ -408,7 +408,7 @@
             await sut.ExecuteAsync(new ExecutionContext());
 
             speechService
-                .Verify(x => x.SpeakAsync(It.Is("some name"), It.IsAny<CancellationToken>()))
+                .Verify(x => x.SpeakAsync("some name", It.IsAny<CancellationToken>()))
                 .WasCalledExactlyOnce();
         }
     }

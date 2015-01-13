@@ -79,7 +79,7 @@
             await sut.ExecuteAsync(new ExecutionContext());
 
             audioService
-                .Verify(x => x.PlayAsync(It.Is(audioResourceUri)))
+                .Verify(x => x.PlayAsync(audioResourceUri))
                 .WasCalledExactlyOnce();
         }
     }

@@ -308,7 +308,7 @@
             Assert.AreEqual(ExerciseProgramsViewModelStatus.LoadedFromCloud, sut.Status);
 
             stateService
-                .Verify(x => x.SetAsync<string>("ExerciseProgramsDocument", It.Is(document)))
+                .Verify(x => x.SetAsync<string>("ExerciseProgramsDocument", document))
                 .WasCalledExactlyOnce();
         }
 

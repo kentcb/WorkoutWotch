@@ -84,15 +84,15 @@
                 await sut.ExecuteAsync(context);
 
                 action1
-                    .Verify(x => x.ExecuteAsync(It.Is(context)))
+                    .Verify(x => x.ExecuteAsync(context))
                     .WasCalledExactlyOnce();
 
                 action2
-                    .Verify(x => x.ExecuteAsync(It.Is(context)))
+                    .Verify(x => x.ExecuteAsync(context))
                     .WasCalledExactlyOnce();
 
                 action3
-                    .Verify(x => x.ExecuteAsync(It.Is(context)))
+                    .Verify(x => x.ExecuteAsync(context))
                     .WasCalledExactlyOnce();
             }
         }
@@ -135,7 +135,7 @@
                 await sut.ExecuteAsync(context);
 
                 action3
-                    .Verify(x => x.ExecuteAsync(It.Is(context)))
+                    .Verify(x => x.ExecuteAsync(context))
                     .WasCalledExactlyOnce();
             }
         }
@@ -179,7 +179,7 @@
                 await sut.ExecuteAsync(context);
 
                 action3
-                    .Verify(x => x.ExecuteAsync(It.Is(context)))
+                    .Verify(x => x.ExecuteAsync(context))
                     .WasCalledExactlyOnce();
             }
         }
@@ -206,15 +206,15 @@
                 Assert.Throws<OperationCanceledException>(async () => await sut.ExecuteAsync(context));
 
                 action1
-                    .Verify(x => x.ExecuteAsync(It.Is(context)))
+                    .Verify(x => x.ExecuteAsync(context))
                     .WasCalledExactlyOnce();
 
                 action2
-                    .Verify(x => x.ExecuteAsync(It.Is(context)))
+                    .Verify(x => x.ExecuteAsync(context))
                     .WasCalledExactlyOnce();
 
                 action3
-                    .Verify(x => x.ExecuteAsync(It.Is(context)))
+                    .Verify(x => x.ExecuteAsync(context))
                     .WasNotCalled();
             }
         }
