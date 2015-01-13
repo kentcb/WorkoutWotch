@@ -148,23 +148,23 @@
     <Reference Include="Sprache">
       <HintPath>..\packages\Sprache.2.0.0.44\lib\portable-net4+netcore45+win8+wp8+sl5+MonoAndroid1+MonoTouch1\Sprache.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.7\lib\portable-net45+wp80+win8+wpa81+aspnetcore50\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="Akavache">
       <HintPath>..\packages\akavache.core.4.1.0\lib\Portable-Net45+Win8+WP8+Wpa81\Akavache.dll</HintPath>
     </Reference>
     <Reference Include="Splat">
       <HintPath>..\packages\Splat.1.6.0\lib\Portable-net45+win+wpa81+wp80\Splat.dll</HintPath>
     </Reference>
-    <Reference Include="ReactiveUI">
-      <HintPath>..\packages\reactiveui-core.6.3.0\lib\Portable-Net45+Win8+WP8+WPA81\ReactiveUI.dll</HintPath>
-    </Reference>
     <Reference Include="Kent.Boogaart.HelperTrinity">
       <HintPath>..\packages\Kent.Boogaart.HelperTrinity.2.0.2\lib\portable-win+net403+sl40+wp+xbox40\Kent.Boogaart.HelperTrinity.dll</HintPath>
     </Reference>
     <Reference Include="Kent.Boogaart.PCLMock">
       <HintPath>..\packages\Kent.Boogaart.PCLMock.1.0.0-alpha\lib\portable-net45+netcore45+win8+wp8+MonoAndroid1+MonoTouch1\Kent.Boogaart.PCLMock.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\portable-net45+wp80+win8+wpa81+aspnetcore50\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="ReactiveUI">
+      <HintPath>..\packages\reactiveui-core.6.3.1\lib\Portable-Net45+Win8+WP8+WPA81\ReactiveUI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
