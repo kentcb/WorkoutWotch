@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 
 [assembly: AssemblyVersion("0.0.1")]

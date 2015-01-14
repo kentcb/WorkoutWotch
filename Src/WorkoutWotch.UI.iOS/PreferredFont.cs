@@ -1,4 +1,4 @@
-﻿namespace WorkoutWotch.UI.iOS
+namespace WorkoutWotch.UI.iOS
 {
     internal enum PreferredFont
     {

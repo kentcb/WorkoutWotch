@@ -1,30 +1,18 @@
-﻿using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-using MonoTouch.NUnit.UI;
-using WorkoutWotch.UnitTests.Services.Logger;
-
 namespace WorkoutWotch.UI.TestHarness
 {
-    // The UIApplicationDelegate for the application. This class is responsible for launching the
-    // User Interface of the application, as well as listening (and optionally responding) to
-    // application events from iOS.
+    using Foundation;
+    using MonoTouch.NUnit.UI;
+    using UIKit;
+    using WorkoutWotch.UnitTests.Services.Logger;
+
     [Register("AppDelegate")]
     public partial class AppDelegate : UIApplicationDelegate
     {
-        // class-level declarations
         UIWindow window;
         TouchRunner runner;
 
-        //
-        // This method is invoked when the application has loaded and is ready to run. In this
-        // method you should instantiate the window, load the UI intoail it and then make the window
-        // visible.
-        //
-        // You have 17 seconds to return from this method, or iOS will terminate your application.
-        //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
-            // create a new window instance based on the screen size
             window = new UIWindow(UIScreen.MainScreen.Bounds);
             runner = new TouchRunner(window);
 
@@ -37,4 +25,3 @@ namespace WorkoutWotch.UI.TestHarness
         }
     }
 }
-

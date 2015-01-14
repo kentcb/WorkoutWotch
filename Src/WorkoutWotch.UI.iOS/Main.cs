@@ -1,8 +1,8 @@
-﻿namespace WorkoutWotch.UI.iOS
+namespace WorkoutWotch.UI.iOS
 {
     using System;
-    using MonoTouch.UIKit;
     using TinyIoC;
+    using UIKit;
     using WorkoutWotch.Services.Contracts.State;
     using WorkoutWotch.Services.Logger;
 

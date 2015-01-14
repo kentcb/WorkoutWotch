@@ -1,10 +1,10 @@
-﻿namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
+namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
 {
     using System;
     using System.Reactive.Disposables;
     using Kent.Boogaart.HelperTrinity.Extensions;
-    using MonoTouch.UIKit;
     using ReactiveUI;
+    using UIKit;
     using WorkoutWotch.UI.iOS.Utility;
     using WorkoutWotch.ViewModels;
 

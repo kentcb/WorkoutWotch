@@ -1,9 +1,8 @@
-﻿namespace WorkoutWotch.UI.iOS.Controls
+namespace WorkoutWotch.UI.iOS.Controls
 {
     using System;
-    using MonoTouch.UIKit;
-    using System.Drawing;
-    using MonoTouch.CoreGraphics;
+    using CoreGraphics;
+    using UIKit;
 
     // because iOS does not allow a custom colour for cell disclosure accessories, we need our own custom control :S
     // translated and adapted from: http://www.cocoanetics.com/2010/10/custom-colored-disclosure-indicators/
@@ -15,11 +14,11 @@
         private bool isHighlighted;
 
         public CellDisclosureAccessory()
-            : this(new RectangleF(0, 0, 11f, 15f))
+            : this(new CGRect(0, 0, 11f, 15f))
         {
         }
 
-        public CellDisclosureAccessory(RectangleF frame)
+        public CellDisclosureAccessory(CGRect frame)
             : base(frame)
         {
             this.BackgroundColor = UIColor.Clear;
@@ -57,7 +56,7 @@
             }
         }
 
-        public override void Draw(RectangleF rect)
+        public override void Draw(CGRect rect)
         {
             base.Draw(rect);
 
