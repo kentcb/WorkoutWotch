@@ -1,6 +1,6 @@
-﻿namespace WorkoutWotch.UI.iOS
+namespace WorkoutWotch.UI.iOS
 {
-    using MonoTouch.UIKit;
+    using UIKit;
 
     // set up default appearances for controls wherever the appearance proxy functionality in iOS allows (often it doesn't, because Apple)
     internal static class AppearanceManager

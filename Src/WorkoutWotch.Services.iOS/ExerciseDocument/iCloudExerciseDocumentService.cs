@@ -1,13 +1,13 @@
-﻿namespace WorkoutWotch.Services.iOS.ExerciseDocument
+namespace WorkoutWotch.Services.iOS.ExerciseDocument
 {
     using System;
     using System.IO;
     using System.Reactive.Subjects;
     using System.Threading;
     using System.Threading.Tasks;
+    using Foundation;
     using Kent.Boogaart.HelperTrinity.Extensions;
-    using MonoTouch.Foundation;
-    using MonoTouch.UIKit;
+    using UIKit;
     using WorkoutWotch.Services.Contracts.ExerciseDocument;
     using WorkoutWotch.Services.Contracts.Logger;
 
@@ -118,7 +118,7 @@
                     {
                         SearchScopes = new NSObject[]
                         {
-                            NSMetadataQuery.QueryUbiquitousDocumentsScope
+                            NSMetadataQuery.UbiquitousDocumentsScope
                         },
                         Predicate = NSPredicate.FromFormat(
                             "%K == %@",

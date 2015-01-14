@@ -1,4 +1,4 @@
-﻿namespace WorkoutWotch.Services.iOS.ExerciseDocument
+namespace WorkoutWotch.Services.iOS.ExerciseDocument
 {
     using System;
     using System.IO;

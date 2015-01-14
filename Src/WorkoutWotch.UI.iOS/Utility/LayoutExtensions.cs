@@ -1,6 +1,6 @@
-﻿namespace WorkoutWotch.UI.iOS.Utility
+namespace WorkoutWotch.UI.iOS.Utility
 {
-    using MonoTouch.UIKit;
+    using UIKit;
 
     // provides extensions that should be used when laying out via the Layout class
     // note the use of ints here rather than floats because comparing floats in our constraint expressions results in annoying compiler warnings

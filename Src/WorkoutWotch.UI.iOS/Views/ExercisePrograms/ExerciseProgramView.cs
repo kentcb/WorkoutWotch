@@ -2,9 +2,9 @@ namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
 {
     using System;
     using System.Reactive.Disposables;
-    using MonoTouch.Foundation;
-    using MonoTouch.UIKit;
+    using Foundation;
     using ReactiveUI;
+    using UIKit;
     using WorkoutWotch.UI.iOS.Controls;
     using WorkoutWotch.UI.iOS.Utility;
     using WorkoutWotch.ViewModels;

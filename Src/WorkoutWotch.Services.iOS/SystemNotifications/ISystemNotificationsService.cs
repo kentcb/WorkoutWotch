@@ -1,4 +1,4 @@
-﻿namespace WorkoutWotch.Services.iOS.SystemNotifications
+namespace WorkoutWotch.Services.iOS.SystemNotifications
 {
     using System;
     using System.Reactive;

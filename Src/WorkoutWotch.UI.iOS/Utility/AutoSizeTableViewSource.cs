@@ -1,12 +1,12 @@
-﻿namespace WorkoutWotch.UI.iOS.Utility
+namespace WorkoutWotch.UI.iOS.Utility
 {
     using System;
-    using System.Drawing;
     using System.Reactive.Linq;
-    using MonoTouch.Foundation;
-    using MonoTouch.UIKit;
+    using CoreGraphics;
+    using Foundation;
     using ReactiveUI;
     using TinyIoC;
+    using UIKit;
     using WorkoutWotch.Services.iOS.SystemNotifications;
 
     // a table view source that automatically sizes its cells. Once a size for a section is determined, all cells will take on that size (unless dynamic type size is changed, in which case the cached size is invalidated)
@@ -16,7 +16,7 @@
         private readonly UITableView tableView;
         private readonly IDisposable dataSubscription;
         private readonly IDisposable dynamicTypeChangedSubscription;
-        private float?[] heights;
+        private nfloat?[] heights;
 
         public AutoSizeTableViewSource(UITableView tableView)
             : base(tableView)
@@ -27,19 +27,19 @@
         }
 
         public AutoSizeTableViewSource(UITableView tableView, IReactiveNotifyCollectionChanged<TSource> collection, NSString cellKey, Action<UITableViewCell> initializeCellAction = null)
-            : base(tableView, collection, cellKey, UITableView.AutomaticDimension, initializeCellAction)
+            : base(tableView, collection, cellKey, (float)UITableView.AutomaticDimension, initializeCellAction)
         {
             this.tableView = tableView;
             this.dataSubscription = this.InitDataSubscription();
             this.dynamicTypeChangedSubscription = this.InitDynamicTypeChangedSubscription();
         }
 
-        public override float EstimatedHeight(UITableView tableView, NSIndexPath indexPath)
+        public override nfloat EstimatedHeight(UITableView tableView, NSIndexPath indexPath)
         {
             return UITableView.AutomaticDimension;
         }
 
-        public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
+        public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
         {
             this.ValidateSection(indexPath.Section);
 
@@ -68,7 +68,7 @@
             offscreenCell.SetNeedsUpdateConstraints();
             offscreenCell.UpdateConstraintsIfNeeded();
 
-            offscreenCell.Bounds = new RectangleF(0, 0, this.tableView.Bounds.Width, this.tableView.Bounds.Height);
+            offscreenCell.Bounds = new CGRect(0, 0, this.tableView.Bounds.Width, this.tableView.Bounds.Height);
 
             offscreenCell.SetNeedsLayout();
             offscreenCell.LayoutIfNeeded();
@@ -96,7 +96,7 @@
         {
             return this
                 .WhenAnyValue(x => x.Data)
-                .Select(x => new float?[x == null ? 0 : x.Count])
+                .Select(x => new nfloat?[x == null ? 0 : x.Count])
                 .Subscribe(x => this.heights = x);
         }
 

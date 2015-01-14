@@ -1,10 +1,10 @@
-﻿namespace WorkoutWotch.UI.iOS.Utility
+namespace WorkoutWotch.UI.iOS.Utility
 {
     using System;
     using System.Reactive.Disposables;
-    using MonoTouch.UIKit;
     using ReactiveUI;
     using TinyIoC;
+    using UIKit;
     using WorkoutWotch.Services.iOS.SystemNotifications;
 
     // a base class for table view controllers to save repetitive code

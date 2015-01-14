@@ -1,4 +1,4 @@
-﻿namespace WorkoutWotch.UI.iOS
+namespace WorkoutWotch.UI.iOS
 {
     using Akavache;
     using TinyIoC;
