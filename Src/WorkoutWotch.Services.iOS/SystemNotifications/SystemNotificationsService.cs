@@ -1,10 +1,10 @@
-﻿namespace WorkoutWotch.Services.iOS.SystemNotifications
+namespace WorkoutWotch.Services.iOS.SystemNotifications
 {
     using System;
     using System.Reactive;
     using System.Reactive.Subjects;
-    using MonoTouch.Foundation;
-    using MonoTouch.UIKit;
+    using Foundation;
+    using UIKit;
     using WorkoutWotch.Utility;
 
     public sealed class SystemNotificationsService : DisposableBase, ISystemNotificationsService

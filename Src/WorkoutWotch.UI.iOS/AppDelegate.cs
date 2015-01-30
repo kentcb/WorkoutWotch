@@ -1,13 +1,13 @@
-﻿namespace WorkoutWotch.UI.iOS
+namespace WorkoutWotch.UI.iOS
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Threading.Tasks;
     using Akavache;
-    using MonoTouch.Foundation;
-    using MonoTouch.UIKit;
+    using Foundation;
     using TinyIoC;
+    using UIKit;
     using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.Contracts.State;
     using WorkoutWotch.UI.iOS.Views.ExercisePrograms;

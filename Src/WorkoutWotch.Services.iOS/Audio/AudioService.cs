@@ -1,13 +1,13 @@
-﻿namespace WorkoutWotch.Services.iOS.Audio
+namespace WorkoutWotch.Services.iOS.Audio
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
+    using AVFoundation;
+    using Foundation;
     using Kent.Boogaart.HelperTrinity.Extensions;
-    using MonoTouch.AVFoundation;
-    using MonoTouch.Foundation;
     using WorkoutWotch.Services.Contracts.Audio;
 
     public sealed class AudioService : IAudioService

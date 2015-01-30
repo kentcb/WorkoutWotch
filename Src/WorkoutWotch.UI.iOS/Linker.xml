@@ -46,23 +46,23 @@
         <type fullname="*"/>
     </assembly>
 
-    <assembly fullname="monotouch">
-        <type fullname="MonoTouch.UIKit.UIControl">
+    <assembly fullname="Xamarin.iOS">
+        <type fullname="UIKit.UIControl">
             <method name="set_Enabled"/>
             <method name="set_Highlighted"/>
             <method name="set_Selected"/>
         </type>
-        <type fullname="MonoTouch.UIKit.UILabel">
+        <type fullname="UIKit.UILabel">
             <method name="set_Text"/>
         </type>
-        <type fullname="MonoTouch.UIKit.UIProgressView">
+        <type fullname="UIKit.UIProgressView">
             <method name="set_Progress"/>
             <method name="set_ProgressTintColor"/>
         </type>
-        <type fullname="MonoTouch.UIKit.UITableView">
+        <type fullname="UIKit.UITableView">
             <method name="set_Source"/>
         </type>
-        <type fullname="MonoTouch.UIKit.UIView">
+        <type fullname="UIKit.UIView">
             <method name="set_Hidden"/>
         </type>
     </assembly>

@@ -1,11 +1,11 @@
-﻿namespace WorkoutWotch.UI.iOS
+namespace WorkoutWotch.UI.iOS
 {
     using System;
     using System.Reactive;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
-    using MonoTouch.UIKit;
     using TinyIoC;
+    using UIKit;
     using WorkoutWotch.Services.iOS.SystemNotifications;
 
     // a factory for creating UI controls

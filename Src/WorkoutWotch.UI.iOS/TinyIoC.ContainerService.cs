@@ -1,4 +1,4 @@
-﻿namespace TinyIoC
+namespace TinyIoC
 {
     using WorkoutWotch.Services.Contracts.Container;
 

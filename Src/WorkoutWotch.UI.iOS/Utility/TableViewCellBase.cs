@@ -1,4 +1,4 @@
-﻿namespace WorkoutWotch.UI.iOS.Utility
+namespace WorkoutWotch.UI.iOS.Utility
 {
     using System;
     using System.Reactive.Disposables;

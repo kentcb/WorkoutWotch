@@ -1,4 +1,4 @@
-﻿// this code is a heavily modified version of https://gist.github.com/praeclarum/6225853
+// this code is a heavily modified version of https://gist.github.com/praeclarum/6225853
 
 namespace WorkoutWotch.UI.iOS.Utility
 {
@@ -7,7 +7,7 @@ namespace WorkoutWotch.UI.iOS.Utility
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using MonoTouch.UIKit;
+    using UIKit;
 
     public static class Layout
     {

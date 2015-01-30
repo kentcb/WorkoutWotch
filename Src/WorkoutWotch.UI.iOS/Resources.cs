@@ -1,6 +1,6 @@
-﻿namespace WorkoutWotch.UI.iOS
+namespace WorkoutWotch.UI.iOS
 {
-    using MonoTouch.UIKit;
+    using UIKit;
 
     public static class Resources
     {

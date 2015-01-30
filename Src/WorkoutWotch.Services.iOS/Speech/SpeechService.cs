@@ -1,10 +1,10 @@
-﻿namespace WorkoutWotch.Services.iOS.Speech
+namespace WorkoutWotch.Services.iOS.Speech
 {
     using System.Reactive.Disposables;
     using System.Threading;
     using System.Threading.Tasks;
+    using AVFoundation;
     using Kent.Boogaart.HelperTrinity.Extensions;
-    using MonoTouch.AVFoundation;
     using WorkoutWotch.Services.Contracts.Speech;
 
     public sealed class SpeechService : ISpeechService
