@@ -76,7 +76,7 @@ namespace WorkoutWotch.UnitTests.ViewModels
 
         public ExerciseProgramsViewModelBuilder WithCloudDocument(string cloudDocument)
         {
-            var exerciseDocumentService = new ExerciseDocumentServiceMock();
+            var exerciseDocumentService = new ExerciseDocumentServiceMock(MockBehavior.Loose);
 
             exerciseDocumentService
                 .When(x => x.ExerciseDocument)
