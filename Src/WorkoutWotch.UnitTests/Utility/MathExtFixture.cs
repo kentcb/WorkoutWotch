@@ -5,46 +5,52 @@
 
     public class MathExtFixture
     {
-        [Fact]
-        public void max_returns_first_if_second_is_null()
+        [Theory]
+        [InlineData(0, 0, 0)]
+        [InlineData(1, 0, 1)]
+        [InlineData(0, 1, 1)]
+        [InlineData(100, 200, 200)]
+        [InlineData(200, 100, 200)]
+        [InlineData(100, -200, 100)]
+        public void max_returns_the_maximum_value_for_value_types(int first, int second, int expected)
         {
-            Assert.Equal("first", MathExt.Max("first", null));
+            Assert.Equal(expected, MathExt.Max(first, second));
         }
 
-        [Fact]
-        public void max_returns_second_if_first_is_null()
+        [Theory]
+        [InlineData(null, null, null)]
+        [InlineData("foo", null, "foo")]
+        [InlineData(null, "foo", "foo")]
+        [InlineData("foo", "foo", "foo")]
+        [InlineData("foo", "bar", "foo")]
+        [InlineData("bar", "foo", "foo")]
+        public void max_returns_the_maximum_value_for_reference_types(string first, string second, string expected)
         {
-            Assert.Equal("second", MathExt.Max(null, "second"));
+            Assert.Equal(expected, MathExt.Max(first, second));
         }
 
-        [Fact]
-        public void max_returns_the_maximum()
+        [Theory]
+        [InlineData(0, 0, 0)]
+        [InlineData(1, 0, 0)]
+        [InlineData(0, 1, 0)]
+        [InlineData(100, 200, 100)]
+        [InlineData(200, 100, 100)]
+        [InlineData(100, -200, -200)]
+        public void min_returns_the_minimum_value_for_value_types(int first, int second, int expected)
         {
-            Assert.Equal(50, MathExt.Max(13, 50));
-            Assert.Equal(50, MathExt.Max(50, 13));
-            Assert.Equal(TimeSpan.FromSeconds(3), MathExt.Max(TimeSpan.FromSeconds(3), TimeSpan.FromMilliseconds(2100)));
-            Assert.Equal(TimeSpan.FromSeconds(3), MathExt.Max(TimeSpan.FromMilliseconds(2100), TimeSpan.FromSeconds(3)));
+            Assert.Equal(expected, MathExt.Min(first, second));
         }
 
-        [Fact]
-        public void min_returns_first_if_it_is_null_and_second_is_not()
+        [Theory]
+        [InlineData(null, null, null)]
+        [InlineData("foo", null, null)]
+        [InlineData(null, "foo", null)]
+        [InlineData("foo", "foo", "foo")]
+        [InlineData("foo", "bar", "bar")]
+        [InlineData("bar", "foo", "bar")]
+        public void min_returns_the_minimum_value_for_reference_types(string first, string second, string expected)
         {
-            Assert.Null(MathExt.Min("first", null));
-        }
-
-        [Fact]
-        public void min_returns_second_if_it_is_null_and_first_is_not()
-        {
-            Assert.Null(MathExt.Min(null, "second"));
-        }
-
-        [Fact]
-        public void min_returns_the_minimum()
-        {
-            Assert.Equal(13, MathExt.Min(13, 50));
-            Assert.Equal(13, MathExt.Min(50, 13));
-            Assert.Equal(TimeSpan.FromMilliseconds(2100), MathExt.Min(TimeSpan.FromSeconds(3), TimeSpan.FromMilliseconds(2100)));
-            Assert.Equal(TimeSpan.FromMilliseconds(2100), MathExt.Min(TimeSpan.FromMilliseconds(2100), TimeSpan.FromSeconds(3)));
+            Assert.Equal(expected, MathExt.Min(first, second));
         }
     }
 }
