@@ -3,42 +3,41 @@
     using System;
     using System.Threading.Tasks;
     using Kent.Boogaart.PCLMock;
-    using NUnit.Framework;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.UnitTests.Services.Audio.Mocks;
+    using Xunit;
 
-    [TestFixture]
     public class AudioActionFixture
     {
-        [Test]
+        [Fact]
         public void ctor_throws_if_audio_service_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new AudioAction(null, "some_uri"));
         }
 
-        [Test]
+        [Fact]
         public void ctor_throws_if_audio_resource_uri_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new AudioAction(new AudioServiceMock(), null));
         }
 
-        [Test]
+        [Fact]
         public void duration_returns_zero()
         {
             var sut = new AudioActionBuilder().Build();
-            Assert.AreEqual(TimeSpan.Zero, sut.Duration);
+            Assert.Equal(TimeSpan.Zero, sut.Duration);
         }
 
-        [Test]
-        public void execute_async_throws_if_context_is_null()
+        [Fact]
+        public async Task execute_async_throws_if_context_is_null()
         {
             var sut = new AudioActionBuilder().Build();
-            Assert.Throws<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
-        [Test]
-        public void execute_async_cancels_if_context_is_cancelled()
+        [Fact]
+        public async Task execute_async_cancels_if_context_is_cancelled()
         {
             var sut = new AudioActionBuilder().Build();
 
@@ -46,11 +45,11 @@
             {
                 context.Cancel();
 
-                Assert.Throws<OperationCanceledException>(async () => await sut.ExecuteAsync(context));
+                await Assert.ThrowsAsync<OperationCanceledException>(async () => await sut.ExecuteAsync(context));
             }
         }
 
-        [Test]
+        [Fact]
         public void execute_async_pauses_if_context_is_paused()
         {
             var sut = new AudioActionBuilder().Build();
@@ -65,9 +64,10 @@
             }
         }
 
-        [TestCase("uri")]
-        [TestCase("some_uri")]
-        [TestCase("some/other/uri")]
+        [Theory]
+        [InlineData("uri")]
+        [InlineData("some_uri")]
+        [InlineData("some/other/uri")]
         public async Task execute_async_passes_the_audio_resource_uri_onto_the_audio_service(string audioResourceUri)
         {
             var audioService = new AudioServiceMock(MockBehavior.Loose);

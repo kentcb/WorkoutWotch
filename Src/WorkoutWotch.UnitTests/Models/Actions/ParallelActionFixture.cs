@@ -3,35 +3,34 @@
     using System;
     using System.Threading.Tasks;
     using Kent.Boogaart.PCLMock;
-    using NUnit.Framework;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.UnitTests.Models.Mocks;
+    using Xunit;
 
-    [TestFixture]
     public class ParallelActionFixture
     {
-        [Test]
+        [Fact]
         public void ctor_throws_if_children_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new ParallelAction(null));
         }
 
-        [Test]
+        [Fact]
         public void ctor_throws_if_any_child_is_null()
         {
             Assert.Throws<ArgumentException>(() => new ParallelAction(new [] { new ActionMock(), null, new ActionMock() }));
         }
 
-        [Test]
+        [Fact]
         public void duration_is_zero_if_there_are_no_children()
         {
             var sut = new ParallelActionBuilder().Build();
 
-            Assert.AreEqual(TimeSpan.Zero, sut.Duration);
+            Assert.Equal(TimeSpan.Zero, sut.Duration);
         }
 
-        [Test]
+        [Fact]
         public void duration_is_the_maximum_duration_from_all_children()
         {
             var action1 = new ActionMock();
@@ -62,18 +61,18 @@
                 .AddChild(action4)
                 .Build();
 
-            Assert.AreEqual(TimeSpan.FromSeconds(5), sut.Duration);
+            Assert.Equal(TimeSpan.FromSeconds(5), sut.Duration);
         }
 
-        [Test]
-        public void execute_async_throws_if_the_execution_context_is_null()
+        [Fact]
+        public async Task execute_async_throws_if_the_execution_context_is_null()
         {
             var sut = new ParallelActionBuilder().Build();
 
-            Assert.Throws<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_executes_each_child_action()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
@@ -126,7 +125,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_skips_actions_that_are_shorter_than_the_skip_ahead()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
@@ -169,7 +168,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_skips_actions_that_are_shorter_than_the_skip_ahead_even_if_the_execution_context_is_paused()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
@@ -213,7 +212,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_correctly_handles_a_skip_ahead_value_that_exceeds_even_the_longest_child_actions_duration()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
@@ -254,11 +253,11 @@
                     .Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                     .WasNotCalled();
 
-                Assert.AreEqual(TimeSpan.FromSeconds(71), context.Progress);
+                Assert.Equal(TimeSpan.FromSeconds(71), context.Progress);
             }
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_ensures_progress_of_child_actions_does_not_compound()
         {
             var action1 = new ActionMock();
@@ -313,11 +312,11 @@
             {
                 await sut.ExecuteAsync(context);
 
-                Assert.AreEqual(TimeSpan.FromSeconds(2), context.Progress);
+                Assert.Equal(TimeSpan.FromSeconds(2), context.Progress);
             }
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_ensures_progress_of_child_actions_does_not_compound_when_skipping()
         {
             var action1 = new ActionMock();
@@ -372,7 +371,7 @@
             {
                 await sut.ExecuteAsync(context);
 
-                Assert.AreEqual(TimeSpan.FromSeconds(10), context.Progress);
+                Assert.Equal(TimeSpan.FromSeconds(10), context.Progress);
 
                 action1
                     .Verify(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
@@ -384,7 +383,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_context_can_be_cancelled_by_longest_child_action()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
@@ -417,7 +416,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_context_can_be_cancelled_by_child_action_that_is_not_the_longest()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
@@ -450,7 +449,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_context_can_be_paused_by_longest_child_action()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
@@ -483,7 +482,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_context_can_be_paused_by_child_action_that_is_not_the_longest()
         {
             var action1 = new ActionMock(MockBehavior.Loose);

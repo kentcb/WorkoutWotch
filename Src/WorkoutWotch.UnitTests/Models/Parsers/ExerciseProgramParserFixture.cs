@@ -2,25 +2,25 @@
 {
     using System;
     using Kent.Boogaart.PCLMock;
-    using NUnit.Framework;
     using Sprache;
     using WorkoutWotch.Models.Parsers;
     using WorkoutWotch.UnitTests.Services.Container.Mocks;
+    using Xunit;
 
-    [TestFixture]
     public class ExerciseProgramParserFixture
     {
-        [Test]
+        [Fact]
         public void get_parser_throws_if_container_service_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => ExerciseProgramParser.GetParser(null));
         }
 
-        [TestCase("# foo\n", "foo")]
-        [TestCase("# Foo\n", "Foo")]
-        [TestCase("# Foo bar\n", "Foo bar")]
-        [TestCase("# !@$%^&*()-_=+[{]};:'\",<.>/?\n", "!@$%^&*()-_=+[{]};:'\",<.>/?")]
-        [TestCase("#    \t Foo   bar  \t \n", "Foo   bar")]
+        [Theory]
+        [InlineData("# foo\n", "foo")]
+        [InlineData("# Foo\n", "Foo")]
+        [InlineData("# Foo bar\n", "Foo bar")]
+        [InlineData("# !@$%^&*()-_=+[{]};:'\",<.>/?\n", "!@$%^&*()-_=+[{]};:'\",<.>/?")]
+        [InlineData("#    \t Foo   bar  \t \n", "Foo   bar")]
         public void can_parse_name(string input, string expectedName)
         {
             var result = ExerciseProgramParser
@@ -28,16 +28,17 @@
                 .Parse(input);
 
             Assert.NotNull(result);
-            Assert.AreEqual(expectedName, result.Name);
+            Assert.Equal(expectedName, result.Name);
         }
 
-        [TestCase("# ignore", 0)]
-        [TestCase("# ignore\n", 0)]
-        [TestCase("# ignore\n## Exercise 1\n* 1 set x 1 rep", 1)]
-        [TestCase("# ignore\n## Exercise 1\n* 1 set x 1 rep\n", 1)]
-        [TestCase("# ignore\n\n\n\n\n\t  \t\t  \n \t \n\n \n## Exercise 1\n* 1 set x 1 rep", 1)]
-        [TestCase("# ignore\n## Exercise 1\n* 1 set x 1 rep\n## Exercise 2\n* 1 set x 1 rep", 2)]
-        [TestCase("# ignore\n## Exercise 1\n* 1 set x 1 rep\n  \n  \t  \n\n## Exercise 2\n* 1 set x 1 rep", 2)]
+        [Theory]
+        [InlineData("# ignore", 0)]
+        [InlineData("# ignore\n", 0)]
+        [InlineData("# ignore\n## Exercise 1\n* 1 set x 1 rep", 1)]
+        [InlineData("# ignore\n## Exercise 1\n* 1 set x 1 rep\n", 1)]
+        [InlineData("# ignore\n\n\n\n\n\t  \t\t  \n \t \n\n \n## Exercise 1\n* 1 set x 1 rep", 1)]
+        [InlineData("# ignore\n## Exercise 1\n* 1 set x 1 rep\n## Exercise 2\n* 1 set x 1 rep", 2)]
+        [InlineData("# ignore\n## Exercise 1\n* 1 set x 1 rep\n  \n  \t  \n\n## Exercise 2\n* 1 set x 1 rep", 2)]
         public void can_parse_exercises(string input, int expectedExerciseCount)
         {
             var result = ExerciseProgramParser
@@ -45,14 +46,15 @@
                 .Parse(input);
 
             Assert.NotNull(result);
-            Assert.AreEqual(expectedExerciseCount, result.Exercises.Count);
+            Assert.Equal(expectedExerciseCount, result.Exercises.Count);
         }
 
-        [TestCase("## two hashes\n")]
-        [TestCase("#\n")]
-        [TestCase("#no space after hash\n")]
-        [TestCase("  # leading whitespace\n")]
-        [TestCase("# ignore\n## Exercise 1\n* 1 set x 1 rep  ## Exercise 2\n* 1 set x 1 rep")]
+        [Theory]
+        [InlineData("## two hashes\n")]
+        [InlineData("#\n")]
+        [InlineData("#no space after hash\n")]
+        [InlineData("  # leading whitespace\n")]
+        [InlineData("# ignore\n## Exercise 1\n* 1 set x 1 rep  ## Exercise 2\n* 1 set x 1 rep")]
         public void cannot_parse_invalid_input(string input)
         {
             var result = ExerciseProgramParser

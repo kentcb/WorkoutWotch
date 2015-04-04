@@ -4,44 +4,43 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Kent.Boogaart.PCLMock;
-    using NUnit.Framework;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.UnitTests.Services.Speech.Mocks;
+    using Xunit;
 
-    [TestFixture]
     public class SayActionFixture
     {
-        [Test]
+        [Fact]
         public void ctor_throws_if_speech_service_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new SayAction(null, "something to say"));
         }
 
-        [Test]
+        [Fact]
         public void ctor_throws_if_speech_text_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new SayAction(new SpeechServiceMock(), null));
         }
 
-        [Test]
+        [Fact]
         public void duration_returns_zero()
         {
             var sut = new SayActionBuilder().Build();
 
-            Assert.AreEqual(TimeSpan.Zero, sut.Duration);
+            Assert.Equal(TimeSpan.Zero, sut.Duration);
         }
 
-        [Test]
-        public void execute_async_throws_if_context_is_null()
+        [Fact]
+        public async Task execute_async_throws_if_context_is_null()
         {
             var sut = new SayActionBuilder().Build();
 
-            Assert.Throws<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
-        [Test]
-        public void execute_async_cancels_if_context_is_cancelled()
+        [Fact]
+        public async Task execute_async_cancels_if_context_is_cancelled()
         {
             var sut = new SayActionBuilder().Build();
 
@@ -49,11 +48,11 @@
             {
                 context.Cancel();
 
-                Assert.Throws<OperationCanceledException>(async () => await sut.ExecuteAsync(context));
+                await Assert.ThrowsAsync<OperationCanceledException>(async () => await sut.ExecuteAsync(context));
             }
         }
 
-        [Test]
+        [Fact]
         public void execute_async_pauses_if_context_is_paused()
         {
             var sut = new SayActionBuilder().Build();
@@ -68,9 +67,10 @@
             }
         }
 
-        [TestCase("hello")]
-        [TestCase("hello, world")]
-        [TestCase("you've got nothing to say. nothing but the one thing.")]
+        [Theory]
+        [InlineData("hello")]
+        [InlineData("hello, world")]
+        [InlineData("you've got nothing to say. nothing but the one thing.")]
         public async Task execute_async_passes_the_speech_text_onto_the_speech_service(string speechText)
         {
             var speechService = new SpeechServiceMock(MockBehavior.Loose);

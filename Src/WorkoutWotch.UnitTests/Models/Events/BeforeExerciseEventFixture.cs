@@ -1,17 +1,17 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Events
 {
-    using NUnit.Framework;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Events;
+    using Xunit;
 
-    [TestFixture]
     public class BeforeExerciseEventFixture
     {
-        [TestCase("")]
-        [TestCase("  ")]
-        [TestCase("Push-ups")]
-        [TestCase("Chin-ups")]
-        [TestCase("Sit-ups")]
+        [Theory]
+        [InlineData("")]
+        [InlineData("  ")]
+        [InlineData("Push-ups")]
+        [InlineData("Chin-ups")]
+        [InlineData("Sit-ups")]
         public void to_string_returns_correct_representation(string exerciseName)
         {
             var exercise = new ExerciseBuilder()
@@ -20,7 +20,7 @@
 
             var sut = new BeforeExerciseEvent(new ExecutionContext(), exercise);
 
-            Assert.AreEqual("Before Exercise '" + exerciseName + "'", sut.ToString());
+            Assert.Equal("Before Exercise '" + exerciseName + "'", sut.ToString());
         }
     }
 }

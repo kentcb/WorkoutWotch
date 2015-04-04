@@ -2,39 +2,40 @@
 {
     using System;
     using Kent.Boogaart.PCLMock;
-    using NUnit.Framework;
     using Sprache;
     using WorkoutWotch.Models.Parsers;
     using WorkoutWotch.UnitTests.Services.Container.Mocks;
+    using Xunit;
 
-    [TestFixture]
     public class SayActionParserFixture
     {
-        [Test]
+        [Fact]
         public void get_parser_throws_if_speech_service_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => SayActionParser.GetParser(null));
         }
 
-        [TestCase("Say 'hello'", "hello")]
-        [TestCase(@"Say ""hello""", "hello")]
-        [TestCase("say 'hello'", "hello")]
-        [TestCase("SAY 'hello'", "hello")]
-        [TestCase("Say    \t \t   'hello'", "hello")]
-        [TestCase(@"Say 'hello, how are you \'friend\'?'", "hello, how are you 'friend'?")]
+        [Theory]
+        [InlineData("Say 'hello'", "hello")]
+        [InlineData(@"Say ""hello""", "hello")]
+        [InlineData("say 'hello'", "hello")]
+        [InlineData("SAY 'hello'", "hello")]
+        [InlineData("Say    \t \t   'hello'", "hello")]
+        [InlineData(@"Say 'hello, how are you \'friend\'?'", "hello, how are you 'friend'?")]
         public void can_parse_correctly_formatted_input(string input, string expectedSpeechText)
         {
             var result = SayActionParser.GetParser(new ContainerServiceMock(MockBehavior.Loose)).Parse(input);
             Assert.NotNull(result);
-            Assert.AreEqual(expectedSpeechText, result.SpeechText);
+            Assert.Equal(expectedSpeechText, result.SpeechText);
         }
 
-        [TestCase("  Say 'hello'")]
-        [TestCase("Say\n 'hello'")]
-        [TestCase("Say")]
-        [TestCase("Say hello")]
-        [TestCase("Sai 'hello'")]
-        [TestCase("Say'hello'")]
+        [Theory]
+        [InlineData("  Say 'hello'")]
+        [InlineData("Say\n 'hello'")]
+        [InlineData("Say")]
+        [InlineData("Say hello")]
+        [InlineData("Sai 'hello'")]
+        [InlineData("Say'hello'")]
         public void cannot_parse_incorrectly_formatted_input(string input)
         {
             var result = SayActionParser.GetParser(new ContainerServiceMock(MockBehavior.Loose))(new Input(input));

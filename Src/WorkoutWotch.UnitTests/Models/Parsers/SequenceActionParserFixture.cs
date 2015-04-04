@@ -3,44 +3,44 @@
     using System;
     using System.Linq;
     using Kent.Boogaart.PCLMock;
-    using NUnit.Framework;
     using Sprache;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Models.Parsers;
     using WorkoutWotch.UnitTests.Services.Container.Mocks;
+    using Xunit;
 
-    [TestFixture]
     public class SequenceActionParserFixture
     {
-        [Test]
+        [Fact]
         public void get_parser_throws_if_indent_level_is_less_than_zero()
         {
             Assert.Throws<ArgumentException>(() => SequenceActionParser.GetParser(-1, new ContainerServiceMock()));
         }
 
-        [Test]
+        [Fact]
         public void get_parser_throws_if_container_service_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => SequenceActionParser.GetParser(0, null));
         }
 
-        [TestCase(
+        [Theory]
+        [InlineData(
             "Sequence:\n  * Say 'foo'\n  * Wait for 2s",
             0,
             new [] { typeof(SayAction), typeof(WaitAction) })]
-        [TestCase(
+        [InlineData(
             "Sequence:\n    * Say 'foo'\n    * Wait for 2s",
             1,
             new [] { typeof(SayAction), typeof(WaitAction) })]
-        [TestCase(
+        [InlineData(
             "SEQUENCE:\n  * Say 'foo'\n  * Wait for 2s",
             0,
             new [] { typeof(SayAction), typeof(WaitAction) })]
-        [TestCase(
+        [InlineData(
             "Sequence:  \t  \n  * Say 'foo'\n  * Say 'bar'\n  * Say 'biz'",
             0,
             new [] { typeof(SayAction), typeof(SayAction), typeof(SayAction) })]
-        [TestCase(
+        [InlineData(
             "Sequence:\n\n\t\t  \n    \n\n  * Say 'foo'\n  * Say 'bar'\n  * Say 'biz'",
             0,
             new [] { typeof(SayAction), typeof(SayAction), typeof(SayAction) })]
@@ -54,10 +54,11 @@
             Assert.True(result.Children.Select(x => x.GetType()).SequenceEqual(expectedActionTypes));
         }
 
-        [TestCase("Seequence:\n  * Say 'foo'", 0)]
-        [TestCase("  Sequence:\n  * Say 'foo'", 0)]
-        [TestCase("Sequence:\n", 0)]
-        [TestCase("Sequence:\n  * Say 'foo'", 1)]
+        [Theory]
+        [InlineData("Seequence:\n  * Say 'foo'", 0)]
+        [InlineData("  Sequence:\n  * Say 'foo'", 0)]
+        [InlineData("Sequence:\n", 0)]
+        [InlineData("Sequence:\n  * Say 'foo'", 1)]
         public void cannot_parse_invalid_input(string input, int indentLevel)
         {
             var result = SequenceActionParser

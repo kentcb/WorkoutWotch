@@ -2,14 +2,13 @@
 {
     using System;
     using System.Threading.Tasks;
-    using NUnit.Framework;
     using ReactiveUI;
     using WorkoutWotch.Models;
+    using Xunit;
 
-    [TestFixture]
     public class ExecutionContextFixture
     {
-        [Test]
+        [Fact]
         public void cancel_cancels_the_cancellation_token()
         {
             var sut = new ExecutionContext();
@@ -22,7 +21,7 @@
             Assert.True(token.IsCancellationRequested);
         }
 
-        [Test]
+        [Fact]
         public void cancel_raises_property_changed_for_is_cancelled()
         {
             var sut = new ExecutionContext();
@@ -35,7 +34,7 @@
             Assert.True(called);
         }
 
-        [Test]
+        [Fact]
         public void wait_while_paused_async_completes_immediately_if_not_paused()
         {
             var sut = new ExecutionContext();
@@ -43,7 +42,7 @@
             Assert.True(task.IsCompleted);
         }
 
-        [Test]
+        [Fact]
         public void wait_while_paused_async_waits_until_unpaused()
         {
             var sut = new ExecutionContext();
@@ -55,7 +54,7 @@
             Assert.True(task.Wait(TimeSpan.FromMilliseconds(10)));
         }
 
-        [Test]
+        [Fact]
         public void wait_while_paused_async_cancels_if_the_context_is_cancelled()
         {
             var sut = new ExecutionContext();
@@ -66,75 +65,75 @@
             sut.Cancel();
 
             var ex = Assert.Throws<AggregateException>(() => task.Wait(TimeSpan.FromMilliseconds(500)));
-            Assert.AreEqual(1, ex.InnerExceptions.Count);
+            Assert.Equal(1, ex.InnerExceptions.Count);
             Assert.True(ex.InnerExceptions[0] is TaskCanceledException);
         }
 
-        [Test]
+        [Fact]
         public void add_progress_adds_to_the_progress()
         {
             var sut = new ExecutionContext();
-            Assert.AreEqual(TimeSpan.Zero, sut.Progress);
+            Assert.Equal(TimeSpan.Zero, sut.Progress);
 
             sut.AddProgress(TimeSpan.FromMilliseconds(100));
-            Assert.AreEqual(TimeSpan.FromMilliseconds(100), sut.Progress);
+            Assert.Equal(TimeSpan.FromMilliseconds(100), sut.Progress);
 
             sut.AddProgress(TimeSpan.FromMilliseconds(150));
-            Assert.AreEqual(TimeSpan.FromMilliseconds(250), sut.Progress);
+            Assert.Equal(TimeSpan.FromMilliseconds(250), sut.Progress);
 
             sut.AddProgress(TimeSpan.FromMilliseconds(13));
-            Assert.AreEqual(TimeSpan.FromMilliseconds(263), sut.Progress);
+            Assert.Equal(TimeSpan.FromMilliseconds(263), sut.Progress);
         }
 
-        [Test]
+        [Fact]
         public void add_progress_adds_progress_to_the_current_exercise()
         {
             var sut = new ExecutionContext();
-            Assert.AreEqual(TimeSpan.Zero, sut.CurrentExerciseProgress);
+            Assert.Equal(TimeSpan.Zero, sut.CurrentExerciseProgress);
 
             sut.AddProgress(TimeSpan.FromMilliseconds(100));
-            Assert.AreEqual(TimeSpan.FromMilliseconds(100), sut.CurrentExerciseProgress);
+            Assert.Equal(TimeSpan.FromMilliseconds(100), sut.CurrentExerciseProgress);
 
             sut.AddProgress(TimeSpan.FromMilliseconds(150));
-            Assert.AreEqual(TimeSpan.FromMilliseconds(250), sut.CurrentExerciseProgress);
+            Assert.Equal(TimeSpan.FromMilliseconds(250), sut.CurrentExerciseProgress);
 
             sut.AddProgress(TimeSpan.FromMilliseconds(13));
-            Assert.AreEqual(TimeSpan.FromMilliseconds(263), sut.CurrentExerciseProgress);
+            Assert.Equal(TimeSpan.FromMilliseconds(263), sut.CurrentExerciseProgress);
         }
 
-        [Test]
+        [Fact]
         public void add_progress_reduces_outstanding_skip_ahead()
         {
             var sut = new ExecutionContext(TimeSpan.FromSeconds(3));
-            Assert.AreEqual(TimeSpan.FromSeconds(3), sut.SkipAhead);
+            Assert.Equal(TimeSpan.FromSeconds(3), sut.SkipAhead);
 
             sut.AddProgress(TimeSpan.FromMilliseconds(100));
-            Assert.AreEqual(TimeSpan.FromSeconds(2.9), sut.SkipAhead);
+            Assert.Equal(TimeSpan.FromSeconds(2.9), sut.SkipAhead);
 
             sut.AddProgress(TimeSpan.FromMilliseconds(150));
-            Assert.AreEqual(TimeSpan.FromSeconds(2.75), sut.SkipAhead);
+            Assert.Equal(TimeSpan.FromSeconds(2.75), sut.SkipAhead);
 
             sut.AddProgress(TimeSpan.FromMilliseconds(1000));
-            Assert.AreEqual(TimeSpan.FromSeconds(1.75), sut.SkipAhead);
+            Assert.Equal(TimeSpan.FromSeconds(1.75), sut.SkipAhead);
         }
 
-        [Test]
+        [Fact]
         public void add_progress_does_not_reduce_skip_ahead_if_it_is_already_zero()
         {
             var sut = new ExecutionContext(TimeSpan.FromSeconds(1));
-            Assert.AreEqual(TimeSpan.FromSeconds(1), sut.SkipAhead);
+            Assert.Equal(TimeSpan.FromSeconds(1), sut.SkipAhead);
 
             sut.AddProgress(TimeSpan.FromMilliseconds(900));
-            Assert.AreEqual(TimeSpan.FromSeconds(0.1), sut.SkipAhead);
+            Assert.Equal(TimeSpan.FromSeconds(0.1), sut.SkipAhead);
 
             sut.AddProgress(TimeSpan.FromMilliseconds(150));
-            Assert.AreEqual(TimeSpan.Zero, sut.SkipAhead);
+            Assert.Equal(TimeSpan.Zero, sut.SkipAhead);
 
             sut.AddProgress(TimeSpan.FromMilliseconds(1000));
-            Assert.AreEqual(TimeSpan.Zero, sut.SkipAhead);
+            Assert.Equal(TimeSpan.Zero, sut.SkipAhead);
         }
 
-        [Test]
+        [Fact]
         public void setting_current_exercise_resets_the_current_exercise_progress_to_zero()
         {
             var sut = new ExecutionContext();
@@ -144,16 +143,16 @@
                 .WithRepetitionCount(10)
                 .Build());
             sut.AddProgress(TimeSpan.FromMilliseconds(100));
-            Assert.AreEqual(TimeSpan.FromMilliseconds(100), sut.CurrentExerciseProgress);
+            Assert.Equal(TimeSpan.FromMilliseconds(100), sut.CurrentExerciseProgress);
 
             sut.SetCurrentExercise(new ExerciseBuilder()
                 .WithSetCount(3)
                 .WithRepetitionCount(10)
                 .Build());
-            Assert.AreEqual(TimeSpan.Zero, sut.CurrentExerciseProgress);
+            Assert.Equal(TimeSpan.Zero, sut.CurrentExerciseProgress);
 
             sut.AddProgress(TimeSpan.FromMilliseconds(150));
-            Assert.AreEqual(TimeSpan.FromMilliseconds(150), sut.CurrentExerciseProgress);
+            Assert.Equal(TimeSpan.FromMilliseconds(150), sut.CurrentExerciseProgress);
         }
     }
 }

@@ -6,52 +6,53 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Kent.Boogaart.PCLMock;
-    using NUnit.Framework;
     using ReactiveUI;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.UnitTests.Services.Delay.Mocks;
+    using Xunit;
 
-    [TestFixture]
     public class WaitActionFixture
     {
-        [Test]
+        [Fact]
         public void ctor_throws_if_delay_service_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new WaitAction(null, TimeSpan.Zero));
         }
 
-        [Test]
+        [Fact]
         public void ctor_throws_if_delay_is_less_than_zero()
         {
             Assert.Throws<ArgumentException>(() => new WaitAction(new DelayServiceMock(), TimeSpan.FromSeconds(-1)));
         }
 
-        [TestCase(0)]
-        [TestCase(100)]
-        [TestCase(1000)]
-        [TestCase(23498)]
+        [Theory]
+        [InlineData(0)]
+        [InlineData(100)]
+        [InlineData(1000)]
+        [InlineData(23498)]
         public void duration_yields_the_duration_passed_into_ctor(int delayInMs)
         {
             var sut = new WaitActionBuilder()
                 .WithDelay(TimeSpan.FromMilliseconds(delayInMs))
                 .Build();
 
-            Assert.AreEqual(TimeSpan.FromMilliseconds(delayInMs), sut.Duration);
+            Assert.Equal(TimeSpan.FromMilliseconds(delayInMs), sut.Duration);
         }
 
-        [Test]
-        public void execute_async_throws_if_context_is_null()
+        [Fact]
+        public async Task execute_async_throws_if_context_is_null()
         {
             var sut = new WaitActionBuilder().Build();
 
-            Assert.Throws<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
-        [TestCase(0)]
-        [TestCase(100)]
-        [TestCase(1000)]
-        [TestCase(23498)]
+        [Theory]
+        [InlineData(0)]
+        [InlineData(100)]
+        [InlineData(1000)]
+        [InlineData(23498)]
         public async Task execute_async_breaks_for_the_specified_delay(int delayInMs)
         {
             var delayService = new DelayServiceMock();
@@ -69,12 +70,13 @@
 
             await sut.ExecuteAsync(new ExecutionContext());
 
-            Assert.AreEqual(TimeSpan.FromMilliseconds(delayInMs), totalDelay);
+            Assert.Equal(TimeSpan.FromMilliseconds(delayInMs), totalDelay);
         }
 
-        [TestCase(850, 800, 50)]
-        [TestCase(850, 849, 1)]
-        [TestCase(3478, 2921, 557)]
+        [Theory]
+        [InlineData(850, 800, 50)]
+        [InlineData(850, 849, 1)]
+        [InlineData(3478, 2921, 557)]
         public async Task execute_async_skips_ahead_if_the_context_has_skip_ahead(int delayInMs, int skipInMs, int expectedDelayInMs)
         {
             var delayService = new DelayServiceMock();
@@ -92,12 +94,13 @@
 
             await sut.ExecuteAsync(new ExecutionContext(TimeSpan.FromMilliseconds(skipInMs)));
 
-            Assert.AreEqual(TimeSpan.FromMilliseconds(expectedDelayInMs), totalDelay);
+            Assert.Equal(TimeSpan.FromMilliseconds(expectedDelayInMs), totalDelay);
         }
 
-        [TestCase(850, 800)]
-        [TestCase(850, 849)]
-        [TestCase(3478, 2921)]
+        [Theory]
+        [InlineData(850, 800)]
+        [InlineData(850, 849)]
+        [InlineData(3478, 2921)]
         public async Task execute_async_skips_ahead_if_the_context_has_skip_ahead_even_if_the_context_is_paused(int delayInMs, int skipInMs)
         {
             var delayService = new DelayServiceMock();
@@ -128,7 +131,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_reports_progress()
         {
             var delayService = new DelayServiceMock(MockBehavior.Loose);
@@ -139,15 +142,15 @@
 
             using (var context = new ExecutionContext())
             {
-                Assert.AreEqual(TimeSpan.Zero, context.Progress);
+                Assert.Equal(TimeSpan.Zero, context.Progress);
 
                 await sut.ExecuteAsync(context);
 
-                Assert.AreEqual(TimeSpan.FromMilliseconds(50), context.Progress);
+                Assert.Equal(TimeSpan.FromMilliseconds(50), context.Progress);
             }
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_reports_progress_correctly_even_if_the_skip_ahead_exceeds_the_wait_duration()
         {
             var delayService = new DelayServiceMock(MockBehavior.Loose);
@@ -158,16 +161,16 @@
 
             using (var context = new ExecutionContext(TimeSpan.FromMilliseconds(100)))
             {
-                Assert.AreEqual(TimeSpan.Zero, context.Progress);
+                Assert.Equal(TimeSpan.Zero, context.Progress);
 
                 await sut.ExecuteAsync(context);
 
-                Assert.AreEqual(TimeSpan.FromMilliseconds(50), context.Progress);
+                Assert.Equal(TimeSpan.FromMilliseconds(50), context.Progress);
             }
         }
 
-        [Test]
-        public void execute_async_bails_out_if_context_is_cancelled()
+        [Fact]
+        public async Task execute_async_bails_out_if_context_is_cancelled()
         {
             var delayService = new DelayServiceMock();
             var delayCallCount = 0;
@@ -191,12 +194,12 @@
                     .WithDelay(TimeSpan.FromSeconds(50))
                     .Build();
 
-                Assert.Throws<OperationCanceledException>(async () => await sut.ExecuteAsync(context));
+                await Assert.ThrowsAsync<OperationCanceledException>(async () => await sut.ExecuteAsync(context));
                 Assert.True(context.IsCancelled);
             }
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_pauses_if_context_is_paused()
         {
             var delayService = new DelayServiceMock();

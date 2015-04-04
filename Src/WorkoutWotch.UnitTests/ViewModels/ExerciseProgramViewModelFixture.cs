@@ -5,7 +5,6 @@
     using System.Reactive.Threading.Tasks;
     using System.Threading.Tasks;
     using Kent.Boogaart.PCLMock;
-    using NUnit.Framework;
     using ReactiveUI;
     using WorkoutWotch.Models;
     using WorkoutWotch.Services.Delay;
@@ -15,31 +14,32 @@
     using WorkoutWotch.UnitTests.Reactive;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
     using WorkoutWotch.ViewModels;
+    using Xunit;
 
-    [TestFixture]
     public class ExerciseProgramViewModelFixture
     {
-        [Test]
+        [Fact]
         public void ctor_throws_if_logger_service_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new ExerciseProgramViewModel(null, new TestSchedulerService(), new ExerciseProgramBuilder().Build()));
         }
 
-        [Test]
+        [Fact]
         public void ctor_throws_if_scheduler_service_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new ExerciseProgramViewModel(new LoggerServiceMock(), null, new ExerciseProgramBuilder().Build()));
         }
 
-        [Test]
+        [Fact]
         public void ctor_throws_if_model_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new ExerciseProgramViewModel(new LoggerServiceMock(), new TestSchedulerService(), null));
         }
 
-        [TestCase("Name")]
-        [TestCase("Some name")]
-        [TestCase("Another name")]
+        [Theory]
+        [InlineData("Name")]
+        [InlineData("Some name")]
+        [InlineData("Another name")]
         public void name_returns_name_in_model(string name)
         {
             var sut = new ExerciseProgramViewModelBuilder()
@@ -47,12 +47,13 @@
                     .WithName(name))
                 .Build();
 
-            Assert.AreEqual(name, sut.Name);
+            Assert.Equal(name, sut.Name);
         }
 
-        [TestCase(239)]
-        [TestCase(1)]
-        [TestCase(232389)]
+        [Theory]
+        [InlineData(239)]
+        [InlineData(1)]
+        [InlineData(232389)]
         public void duration_returns_duration_in_model(int durationInMs)
         {
             var duration = TimeSpan.FromMilliseconds(durationInMs);
@@ -63,10 +64,10 @@
                             .WithDelay(duration))))
                 .Build();
 
-            Assert.AreEqual(duration, sut.Duration);
+            Assert.Equal(duration, sut.Duration);
         }
 
-        [Test]
+        [Fact]
         public void exercises_returns_exercises_in_model()
         {
             var sut = new ExerciseProgramViewModelBuilder()
@@ -78,12 +79,12 @@
                 .Build();
 
             Assert.NotNull(sut.Exercises);
-            Assert.AreEqual(2, sut.Exercises.Count);
-            Assert.AreEqual("Exercise 1", sut.Exercises[0].Name);
-            Assert.AreEqual("Exercise 2", sut.Exercises[1].Name);
+            Assert.Equal(2, sut.Exercises.Count);
+            Assert.Equal("Exercise 1", sut.Exercises[0].Name);
+            Assert.Equal("Exercise 2", sut.Exercises[1].Name);
         }
 
-        [Test]
+        [Fact]
         public void is_started_is_false_by_default()
         {
             var sut = new ExerciseProgramViewModelBuilder().Build();
@@ -91,7 +92,7 @@
             Assert.False(sut.IsStarted);
         }
 
-        [Test]
+        [Fact]
         public async Task is_started_cycles_correctly_if_start_command_is_executed()
         {
             var scheduler = new TestSchedulerService();
@@ -117,7 +118,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void is_start_visible_is_true_by_default()
         {
             var sut = new ExerciseProgramViewModelBuilder().Build();
@@ -125,7 +126,7 @@
             Assert.True(sut.IsStartVisible);
         }
 
-        [Test]
+        [Fact]
         public async Task is_start_visible_cycles_correctly_if_start_command_is_executed()
         {
             var scheduler = new TestSchedulerService();
@@ -151,7 +152,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void is_paused_is_false_by_default()
         {
             var sut = new ExerciseProgramViewModelBuilder().Build();
@@ -159,7 +160,7 @@
             Assert.False(sut.IsPaused);
         }
 
-        [Test]
+        [Fact]
         public async Task is_paused_cycles_correctly_if_pause_command_is_executed()
         {
             var scheduler = new TestSchedulerService();
@@ -195,7 +196,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void is_pause_visible_is_false_by_default()
         {
             var sut = new ExerciseProgramViewModelBuilder().Build();
@@ -203,7 +204,7 @@
             Assert.False(sut.IsPauseVisible);
         }
 
-        [Test]
+        [Fact]
         public async Task is_pause_visible_cycles_correctly_if_start_command_is_executed()
         {
             var scheduler = new TestSchedulerService();
@@ -229,7 +230,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public async Task is_pause_visible_cycles_correctly_if_pause_command_is_executed()
         {
             var scheduler = new TestSchedulerService();
@@ -265,7 +266,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void is_resume_visible_is_false_by_default()
         {
             var sut = new ExerciseProgramViewModelBuilder().Build();
@@ -273,7 +274,7 @@
             Assert.False(sut.IsResumeVisible);
         }
 
-        [Test]
+        [Fact]
         public async Task is_resume_visible_cycles_correctly_if_start_command_is_executed_and_execution_is_paused()
         {
             var scheduler = new TestSchedulerService();
@@ -309,7 +310,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public async Task progress_time_span_is_updated_throughout_execution()
         {
             var scheduler = new TestSchedulerService();
@@ -347,13 +348,13 @@
 
                 var progressTimeSpan = await progressTimeSpanTask;
 
-                Assert.AreEqual(TimeSpan.Zero, progressTimeSpan[0]);
-                Assert.AreEqual(TimeSpan.FromSeconds(1), progressTimeSpan[1]);
-                Assert.AreEqual(TimeSpan.FromSeconds(4), progressTimeSpan[2]);
+                Assert.Equal(TimeSpan.Zero, progressTimeSpan[0]);
+                Assert.Equal(TimeSpan.FromSeconds(1), progressTimeSpan[1]);
+                Assert.Equal(TimeSpan.FromSeconds(4), progressTimeSpan[2]);
             }
         }
 
-        [Test]
+        [Fact]
         public async Task progress_is_updated_throughout_execution()
         {
             var scheduler = new TestSchedulerService();
@@ -395,13 +396,13 @@
 
                 var progress = await progressTask;
 
-                Assert.AreEqual(0, progress[0]);
-                Assert.AreEqual(0.25, progress[1]);
-                Assert.AreEqual(0.75, progress[2]);
+                Assert.Equal(0, progress[0]);
+                Assert.Equal(0.25, progress[1]);
+                Assert.Equal(0.75, progress[2]);
             }
         }
 
-        [Test]
+        [Fact]
         public async Task skip_backwards_command_is_disabled_if_on_first_exercise()
         {
             var scheduler = new TestSchedulerService();
@@ -437,7 +438,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public async Task skip_backwards_command_is_enabled_if_sufficient_progress_has_been_made_through_first_exercise()
         {
             var scheduler = new TestSchedulerService();
@@ -472,7 +473,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public async Task skip_backwards_command_restarts_the_execution_context_from_the_start_of_the_current_exercise_if_sufficient_progress_has_been_made()
         {
             var scheduler = new TestSchedulerService();
@@ -514,13 +515,13 @@
 
                 var progress = await progressTask;
 
-                Assert.AreEqual(TimeSpan.Zero, progress[0]);
-                Assert.AreEqual(TimeSpan.FromSeconds(4), progress[1]);
-                Assert.AreEqual(TimeSpan.Zero, progress[2]);
+                Assert.Equal(TimeSpan.Zero, progress[0]);
+                Assert.Equal(TimeSpan.FromSeconds(4), progress[1]);
+                Assert.Equal(TimeSpan.Zero, progress[2]);
             }
         }
 
-        [Test]
+        [Fact]
         public async Task skip_backwards_command_restarts_the_execution_context_from_the_start_of_the_previous_exercise_if_the_current_exercise_if_only_recently_started()
         {
             var scheduler = new TestSchedulerService();
@@ -577,14 +578,14 @@
 
                 var progress = await progressTask;
 
-                Assert.AreEqual(TimeSpan.Zero, progress[0]);
-                Assert.AreEqual(TimeSpan.FromSeconds(10), progress[1]);
-                Assert.AreEqual(TimeSpan.FromSeconds(10.5), progress[2]);
-                Assert.AreEqual(TimeSpan.Zero, progress[3]);
+                Assert.Equal(TimeSpan.Zero, progress[0]);
+                Assert.Equal(TimeSpan.FromSeconds(10), progress[1]);
+                Assert.Equal(TimeSpan.FromSeconds(10.5), progress[2]);
+                Assert.Equal(TimeSpan.Zero, progress[3]);
             }
         }
 
-        [Test]
+        [Fact]
         public async Task skip_forwards_command_is_disabled_if_on_last_exercise()
         {
             var scheduler = new TestSchedulerService();
@@ -639,7 +640,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public async Task skip_forwards_command_skips_to_the_next_exercise()
         {
             var scheduler = new TestSchedulerService();
@@ -694,12 +695,12 @@
 
                 var progress = await progressTask;
 
-                Assert.AreEqual(TimeSpan.Zero, progress[0]);
-                Assert.AreEqual(TimeSpan.FromSeconds(10), progress[1]);
+                Assert.Equal(TimeSpan.Zero, progress[0]);
+                Assert.Equal(TimeSpan.FromSeconds(10), progress[1]);
             }
         }
 
-        [Test]
+        [Fact]
         public async Task current_exercise_reflects_that_in_the_execution_context()
         {
             var scheduler = new TestSchedulerService();
@@ -776,10 +777,10 @@
 
                 var currentExercises = await currentExercisesTask;
 
-                Assert.AreEqual("Exercise 1", currentExercises[0].Name);
-                Assert.AreEqual("Exercise 2", currentExercises[1].Name);
-                Assert.AreEqual("Exercise 3", currentExercises[2].Name);
-                Assert.AreEqual("Exercise 2", currentExercises[3].Name);
+                Assert.Equal("Exercise 1", currentExercises[0].Name);
+                Assert.Equal("Exercise 2", currentExercises[1].Name);
+                Assert.Equal("Exercise 3", currentExercises[2].Name);
+                Assert.Equal("Exercise 2", currentExercises[3].Name);
             }
         }
     }

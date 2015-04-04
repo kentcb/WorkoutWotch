@@ -4,28 +4,27 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Kent.Boogaart.PCLMock;
-    using NUnit.Framework;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.UnitTests.Models.Mocks;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
+    using Xunit;
 
-    [TestFixture]
     public class DoNotAwaitActionFixture
     {
-        [Test]
+        [Fact]
         public void ctor_throws_if_logger_service_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new DoNotAwaitAction(null, new ActionMock()));
         }
 
-        [Test]
+        [Fact]
         public void ctor_throws_if_inner_action_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new DoNotAwaitAction(new LoggerServiceMock(), null));
         }
 
-        [Test]
+        [Fact]
         public void duration_always_returns_zero_regardless_of_inner_action_duration()
         {
             var action = new ActionMock();
@@ -38,18 +37,18 @@
                 .WithInnerAction(action)
                 .Build();
 
-            Assert.AreEqual(TimeSpan.Zero, sut.Duration);
+            Assert.Equal(TimeSpan.Zero, sut.Duration);
         }
 
-        [Test]
-        public void execute_async_throws_if_the_context_is_null()
+        [Fact]
+        public async Task execute_async_throws_if_the_context_is_null()
         {
             var sut = new DoNotAwaitActionBuilder().Build();
 
-            Assert.Throws<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
-        [Test]
+        [Fact]
         public void execute_async_does_not_wait_for_inner_actions_execution_to_complete_before_itself_completing()
         {
             var action = new ActionMock();
@@ -68,7 +67,7 @@
             Assert.True(task.Wait(TimeSpan.FromSeconds(3)));
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_logs_any_error_raised_by_the_inner_action()
         {
             var waitHandle = new ManualResetEventSlim();

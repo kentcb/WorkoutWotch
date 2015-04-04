@@ -3,35 +3,34 @@
     using System;
     using System.Threading.Tasks;
     using Kent.Boogaart.PCLMock;
-    using NUnit.Framework;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.UnitTests.Models.Mocks;
+    using Xunit;
 
-    [TestFixture]
     public class SequenceActionFixture
     {
-        [Test]
+        [Fact]
         public void ctor_throws_if_children_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new SequenceAction(null));
         }
 
-        [Test]
+        [Fact]
         public void ctor_throws_if_any_child_is_null()
         {
             Assert.Throws<ArgumentException>(() => new SequenceAction(new [] { new ActionMock(), null, new ActionMock() }));
         }
 
-        [Test]
+        [Fact]
         public void duration_is_zero_if_there_are_no_child_actions()
         {
             var sut = new SequenceActionBuilder().Build();
 
-            Assert.AreEqual(TimeSpan.Zero, sut.Duration);
+            Assert.Equal(TimeSpan.Zero, sut.Duration);
         }
 
-        [Test]
+        [Fact]
         public void duration_is_calculated_as_the_sum_of_child_durations()
         {
             var action1 = new ActionMock();
@@ -56,18 +55,18 @@
                 .AddChild(action3)
                 .Build();
 
-            Assert.AreEqual(TimeSpan.FromSeconds(18), sut.Duration);
+            Assert.Equal(TimeSpan.FromSeconds(18), sut.Duration);
         }
 
-        [Test]
-        public void execute_async_throws_if_context_is_null()
+        [Fact]
+        public async Task execute_async_throws_if_context_is_null()
         {
             var sut = new SequenceActionBuilder().Build();
 
-            Assert.Throws<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_executes_each_child_action()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
@@ -97,7 +96,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_skips_child_actions_that_are_shorter_than_the_skip_ahead()
         {
             var action1 = new ActionMock();
@@ -140,7 +139,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_skips_child_actions_that_are_shorter_than_the_skip_ahead_even_if_the_context_is_paused()
         {
             var action1 = new ActionMock();
@@ -184,8 +183,8 @@
             }
         }
 
-        [Test]
-        public void execute_async_stops_executing_if_the_context_is_cancelled()
+        [Fact]
+        public async Task execute_async_stops_executing_if_the_context_is_cancelled()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
             var action2 = new ActionMock(MockBehavior.Loose);
@@ -203,7 +202,7 @@
                     .Do(context.Cancel)
                     .Return(Task.FromResult(true));
 
-                Assert.Throws<OperationCanceledException>(async () => await sut.ExecuteAsync(context));
+                await Assert.ThrowsAsync<OperationCanceledException>(async () => await sut.ExecuteAsync(context));
 
                 action1
                     .Verify(x => x.ExecuteAsync(context))

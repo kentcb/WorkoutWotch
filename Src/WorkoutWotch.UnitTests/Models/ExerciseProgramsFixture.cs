@@ -3,28 +3,28 @@
     using System;
     using System.Linq;
     using Kent.Boogaart.PCLMock;
-    using NUnit.Framework;
     using WorkoutWotch.Models;
     using WorkoutWotch.UnitTests.Services.Container.Mocks;
+    using Xunit;
 
-    [TestFixture]
     public class ExerciseProgramsFixture
     {
-        [Test]
+        [Fact]
         public void ctor_throws_if_programs_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new ExercisePrograms(null));
         }
 
-        [Test]
+        [Fact]
         public void ctor_throws_if_any_program_is_null()
         {
             Assert.Throws<ArgumentException>(() => new ExercisePrograms(new [] { new ExerciseProgramBuilder().Build(), null }));
         }
 
-        [TestCase(0)]
-        [TestCase(3)]
-        [TestCase(10)]
+        [Theory]
+        [InlineData(0)]
+        [InlineData(3)]
+        [InlineData(10)]
         public void programs_yields_the_programs_passed_into_ctor(int programCount)
         {
             var programs = Enumerable.Range(0, programCount)
@@ -36,26 +36,27 @@
                 .AddPrograms(programs)
                 .Build();
 
-            Assert.AreEqual(programCount, sut.Programs.Count);
+            Assert.Equal(programCount, sut.Programs.Count);
             Assert.True(sut.Programs.SequenceEqual(programs));
         }
 
-        [Test]
+        [Fact]
         public void parse_throws_if_input_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => ExercisePrograms.Parse(null, new ContainerServiceMock()));
         }
 
-        [Test]
+        [Fact]
         public void parse_throws_if_container_service_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => ExercisePrograms.Parse("input", null));
         }
 
-        [TestCase(
+        [Theory]
+        [InlineData(
             "# first\n",
             new [] { "first" })]
-        [TestCase(
+        [InlineData(
             "# first\n# second\n# third\n",
             new [] { "first", "second", "third" })]
         public void parse_returns_an_appropriate_exercise_programs_instance(string input, string[] expectedProgramNames)
@@ -66,22 +67,23 @@
             Assert.True(result.Programs.Select(x => x.Name).SequenceEqual(expectedProgramNames));
         }
 
-        [Test]
+        [Fact]
         public void try_parse_throws_if_input_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => ExercisePrograms.TryParse(null, new ContainerServiceMock()));
         }
 
-        [Test]
+        [Fact]
         public void try_parse_throws_if_container_service_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => ExercisePrograms.TryParse("input", null));
         }
 
-        [TestCase(
+        [Theory]
+        [InlineData(
             "# first\n",
             new [] { "first" })]
-        [TestCase(
+        [InlineData(
             "# first\n# second\n# third\n",
             new [] { "first", "second", "third" })]
         public void try_parse_returns_an_appropriate_exercise_programs_instance(string input, string[] expectedProgramNames)

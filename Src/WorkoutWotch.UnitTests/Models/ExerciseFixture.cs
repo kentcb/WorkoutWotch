@@ -8,94 +8,96 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Kent.Boogaart.PCLMock;
-    using NUnit.Framework;
     using ReactiveUI;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Events;
     using WorkoutWotch.UnitTests.Models.Mocks;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
     using WorkoutWotch.UnitTests.Services.Speech.Mocks;
+    using Xunit;
 
-    [TestFixture]
     public class ExerciseFixture
     {
-        [Test]
+        [Fact]
         public void ctor_throws_if_logger_service_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new Exercise(null, new SpeechServiceMock(), "name", 3, 10, Enumerable.Empty<MatcherWithAction>()));
         }
 
-        [Test]
+        [Fact]
         public void ctor_throws_if_speech_service_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new Exercise(new LoggerServiceMock(), null, "name", 3, 10, Enumerable.Empty<MatcherWithAction>()));
         }
 
-        [Test]
+        [Fact]
         public void ctor_throws_if_name_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), null, 3, 10, Enumerable.Empty<MatcherWithAction>()));
         }
 
-        [Test]
+        [Fact]
         public void ctor_throws_if_set_count_is_less_than_zero()
         {
             Assert.Throws<ArgumentException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "name", -3, 10, Enumerable.Empty<MatcherWithAction>()));
         }
 
-        [Test]
+        [Fact]
         public void ctor_throws_if_repetition_count_is_less_than_zero()
         {
             Assert.Throws<ArgumentException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "name", 3, -10, Enumerable.Empty<MatcherWithAction>()));
         }
 
-        [Test]
+        [Fact]
         public void ctor_throws_if_matchers_with_actions_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "name", 3, 10, null));
         }
 
-        [TestCase("Name")]
-        [TestCase("Some longer name")]
-        [TestCase("An exercise name with !@*&(*$#&^$).,/.<?][:[]; weird characters")]
+        [Theory]
+        [InlineData("Name")]
+        [InlineData("Some longer name")]
+        [InlineData("An exercise name with !@*&(*$#&^$).,/.<?][:[]; weird characters")]
         public void name_yields_the_name_passed_into_ctor(string name)
         {
             var sut = new ExerciseBuilder()
                 .WithName(name)
                 .Build();
-            Assert.AreEqual(name, sut.Name);
+            Assert.Equal(name, sut.Name);
         }
 
-        [TestCase(1)]
-        [TestCase(3)]
-        [TestCase(10)]
+        [Theory]
+        [InlineData(1)]
+        [InlineData(3)]
+        [InlineData(10)]
         public void set_count_yields_the_set_count_passed_into_ctor(int setCount)
         {
             var sut = new ExerciseBuilder()
                 .WithSetCount(setCount)
                 .Build();
-            Assert.AreEqual(setCount, sut.SetCount);
+            Assert.Equal(setCount, sut.SetCount);
         }
 
-        [TestCase(1)]
-        [TestCase(3)]
-        [TestCase(10)]
+        [Theory]
+        [InlineData(1)]
+        [InlineData(3)]
+        [InlineData(10)]
         public void repetition_count_yields_the_repetition_count_passed_into_ctor(int repetitionCount)
         {
             var sut = new ExerciseBuilder()
                 .WithRepetitionCount(repetitionCount)
                 .Build();
-            Assert.AreEqual(repetitionCount, sut.RepetitionCount);
+            Assert.Equal(repetitionCount, sut.RepetitionCount);
         }
 
-        [Test]
+        [Fact]
         public void duration_returns_zero_if_there_are_no_actions()
         {
             var sut = new ExerciseBuilder().Build();
-            Assert.AreEqual(TimeSpan.Zero, sut.Duration);
+            Assert.Equal(TimeSpan.Zero, sut.Duration);
         }
 
-        [Test]
+        [Fact]
         public void duration_returns_sum_of_action_durations()
         {
             var action1 = new ActionMock();
@@ -138,17 +140,17 @@
                 .AddMatcherWithAction(new MatcherWithAction(eventMatcher3, action3))
                 .Build();
 
-            Assert.AreEqual(TimeSpan.FromSeconds(30), sut.Duration);
+            Assert.Equal(TimeSpan.FromSeconds(30), sut.Duration);
         }
 
-        [Test]
-        public void execute_async_throws_if_execution_context_is_null()
+        [Fact]
+        public async Task execute_async_throws_if_execution_context_is_null()
         {
             var sut = new ExerciseBuilder().Build();
-            Assert.Throws<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_executes_all_appropriate_actions()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
@@ -196,7 +198,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_does_not_skip_zero_duration_actions()
         {
             var action = new ActionMock(MockBehavior.Loose);
@@ -220,7 +222,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_skips_actions_that_are_shorter_than_the_skip_ahead()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
@@ -278,7 +280,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_skips_actions_that_are_shorter_than_the_skip_ahead_even_if_the_context_is_paused()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
@@ -337,7 +339,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_updates_the_current_exercise_in_the_context()
         {
             var sut = new ExerciseBuilder().Build();
@@ -345,10 +347,10 @@
 
             await sut.ExecuteAsync(context);
 
-            Assert.AreSame(sut, context.CurrentExercise);
+            Assert.Same(sut, context.CurrentExercise);
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_updates_the_current_set_in_the_context()
         {
             var sut = new ExerciseBuilder()
@@ -365,13 +367,13 @@
             await sut.ExecuteAsync(context);
             var currentSets = await currentSetsTask;
 
-            Assert.AreEqual(3, currentSets.Count);
-            Assert.AreEqual(1, currentSets[0]);
-            Assert.AreEqual(2, currentSets[1]);
-            Assert.AreEqual(3, currentSets[2]);
+            Assert.Equal(3, currentSets.Count);
+            Assert.Equal(1, currentSets[0]);
+            Assert.Equal(2, currentSets[1]);
+            Assert.Equal(3, currentSets[2]);
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_updates_the_current_repetitions_in_the_context()
         {
             var sut = new ExerciseBuilder()
@@ -388,15 +390,15 @@
             await sut.ExecuteAsync(context);
             var currentRepetitions = await currentRepetitionsTask;
 
-            Assert.AreEqual(5, currentRepetitions.Count);
-            Assert.AreEqual(1, currentRepetitions[0]);
-            Assert.AreEqual(2, currentRepetitions[1]);
-            Assert.AreEqual(3, currentRepetitions[2]);
-            Assert.AreEqual(4, currentRepetitions[3]);
-            Assert.AreEqual(5, currentRepetitions[4]);
+            Assert.Equal(5, currentRepetitions.Count);
+            Assert.Equal(1, currentRepetitions[0]);
+            Assert.Equal(2, currentRepetitions[1]);
+            Assert.Equal(3, currentRepetitions[2]);
+            Assert.Equal(4, currentRepetitions[3]);
+            Assert.Equal(5, currentRepetitions[4]);
         }
 
-        [Test]
+        [Fact]
         public async Task execute_async_says_exercise_name_first()
         {
             var speechService = new SpeechServiceMock(MockBehavior.Loose);

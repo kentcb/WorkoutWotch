@@ -5,35 +5,34 @@
     using System.Reactive.Linq;
     using System.Threading.Tasks;
     using Kent.Boogaart.PCLMock;
-    using NUnit.Framework;
     using WorkoutWotch.Services.State;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
     using WorkoutWotch.UnitTests.Services.State.Mocks;
+    using Xunit;
 
-    [TestFixture]
     public class StateServiceFixture
     {
-        [Test]
+        [Fact]
         public void ctor_throws_if_blob_cache_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new StateService(null, new LoggerServiceMock()));
         }
 
-        [Test]
+        [Fact]
         public void ctor_throws_if_logger_service_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new StateService(new BlobCacheMock(), null));
         }
 
-        [Test]
-        public void get_async_throws_if_key_is_null()
+        [Fact]
+        public async Task get_async_throws_if_key_is_null()
         {
             var sut = new StateServiceBuilder().Build();
 
-            Assert.Throws<ArgumentNullException>(() => sut.GetAsync<string>(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.GetAsync<string>(null));
         }
 
-        [Test]
+        [Fact]
         public void get_async_forwards_the_call_onto_the_blob_cache()
         {
             var blobCache = new BlobCacheMock();
@@ -54,15 +53,15 @@
                 .WasCalledExactlyOnce();
         }
 
-        [Test]
-        public void set_async_throws_if_key_is_null()
+        [Fact]
+        public async Task set_async_throws_if_key_is_null()
         {
             var sut = new StateServiceBuilder().Build();
 
-            Assert.Throws<ArgumentNullException>(() => sut.SetAsync<string>(null, "foo"));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.SetAsync<string>(null, "foo"));
         }
 
-        [Test]
+        [Fact]
         public void set_async_forwards_the_call_onto_the_blob_cache()
         {
             var blobCache = new BlobCacheMock(MockBehavior.Loose);
@@ -83,15 +82,15 @@
                 .WasCalledExactlyOnce();
         }
 
-        [Test]
+        [Fact]
         public void remove_async_throws_if_key_is_null()
         {
             var sut = new StateServiceBuilder().Build();
 
-            Assert.Throws<ArgumentNullException>(() => sut.RemoveAsync<string>(null));
+            Assert.ThrowsAsync<ArgumentNullException>(() => sut.RemoveAsync<string>(null));
         }
 
-        [Test]
+        [Fact]
         public void remove_async_forwards_the_call_onto_the_blob_cache()
         {
             var blobCache = new BlobCacheMock(MockBehavior.Loose);
@@ -112,7 +111,7 @@
                 .WasCalledExactlyOnce();
         }
 
-        [Test]
+        [Fact]
         public async Task save_async_executes_all_tasks_returned_by_saved_callbacks()
         {
             var sut = new StateServiceBuilder().Build();
@@ -127,7 +126,7 @@
             Assert.True(secondExecuted);
         }
 
-        [Test]
+        [Fact]
         public async Task save_async_ignores_any_null_tasks_returned_by_saved_callbacks()
         {
             var logger = new LoggerMock(MockBehavior.Loose);
@@ -169,7 +168,7 @@
                 .WasNotCalled();
         }
 
-        [Test]
+        [Fact]
         public async Task save_async_does_not_fail_if_a_save_callback_fails()
         {
             var sut = new StateServiceBuilder().Build();
@@ -178,7 +177,7 @@
             await sut.SaveAsync();
         }
 
-        [Test]
+        [Fact]
         public async Task save_async_logs_an_error_if_a_save_callback_fails()
         {
             var logger = new LoggerMock(MockBehavior.Loose);
@@ -201,7 +200,7 @@
                 .WasCalledExactlyOnce();
         }
 
-        [Test]
+        [Fact]
         public void register_save_callback_throws_if_save_task_factory_is_null()
         {
             var sut = new StateServiceBuilder().Build();
@@ -209,7 +208,7 @@
             Assert.Throws<ArgumentNullException>(() => sut.RegisterSaveCallback(null));
         }
 
-        [Test]
+        [Fact]
         public async Task register_save_callback_returns_a_registration_handle_that_unregisters_the_callback_when_disposed()
         {
             var sut = new StateServiceBuilder().Build();
