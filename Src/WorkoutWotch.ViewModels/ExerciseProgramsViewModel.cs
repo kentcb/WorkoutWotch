@@ -1,6 +1,7 @@
 ﻿namespace WorkoutWotch.ViewModels
 {
     using System;
+    using System.Reactive;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Reactive.Threading.Tasks;
@@ -99,10 +100,18 @@
 
             safeDocuments
                 .Where(x => x.Source == DocumentSource.Cloud)
-                .Subscribe(async x => await this.stateService.SetAsync(exerciseProgramsCacheKey, x.Item))
+                .SelectMany(
+                    async x =>
+                    {
+                        await this.stateService.SetAsync(exerciseProgramsCacheKey, x.Item);
+                        return Unit.Default;
+                    })
+                .Subscribe()
                 .AddTo(this.disposables);
 
-            documents.Connect();
+            documents
+                .Connect()
+                .AddTo(this.disposables);
         }
 
         public ExerciseProgramsViewModelStatus Status
