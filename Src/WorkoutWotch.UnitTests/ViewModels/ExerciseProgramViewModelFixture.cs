@@ -178,21 +178,21 @@
                 await sut.WhenAnyValue(x => x.IsPaused)
                     .Where(x => !x)
                     .FirstAsync()
-                    .Timeout(TimeSpan.FromSeconds(3));
+                    .TimeoutIfTooSlow();
 
                 sut.StartCommand.Execute(null);
 
                 await sut.WhenAnyValue(x => x.IsPaused)
                     .Where(x => !x)
                     .FirstAsync()
-                    .Timeout(TimeSpan.FromSeconds(3));
+                    .TimeoutIfTooSlow();
 
                 sut.PauseCommand.Execute(null);
 
                 await sut.WhenAnyValue(x => x.IsPaused)
                     .Where(x => x)
                     .FirstAsync()
-                    .Timeout(TimeSpan.FromSeconds(3));
+                    .TimeoutIfTooSlow();
             }
         }
 
@@ -248,21 +248,21 @@
                 await sut.WhenAnyValue(x => x.IsPauseVisible)
                     .Where(x => !x)
                     .FirstAsync()
-                    .Timeout(TimeSpan.FromSeconds(3));
+                    .TimeoutIfTooSlow();
 
                 sut.StartCommand.Execute(null);
 
                 await sut.WhenAnyValue(x => x.IsPauseVisible)
                     .Where(x => x)
                     .FirstAsync()
-                    .Timeout(TimeSpan.FromSeconds(3));
+                    .TimeoutIfTooSlow();
 
                 sut.PauseCommand.Execute(null);
 
                 await sut.WhenAnyValue(x => x.IsPauseVisible)
                     .Where(x => !x)
                     .FirstAsync()
-                    .Timeout(TimeSpan.FromSeconds(3));
+                    .TimeoutIfTooSlow();
             }
         }
 
@@ -292,21 +292,21 @@
                 await sut.WhenAnyValue(x => x.IsResumeVisible)
                     .Where(x => !x)
                     .FirstAsync()
-                    .Timeout(TimeSpan.FromSeconds(3));
+                    .TimeoutIfTooSlow();
 
                 sut.StartCommand.Execute(null);
 
                 await sut.WhenAnyValue(x => x.IsResumeVisible)
                     .Where(x => !x)
                     .FirstAsync()
-                    .Timeout(TimeSpan.FromSeconds(3));
+                    .TimeoutIfTooSlow();
 
                 sut.PauseCommand.Execute(null);
 
                 await sut.WhenAnyValue(x => x.IsResumeVisible)
                     .Where(x => x)
                     .FirstAsync()
-                    .Timeout(TimeSpan.FromSeconds(3));
+                    .TimeoutIfTooSlow();
             }
         }
 
@@ -431,7 +431,7 @@
 
                 await sut.WhenAnyValue(x => x.IsPaused)
                     .Where(x => x)
-                    .Timeout(TimeSpan.FromSeconds(3))
+                    .TimeoutIfTooSlow()
                     .FirstAsync();
 
                 Assert.False(sut.SkipBackwardsCommand.CanExecute(null));
@@ -468,7 +468,7 @@
 
                 await sut.SkipBackwardsCommand.CanExecuteObservable
                     .Where(x => x)
-                    .Timeout(TimeSpan.FromSeconds(3))
+                    .TimeoutIfTooSlow()
                     .FirstAsync();
             }
         }
@@ -508,7 +508,7 @@
 
                 await sut.WhenAnyValue(x => x.IsPaused)
                     .Where(x => x)
-                    .Timeout(TimeSpan.FromSeconds(3))
+                    .TimeoutIfTooSlow()
                     .FirstAsync();
 
                 sut.SkipBackwardsCommand.Execute(null);
@@ -571,7 +571,7 @@
 
                 await sut.WhenAnyValue(x => x.IsPaused)
                     .Where(x => x)
-                    .Timeout(TimeSpan.FromSeconds(3))
+                    .TimeoutIfTooSlow()
                     .FirstAsync();
 
                 sut.SkipBackwardsCommand.Execute(null);
@@ -628,14 +628,14 @@
 
                 await sut.WhenAnyValue(x => x.IsPaused)
                     .Where(x => x)
-                    .Timeout(TimeSpan.FromSeconds(3))
+                    .TimeoutIfTooSlow()
                     .FirstAsync();
 
                 sut.SkipForwardsCommand.Execute(null);
 
                 await sut.SkipForwardsCommand.CanExecuteObservable
                     .Where(x => !x)
-                    .Timeout(TimeSpan.FromSeconds(3))
+                    .TimeoutIfTooSlow()
                     .FirstAsync();
             }
         }
@@ -688,7 +688,7 @@
 
                 await sut.WhenAnyValue(x => x.IsPaused)
                     .Where(x => x)
-                    .Timeout(TimeSpan.FromSeconds(3))
+                    .TimeoutIfTooSlow()
                     .FirstAsync();
 
                 sut.SkipForwardsCommand.Execute(null);
@@ -756,21 +756,21 @@
 
                 await sut.WhenAnyValue(x => x.IsPaused)
                     .Where(x => x)
-                    .Timeout(TimeSpan.FromSeconds(3))
+                    .TimeoutIfTooSlow()
                     .FirstAsync();
 
                 sut.SkipForwardsCommand.Execute(null);
 
                 await sut.SkipForwardsCommand.IsExecuting
                     .Where(x => !x)
-                    .Timeout(TimeSpan.FromSeconds(3))
+                    .TimeoutIfTooSlow()
                     .FirstAsync();
 
                 sut.SkipForwardsCommand.Execute(null);
 
                 await sut.SkipForwardsCommand.IsExecuting
                     .Where(x => !x)
-                    .Timeout(TimeSpan.FromSeconds(3))
+                    .TimeoutIfTooSlow()
                     .FirstAsync();
 
                 sut.SkipBackwardsCommand.Execute(null);

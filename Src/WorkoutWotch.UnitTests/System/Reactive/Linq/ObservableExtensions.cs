@@ -7,13 +7,22 @@
 
     public static class ObservableExtensions
     {
-        public static IObservable<IList<T>> ToListAsync<T>(this IObservable<T> @this, TimeSpan? timeout = null)
+        public static IObservable<IList<T>> ToListAsync<T>(this IObservable<T> @this)
         {
-            @this.AssertNotNull("@this");
+            @this.AssertNotNull(nameof(@this));
 
-            return @this.Timeout(timeout.GetValueOrDefault(TimeSpan.FromSeconds(3)))
+            return @this
+                .TimeoutIfTooSlow()
                 .Buffer(int.MaxValue)
                 .FirstAsync();
+        }
+
+        public static IObservable<T> TimeoutIfTooSlow<T>(this IObservable<T> @this)
+        {
+            @this.AssertNotNull(nameof(@this));
+
+            return @this
+                .Timeout(TimeSpan.FromSeconds(10));
         }
     }
 }

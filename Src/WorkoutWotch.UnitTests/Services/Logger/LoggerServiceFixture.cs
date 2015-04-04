@@ -123,7 +123,7 @@
             var entryTask = sut
                 .Entries
                 .FirstAsync()
-                .Timeout(TimeSpan.FromSeconds(3))
+                .TimeoutIfTooSlow()
                 .ToTask();
 
             logger.Debug("A message with a parameter: {0}", 42);
@@ -141,7 +141,7 @@
             var entryTask = sut
                 .Entries
                 .FirstAsync()
-                .Timeout(TimeSpan.FromSeconds(3))
+                .TimeoutIfTooSlow()
                 .ToTask();
 
             logger.Debug(new InvalidOperationException("foo"), "A message with an exception and a parameter ({0}): ", 42);
@@ -160,7 +160,7 @@
             var entryTask = sut
                 .Entries
                 .FirstAsync()
-                .Timeout(TimeSpan.FromSeconds(3))
+                .TimeoutIfTooSlow()
                 .ToTask();
 
             using (logger.Perf("This shouldn't be logged"))
@@ -182,7 +182,7 @@
             var entryTask = sut
                 .Entries
                 .FirstAsync()
-                .Timeout(TimeSpan.FromSeconds(3))
+                .TimeoutIfTooSlow()
                 .ToTask();
 
             using (logger.Perf("Some performance {0}", "entry"))

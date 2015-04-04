@@ -126,7 +126,7 @@
                     .WhenAnyValue(x => x.Progress)
                     .Where(x => x == TimeSpan.FromMilliseconds(skipInMs))
                     .FirstAsync()
-                    .Timeout(TimeSpan.FromSeconds(3))
+                    .TimeoutIfTooSlow()
                     .ToTask();
             }
         }
@@ -231,7 +231,7 @@
                     .WhenAnyValue(x => x.IsPaused)
                     .Where(x => x)
                     .FirstAsync()
-                    .Timeout(TimeSpan.FromSeconds(3))
+                    .TimeoutIfTooSlow()
                     .ToTask();
 
                 Assert.True(context.IsPaused);
