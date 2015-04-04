@@ -13,7 +13,7 @@
 
         public ExercisePrograms(IEnumerable<ExerciseProgram> programs)
         {
-            programs.AssertNotNull("programs", assertContentsNotNull: true);
+            programs.AssertNotNull(nameof(programs), assertContentsNotNull: true);
             this.programs = programs.ToImmutableList();
         }
 
@@ -24,16 +24,16 @@
 
         public static ExercisePrograms Parse(string input, IContainerService containerService)
         {
-            input.AssertNotNull("input");
-            containerService.AssertNotNull("containerService");
+            input.AssertNotNull(nameof(input));
+            containerService.AssertNotNull(nameof(containerService));
 
             return ExerciseProgramsParser.GetParser(containerService).Parse(input);
         }
 
         public static IResult<ExercisePrograms> TryParse(string input, IContainerService containerService)
         {
-            input.AssertNotNull("input");
-            containerService.AssertNotNull("containerService");
+            input.AssertNotNull(nameof(input));
+            containerService.AssertNotNull(nameof(containerService));
 
             return ExerciseProgramsParser.GetParser(containerService).TryParse(input);
         }

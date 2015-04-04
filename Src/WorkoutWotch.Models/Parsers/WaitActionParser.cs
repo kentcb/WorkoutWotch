@@ -10,7 +10,7 @@
     {
         public static Parser<WaitAction> GetParser(IContainerService containerService)
         {
-            containerService.AssertNotNull("containerService");
+            containerService.AssertNotNull(nameof(containerService));
 
             return
                 from _ in Parse.IgnoreCase("wait")

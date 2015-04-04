@@ -13,7 +13,7 @@
 
         public WaitAction(IDelayService delayService, TimeSpan delay)
         {
-            delayService.AssertNotNull("delayService");
+            delayService.AssertNotNull(nameof(delayService));
 
             if (delay < TimeSpan.Zero)
             {
@@ -31,7 +31,7 @@
 
         public async Task ExecuteAsync(ExecutionContext context)
         {
-            context.AssertNotNull("context");
+            context.AssertNotNull(nameof(context));
 
             var remainingDelay = this.delay;
             var skipAhead = MathExt.Min(remainingDelay, context.SkipAhead);

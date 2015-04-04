@@ -12,8 +12,8 @@
 
         public DoNotAwaitAction(ILoggerService loggerService, IAction innerAction)
         {
-            loggerService.AssertNotNull("loggerService");
-            innerAction.AssertNotNull("innerAction");
+            loggerService.AssertNotNull(nameof(loggerService));
+            innerAction.AssertNotNull(nameof(innerAction));
 
             this.logger = loggerService.GetLogger(this.GetType());
             this.innerAction = innerAction;
@@ -31,7 +31,7 @@
 
         public Task ExecuteAsync(ExecutionContext context)
         {
-            context.AssertNotNull("context");
+            context.AssertNotNull(nameof(context));
 
             this.innerAction
                 .ExecuteAsync(context)

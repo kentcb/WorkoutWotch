@@ -12,8 +12,8 @@
 
         public AudioAction(IAudioService audioService, string audioResourceUri)
         {
-            audioService.AssertNotNull("audioService");
-            audioResourceUri.AssertNotNull("audioResourceUri");
+            audioService.AssertNotNull(nameof(audioService));
+            audioResourceUri.AssertNotNull(nameof(audioResourceUri));
 
             this.audioService = audioService;
             this.audioResourceUri = audioResourceUri;
@@ -26,7 +26,7 @@
 
         public async Task ExecuteAsync(ExecutionContext context)
         {
-            context.AssertNotNull("context");
+            context.AssertNotNull(nameof(context));
             context.CancellationToken.ThrowIfCancellationRequested();
 
             await context

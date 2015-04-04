@@ -12,7 +12,7 @@ namespace WorkoutWotch.UI.iOS
     using WorkoutWotch.Services.Contracts.State;
     using WorkoutWotch.UI.iOS.Views.ExercisePrograms;
 
-    [Register("AppDelegate")]
+    [Register(nameof(AppDelegate))]
     public partial class AppDelegate : UIApplicationDelegate
     {
         private UIWindow window;

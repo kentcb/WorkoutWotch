@@ -16,10 +16,10 @@
 
         public MetronomeAction(IAudioService audioService, IDelayService delayService, ILoggerService loggerService, IEnumerable<MetronomeTick> ticks)
         {
-            audioService.AssertNotNull("audioService");
-            delayService.AssertNotNull("delayService");
-            loggerService.AssertNotNull("loggerService");
-            ticks.AssertNotNull("ticks");
+            audioService.AssertNotNull(nameof(audioService));
+            delayService.AssertNotNull(nameof(delayService));
+            loggerService.AssertNotNull(nameof(loggerService));
+            ticks.AssertNotNull(nameof(ticks));
 
             this.ticks = ticks.ToImmutableList();
             this.innerAction = new SequenceAction(GetInnerActions(audioService, delayService, loggerService, this.ticks));
@@ -37,7 +37,7 @@
 
         public async Task ExecuteAsync(ExecutionContext context)
         {
-            context.AssertNotNull("context");
+            context.AssertNotNull(nameof(context));
 
             await this
                 .innerAction

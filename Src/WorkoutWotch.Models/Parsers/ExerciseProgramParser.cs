@@ -10,7 +10,7 @@
     {
         public static Parser<ExerciseProgram> GetParser(IContainerService containerService)
         {
-            containerService.AssertNotNull("containerService");
+            containerService.AssertNotNull(nameof(containerService));
 
             return
                 from name in HeadingParser.GetParser(1)

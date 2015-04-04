@@ -9,7 +9,7 @@
     {
         public static Parser<ExercisePrograms> GetParser(IContainerService containerService)
         {
-            containerService.AssertNotNull("containerService");
+            containerService.AssertNotNull(nameof(containerService));
 
             return
                 from _ in VerticalSeparationParser.Parser

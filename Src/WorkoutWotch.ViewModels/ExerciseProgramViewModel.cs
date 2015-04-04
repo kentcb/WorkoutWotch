@@ -39,9 +39,9 @@ namespace WorkoutWotch.ViewModels
 
         public ExerciseProgramViewModel(ILoggerService loggerService, ISchedulerService schedulerService, ExerciseProgram model)
         {
-            loggerService.AssertNotNull("loggerService");
-            schedulerService.AssertNotNull("schedulerService");
-            model.AssertNotNull("model");
+            loggerService.AssertNotNull(nameof(loggerService));
+            schedulerService.AssertNotNull(nameof(schedulerService));
+            model.AssertNotNull(nameof(model));
 
             this.logger = loggerService.GetLogger(this.GetType());
             this.model = model;

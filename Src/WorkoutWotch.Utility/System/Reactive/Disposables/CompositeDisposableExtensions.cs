@@ -7,8 +7,8 @@
         public static T AddTo<T>(this T @this, CompositeDisposable compositeDisposable)
             where T : IDisposable
         {
-            @this.AssertGenericArgumentNotNull("@this");
-            compositeDisposable.AssertNotNull("compositeDisposable");
+            @this.AssertGenericArgumentNotNull(nameof(@this));
+            compositeDisposable.AssertNotNull(nameof(compositeDisposable));
 
             compositeDisposable.Add(@this);
             return @this;

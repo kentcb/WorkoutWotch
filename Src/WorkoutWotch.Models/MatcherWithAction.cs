@@ -9,8 +9,8 @@ namespace WorkoutWotch.Models
 
         public MatcherWithAction(IEventMatcher matcher, IAction action)
         {
-            matcher.AssertNotNull("matcher");
-            action.AssertNotNull("action");
+            matcher.AssertNotNull(nameof(matcher));
+            action.AssertNotNull(nameof(action));
 
             this.matcher = matcher;
             this.action = action;

@@ -23,7 +23,7 @@ namespace WorkoutWotch.Services.iOS.ExerciseDocument
 
         public iCloudExerciseDocumentService(ILoggerService loggerService)
         {
-            loggerService.AssertNotNull("loggerService");
+            loggerService.AssertNotNull(nameof(loggerService));
 
             this.logger = loggerService.GetLogger(this.GetType());
             this.exerciseDocument = new BehaviorSubject<string>(null);

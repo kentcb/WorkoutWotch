@@ -15,7 +15,7 @@
                 throw new ArgumentException("indentLevel must be greater than or equal to 0.", "indentLevel");
             }
 
-            containerService.AssertNotNull("containerService");
+            containerService.AssertNotNull(nameof(containerService));
 
             return
                 from _ in Parse.IgnoreCase("sequence:")

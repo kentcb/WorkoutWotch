@@ -37,11 +37,11 @@
             ISchedulerService schedulerService,
             IStateService stateService)
         {
-            containerService.AssertNotNull("containerService");
-            exerciseDocumentService.AssertNotNull("exerciseDocumentService");
-            loggerService.AssertNotNull("loggerService");
-            schedulerService.AssertNotNull("schedulerService");
-            stateService.AssertNotNull("stateService");
+            containerService.AssertNotNull(nameof(containerService));
+            exerciseDocumentService.AssertNotNull(nameof(exerciseDocumentService));
+            loggerService.AssertNotNull(nameof(loggerService));
+            schedulerService.AssertNotNull(nameof(schedulerService));
+            stateService.AssertNotNull(nameof(stateService));
 
             this.containerService = containerService;
             this.exerciseDocumentService = exerciseDocumentService;

@@ -20,9 +20,9 @@ namespace WorkoutWotch.ViewModels
 
         public ExerciseViewModel(ISchedulerService schedulerService, Exercise model, IObservable<ExecutionContext> executionContext)
         {
-            schedulerService.AssertNotNull("schedulerService");
-            model.AssertNotNull("model");
-            executionContext.AssertNotNull("executionContext");
+            schedulerService.AssertNotNull(nameof(schedulerService));
+            model.AssertNotNull(nameof(model));
+            executionContext.AssertNotNull(nameof(executionContext));
 
             this.disposables = new CompositeDisposable();
             this.model = model;

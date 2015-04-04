@@ -21,7 +21,7 @@ namespace WorkoutWotch.Services.iOS.Audio
 
         public Task PlayAsync(string resourceUri)
         {
-            resourceUri.AssertNotNull("resourceUri");
+            resourceUri.AssertNotNull(nameof(resourceUri));
 
             var tcs = new TaskCompletionSource<bool>();
             var url = new NSUrl(resourceUri);

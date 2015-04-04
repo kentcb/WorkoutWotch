@@ -17,7 +17,7 @@ namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
 
         public ExerciseProgramsHostView(ExerciseProgramsViewModel viewModel)
         {
-            viewModel.AssertNotNull("viewModel");
+            viewModel.AssertNotNull(nameof(viewModel));
 
             this.ViewModel = viewModel;
 

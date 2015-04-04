@@ -11,7 +11,7 @@
     {
         public static Parser<PrepareAction> GetParser(IContainerService containerService)
         {
-            containerService.AssertNotNull("containerService");
+            containerService.AssertNotNull(nameof(containerService));
 
             return
                 from _ in Parse.IgnoreCase("prepare")

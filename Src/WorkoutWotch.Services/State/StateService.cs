@@ -21,8 +21,8 @@
 
         public StateService(IBlobCache blobCache, ILoggerService loggerService)
         {
-            blobCache.AssertNotNull("blobCache");
-            loggerService.AssertNotNull("loggerService");
+            blobCache.AssertNotNull(nameof(blobCache));
+            loggerService.AssertNotNull(nameof(loggerService));
 
             this.blobCache = blobCache;
             this.logger = loggerService.GetLogger(this.GetType());
@@ -32,19 +32,19 @@
 
         public Task<T> GetAsync<T>(string key)
         {
-            key.AssertNotNull("key");
+            key.AssertNotNull(nameof(key));
             return this.blobCache.GetObject<T>(key).ToTask();
         }
 
         public Task SetAsync<T>(string key, T value)
         {
-            key.AssertNotNull("key");
+            key.AssertNotNull(nameof(key));
             return this.blobCache.InsertObject<T>(key, value).ToTask();
         }
 
         public Task RemoveAsync<T>(string key)
         {
-            key.AssertNotNull("key");
+            key.AssertNotNull(nameof(key));
             return this.blobCache.InvalidateObject<T>(key).ToTask();
         }
 
@@ -72,7 +72,7 @@
 
         public IDisposable RegisterSaveCallback(Func<IStateService, Task> saveTaskFactory)
         {
-            saveTaskFactory.AssertNotNull("saveTaskFactory");
+            saveTaskFactory.AssertNotNull(nameof(saveTaskFactory));
 
             lock (this.sync)
             {

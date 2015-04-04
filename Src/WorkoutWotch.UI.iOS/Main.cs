@@ -16,7 +16,7 @@ namespace WorkoutWotch.UI.iOS
 
             try
             {
-                UIApplication.Main(args, null, "AppDelegate");
+                UIApplication.Main(args, null, nameof(AppDelegate));
             }
             catch (Exception ex)
             {

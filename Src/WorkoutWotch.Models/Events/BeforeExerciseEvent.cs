@@ -10,7 +10,7 @@ namespace WorkoutWotch.Models.Events
         public BeforeExerciseEvent(ExecutionContext executionContext, Exercise exercise)
             : base(executionContext)
         {
-            exercise.AssertNotNull("exercise");
+            exercise.AssertNotNull(nameof(exercise));
             this.exercise = exercise;
         }
 

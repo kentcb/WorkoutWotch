@@ -17,9 +17,9 @@
 
         public ExerciseProgram(ILoggerService loggerService, string name, IEnumerable<Exercise> exercises)
         {
-            loggerService.AssertNotNull("loggerService");
-            name.AssertNotNull("name");
-            exercises.AssertNotNull("exercises", assertContentsNotNull: true);
+            loggerService.AssertNotNull(nameof(loggerService));
+            name.AssertNotNull(nameof(name));
+            exercises.AssertNotNull(nameof(exercises), assertContentsNotNull: true);
 
             this.logger = loggerService.GetLogger(this.GetType());
             this.name = name;
@@ -48,7 +48,7 @@
 
         public async Task ExecuteAsync(ExecutionContext context)
         {
-            context.AssertNotNull("context");
+            context.AssertNotNull(nameof(context));
 
             foreach (var exercise in this.exercises)
             {

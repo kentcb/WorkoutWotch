@@ -129,39 +129,39 @@ namespace WorkoutWotch.UI.iOS.Utility
 
             switch (methodCallExpression.Method.Name)
             {
-                case "Width":
+                case nameof(LayoutExtensions.Width):
                     layoutAttribute = NSLayoutAttribute.Width;
                     break;
-                case "Height":
+                case nameof(LayoutExtensions.Height):
                     layoutAttribute = NSLayoutAttribute.Height;
                     break;
-                case "Left":
-                case "X":
+                case nameof(LayoutExtensions.Left):
+                case nameof(LayoutExtensions.X):
                     layoutAttribute = NSLayoutAttribute.Left;
                     break;
-                case "Top":
-                case "Y":
+                case nameof(LayoutExtensions.Top):
+                case nameof(LayoutExtensions.Y):
                     layoutAttribute = NSLayoutAttribute.Top;
                     break;
-                case "Right":
+                case nameof(LayoutExtensions.Right):
                     layoutAttribute = NSLayoutAttribute.Right;
                     break;
-                case "Bottom":
+                case nameof(LayoutExtensions.Bottom):
                     layoutAttribute = NSLayoutAttribute.Bottom;
                     break;
-                case "CenterX":
+                case nameof(LayoutExtensions.CenterX):
                     layoutAttribute = NSLayoutAttribute.CenterX;
                     break;
-                case "CenterY":
+                case nameof(LayoutExtensions.CenterY):
                     layoutAttribute = NSLayoutAttribute.CenterY;
                     break;
-                case "Baseline":
+                case nameof(LayoutExtensions.Baseline):
                     layoutAttribute = NSLayoutAttribute.Baseline;
                     break;
-                case "Leading":
+                case nameof(LayoutExtensions.Leading):
                     layoutAttribute = NSLayoutAttribute.Leading;
                     break;
-                case "Trailing":
+                case nameof(LayoutExtensions.Trailing):
                     layoutAttribute = NSLayoutAttribute.Trailing;
                     break;
                 default:

@@ -8,8 +8,8 @@
     {
         public static Parser<T> Token<T, U>(this Parser<T> @this, Parser<U> whitespace)
         {
-            @this.AssertNotNull("@this");
-            whitespace.AssertNotNull("whitespace");
+            @this.AssertNotNull(nameof(@this));
+            whitespace.AssertNotNull(nameof(whitespace));
 
             return
                 from _ in whitespace.Many()
@@ -20,14 +20,14 @@
 
         public static Parser<Unit> ToUnit<T>(this Parser<T> @this)
         {
-            @this.AssertNotNull("@this");
+            @this.AssertNotNull(nameof(@this));
             return @this.Select(_ => Unit.Default);
         }
 
         public static Parser<T> Do<T>(this Parser<T> @this, Action<T> action)
         {
-            @this.AssertNotNull("@this");
-            action.AssertNotNull("action");
+            @this.AssertNotNull(nameof(@this));
+            action.AssertNotNull(nameof(action));
 
             return @this.Then(
                 x =>

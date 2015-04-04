@@ -7,7 +7,7 @@
     {
         public bool Matches(IEvent @event)
         {
-            @event.AssertNotNull("@event");
+            @event.AssertNotNull(nameof(@event));
             return @event is T;
         }
     }

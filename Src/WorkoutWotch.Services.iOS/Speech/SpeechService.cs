@@ -13,7 +13,7 @@ namespace WorkoutWotch.Services.iOS.Speech
 
         public Task SpeakAsync(string speechString, CancellationToken cancellationToken = default(CancellationToken))
         {
-            speechString.AssertNotNull("speechString");
+            speechString.AssertNotNull(nameof(speechString));
 
             var tcs = new TaskCompletionSource<bool>();
             var utterance = new AVSpeechUtterance(speechString)

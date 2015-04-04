@@ -17,7 +17,7 @@
 
         public static Parser<MetronomeAction> GetParser(IContainerService containerService)
         {
-            containerService.AssertNotNull("containerService");
+            containerService.AssertNotNull(nameof(containerService));
 
             return
                 from _ in Parse.IgnoreCase("metronome")

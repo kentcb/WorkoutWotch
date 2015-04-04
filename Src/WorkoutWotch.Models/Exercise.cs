@@ -23,10 +23,10 @@ namespace WorkoutWotch.Models
 
         public Exercise(ILoggerService loggerService, ISpeechService speechService, string name, int setCount, int repetitionCount, IEnumerable<MatcherWithAction> matchersWithActions)
         {
-            loggerService.AssertNotNull("loggerService");
-            speechService.AssertNotNull("speechService");
-            name.AssertNotNull("name");
-            matchersWithActions.AssertNotNull("matchersWithActions");
+            loggerService.AssertNotNull(nameof(loggerService));
+            speechService.AssertNotNull(nameof(speechService));
+            name.AssertNotNull(nameof(name));
+            matchersWithActions.AssertNotNull(nameof(matchersWithActions));
 
             if (setCount < 0)
             {
@@ -83,7 +83,7 @@ namespace WorkoutWotch.Models
 
         public async Task ExecuteAsync(ExecutionContext context)
         {
-            context.AssertNotNull("context");
+            context.AssertNotNull(nameof(context));
 
             foreach (var eventWithActions in this.GetEventsWithActions(context))
             {

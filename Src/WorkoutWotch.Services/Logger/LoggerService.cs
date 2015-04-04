@@ -57,13 +57,13 @@
 
         public ILogger GetLogger(Type forType)
         {
-            forType.AssertNotNull("forType");
+            forType.AssertNotNull(nameof(forType));
             return this.GetLogger(forType.FullName);
         }
 
         public ILogger GetLogger(string name)
         {
-            name.AssertNotNull("name");
+            name.AssertNotNull(nameof(name));
             return new Logger(this, name);
         }
 
@@ -155,7 +155,7 @@
 
             public IDisposable Perf(string message)
             {
-                message.AssertNotNull("message");
+                message.AssertNotNull(nameof(message));
 
                 if (!this.IsPerfEnabled)
                 {
@@ -167,8 +167,8 @@
 
             public IDisposable Perf(string format, params object[] args)
             {
-                format.AssertNotNull("format");
-                args.AssertNotNull("args");
+                format.AssertNotNull(nameof(format));
+                args.AssertNotNull(nameof(args));
 
                 if (!this.IsPerfEnabled)
                 {
@@ -211,8 +211,8 @@
 
             private void Log(LogLevel level, string format, params object[] args)
             {
-                format.AssertNotNull("format");
-                args.AssertNotNull("args");
+                format.AssertNotNull(nameof(format));
+                args.AssertNotNull(nameof(args));
 
                 if (!this.owner.IsLevelEnabled(level))
                 {
@@ -225,9 +225,9 @@
 
             private void Log(LogLevel level, Exception exception, string format, params object[] args)
             {
-                exception.AssertNotNull("exception");
-                format.AssertNotNull("format");
-                args.AssertNotNull("args");
+                exception.AssertNotNull(nameof(exception));
+                format.AssertNotNull(nameof(format));
+                args.AssertNotNull(nameof(args));
 
                 if (!this.owner.IsLevelEnabled(level))
                 {
@@ -240,7 +240,7 @@
 
             private void Log(LogLevel level, string message)
             {
-                message.AssertNotNull("message");
+                message.AssertNotNull(nameof(message));
 
                 if (!this.owner.IsLevelEnabled(level))
                 {
@@ -278,4 +278,3 @@
         }
     }
 }
-

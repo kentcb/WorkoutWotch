@@ -7,7 +7,7 @@ namespace WorkoutWotch.UI.TestHarness
     using Xunit.Runner;
     using Xunit.Sdk;
 
-    [Register("AppDelegate")]
+    [Register(nameof(AppDelegate))]
     public partial class AppDelegate : RunnerAppDelegate
     {
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)

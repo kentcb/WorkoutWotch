@@ -11,7 +11,7 @@
 
         public NumberedEventMatcher(Func<T, bool> matches)
         {
-            matches.AssertNotNull("matches");
+            matches.AssertNotNull(nameof(matches));
             this.matches = matches;
         }
 

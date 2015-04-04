@@ -16,7 +16,7 @@
 
         public ParallelAction(IEnumerable<IAction> children)
         {
-            children.AssertNotNull("children", assertContentsNotNull: true);
+            children.AssertNotNull(nameof(children), assertContentsNotNull: true);
 
             this.children = children.ToImmutableList();
             this.duration = this
@@ -38,7 +38,7 @@
 
         public async Task ExecuteAsync(ExecutionContext context)
         {
-            context.AssertNotNull("context");
+            context.AssertNotNull(nameof(context));
                 
             var childrenToExecute = this
                 .children

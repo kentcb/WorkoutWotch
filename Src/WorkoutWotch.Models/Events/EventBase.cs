@@ -8,7 +8,7 @@
 
         protected EventBase(ExecutionContext executionContext)
         {
-            executionContext.AssertNotNull("executionContext");
+            executionContext.AssertNotNull(nameof(executionContext));
             this.executionContext = executionContext;
         }
 

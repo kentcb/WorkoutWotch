@@ -12,8 +12,8 @@
 
         public SayAction(ISpeechService speechService, string speechText)
         {
-            speechService.AssertNotNull("speechService");
-            speechText.AssertNotNull("speechText");
+            speechService.AssertNotNull(nameof(speechService));
+            speechText.AssertNotNull(nameof(speechText));
 
             this.speechService = speechService;
             this.speechText = speechText;
@@ -31,7 +31,7 @@
 
         public async Task ExecuteAsync(ExecutionContext context)
         {
-            context.AssertNotNull("context");
+            context.AssertNotNull(nameof(context));
             context.CancellationToken.ThrowIfCancellationRequested();
 
             await context

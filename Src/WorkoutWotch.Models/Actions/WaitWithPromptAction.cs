@@ -14,9 +14,9 @@
 
         public WaitWithPromptAction(IDelayService delayService, ISpeechService speechService, TimeSpan duration, string promptSpeechText)
         {
-            delayService.AssertNotNull("delayService");
-            speechService.AssertNotNull("speechService");
-            promptSpeechText.AssertNotNull("promptSpeechText");
+            delayService.AssertNotNull(nameof(delayService));
+            speechService.AssertNotNull(nameof(speechService));
+            promptSpeechText.AssertNotNull(nameof(promptSpeechText));
 
             if (duration < TimeSpan.Zero)
             {
@@ -33,7 +33,7 @@
 
         public async Task ExecuteAsync(ExecutionContext context)
         {
-            context.AssertNotNull("context");
+            context.AssertNotNull(nameof(context));
 
             await this
                 .innerAction
