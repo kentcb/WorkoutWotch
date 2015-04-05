@@ -19,15 +19,9 @@
             this.speechText = speechText;
         }
 
-        public TimeSpan Duration
-        {
-            get { return TimeSpan.Zero; }
-        }
+        public TimeSpan Duration => TimeSpan.Zero;
 
-        public string SpeechText
-        {
-            get { return this.speechText; }
-        }
+        public string SpeechText => this.speechText;
 
         public async Task ExecuteAsync(ExecutionContext context)
         {

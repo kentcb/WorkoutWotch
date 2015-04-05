@@ -14,17 +14,12 @@
             this.innerAction = new WaitWithPromptAction(delayService, speechService, duration, "break");
         }
 
-        public TimeSpan Duration
-        {
-            get { return this.innerAction.Duration; }
-        }
+        public TimeSpan Duration =>  this.innerAction.Duration;
 
         public async Task ExecuteAsync(ExecutionContext context)
-        {
-            await this
+            => await this
                 .innerAction
                 .ExecuteAsync(context)
                 .ContinueOnAnyContext();
-        }
     }
 }

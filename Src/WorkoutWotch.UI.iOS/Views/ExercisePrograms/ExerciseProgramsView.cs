@@ -21,10 +21,7 @@ namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
             this.ViewModel = viewModel;
         }
 
-        public IObservable<UIViewController> NavigationRequests
-        {
-            get { return this.navigationRequests; }
-        }
+        public IObservable<UIViewController> NavigationRequests => this.navigationRequests;
 
         public override void ViewDidLoad()
         {

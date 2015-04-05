@@ -10,8 +10,6 @@
         }
 
         public override string ToString()
-        {
-            return string.Format(CultureInfo.InvariantCulture, "After Set {0}", this.Number);
-        }
+            => string.Format(CultureInfo.InvariantCulture, "After Set {0}", this.Number);
     }
 }

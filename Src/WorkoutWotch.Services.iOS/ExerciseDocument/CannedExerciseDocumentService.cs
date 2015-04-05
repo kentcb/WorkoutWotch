@@ -7,10 +7,7 @@ namespace WorkoutWotch.Services.iOS.ExerciseDocument
 
     public sealed class CannedExerciseDocumentService : IExerciseDocumentService
     {
-        public IObservable<string> ExerciseDocument
-        {
-            get { return Observable.Return(GetDefaultExerciseDocument()); }
-        }
+        public IObservable<string> ExerciseDocument => Observable.Return(GetDefaultExerciseDocument());
 
         private static string GetDefaultExerciseDocument()
         {

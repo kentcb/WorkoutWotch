@@ -26,9 +26,7 @@ namespace WorkoutWotch.UI.iOS
         }
 
         private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            HandleException(e.ExceptionObject as Exception);
-        }
+            => HandleException(e.ExceptionObject as Exception);
 
         private static void HandleException(Exception exception)
         {

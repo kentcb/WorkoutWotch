@@ -19,10 +19,7 @@
             this.audioResourceUri = audioResourceUri;
         }
 
-        public TimeSpan Duration
-        {
-            get { return TimeSpan.Zero; }
-        }
+        public TimeSpan Duration => TimeSpan.Zero;
 
         public async Task ExecuteAsync(ExecutionContext context)
         {

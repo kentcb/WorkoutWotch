@@ -68,40 +68,19 @@ namespace WorkoutWotch.ViewModels
                 .AddTo(this.disposables);
         }
 
-        public Exercise Model
-        {
-            get { return this.model; }
-        }
+        public Exercise Model => this.model;
 
-        public string Name
-        {
-            get { return this.model.Name; }
-        }
+        public string Name => this.model.Name;
 
-        public TimeSpan Duration
-        {
-            get { return this.model.Duration; }
-        }
+        public TimeSpan Duration => this.model.Duration;
 
-        public TimeSpan ProgressTimeSpan
-        {
-            get { return this.progressTimeSpan.Value; }
-        }
+        public TimeSpan ProgressTimeSpan => this.progressTimeSpan.Value;
 
-        public double Progress
-        {
-            get { return this.progress.Value; }
-        }
+        public double Progress => this.progress.Value;
 
-        public bool IsActive
-        {
-            get { return this.isActive.Value; }
-        }
+        public bool IsActive => this.isActive.Value;
 
-        private ExecutionContext ExecutionContext
-        {
-            get { return this.executionContext.Value; }
-        }
+        private ExecutionContext ExecutionContext => this.executionContext.Value;
 
         protected override void Dispose(bool disposing)
         {

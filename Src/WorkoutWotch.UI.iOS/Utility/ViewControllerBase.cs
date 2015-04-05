@@ -27,10 +27,7 @@ namespace WorkoutWotch.UI.iOS.Utility
             set { this.ViewModel = (TViewModel)value; }
         }
 
-        protected CompositeDisposable Disposables
-        {
-            get { return this.disposables; }
-        }
+        protected CompositeDisposable Disposables => this.disposables;
 
         protected override void Dispose(bool disposing)
         {

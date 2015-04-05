@@ -31,20 +31,11 @@
                 .Aggregate((running, next) => running + next);
         }
 
-        public string Name
-        {
-            get { return this.name; }
-        }
+        public string Name => this.name;
 
-        public TimeSpan Duration
-        {
-            get { return this.duration; }
-        }
+        public TimeSpan Duration => this.duration;
 
-        public IImmutableList<Exercise> Exercises
-        {
-            get { return this.exercises; }
-        }
+        public IImmutableList<Exercise> Exercises =>  this.exercises;
 
         public async Task ExecuteAsync(ExecutionContext context)
         {

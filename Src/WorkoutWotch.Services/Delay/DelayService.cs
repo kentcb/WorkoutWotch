@@ -8,10 +8,9 @@
     public sealed class DelayService : IDelayService
     {
         public async Task DelayAsync(TimeSpan duration, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            await Task
-                .Delay(duration, cancellationToken)
-                .ContinueOnAnyContext();
-        }
+            =>
+                await Task
+                    .Delay(duration, cancellationToken)
+                    .ContinueOnAnyContext();
     }
 }

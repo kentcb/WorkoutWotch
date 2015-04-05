@@ -32,10 +32,7 @@ namespace WorkoutWotch.UI.iOS.Utility
             set { this.ViewModel = (T)value; }
         }
 
-        protected CompositeDisposable Disposables
-        {
-            get { return this.disposables; }
-        }
+        protected CompositeDisposable Disposables => this.disposables;
 
         public sealed override void UpdateConstraints()
         {

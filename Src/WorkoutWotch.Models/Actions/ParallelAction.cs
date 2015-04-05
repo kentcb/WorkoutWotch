@@ -26,15 +26,9 @@
                 .Max();
         }
 
-        public TimeSpan Duration
-        {
-            get { return this.duration; }
-        }
+        public TimeSpan Duration => this.duration;
 
-        public IImmutableList<IAction> Children
-        {
-            get { return this.children; }
-        }
+        public IImmutableList<IAction> Children =>  this.children;
 
         public async Task ExecuteAsync(ExecutionContext context)
         {

@@ -35,9 +35,7 @@ namespace WorkoutWotch.UI.iOS.Utility
         }
 
         public override nfloat EstimatedHeight(UITableView tableView, NSIndexPath indexPath)
-        {
-            return UITableView.AutomaticDimension;
-        }
+            => UITableView.AutomaticDimension;
 
         public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
         {
@@ -93,29 +91,27 @@ namespace WorkoutWotch.UI.iOS.Utility
         }
 
         private IDisposable InitDataSubscription()
-        {
-            return this
-                .WhenAnyValue(x => x.Data)
-                .Select(x => new nfloat?[x == null ? 0 : x.Count])
-                .Subscribe(x => this.heights = x);
-        }
+            => 
+                this
+                    .WhenAnyValue(x => x.Data)
+                    .Select(x => new nfloat?[x == null ? 0 : x.Count])
+                    .Subscribe(x => this.heights = x);
 
         private IDisposable InitDynamicTypeChangedSubscription()
-        {
-            return TinyIoCContainer.Current
-                .Resolve<ISystemNotificationsService>()
-                .DynamicTypeChanged
-                .Where(_ => this.heights != null)
-                .Subscribe(
-                    _ =>
-                    {
-                        // clear out the cached heights for every section
-                        for (var i = 0; i < this.heights.Length; ++i)
+            => 
+                TinyIoCContainer.Current
+                    .Resolve<ISystemNotificationsService>()
+                    .DynamicTypeChanged
+                    .Where(_ => this.heights != null)
+                    .Subscribe(
+                        _ =>
                         {
-                            this.heights[i] = null;
-                        }
-                    });
-        }
+                            // clear out the cached heights for every section
+                            for (var i = 0; i < this.heights.Length; ++i)
+                            {
+                                this.heights[i] = null;
+                            }
+                        });
 
         private void ValidateSection(int section)
         {

@@ -48,8 +48,7 @@
         // returns a matcher with action, where all specified actions are enclosed in a single sequence action
         private static Parser<MatcherWithAction> GetTypedEventMatcherWithActionParser<T>(Parser<Unit> nameParser, IContainerService containerService)
             where T : IEvent
-        {
-            return
+            => 
                 from _ in Parse.String("*")
                 from __ in HorizontalWhitespaceParser.Parser.AtLeastOnce()
                 from ___ in nameParser
@@ -58,7 +57,6 @@
                 from actions in ActionListParser.GetParser(1, containerService)
                 let action = new SequenceAction(actions)
                 select new MatcherWithAction(new TypedEventMatcher<T>(), action);
-        }
 
         // parses a typed event matcher. e.g. "before set 3: ..." or "after reps first+1..last: ..."
         // returns a matcher with action, where all specified actions are enclosed in a single sequence action
@@ -69,8 +67,7 @@
                 Func<ExecutionContext, int> getFirst,
                 Func<ExecutionContext, int> getLast)
             where T : NumberedEvent
-        {
-            return
+            => 
                 from _ in Parse.String("*")
                 from __ in HorizontalWhitespaceParser.Parser.AtLeastOnce()
                 from ___ in nameParser
@@ -81,7 +78,6 @@
                 from actions in ActionListParser.GetParser(1, containerService)
                 let action = new SequenceAction(actions)
                 select new MatcherWithAction(new NumberedEventMatcher<T>(e => numericalConstraint(e.ExecutionContext)), action);
-        }
 
         // parses any matcher with an action. e.g. "before: ..." or "after sets 3..2..8: ..."
         // returns a matcher with action, where all specified actions are enclosed in a single sequence action
@@ -109,9 +105,7 @@
 
         // parses any number of matchers with their associated action
         private static Parser<IEnumerable<MatcherWithAction>> GetMatchersWithActionsParser(IContainerService containerService)
-        {
-            return GetMatcherWithActionParser(containerService).DelimitedBy(NewLineParser.Parser.Token(HorizontalWhitespaceParser.Parser).AtLeastOnce());
-        }
+            =>  GetMatcherWithActionParser(containerService).DelimitedBy(NewLineParser.Parser.Token(HorizontalWhitespaceParser.Parser).AtLeastOnce());
 
         public static Parser<Exercise> GetParser(IContainerService containerService)
         {

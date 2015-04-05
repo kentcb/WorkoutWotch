@@ -18,10 +18,7 @@ namespace WorkoutWotch.Services.iOS.SystemNotifications
             this.contentSizeCategoryChangedObserver = NSNotificationCenter.DefaultCenter.AddObserver(UIApplication.ContentSizeCategoryChangedNotification, this.ContentSizeCategoryChanged);
         }
 
-        public IObservable<Unit> DynamicTypeChanged
-        {
-            get { return this.dynamicTypeChanged; }
-        }
+        public IObservable<Unit> DynamicTypeChanged => this.dynamicTypeChanged;
 
         protected override void Dispose(bool disposing)
         {
@@ -35,8 +32,6 @@ namespace WorkoutWotch.Services.iOS.SystemNotifications
         }
 
         private void ContentSizeCategoryChanged(NSNotification notification)
-        {
-            this.dynamicTypeChanged.OnNext(Unit.Default);
-        }
+            => this.dynamicTypeChanged.OnNext(Unit.Default);
     }
 }

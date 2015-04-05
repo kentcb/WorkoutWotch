@@ -19,58 +19,42 @@ namespace WorkoutWotch.UI.iOS
             .RefCount();
 
         public static UILabel CreateLabel(PreferredFont font = PreferredFont.Body)
-        {
-            return new DynamicTypeAwareLabel(sharedDynamicTypeChanged, font);
-        }
+            => new DynamicTypeAwareLabel(sharedDynamicTypeChanged, font);
 
         public static UIButton CreateButton(PreferredFont font = PreferredFont.Headline, UIButtonType type = UIButtonType.System)
-        {
-            return new DynamicTypeAwareButton(sharedDynamicTypeChanged, font, type);
-        }
+            => new DynamicTypeAwareButton(sharedDynamicTypeChanged, font, type);
 
         public static UITextField CreateTextField(PreferredFont font = PreferredFont.Body)
-        {
-            return new DynamicTypeAwareTextField(sharedDynamicTypeChanged, font)
-            {
-                AutocorrectionType = UITextAutocorrectionType.No,
-                AutocapitalizationType = UITextAutocapitalizationType.None,
-                BorderStyle = UITextBorderStyle.RoundedRect,
-                ClearButtonMode = UITextFieldViewMode.WhileEditing
-            };
-        }
+            =>
+                new DynamicTypeAwareTextField(sharedDynamicTypeChanged, font)
+                {
+                    AutocorrectionType = UITextAutocorrectionType.No,
+                    AutocapitalizationType = UITextAutocapitalizationType.None,
+                    BorderStyle = UITextBorderStyle.RoundedRect,
+                    ClearButtonMode = UITextFieldViewMode.WhileEditing
+                };
 
         public static UITextView CreateTextView(PreferredFont font = PreferredFont.Body)
-        {
-            return new DynamicTypeAwareTextView(sharedDynamicTypeChanged, font);
-        }
+            => new DynamicTypeAwareTextView(sharedDynamicTypeChanged, font);
 
         public static UIPickerView CreatePicker()
-        {
-            return new UIPickerView();
-        }
+            => new UIPickerView();
 
         public static UISlider CreateSlider()
-        {
-            return new UISlider();
-        }
+            => new UISlider();
 
         public static UIActivityIndicatorView CreateActivityIndicator()
-        {
-            return new UIActivityIndicatorView
-            {
-                ActivityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
-            };
-        }
+            => 
+                new UIActivityIndicatorView
+                {
+                    ActivityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+                };
 
         public static UIProgressView CreateProgressView()
-        {
-            return new UIProgressView();
-        }
+            => new UIProgressView();
 
         public static UIImageView CreateImage()
-        {
-            return new UIImageView();
-        }
+            => new UIImageView();
 
         private static UIFont GetUIFontForPreferredFont(PreferredFont font)
         {
@@ -135,9 +119,7 @@ namespace WorkoutWotch.UI.iOS
             }
 
             private void UpdateFont()
-            {
-                this.Font = GetUIFontForPreferredFont(this.font);
-            }
+                => this.Font = GetUIFontForPreferredFont(this.font);
         }
 
         private sealed class DynamicTypeAwareButton : UIButton
@@ -181,9 +163,7 @@ namespace WorkoutWotch.UI.iOS
             }
 
             private void UpdateFont()
-            {
-                this.Font = GetUIFontForPreferredFont(this.font);
-            }
+                => this.Font = GetUIFontForPreferredFont(this.font);
         }
 
         private sealed class DynamicTypeAwareTextField : UITextField
@@ -226,9 +206,7 @@ namespace WorkoutWotch.UI.iOS
             }
 
             private void UpdateFont()
-            {
-                this.Font = GetUIFontForPreferredFont(this.font);
-            }
+                => this.Font = GetUIFontForPreferredFont(this.font);
         }
 
         private sealed class DynamicTypeAwareTextView : UITextView
@@ -271,9 +249,7 @@ namespace WorkoutWotch.UI.iOS
             }
 
             private void UpdateFont()
-            {
-                this.Font = GetUIFontForPreferredFont(this.font);
-            }
+                => this.Font = GetUIFontForPreferredFont(this.font);
         }
     }
 }

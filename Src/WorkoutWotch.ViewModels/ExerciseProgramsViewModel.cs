@@ -114,10 +114,7 @@
                 .AddTo(this.disposables);
         }
 
-        public ExerciseProgramsViewModelStatus Status
-        {
-            get { return this.status.Value; }
-        }
+        public ExerciseProgramsViewModelStatus Status => this.status.Value;
 
         public ExerciseProgramViewModel SelectedProgram
         {
@@ -125,20 +122,11 @@
             set { this.RaiseAndSetIfChanged(ref this.selectedProgram, value); }
         }
 
-        public string ParseErrorMessage
-        {
-            get { return this.parseErrorMessage.Value; }
-        }
+        public string ParseErrorMessage => this.parseErrorMessage.Value;
 
-        public IReadOnlyReactiveList<ExerciseProgramViewModel> Programs
-        {
-            get { return this.programs.Value; }
-        }
+        public IReadOnlyReactiveList<ExerciseProgramViewModel> Programs => this.programs.Value;
 
-        private ExercisePrograms Model
-        {
-            get { return this.model.Value; }
-        }
+        private ExercisePrograms Model => this.model.Value;
 
         protected override void Dispose(bool disposing)
         {
@@ -167,15 +155,9 @@
                 this.item = item;
             }
 
-            public DocumentSource Source
-            {
-                get { return this.source; }
-            }
+            public DocumentSource Source => this.source;
 
-            public T Item
-            {
-                get { return this.item; }
-            }
+            public T Item => this.item;
 
             public override bool Equals(object obj)
             {

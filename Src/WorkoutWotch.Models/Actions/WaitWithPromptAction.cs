@@ -26,10 +26,7 @@
             this.innerAction = new SequenceAction(GetInnerActions(delayService, speechService, duration, promptSpeechText));
         }
 
-        public TimeSpan Duration
-        {
-            get { return this.innerAction.Duration; }
-        }
+        public TimeSpan Duration => this.innerAction.Duration;
 
         public async Task ExecuteAsync(ExecutionContext context)
         {

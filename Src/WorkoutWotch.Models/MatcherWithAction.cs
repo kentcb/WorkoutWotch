@@ -16,14 +16,8 @@ namespace WorkoutWotch.Models
             this.action = action;
         }
 
-        public IEventMatcher Matcher
-        {
-            get { return this.matcher; }
-        }
+        public IEventMatcher Matcher => this.matcher;
 
-        public IAction Action
-        {
-            get { return this.action; }
-        }
+        public IAction Action => this.action;
     }
 }

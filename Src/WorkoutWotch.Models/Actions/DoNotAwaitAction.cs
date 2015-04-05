@@ -19,15 +19,9 @@
             this.innerAction = innerAction;
         }
 
-        public TimeSpan Duration
-        {
-            get { return TimeSpan.Zero; }
-        }
+        public TimeSpan Duration => TimeSpan.Zero;
 
-        public IAction InnerAction
-        {
-            get { return this.innerAction; }
-        }
+        public IAction InnerAction => this.innerAction;
 
         public Task ExecuteAsync(ExecutionContext context)
         {

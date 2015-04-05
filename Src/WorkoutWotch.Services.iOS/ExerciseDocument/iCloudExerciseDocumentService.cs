@@ -86,56 +86,54 @@ namespace WorkoutWotch.Services.iOS.ExerciseDocument
         }
 
         private Task InitializeUbiquityContainerUrlAsync()
-        {
-            return Task.Run(
-                () =>
-                {
-                    this.logger.Debug("Getting URL for ubiquity container.");
-
-                    var localUbiquityContainerUrl = NSFileManager.DefaultManager.GetUrlForUbiquityContainer(containerIdentifier: null);
-
-                    if (localUbiquityContainerUrl == null)
+            => 
+                Task.Run(
+                    () =>
                     {
-                        this.logger.Error("Failed to obtain URL for ubiquity container.");
-                        throw new NotSupportedException("iCloud not enabled.");
-                    }
+                        this.logger.Debug("Getting URL for ubiquity container.");
 
-                    this.logger.Debug("Ubiquity URL obtained: {0}", localUbiquityContainerUrl);
+                        var localUbiquityContainerUrl = NSFileManager.DefaultManager.GetUrlForUbiquityContainer(containerIdentifier: null);
 
-                    lock (this.sync)
-                    {
-                        this.ubiquityContainerUrl = localUbiquityContainerUrl;
-                    }
-                });
-        }
+                        if (localUbiquityContainerUrl == null)
+                        {
+                            this.logger.Error("Failed to obtain URL for ubiquity container.");
+                            throw new NotSupportedException("iCloud not enabled.");
+                        }
+
+                        this.logger.Debug("Ubiquity URL obtained: {0}", localUbiquityContainerUrl);
+
+                        lock (this.sync)
+                        {
+                            this.ubiquityContainerUrl = localUbiquityContainerUrl;
+                        }
+                    });
 
         private Task InstigateDocumentLookupAsync(TaskScheduler synchronizationContextTaskScheduler)
-        {
-            return Task.Factory.StartNew(
-                () =>
-                {
-                    var query = new NSMetadataQuery
+            =>
+                Task.Factory.StartNew(
+                    () =>
                     {
-                        SearchScopes = new NSObject[]
+                        var query = new NSMetadataQuery
                         {
-                            NSMetadataQuery.UbiquitousDocumentsScope
-                        },
-                        Predicate = NSPredicate.FromFormat(
-                            "%K == %@",
-                            new NSObject[]
+                            SearchScopes = new NSObject[]
                             {
-                                NSMetadataQuery.ItemFSNameKey,
-                                new NSString(documentFilename)
-                            })
-                    };
+                                NSMetadataQuery.UbiquitousDocumentsScope
+                            },
+                            Predicate = NSPredicate.FromFormat(
+                                "%K == %@",
+                                new NSObject[]
+                                {
+                                    NSMetadataQuery.ItemFSNameKey,
+                                    new NSString(documentFilename)
+                                })
+                        };
 
-                    NSNotificationCenter.DefaultCenter.AddObserver(NSMetadataQuery.DidFinishGatheringNotification, this.OnQueryFinished, query);
-                    query.StartQuery();
-                },
-                CancellationToken.None,
-                TaskCreationOptions.None,
-                synchronizationContextTaskScheduler);
-        }
+                        NSNotificationCenter.DefaultCenter.AddObserver(NSMetadataQuery.DidFinishGatheringNotification, this.OnQueryFinished, query);
+                        query.StartQuery();
+                    },
+                    CancellationToken.None,
+                    TaskCreationOptions.None,
+                    synchronizationContextTaskScheduler);
 
         private void OnQueryFinished(NSNotification notification)
         {

@@ -101,14 +101,10 @@ namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
         }
 
         private static bool IsLoadingStatus(ExerciseProgramsViewModelStatus status)
-        {
-            return status == ExerciseProgramsViewModelStatus.Loading;
-        }
+            => status == ExerciseProgramsViewModelStatus.Loading;
 
         private static bool IsErrorStatus(ExerciseProgramsViewModelStatus status)
-        {
-            return status == ExerciseProgramsViewModelStatus.ParseFailed || status == ExerciseProgramsViewModelStatus.LoadFailed;
-        }
+            => status == ExerciseProgramsViewModelStatus.ParseFailed || status == ExerciseProgramsViewModelStatus.LoadFailed;
 
         private static string GetErrorMessage(ExerciseProgramsViewModelStatus status)
         {

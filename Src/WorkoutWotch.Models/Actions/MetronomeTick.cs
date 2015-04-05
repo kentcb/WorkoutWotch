@@ -13,14 +13,8 @@
             this.type = type;
         }
 
-        public TimeSpan PeriodBefore
-        {
-            get { return this.periodBefore; }
-        }
+        public TimeSpan PeriodBefore => this.periodBefore;
 
-        public MetronomeTickType Type
-        {
-            get { return this.type; }
-        }
+        public MetronomeTickType Type => this.type;
     }
 }

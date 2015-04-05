@@ -24,10 +24,7 @@
             this.delay = delay;
         }
 
-        public TimeSpan Duration
-        {
-            get { return this.delay; }
-        }
+        public TimeSpan Duration => this.delay;
 
         public async Task ExecuteAsync(ExecutionContext context)
         {

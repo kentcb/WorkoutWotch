@@ -56,30 +56,15 @@ namespace WorkoutWotch.Models
             }
         }
 
-        public string Name
-        {
-            get { return this.name; }
-        }
+        public string Name => this.name;
 
-        public int SetCount
-        {
-            get { return this.setCount; }
-        }
+        public int SetCount => this.setCount;
 
-        public int RepetitionCount
-        {
-            get { return this.repetitionCount; }
-        }
+        public int RepetitionCount => this.repetitionCount;
 
-        public IImmutableList<MatcherWithAction> MatchersWithActions
-        {
-            get { return this.matchersWithActions; }
-        }
+        public IImmutableList<MatcherWithAction> MatchersWithActions => this.matchersWithActions;
 
-        public TimeSpan Duration
-        {
-            get { return this.duration; }
-        }
+        public TimeSpan Duration => this.duration;
 
         public async Task ExecuteAsync(ExecutionContext context)
         {
@@ -130,11 +115,9 @@ namespace WorkoutWotch.Models
         }
 
         private IEnumerable<EventWithActions> GetEventsWithActions(ExecutionContext executionContext)
-        {
-            return this
-                .GetEvents(executionContext)
-                .Select(x => new EventWithActions(x, this.GetActionsForEvent(x)));
-        }
+            =>  this
+                    .GetEvents(executionContext)
+                    .Select(x => new EventWithActions(x, this.GetActionsForEvent(x)));
 
         private IEnumerable<IAction> GetActionsForEvent(IEvent @event)
         {
@@ -167,15 +150,9 @@ namespace WorkoutWotch.Models
                 this.actions = actions.ToImmutableList();
             }
 
-            public IEvent Event
-            {
-                get { return this.@event; }
-            }
+            public IEvent Event => this.@event;
 
-            public IImmutableList<IAction> Actions
-            {
-                get { return this.actions; }
-            }
+            public IImmutableList<IAction> Actions =>  this.actions;
         }
     }
 }

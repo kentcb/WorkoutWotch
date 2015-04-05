@@ -12,9 +12,6 @@
             this.executionContext = executionContext;
         }
 
-        public ExecutionContext ExecutionContext
-        {
-            get { return this.executionContext; }
-        }
+        public ExecutionContext ExecutionContext => this.executionContext;
     }
 }

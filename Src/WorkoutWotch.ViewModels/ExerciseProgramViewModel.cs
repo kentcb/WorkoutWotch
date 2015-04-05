@@ -169,85 +169,37 @@ namespace WorkoutWotch.ViewModels
                 .AddTo(this.disposables);
         }
 
-        public string Name
-        {
-            get { return this.model.Name; }
-        }
+        public string Name => this.model.Name;
 
-        public TimeSpan Duration
-        {
-            get { return this.model.Duration; }
-        }
+        public TimeSpan Duration => this.model.Duration;
 
-        public TimeSpan ProgressTimeSpan
-        {
-            get { return this.progressTimeSpan.Value; }
-        }
+        public TimeSpan ProgressTimeSpan => this.progressTimeSpan.Value;
 
-        public double Progress
-        {
-            get { return this.progress.Value; }
-        }
+        public double Progress => this.progress.Value;
 
-        public IReadOnlyReactiveList<ExerciseViewModel> Exercises
-        {
-            get { return this.exercises; }
-        }
+        public IReadOnlyReactiveList<ExerciseViewModel> Exercises => this.exercises;
 
-        public ExerciseViewModel CurrentExercise
-        {
-            get { return this.currentExercise.Value; }
-        }
+        public ExerciseViewModel CurrentExercise => this.currentExercise.Value;
 
-        public bool IsStarted
-        {
-            get { return this.isStarted.Value; }
-        }
+        public bool IsStarted => this.isStarted.Value;
 
-        public bool IsPaused
-        {
-            get { return this.isPaused.Value; }
-        }
+        public bool IsPaused => this.isPaused.Value;
 
-        public bool IsStartVisible
-        {
-            get { return this.isStartVisible.Value; }
-        }
+        public bool IsStartVisible => this.isStartVisible.Value;
 
-        public bool IsPauseVisible
-        {
-            get { return this.isPauseVisible.Value; }
-        }
+        public bool IsPauseVisible => this.isPauseVisible.Value;
 
-        public bool IsResumeVisible
-        {
-            get { return this.isResumeVisible.Value; }
-        }
+        public bool IsResumeVisible => this.isResumeVisible.Value;
 
-        public IReactiveCommand StartCommand
-        {
-            get { return this.startCommand; }
-        }
+        public IReactiveCommand StartCommand => this.startCommand;
 
-        public IReactiveCommand PauseCommand
-        {
-            get { return this.pauseCommand; }
-        }
+        public IReactiveCommand PauseCommand => this.pauseCommand;
 
-        public IReactiveCommand ResumeCommand
-        {
-            get { return this.resumeCommand; }
-        }
+        public IReactiveCommand ResumeCommand => this.resumeCommand;
 
-        public IReactiveCommand SkipBackwardsCommand
-        {
-            get { return this.skipBackwardsCommand; }
-        }
+        public IReactiveCommand SkipBackwardsCommand => this.skipBackwardsCommand;
 
-        public IReactiveCommand SkipForwardsCommand
-        {
-            get { return this.skipForwardsCommand; }
-        }
+        public IReactiveCommand SkipForwardsCommand => this.skipForwardsCommand;
 
         private ExecutionContext ExecutionContext
         {
@@ -266,19 +218,13 @@ namespace WorkoutWotch.ViewModels
         }
 
         private async Task OnStartAsync(object state)
-        {
-            await this.StartAsync(((TimeSpan?)state).GetValueOrDefault(TimeSpan.Zero));
-        }
+            => await this.StartAsync(((TimeSpan?)state).GetValueOrDefault(TimeSpan.Zero));
 
         private async Task OnSkipBackwardsAsync(object state)
-        {
-            await this.SkipBackwardsAsync();
-        }
+            => await this.SkipBackwardsAsync();
 
         private async Task OnSkipForwardsAsync(object state)
-        {
-            await this.SkipForwardsAsync();
-        }
+            => await this.SkipForwardsAsync();
 
         private async Task StartAsync(TimeSpan skipTo = default(TimeSpan), bool isPaused = false)
         {

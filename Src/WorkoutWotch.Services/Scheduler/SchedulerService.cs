@@ -14,29 +14,14 @@
             this.synchronizationContextScheduler = new SynchronizationContextScheduler(SynchronizationContext.Current);
         }
 
-        public IScheduler DefaultScheduler
-        {
-            get { return Rx.DefaultScheduler.Instance; }
-        }
+        public IScheduler DefaultScheduler => Rx.DefaultScheduler.Instance;
 
-        public IScheduler CurrentThreadScheduler
-        {
-            get { return Rx.CurrentThreadScheduler.Instance; }
-        }
+        public IScheduler CurrentThreadScheduler => Rx.CurrentThreadScheduler.Instance;
 
-        public IScheduler ImmediateScheduler
-        {
-            get { return Rx.ImmediateScheduler.Instance; }
-        }
+        public IScheduler ImmediateScheduler => Rx.ImmediateScheduler.Instance;
 
-        public IScheduler SynchronizationContextScheduler
-        {
-            get { return this.synchronizationContextScheduler; }
-        }
+        public IScheduler SynchronizationContextScheduler => this.synchronizationContextScheduler;
 
-        public IScheduler TaskPoolScheduler
-        {
-            get { return Rx.TaskPoolScheduler.Default; }
-        }
+        public IScheduler TaskPoolScheduler => Rx.TaskPoolScheduler.Default;
     }
 }

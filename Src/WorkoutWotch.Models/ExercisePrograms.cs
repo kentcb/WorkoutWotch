@@ -17,10 +17,7 @@
             this.programs = programs.ToImmutableList();
         }
 
-        public IImmutableList<ExerciseProgram> Programs
-        {
-            get { return this.programs; }
-        }
+        public IImmutableList<ExerciseProgram> Programs => this.programs;
 
         public static ExercisePrograms Parse(string input, IContainerService containerService)
         {

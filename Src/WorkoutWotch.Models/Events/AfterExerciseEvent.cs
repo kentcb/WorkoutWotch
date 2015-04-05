@@ -14,14 +14,9 @@
             this.exercise = exercise;
         }
 
-        public Exercise Exercise
-        {
-            get { return this.exercise; }
-        }
+        public Exercise Exercise => this.exercise;
 
         public override string ToString()
-        {
-            return string.Format(CultureInfo.InvariantCulture, "After Exercise '{0}'", this.exercise.Name);
-        }
+            => string.Format(CultureInfo.InvariantCulture, "After Exercise '{0}'", this.exercise.Name);
     }
 }

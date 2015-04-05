@@ -17,9 +17,6 @@
             this.number = number;
         }
 
-        public int Number
-        {
-            get { return this.number; }
-        }
+        public int Number => this.number;
     }
 }

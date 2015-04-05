@@ -41,8 +41,6 @@
     public static class ParseExt
     {
         public static Parser<T> Default<T>()
-        {
-            return i => Result.Success(default(T), i);
-        }
+            => i => Result.Success(default(T), i);
     }
 }

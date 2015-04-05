@@ -25,35 +25,17 @@
             set { this.threshold = value; }
         }
 
-        public bool IsDebugEnabled
-        {
-            get { return this.IsLevelEnabled(LogLevel.Debug); }
-        }
+        public bool IsDebugEnabled => this.IsLevelEnabled(LogLevel.Debug);
 
-        public bool IsInfoEnabled
-        {
-            get { return this.IsLevelEnabled(LogLevel.Info); }
-        }
+        public bool IsInfoEnabled => this.IsLevelEnabled(LogLevel.Info);
 
-        public bool IsPerfEnabled
-        {
-            get { return this.IsLevelEnabled(LogLevel.Perf); }
-        }
+        public bool IsPerfEnabled => this.IsLevelEnabled(LogLevel.Perf);
 
-        public bool IsWarnEnabled
-        {
-            get { return this.IsLevelEnabled(LogLevel.Warn); }
-        }
+        public bool IsWarnEnabled => this.IsLevelEnabled(LogLevel.Warn);
 
-        public bool IsErrorEnabled
-        {
-            get { return this.IsLevelEnabled(LogLevel.Error); }
-        }
+        public bool IsErrorEnabled => this.IsLevelEnabled(LogLevel.Error);
 
-        public IObservable<LogEntry> Entries
-        {
-            get { return this.entries; }
-        }
+        public IObservable<LogEntry> Entries => this.entries;
 
         public ILogger GetLogger(Type forType)
         {
@@ -78,9 +60,7 @@
         }
 
         private bool IsLevelEnabled(LogLevel level)
-        {
-            return this.threshold <= level;
-        }
+            => this.threshold <= level;
 
         private sealed class Logger : ILogger
         {
@@ -93,65 +73,35 @@
                 this.name = name;
             }
 
-            public string Name
-            {
-                get { return this.name; }
-            }
+            public string Name => this.name;
 
-            public bool IsDebugEnabled
-            {
-                get { return this.owner.IsDebugEnabled; }
-            }
+            public bool IsDebugEnabled => this.owner.IsDebugEnabled;
 
-            public bool IsInfoEnabled
-            {
-                get { return this.owner.IsInfoEnabled; }
-            }
+            public bool IsInfoEnabled => this.owner.IsInfoEnabled;
 
-            public bool IsPerfEnabled
-            {
-                get { return this.owner.IsPerfEnabled; }
-            }
+            public bool IsPerfEnabled => this.owner.IsPerfEnabled;
 
-            public bool IsWarnEnabled
-            {
-                get { return this.owner.IsWarnEnabled; }
-            }
+            public bool IsWarnEnabled => this.owner.IsWarnEnabled;
 
-            public bool IsErrorEnabled
-            {
-                get { return this.owner.IsErrorEnabled; }
-            }
+            public bool IsErrorEnabled => this.owner.IsErrorEnabled;
 
             public void Debug(string message)
-            {
-                this.Log(LogLevel.Debug, message);
-            }
+                => this.Log(LogLevel.Debug, message);
 
             public void Debug(string format, params object[] args)
-            {
-                this.Log(LogLevel.Debug, format, args);
-            }
+                => this.Log(LogLevel.Debug, format, args);
 
             public void Debug(Exception exception, string format, params object[] args)
-            {
-                this.Log(LogLevel.Debug, exception, format, args);
-            }
+                => this.Log(LogLevel.Debug, exception, format, args);
 
             public void Info(string message)
-            {
-                this.Log(LogLevel.Info, message);
-            }
+                => this.Log(LogLevel.Info, message);
 
             public void Info(string format, params object[] args)
-            {
-                this.Log(LogLevel.Info, format, args);
-            }
+                => this.Log(LogLevel.Info, format, args);
 
             public void Info(Exception exception, string format, params object[] args)
-            {
-                this.Log(LogLevel.Info, exception, format, args);
-            }
+                => this.Log(LogLevel.Info, exception, format, args);
 
             public IDisposable Perf(string message)
             {
@@ -180,34 +130,22 @@
             }
 
             public void Warn(string message)
-            {
-                this.Log(LogLevel.Warn, message);
-            }
+                => this.Log(LogLevel.Warn, message);
 
             public void Warn(string format, params object[] args)
-            {
-                this.Log(LogLevel.Warn, format, args);
-            }
+                => this.Log(LogLevel.Warn, format, args);
 
             public void Warn(Exception exception, string format, params object[] args)
-            {
-                this.Log(LogLevel.Warn, exception, format, args);
-            }
+                => this.Log(LogLevel.Warn, exception, format, args);
 
             public void Error(string message)
-            {
-                this.Log(LogLevel.Error, message);
-            }
+                => this.Log(LogLevel.Error, message);
 
             public void Error(string format, params object[] args)
-            {
-                this.Log(LogLevel.Error, format, args);
-            }
+                => this.Log(LogLevel.Error, format, args);
 
             public void Error(Exception exception, string format, params object[] args)
-            {
-                this.Log(LogLevel.Error, exception, format, args);
-            }
+                => this.Log(LogLevel.Error, exception, format, args);
 
             private void Log(LogLevel level, string format, params object[] args)
             {

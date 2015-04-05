@@ -25,15 +25,9 @@
             this.innerAction = new SequenceAction(GetInnerActions(audioService, delayService, loggerService, this.ticks));
         }
 
-        public TimeSpan Duration
-        {
-            get { return this.innerAction.Duration; }
-        }
+        public TimeSpan Duration => this.innerAction.Duration;
 
-        public IImmutableList<MetronomeTick> Ticks
-        {
-            get { return this.ticks; }
-        }
+        public IImmutableList<MetronomeTick> Ticks => this.ticks;
 
         public async Task ExecuteAsync(ExecutionContext context)
         {

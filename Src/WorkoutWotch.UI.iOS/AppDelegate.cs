@@ -54,14 +54,10 @@ namespace WorkoutWotch.UI.iOS
         }
 
         private void InitializeAppearanceManager()
-        {
-            AppearanceManager.Configure();
-        }
+            => AppearanceManager.Configure();
 
         private void InitializeAkavache()
-        {
-            BlobCache.ApplicationName = "Workout Wotch";
-        }
+            => BlobCache.ApplicationName = "Workout Wotch";
 
         private void InitializeIoc()
         {

@@ -66,15 +66,9 @@ namespace WorkoutWotch.Models
                 .AddTo(this.disposables);
         }
 
-        public CancellationToken CancellationToken
-        {
-            get { return this.cancellationTokenSource.Token; }
-        }
+        public CancellationToken CancellationToken => this.cancellationTokenSource.Token;
 
-        public bool IsCancelled
-        {
-            get { return this.isCancelled.Value; }
-        }
+        public bool IsCancelled => this.isCancelled.Value;
 
         public bool IsPaused
         {
@@ -100,15 +94,9 @@ namespace WorkoutWotch.Models
             private set { this.RaiseAndSetIfChanged(ref this.currentRepetition, value); }
         }
 
-        public TimeSpan Progress
-        {
-            get { return this.progress.Value; }
-        }
+        public TimeSpan Progress => this.progress.Value;
 
-        public TimeSpan CurrentExerciseProgress
-        {
-            get { return this.currentExerciseProgress.Value; }
-        }
+        public TimeSpan CurrentExerciseProgress => this.currentExerciseProgress.Value;
 
         public TimeSpan SkipAhead
         {
@@ -125,29 +113,19 @@ namespace WorkoutWotch.Models
         }
 
         public void Cancel()
-        {
-            this.cancelRequested.OnNext(Unit.Default);
-        }
+            =>  this.cancelRequested.OnNext(Unit.Default);
 
         internal void AddProgress(TimeSpan progressDelta)
-        {
-            this.progressDeltas.OnNext(progressDelta);
-        }
+            =>  this.progressDeltas.OnNext(progressDelta);
 
         internal void SetCurrentExercise(Exercise exercise)
-        {
-            this.CurrentExercise = exercise;
-        }
+            => this.CurrentExercise = exercise;
 
         internal void SetCurrentSet(int set)
-        {
-            this.CurrentSet = set;
-        }
+            => this.CurrentSet = set;
 
         internal void SetCurrentRepetition(int repetition)
-        {
-            this.CurrentRepetition = repetition;
-        }
+            => this.CurrentRepetition = repetition;
 
         protected override void Dispose(bool disposing)
         {
