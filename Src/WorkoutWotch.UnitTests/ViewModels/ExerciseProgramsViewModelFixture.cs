@@ -76,7 +76,7 @@ namespace WorkoutWotch.UnitTests.ViewModels
 
             scheduler.Start();
             Assert.NotNull(sut.ParseErrorMessage);
-            Assert.Equal("Parsing failure: unexpected '#'; expected end of input (Line 3, Column 1); recently consumed:  Program\n\n", sut.ParseErrorMessage);
+            Assert.Equal("Parsing failure: unexpected '#'; expected end of input (Line 3, Column 1); recently consumed: rogram\r\n\r\n", sut.ParseErrorMessage);
         }
 
         [Fact]
@@ -182,7 +182,7 @@ namespace WorkoutWotch.UnitTests.ViewModels
 
             stateService
                 .When(x => x.GetAsync<string>(It.IsAny<string>()))
-                .Return(Task.Run<string>(() => { throw new InvalidOperationException(); }));
+                .Return(Task.Run<string>((Func<string>)(() => { throw new InvalidOperationException(); })));
 
             stateService
                 .When(x => x.SetAsync<string>(It.IsAny<string>(), It.IsAny<string>()))

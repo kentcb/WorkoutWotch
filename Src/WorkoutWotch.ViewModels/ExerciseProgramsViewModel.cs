@@ -65,7 +65,7 @@
                 .Publish();
 
             var safeDocuments = documents
-                .Catch(Observable.Empty<DocumentSourceWith<string>>());
+                .Catch((Exception ex) => Observable.Empty<DocumentSourceWith<string>>());
 
             var results = documents
                 .Select(x => new DocumentSourceWith<IResult<ExercisePrograms>>(x.Source, ExercisePrograms.TryParse(x.Item, this.containerService)));

@@ -25,6 +25,7 @@ namespace WorkoutWotch.UI.iOS.Views.ExerciseProgram
             this.TableView.RegisterClassForCellReuse(typeof(ExerciseView), ExerciseView.Key);
             this.TableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
             this.TableView.AllowsSelection = false;
+            this.TableView.CellLayoutMarginsFollowReadableWidth = false;
 
             this.WhenAnyValue(x => x.ViewModel.Exercises)
                 .Select(x => x == null ? null : new AutoSizeTableViewSource<ExerciseViewModel>(this.TableView, x, ExerciseView.Key))

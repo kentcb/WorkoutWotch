@@ -51,6 +51,7 @@ namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
             this.TableView.RegisterClassForCellReuse(typeof(ExerciseProgramView), ExerciseProgramView.Key);
             this.TableView.SeparatorColor = Resources.ThemeDarkColor;
             this.TableView.TableFooterView = new UIView();
+            this.TableView.CellLayoutMarginsFollowReadableWidth = false;
 
             var tableViewSource = this.WhenAnyValue(x => x.ViewModel.Programs)
                 .Select(x => x == null ? null : new AutoSizeTableViewSource<ExerciseProgramViewModel>(this.TableView, x, ExerciseProgramView.Key))

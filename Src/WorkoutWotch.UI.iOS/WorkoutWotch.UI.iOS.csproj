@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -10,7 +10,6 @@
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>WorkoutWotchUIiOS</AssemblyName>
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
-    <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -166,7 +165,9 @@
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
     <None Include="packages.config" />
-    <None Include="Linker.xml" />
+    <None Include="Linker.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -196,15 +197,7 @@
     <Compile Include="Views\ExerciseProgram\ExerciseView.cs" />
     <Compile Include="AkavacheSqliteLinkerOverride.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-    <Folder Include="Audio\" />
-    <Folder Include="Controls\" />
-    <Folder Include="Utility\" />
-    <Folder Include="Views\" />
-    <Folder Include="Views\ExercisePrograms\" />
-    <Folder Include="Views\ExerciseProgram\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Audio\MetronomeBell.mp3" />
     <Content Include="Audio\MetronomeClick.mp3" />
@@ -236,38 +229,102 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json" />
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\29.png" />
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\58.png" />
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\87.png" />
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\80.png" />
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\120.png" />
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\57.png" />
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\114.png" />
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\180.png" />
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\40.png" />
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\50.png" />
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\100.png" />
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\72.png" />
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\144.png" />
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\76.png" />
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\152.png" />
-    <ImageAsset Include="Resources\Images.xcassets\Play.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Images.xcassets\Play.imageset\Play.png" />
-    <ImageAsset Include="Resources\Images.xcassets\Play.imageset\Play%402x.png" />
-    <ImageAsset Include="Resources\Images.xcassets\Play.imageset\Play%403x.png" />
-    <ImageAsset Include="Resources\Images.xcassets\Pause.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Images.xcassets\Pause.imageset\Pause.png" />
-    <ImageAsset Include="Resources\Images.xcassets\Pause.imageset\Pause%402x.png" />
-    <ImageAsset Include="Resources\Images.xcassets\Pause.imageset\Pause%403x.png" />
-    <ImageAsset Include="Resources\Images.xcassets\SkipForward.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Images.xcassets\SkipForward.imageset\SkipForward.png" />
-    <ImageAsset Include="Resources\Images.xcassets\SkipForward.imageset\SkipForward%402x.png" />
-    <ImageAsset Include="Resources\Images.xcassets\SkipForward.imageset\SkipForward%403x.png" />
-    <ImageAsset Include="Resources\Images.xcassets\SkipBackward.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Images.xcassets\SkipBackward.imageset\SkipBackward.png" />
-    <ImageAsset Include="Resources\Images.xcassets\SkipBackward.imageset\SkipBackward%402x.png" />
-    <ImageAsset Include="Resources\Images.xcassets\SkipBackward.imageset\SkipBackward%403x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\29.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\58.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\87.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\80.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\120.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\57.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\114.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\180.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\40.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\50.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\100.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\72.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\144.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\76.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\152.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\Play.imageset\Contents.json">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\Play.imageset\Play.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\Play.imageset\Play%402x.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\Play.imageset\Play%403x.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\Pause.imageset\Contents.json">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\Pause.imageset\Pause.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\Pause.imageset\Pause%402x.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\Pause.imageset\Pause%403x.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\SkipForward.imageset\Contents.json">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\SkipForward.imageset\SkipForward.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\SkipForward.imageset\SkipForward%402x.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\SkipForward.imageset\SkipForward%403x.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\SkipBackward.imageset\Contents.json">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\SkipBackward.imageset\SkipBackward.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\SkipBackward.imageset\SkipBackward%402x.png">
+      <InProject>false</InProject>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\SkipBackward.imageset\SkipBackward%403x.png">
+      <InProject>false</InProject>
+    </ImageAsset>
   </ItemGroup>
   <ItemGroup>
     <ITunesArtwork Include="iTunesArtwork" />

@@ -1,6 +1,7 @@
 ﻿namespace WorkoutWotch.UnitTests.ViewModels
 {
     using System;
+    using System.Reactive;
     using System.Reactive.Linq;
     using System.Reactive.Threading.Tasks;
     using System.Threading.Tasks;
@@ -60,8 +61,10 @@
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
                     .AddExercise(new ExerciseBuilder()
-                        .WithBeforeExerciseAction(new WaitActionBuilder()
-                            .WithDelay(duration))))
+                        .WithBeforeExerciseAction(
+                            new WaitActionBuilder()
+                                .WithDelay(duration)
+                                .Build())))
                 .Build();
 
             Assert.Equal(duration, sut.Duration);
@@ -167,9 +170,11 @@
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
                     .AddExercise(new ExerciseBuilder()
-                        .WithBeforeExerciseAction(new WaitActionBuilder()
-                            .WithDelayService(new DelayService())
-                            .WithDelay(TimeSpan.FromMinutes(1)))))
+                        .WithBeforeExerciseAction(
+                            new WaitActionBuilder()
+                                .WithDelayService(new DelayService())
+                                .WithDelay(TimeSpan.FromMinutes(1))
+                                .Build())))
                 .WithSchedulerService(scheduler)
                 .Build();
 
@@ -237,9 +242,11 @@
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
                     .AddExercise(new ExerciseBuilder()
-                        .WithBeforeExerciseAction(new WaitActionBuilder()
-                            .WithDelayService(new DelayService())
-                            .WithDelay(TimeSpan.FromMinutes(1)))))
+                        .WithBeforeExerciseAction(
+                            new WaitActionBuilder()
+                                .WithDelayService(new DelayService())
+                                .WithDelay(TimeSpan.FromMinutes(1))
+                                .Build())))
                 .WithSchedulerService(scheduler)
                 .Build();
 
@@ -281,9 +288,11 @@
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
                     .AddExercise(new ExerciseBuilder()
-                        .WithBeforeExerciseAction(new WaitActionBuilder()
-                            .WithDelayService(new DelayService())
-                            .WithDelay(TimeSpan.FromMinutes(1)))))
+                        .WithBeforeExerciseAction(
+                            new WaitActionBuilder()
+                                .WithDelayService(new DelayService())
+                                .WithDelay(TimeSpan.FromMinutes(1))
+                                .Build())))
                 .WithSchedulerService(scheduler)
                 .Build();
 
@@ -508,8 +517,8 @@
 
                 await sut.WhenAnyValue(x => x.IsPaused)
                     .Where(x => x)
-                    .TimeoutIfTooSlow()
-                    .FirstAsync();
+                    .FirstAsync()
+                    .TimeoutIfTooSlow();
 
                 sut.SkipBackwardsCommand.Execute(null);
 

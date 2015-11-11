@@ -19,7 +19,7 @@ namespace WorkoutWotch.Services.iOS.Speech
             var utterance = new AVSpeechUtterance(speechString)
             {
                 Voice = voice,
-                Rate = 0.3f
+                Rate = 0.6f
             };
             var synthesizer = new AVSpeechSynthesizer();
             var disposables = new CompositeDisposable(utterance, synthesizer);
