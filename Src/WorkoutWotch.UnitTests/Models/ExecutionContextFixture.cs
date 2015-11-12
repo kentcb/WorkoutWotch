@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using Builders;
     using ReactiveUI;
     using WorkoutWotch.Models;
     using Xunit;

@@ -1,10 +1,10 @@
-﻿namespace WorkoutWotch.UnitTests.ViewModels
+﻿namespace WorkoutWotch.UnitTests.ViewModels.Builders
 {
     using Kent.Boogaart.PCLMock;
+    using Models.Builders;
     using WorkoutWotch.Models;
     using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.Contracts.Scheduler;
-    using WorkoutWotch.UnitTests.Models;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
     using WorkoutWotch.UnitTests.Services.Scheduler.Mocks;
     using WorkoutWotch.ViewModels;

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using Builders;
     using Kent.Boogaart.PCLMock;
     using WorkoutWotch.Models;
     using WorkoutWotch.UnitTests.Services.Container.Mocks;

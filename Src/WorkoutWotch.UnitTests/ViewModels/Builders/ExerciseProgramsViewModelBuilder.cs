@@ -1,7 +1,6 @@
-﻿using System.Reactive.Linq;
-
-namespace WorkoutWotch.UnitTests.ViewModels
+﻿namespace WorkoutWotch.UnitTests.ViewModels.Builders
 {
+    using System.Reactive.Linq;
     using System.Threading.Tasks;
     using Kent.Boogaart.PCLMock;
     using WorkoutWotch.Services.Contracts.Container;

@@ -1,6 +1,7 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.EventMatchers
 {
     using System;
+    using Builders;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.EventMatchers;
     using WorkoutWotch.Models.Events;

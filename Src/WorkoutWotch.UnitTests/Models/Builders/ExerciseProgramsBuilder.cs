@@ -1,4 +1,4 @@
-﻿namespace WorkoutWotch.UnitTests.Models
+﻿namespace WorkoutWotch.UnitTests.Models.Builders
 {
     using System.Collections.Generic;
     using WorkoutWotch.Models;

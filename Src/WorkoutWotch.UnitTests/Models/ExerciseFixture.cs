@@ -1,12 +1,12 @@
 ﻿namespace WorkoutWotch.UnitTests.Models
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Reactive.Linq;
     using System.Reactive.Threading.Tasks;
     using System.Threading;
     using System.Threading.Tasks;
+    using Builders;
     using Kent.Boogaart.PCLMock;
     using ReactiveUI;
     using WorkoutWotch.Models;

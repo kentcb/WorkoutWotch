@@ -1,4 +1,4 @@
-﻿namespace WorkoutWotch.UnitTests.Models.Actions
+﻿namespace WorkoutWotch.UnitTests.Models.Actions.Builders
 {
     using Kent.Boogaart.PCLMock;
     using WorkoutWotch.Models.Actions;

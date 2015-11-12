@@ -5,6 +5,7 @@
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
     using System.Threading.Tasks;
+    using Builders;
     using Kent.Boogaart.PCLMock;
     using WorkoutWotch.UnitTests.Reactive;
     using WorkoutWotch.UnitTests.Services.Container.Mocks;

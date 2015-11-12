@@ -1,4 +1,4 @@
-﻿namespace WorkoutWotch.UnitTests.Services.State
+﻿namespace WorkoutWotch.UnitTests.Services.State.Builders
 {
     using Akavache;
     using Kent.Boogaart.PCLMock;

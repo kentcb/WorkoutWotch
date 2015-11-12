@@ -1,16 +1,16 @@
 ﻿namespace WorkoutWotch.UnitTests.ViewModels
 {
     using System;
-    using System.Reactive;
     using System.Reactive.Linq;
     using System.Reactive.Threading.Tasks;
     using System.Threading.Tasks;
+    using Builders;
     using Kent.Boogaart.PCLMock;
+    using Models.Actions.Builders;
+    using Models.Builders;
     using ReactiveUI;
     using WorkoutWotch.Models;
     using WorkoutWotch.Services.Delay;
-    using WorkoutWotch.UnitTests.Models;
-    using WorkoutWotch.UnitTests.Models.Actions;
     using WorkoutWotch.UnitTests.Models.Mocks;
     using WorkoutWotch.UnitTests.Reactive;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;

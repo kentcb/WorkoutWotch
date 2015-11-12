@@ -1,9 +1,9 @@
 ﻿namespace WorkoutWotch.UnitTests.Models
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Builders;
     using Kent.Boogaart.PCLMock;
     using WorkoutWotch.Models;
     using WorkoutWotch.UnitTests.Models.Mocks;

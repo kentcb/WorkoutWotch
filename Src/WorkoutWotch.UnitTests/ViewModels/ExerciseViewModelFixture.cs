@@ -3,9 +3,10 @@
     using System;
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
+    using Builders;
     using Kent.Boogaart.PCLMock;
+    using Models.Builders;
     using WorkoutWotch.Models;
-    using WorkoutWotch.UnitTests.Models;
     using WorkoutWotch.UnitTests.Models.Mocks;
     using WorkoutWotch.UnitTests.Reactive;
     using WorkoutWotch.ViewModels;

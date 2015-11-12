@@ -1,5 +1,6 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Events
 {
+    using Builders;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Events;
     using Xunit;
