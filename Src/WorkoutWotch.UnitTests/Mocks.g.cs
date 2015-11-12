@@ -411,25 +411,4 @@ namespace WorkoutWotch.UnitTests.Services.Speech.Mocks
         }
     }
 }
-namespace WorkoutWotch.UnitTests.Services.Container.Mocks
-{
-    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "3.1.2.0")]
-    [System.Runtime.CompilerServices.CompilerGenerated]
-    public partial class ContainerServiceMock : global::Kent.Boogaart.PCLMock.MockBase<global::WorkoutWotch.Services.Contracts.Container.IContainerService>, global::WorkoutWotch.Services.Contracts.Container.IContainerService
-    {
-        public ContainerServiceMock(global::Kent.Boogaart.PCLMock.MockBehavior behavior = global::Kent.Boogaart.PCLMock.MockBehavior.Strict): base (behavior)
-        {
-            if ((behavior) == (global::Kent.Boogaart.PCLMock.MockBehavior.Loose))
-            {
-                ConfigureLooseBehavior();
-            }
-        }
-
-        partial void ConfigureLooseBehavior();
-        public T Resolve<T>()where T : class
-        {
-            return this.Apply(x => x.Resolve<T>());
-        }
-    }
-}
 

@@ -7,9 +7,11 @@
     using System.Reactive.Threading.Tasks;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using ReactiveUI;
+    using Services.Contracts.Audio;
+    using Services.Contracts.Delay;
+    using Services.Contracts.Speech;
     using Sprache;
     using WorkoutWotch.Models;
-    using WorkoutWotch.Services.Contracts.Container;
     using WorkoutWotch.Services.Contracts.ExerciseDocument;
     using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.Contracts.Scheduler;
@@ -20,7 +22,6 @@
     {
         private const string exerciseProgramsCacheKey = "ExerciseProgramsDocument";
 
-        private readonly IContainerService containerService;
         private readonly IExerciseDocumentService exerciseDocumentService;
         private readonly IStateService stateService;
         private readonly CompositeDisposable disposables;
@@ -31,19 +32,22 @@
         private ExerciseProgramViewModel selectedProgram;
 
         public ExerciseProgramsViewModel(
-            IContainerService containerService,
+            IAudioService audioService,
+            IDelayService delayService,
             IExerciseDocumentService exerciseDocumentService,
             ILoggerService loggerService,
             ISchedulerService schedulerService,
+            ISpeechService speechService,
             IStateService stateService)
         {
-            containerService.AssertNotNull(nameof(containerService));
+            audioService.AssertNotNull(nameof(audioService));
+            delayService.AssertNotNull(nameof(delayService));
             exerciseDocumentService.AssertNotNull(nameof(exerciseDocumentService));
             loggerService.AssertNotNull(nameof(loggerService));
             schedulerService.AssertNotNull(nameof(schedulerService));
+            speechService.AssertNotNull(nameof(speechService));
             stateService.AssertNotNull(nameof(stateService));
 
-            this.containerService = containerService;
             this.exerciseDocumentService = exerciseDocumentService;
             this.stateService = stateService;
             this.disposables = new CompositeDisposable();
@@ -68,7 +72,7 @@
                 .Catch((Exception ex) => Observable.Empty<DocumentSourceWith<string>>());
 
             var results = documents
-                .Select(x => new DocumentSourceWith<IResult<ExercisePrograms>>(x.Source, ExercisePrograms.TryParse(x.Item, this.containerService)));
+                .Select(x => new DocumentSourceWith<IResult<ExercisePrograms>>(x.Source, ExercisePrograms.TryParse(x.Item, audioService, delayService, loggerService, speechService)));
 
             var safeResults = results
                 .Catch(Observable.Empty<DocumentSourceWith<IResult<ExercisePrograms>>>());

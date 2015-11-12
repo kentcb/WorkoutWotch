@@ -3,9 +3,12 @@
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using Kent.Boogaart.HelperTrinity.Extensions;
+    using Services.Contracts.Audio;
+    using Services.Contracts.Delay;
+    using Services.Contracts.Logger;
+    using Services.Contracts.Speech;
     using Sprache;
     using WorkoutWotch.Models.Parsers;
-    using WorkoutWotch.Services.Contracts.Container;
 
     public sealed class ExercisePrograms
     {
@@ -19,20 +22,36 @@
 
         public IImmutableList<ExerciseProgram> Programs => this.programs;
 
-        public static ExercisePrograms Parse(string input, IContainerService containerService)
+        public static ExercisePrograms Parse(
+            string input,
+            IAudioService audioService,
+            IDelayService delayService,
+            ILoggerService loggerService,
+            ISpeechService speechService)
         {
             input.AssertNotNull(nameof(input));
-            containerService.AssertNotNull(nameof(containerService));
+            audioService.AssertNotNull(nameof(audioService));
+            delayService.AssertNotNull(nameof(delayService));
+            loggerService.AssertNotNull(nameof(loggerService));
+            speechService.AssertNotNull(nameof(speechService));
 
-            return ExerciseProgramsParser.GetParser(containerService).Parse(input);
+            return ExerciseProgramsParser.GetParser(audioService, delayService, loggerService, speechService).Parse(input);
         }
 
-        public static IResult<ExercisePrograms> TryParse(string input, IContainerService containerService)
+        public static IResult<ExercisePrograms> TryParse(
+            string input,
+            IAudioService audioService,
+            IDelayService delayService,
+            ILoggerService loggerService,
+            ISpeechService speechService)
         {
             input.AssertNotNull(nameof(input));
-            containerService.AssertNotNull(nameof(containerService));
+            audioService.AssertNotNull(nameof(audioService));
+            delayService.AssertNotNull(nameof(delayService));
+            loggerService.AssertNotNull(nameof(loggerService));
+            speechService.AssertNotNull(nameof(speechService));
 
-            return ExerciseProgramsParser.GetParser(containerService).TryParse(input);
+            return ExerciseProgramsParser.GetParser(audioService, delayService, loggerService, speechService).TryParse(input);
         }
     }
 }

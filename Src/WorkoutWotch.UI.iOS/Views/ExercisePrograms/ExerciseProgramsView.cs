@@ -5,7 +5,6 @@ namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
     using System.Reactive.Linq;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using ReactiveUI;
-    using TinyIoC;
     using UIKit;
     using WorkoutWotch.UI.iOS.Utility;
     using WorkoutWotch.ViewModels;
@@ -35,7 +34,7 @@ namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
                             return null;
                         }
 
-                        var view = TinyIoCContainer.Current.Resolve<Views.ExerciseProgram.ExerciseProgramView>();
+                        var view = new Views.ExerciseProgram.ExerciseProgramView();
                         view.ViewModel = x;
                         return view;
                     })

@@ -4,7 +4,6 @@ namespace WorkoutWotch.UI.iOS
     using System.Reactive;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
-    using TinyIoC;
     using UIKit;
     using WorkoutWotch.Services.iOS.SystemNotifications;
 
@@ -12,11 +11,15 @@ namespace WorkoutWotch.UI.iOS
     // sets any control properties that aren't controllable via the appearance proxy functionality, and provides automatic dynamic type support where relevant
     internal static class ControlFactory
     {
-        private static readonly IObservable<Unit> sharedDynamicTypeChanged = TinyIoCContainer.Current
-            .Resolve<ISystemNotificationsService>()
-            .DynamicTypeChanged
-            .Publish()
-            .RefCount();
+        private static IObservable<Unit> sharedDynamicTypeChanged;
+
+        public static void Initialize(ISystemNotificationsService systemNotificationService)
+        {
+            sharedDynamicTypeChanged = systemNotificationService
+                .DynamicTypeChanged
+                .Publish()
+                .RefCount();
+        }
 
         public static UILabel CreateLabel(PreferredFont font = PreferredFont.Body)
             => new DynamicTypeAwareLabel(sharedDynamicTypeChanged, font);

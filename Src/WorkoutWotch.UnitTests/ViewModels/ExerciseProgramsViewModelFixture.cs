@@ -8,9 +8,7 @@
     using Builders;
     using Kent.Boogaart.PCLMock;
     using WorkoutWotch.UnitTests.Reactive;
-    using WorkoutWotch.UnitTests.Services.Container.Mocks;
     using WorkoutWotch.UnitTests.Services.ExerciseDocument.Mocks;
-    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
     using WorkoutWotch.UnitTests.Services.State.Mocks;
     using WorkoutWotch.ViewModels;
     using Xunit;
@@ -18,33 +16,45 @@
     public class ExerciseProgramsViewModelFixture
     {
         [Fact]
-        public void ctor_throws_if_container_service_is_null()
+        public void ctor_throws_if_audio_service_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModel(null, new ExerciseDocumentServiceMock(), new LoggerServiceMock(), new TestSchedulerService(), new StateServiceMock()));
+            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModelBuilder().WithAudioService(null).Build());
+        }
+
+        [Fact]
+        public void ctor_throws_if_delay_service_is_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModelBuilder().WithDelayService(null).Build());
         }
 
         [Fact]
         public void ctor_throws_if_exercise_document_service_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModel(new ContainerServiceMock(), null, new LoggerServiceMock(), new TestSchedulerService(), new StateServiceMock()));
+            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModelBuilder().WithExerciseDocumentService(null).Build());
         }
 
         [Fact]
         public void ctor_throws_if_logger_service_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModel(new ContainerServiceMock(), new ExerciseDocumentServiceMock(), null, new TestSchedulerService(), new StateServiceMock()));
+            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModelBuilder().WithLoggerService(null).Build());
         }
 
         [Fact]
         public void ctor_throws_if_scheduler_service_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModel(new ContainerServiceMock(), new ExerciseDocumentServiceMock(), new LoggerServiceMock(), null, new StateServiceMock()));
+            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModelBuilder().WithSchedulerService(null).Build());
+        }
+
+        [Fact]
+        public void ctor_throws_if_speech_service_is_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModelBuilder().WithSpeechService(null).Build());
         }
 
         [Fact]
         public void ctor_throws_if_state_service_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModel(new ContainerServiceMock(), new ExerciseDocumentServiceMock(), new LoggerServiceMock(), new TestSchedulerService(), null));
+            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModelBuilder().WithStateService(null).Build());
         }
 
         [Fact]

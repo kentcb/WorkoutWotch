@@ -1,11 +1,8 @@
 namespace WorkoutWotch.UI.iOS.Utility
 {
-    using System;
     using System.Reactive.Disposables;
     using ReactiveUI;
-    using TinyIoC;
     using UIKit;
-    using WorkoutWotch.Services.iOS.SystemNotifications;
 
     // a base class for table view controllers to save repetitive code
     public abstract class TableViewControllerBase<TViewModel> : ReactiveTableViewController, IViewFor<TViewModel>
@@ -45,11 +42,12 @@ namespace WorkoutWotch.UI.iOS.Utility
         {
             base.ViewDidAppear(animated);
 
-            // if the dynamic type size changes, we need to reload data in the table view, otherwise things don't re-layout correctly (on device - works fine without this in simulator)
-            this.dynamicTypeChangedSubscription.Disposable = TinyIoCContainer.Current
-                .Resolve<ISystemNotificationsService>()
-                .DynamicTypeChanged
-                .Subscribe(_ => this.TableView.ReloadData());
+            // TODO: how to do this cleanly?
+            //// if the dynamic type size changes, we need to reload data in the table view, otherwise things don't re-layout correctly (on device - works fine without this in simulator)
+            //this.dynamicTypeChangedSubscription.Disposable = TinyIoCContainer.Current
+            //    .Resolve<ISystemNotificationsService>()
+            //    .DynamicTypeChanged
+            //    .Subscribe(_ => this.TableView.ReloadData());
         }
 
         public override void ViewDidDisappear(bool animated)

@@ -2,9 +2,9 @@
 {
     using System;
     using Kent.Boogaart.PCLMock;
+    using Services.Delay.Mocks;
     using Sprache;
     using WorkoutWotch.Models.Parsers;
-    using WorkoutWotch.UnitTests.Services.Container.Mocks;
     using Xunit;
 
     public class WaitActionParserFixture
@@ -27,7 +27,7 @@
         [InlineData("Wait    \t for \t   3s", 3 * msInSecond)]
         public void can_parse_correctly_formatted_input(string input, int expectedMilliseconds)
         {
-            var result = WaitActionParser.GetParser(new ContainerServiceMock(MockBehavior.Loose)).Parse(input);
+            var result = WaitActionParser.GetParser(new DelayServiceMock(MockBehavior.Loose)).Parse(input);
             Assert.NotNull(result);
             Assert.Equal(TimeSpan.FromMilliseconds(expectedMilliseconds), result.Duration);
         }
@@ -47,7 +47,7 @@
         [InlineData("whatever")]
         public void cannot_parse_incorrectly_formatted_input(string input)
         {
-            var result = WaitActionParser.GetParser(new ContainerServiceMock(MockBehavior.Loose))(new Input(input));
+            var result = WaitActionParser.GetParser(new DelayServiceMock(MockBehavior.Loose))(new Input(input));
             Assert.False(result.WasSuccessful && result.Remainder.AtEnd);
         }
     }

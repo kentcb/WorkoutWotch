@@ -1,42 +1,30 @@
 namespace WorkoutWotch.UI.iOS
 {
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Threading.Tasks;
     using Akavache;
     using Foundation;
-    using TinyIoC;
     using UIKit;
     using WorkoutWotch.Services.Contracts.Logger;
-    using WorkoutWotch.Services.Contracts.State;
-    using WorkoutWotch.UI.iOS.Views.ExercisePrograms;
 
     [Register(nameof(AppDelegate))]
     public partial class AppDelegate : UIApplicationDelegate
     {
         private UIWindow window;
+        private iOSCompositionRoot compositionRoot;
 
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             this.InitializeAppearanceManager();
+            this.InitializeCompositionRoot();
             this.InitializeAkavache();
-            this.InitializeIoc();
             this.ConfigureLogging();
-
-            #if DEBUG
-            // we do not want to await the task
-            #pragma warning disable 4014
-
-            this.CheckForPreviouslyUnhandledExceptions();
-
-            #pragma warning restore 4014
-            #endif
+            this.InitializeControlFactory();
 
             // create a new window instance based on the screen size
             window = new UIWindow(UIScreen.MainScreen.Bounds);
 
-            var view = TinyIoCContainer.Current.Resolve<ExerciseProgramsHostView>();
+            var view = this.compositionRoot.ResolveExerciseProgramsHostView();
             var navigationController = new UINavigationController(view);
 
             window.RootViewController = navigationController;
@@ -53,69 +41,36 @@ namespace WorkoutWotch.UI.iOS
                 .ContinueWith(_ => UIApplication.SharedApplication.EndBackgroundTask(taskId));
         }
 
-        private void InitializeAppearanceManager()
-            => AppearanceManager.Configure();
+        private void InitializeAppearanceManager() =>
+            AppearanceManager.Configure();
 
-        private void InitializeAkavache()
-            => BlobCache.ApplicationName = "Workout Wotch";
+        private void InitializeCompositionRoot() =>
+            this.compositionRoot = new iOSCompositionRoot();
 
-        private void InitializeIoc()
-        {
-            this.RegisterServices(TinyIoCContainer.Current);
-            this.RegisterViewModels(TinyIoCContainer.Current);
-        }
+        private void InitializeAkavache() =>
+            BlobCache.ApplicationName = "Workout Wotch";
 
         private void ConfigureLogging()
         {
-            var loggerService = TinyIoCContainer.Current.Resolve<ILoggerService>();
+            var loggerService = this.compositionRoot.ResolveLoggerService();
 
-            #if DEBUG
-
+#if DEBUG
             loggerService.Threshold = LogLevel.Debug;
-
-            #else
-
+#else
             loggerService.Threshold = LogLevel.Info;
-
-            #endif
+#endif
 
             loggerService.Entries.Subscribe(x => Console.WriteLine("[{0}] {1} #{2} {3}", x.Level, x.Name, x.ThreadId, x.Message));
         }
 
+        private void InitializeControlFactory() =>
+            ControlFactory.Initialize(this.compositionRoot.ResolveSystemNotificationsService());
+
         private async Task SaveStateAsync()
         {
-            IStateService stateService;
-
-            if (!TinyIoCContainer.Current.TryResolve<IStateService>(out stateService))
-            {
-                return;
-            }
+            var stateService = this.compositionRoot.ResolveStateService();
 
             await stateService.SaveAsync();
         }
-
-        #if DEBUG
-
-        // if the app crashed in a prior run, we may have captured the exception details and this will enable us to see those details
-        private async Task CheckForPreviouslyUnhandledExceptions()
-        {
-            var stateService = TinyIoCContainer.Current.Resolve<IStateService>();
-            var loggerService = TinyIoCContainer.Current.Resolve<ILoggerService>();
-
-            try
-            {
-                var unhandledException = await stateService.GetAsync<string>(Application.UnhandledExceptionKey).ConfigureAwait(continueOnCapturedContext: false);
-                loggerService.GetLogger(this.GetType()).Error("Recovered details of a previously unhandled exception: {0}", unhandledException);
-                Debugger.Break();
-
-                await stateService.RemoveAsync<string>(Application.UnhandledExceptionKey).ConfigureAwait(continueOnCapturedContext: false);
-            }
-            catch (KeyNotFoundException)
-            {
-                // swallow - no previously unhandled exception to deal with
-            }
-        }
-
-        #endif
     }
 }

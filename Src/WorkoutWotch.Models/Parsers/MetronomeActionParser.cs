@@ -4,7 +4,6 @@
     using Sprache;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Services.Contracts.Audio;
-    using WorkoutWotch.Services.Contracts.Container;
     using WorkoutWotch.Services.Contracts.Delay;
     using WorkoutWotch.Services.Contracts.Logger;
 
@@ -15,9 +14,14 @@
             from type in Parse.Chars("*-").Optional()
             select new MetronomeTick(periodBefore, GetTickType(type.GetOrDefault()));
 
-        public static Parser<MetronomeAction> GetParser(IContainerService containerService)
+        public static Parser<MetronomeAction> GetParser(
+            IAudioService audioService,
+            IDelayService delayService,
+            ILoggerService loggerService)
         {
-            containerService.AssertNotNull(nameof(containerService));
+            audioService.AssertNotNull(nameof(audioService));
+            delayService.AssertNotNull(nameof(delayService));
+            loggerService.AssertNotNull(nameof(loggerService));
 
             return
                 from _ in Parse.IgnoreCase("metronome")
@@ -26,9 +30,9 @@
                 from ____ in HorizontalWhitespaceParser.Parser.AtLeastOnce()
                 from ticks in metronomeTickParser.DelimitedBy(Parse.Char(',').Token(HorizontalWhitespaceParser.Parser))
                 select new MetronomeAction(
-                    containerService.Resolve<IAudioService>(),
-                    containerService.Resolve<IDelayService>(),
-                    containerService.Resolve<ILoggerService>(),
+                    audioService,
+                    delayService,
+                    loggerService,
                     ticks);
         }
 

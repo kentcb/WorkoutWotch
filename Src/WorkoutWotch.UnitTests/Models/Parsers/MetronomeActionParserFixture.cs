@@ -3,10 +3,12 @@
     using System;
     using System.Linq;
     using Kent.Boogaart.PCLMock;
+    using Services.Audio.Mocks;
+    using Services.Delay.Mocks;
+    using Services.Logger.Mocks;
     using Sprache;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Models.Parsers;
-    using WorkoutWotch.UnitTests.Services.Container.Mocks;
     using Xunit;
 
     public class MetronomeActionParserFixture
@@ -16,9 +18,21 @@
         private const int msInHour = 60 * msInMinute;
 
         [Fact]
-        public void get_parser_throws_if_container_service_is_null()
+        public void get_parser_throws_if_audio_service_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => MetronomeActionParser.GetParser(null));
+            Assert.Throws<ArgumentNullException>(() => MetronomeActionParser.GetParser(null, new DelayServiceMock(), new LoggerServiceMock()));
+        }
+
+        [Fact]
+        public void get_parser_throws_if_delay_service_is_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => MetronomeActionParser.GetParser(new AudioServiceMock(), null, new LoggerServiceMock()));
+        }
+
+        [Fact]
+        public void get_parser_throws_if_logger_service_is_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => MetronomeActionParser.GetParser(new AudioServiceMock(), new DelayServiceMock(), null));
         }
 
         [Theory]
@@ -42,7 +56,12 @@
         {
             Assert.Equal(expectedPeriodsBeforeMilliseconds.Length, expectedTickTypes.Length);
 
-            var result = MetronomeActionParser.GetParser(new ContainerServiceMock(MockBehavior.Loose)).Parse(input);
+            var result = MetronomeActionParser
+                .GetParser(
+                    new AudioServiceMock(MockBehavior.Loose),
+                    new DelayServiceMock(MockBehavior.Loose),
+                    new LoggerServiceMock(MockBehavior.Loose))
+                .Parse(input);
             Assert.NotNull(result);
             Assert.Equal(expectedPeriodsBeforeMilliseconds.Length, result.Ticks.Count);
 
@@ -72,7 +91,11 @@
         [InlineData("Metronome at 1s,\n2s")]
         public void cannot_parse_incorrectly_formatted_input(string input)
         {
-            var result = MetronomeActionParser.GetParser(new ContainerServiceMock(MockBehavior.Loose))(new Input(input));
+            var result = MetronomeActionParser
+                 .GetParser(
+                     new AudioServiceMock(MockBehavior.Loose),
+                     new DelayServiceMock(MockBehavior.Loose),
+                     new LoggerServiceMock(MockBehavior.Loose))(new Input(input));
             Assert.False(result.WasSuccessful && result.Remainder.AtEnd);
         }
     }

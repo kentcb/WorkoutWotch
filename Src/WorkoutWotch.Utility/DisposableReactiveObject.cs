@@ -2,8 +2,8 @@
 {
     using System;
     using System.Threading;
-    using ReactiveUI;
     using Kent.Boogaart.HelperTrinity.Extensions;
+    using ReactiveUI;
 
     public abstract class DisposableReactiveObject : ReactiveObject, IDisposable
     {

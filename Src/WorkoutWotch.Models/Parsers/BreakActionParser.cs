@@ -3,15 +3,17 @@
     using Kent.Boogaart.HelperTrinity.Extensions;
     using Sprache;
     using WorkoutWotch.Models.Actions;
-    using WorkoutWotch.Services.Contracts.Container;
     using WorkoutWotch.Services.Contracts.Delay;
     using WorkoutWotch.Services.Contracts.Speech;
 
     internal static class BreakActionParser
     {
-        public static Parser<BreakAction> GetParser(IContainerService containerService)
+        public static Parser<BreakAction> GetParser(
+            IDelayService delayService,
+            ISpeechService speechService)
         {
-            containerService.AssertNotNull(nameof(containerService));
+            delayService.AssertNotNull(nameof(delayService));
+            speechService.AssertNotNull(nameof(speechService));
 
             return
                 from _ in Parse.IgnoreCase("break")
@@ -20,8 +22,8 @@
                 from ____ in HorizontalWhitespaceParser.Parser.AtLeastOnce()
                 from duration in TimeSpanParser.Parser
                 select new BreakAction(
-                    containerService.Resolve<IDelayService>(),
-                    containerService.Resolve<ISpeechService>(),
+                    delayService,
+                    speechService,
                     duration);
         }
     }

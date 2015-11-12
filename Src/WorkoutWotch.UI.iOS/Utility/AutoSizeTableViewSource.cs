@@ -1,124 +1,39 @@
 namespace WorkoutWotch.UI.iOS.Utility
 {
     using System;
-    using System.Reactive.Linq;
-    using CoreGraphics;
     using Foundation;
     using ReactiveUI;
-    using TinyIoC;
     using UIKit;
-    using WorkoutWotch.Services.iOS.SystemNotifications;
 
-    // a table view source that automatically sizes its cells. Once a size for a section is determined, all cells will take on that size (unless dynamic type size is changed, in which case the cached size is invalidated)
-    // if cells need to be of varying sizes, use VariableRowHightTableViewSource instead
+    // a table view source that automatically sizes its cells
     public class AutoSizeTableViewSource<TSource> : ReactiveTableViewSource<TSource>
     {
+        private const float defaultEstimatedRowHeight = 30f;
         private readonly UITableView tableView;
-        private readonly IDisposable dataSubscription;
-        private readonly IDisposable dynamicTypeChangedSubscription;
-        private nfloat?[] heights;
+        private readonly nfloat estimatedRowHeight;
 
-        public AutoSizeTableViewSource(UITableView tableView)
+        public AutoSizeTableViewSource(UITableView tableView, float estimatedRowHeight = defaultEstimatedRowHeight)
             : base(tableView)
         {
             this.tableView = tableView;
-            this.dataSubscription = this.InitDataSubscription();
-            this.dynamicTypeChangedSubscription = this.InitDynamicTypeChangedSubscription();
+            this.estimatedRowHeight = estimatedRowHeight;
         }
 
-        public AutoSizeTableViewSource(UITableView tableView, IReactiveNotifyCollectionChanged<TSource> collection, NSString cellKey, Action<UITableViewCell> initializeCellAction = null)
+        public AutoSizeTableViewSource(UITableView tableView, IReactiveNotifyCollectionChanged<TSource> collection, NSString cellKey, Action<UITableViewCell> initializeCellAction = null, float estimatedRowHeight = defaultEstimatedRowHeight)
             : base(tableView, collection, cellKey, (float)UITableView.AutomaticDimension, initializeCellAction)
         {
             this.tableView = tableView;
-            this.dataSubscription = this.InitDataSubscription();
-            this.dynamicTypeChangedSubscription = this.InitDynamicTypeChangedSubscription();
+            this.estimatedRowHeight = estimatedRowHeight;
         }
 
         public override nfloat EstimatedHeight(UITableView tableView, NSIndexPath indexPath)
-            => UITableView.AutomaticDimension;
+        {
+            return this.estimatedRowHeight;
+        }
 
         public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
         {
-            this.ValidateSection(indexPath.Section);
-
-            if (this.heights[indexPath.Section].HasValue)
-            {
-                return this.heights[indexPath.Section].Value;
-            }
-
-            var viewModel = this.ItemAt(indexPath);
-            var section = this.Data[indexPath.Section];
-            var cellKey = section.CellKeySelector(viewModel);
-            var offscreenCell = this.tableView.DequeueReusableCell(cellKey);
-
-            if (section.InitializeCellAction != null)
-            {
-                section.InitializeCellAction(offscreenCell);
-            }
-
-            var castCell = offscreenCell as IViewFor;
-
-            if (castCell != null)
-            {
-                castCell.ViewModel = viewModel;
-            }
-
-            offscreenCell.SetNeedsUpdateConstraints();
-            offscreenCell.UpdateConstraintsIfNeeded();
-
-            offscreenCell.Bounds = new CGRect(0, 0, this.tableView.Bounds.Width, this.tableView.Bounds.Height);
-
-            offscreenCell.SetNeedsLayout();
-            offscreenCell.LayoutIfNeeded();
-
-            var height = offscreenCell.ContentView.SystemLayoutSizeFittingSize(UIView.UILayoutFittingCompressedSize).Height;
-            height += 1;
-
-            this.heights[indexPath.Section] = height;
-
-            return height;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            if (disposing)
-            {
-                this.dataSubscription.Dispose();
-                this.dynamicTypeChangedSubscription.Dispose();
-            }
-        }
-
-        private IDisposable InitDataSubscription()
-            => 
-                this
-                    .WhenAnyValue(x => x.Data)
-                    .Select(x => new nfloat?[x == null ? 0 : x.Count])
-                    .Subscribe(x => this.heights = x);
-
-        private IDisposable InitDynamicTypeChangedSubscription()
-            => 
-                TinyIoCContainer.Current
-                    .Resolve<ISystemNotificationsService>()
-                    .DynamicTypeChanged
-                    .Where(_ => this.heights != null)
-                    .Subscribe(
-                        _ =>
-                        {
-                            // clear out the cached heights for every section
-                            for (var i = 0; i < this.heights.Length; ++i)
-                            {
-                                this.heights[i] = null;
-                            }
-                        });
-
-        private void ValidateSection(int section)
-        {
-            if (section >= this.Data.Count)
-            {
-                throw new InvalidOperationException("Section " + section + " does not exist.");
-            }
+            return UITableView.AutomaticDimension;
         }
     }
 }

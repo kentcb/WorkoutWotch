@@ -2,9 +2,9 @@
 {
     using System;
     using Kent.Boogaart.PCLMock;
+    using Services.Speech.Mocks;
     using Sprache;
     using WorkoutWotch.Models.Parsers;
-    using WorkoutWotch.UnitTests.Services.Container.Mocks;
     using Xunit;
 
     public class SayActionParserFixture
@@ -24,7 +24,7 @@
         [InlineData(@"Say 'hello, how are you \'friend\'?'", "hello, how are you 'friend'?")]
         public void can_parse_correctly_formatted_input(string input, string expectedSpeechText)
         {
-            var result = SayActionParser.GetParser(new ContainerServiceMock(MockBehavior.Loose)).Parse(input);
+            var result = SayActionParser.GetParser(new SpeechServiceMock(MockBehavior.Loose)).Parse(input);
             Assert.NotNull(result);
             Assert.Equal(expectedSpeechText, result.SpeechText);
         }
@@ -38,7 +38,7 @@
         [InlineData("Say'hello'")]
         public void cannot_parse_incorrectly_formatted_input(string input)
         {
-            var result = SayActionParser.GetParser(new ContainerServiceMock(MockBehavior.Loose))(new Input(input));
+            var result = SayActionParser.GetParser(new SpeechServiceMock(MockBehavior.Loose))(new Input(input));
             Assert.False(result.WasSuccessful && result.Remainder.AtEnd);
         }
     }
