@@ -10,33 +10,33 @@
 
     public class AudioActionFixture
     {
-        [Fact] [WorkoutWotch.UnitTests.Debug]
+        [Fact]
         public void ctor_throws_if_audio_service_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new AudioAction(null, "some_uri"));
         }
 
-        [Fact] [WorkoutWotch.UnitTests.Debug]
+        [Fact]
         public void ctor_throws_if_audio_resource_uri_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => new AudioAction(new AudioServiceMock(), null));
         }
 
-        [Fact] [WorkoutWotch.UnitTests.Debug]
+        [Fact]
         public void duration_returns_zero()
         {
             var sut = new AudioActionBuilder().Build();
             Assert.Equal(TimeSpan.Zero, sut.Duration);
         }
 
-        [Fact] [WorkoutWotch.UnitTests.Debug]
+        [Fact]
         public async Task execute_async_throws_if_context_is_null()
         {
             var sut = new AudioActionBuilder().Build();
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
-        [Fact] [WorkoutWotch.UnitTests.Debug]
+        [Fact]
         public async Task execute_async_cancels_if_context_is_cancelled()
         {
             var sut = new AudioActionBuilder().Build();
@@ -49,7 +49,7 @@
             }
         }
 
-        [Fact] [WorkoutWotch.UnitTests.Debug]
+        [Fact]
         public void execute_async_pauses_if_context_is_paused()
         {
             var sut = new AudioActionBuilder().Build();
@@ -64,7 +64,7 @@
             }
         }
 
-        [Theory] [WorkoutWotch.UnitTests.Debug]
+        [Theory]
         [InlineData("uri")]
         [InlineData("some_uri")]
         [InlineData("some/other/uri")]

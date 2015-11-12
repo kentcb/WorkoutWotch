@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+This input file to PCLMock's mock generation T4 template allows you to control which mocks are generated, and how they are named.
+All patterns specified in this file are .NET regular expressions.
+-->
+<Mocks>
+    <!--
+    Namespace transformations allow you to transform the original namespace into a new namespace in which the mock will be placed.
+    Each transformation receives the output from the previous transformation, and the first transformation receives the original namespace.
+    -->
+    <NamespaceTransformations>
+        <!--
+        inject "WorkoutWotch" into the namespace
+        -->
+        <Transformation>
+            <Pattern><![CDATA[WorkoutWotch\.(?<remainder>.*)]]></Pattern>
+            <Replacement>WorkoutWotch.UnitTests.${remainder}</Replacement>
+        </Transformation>
+        <!--
+        strip "Contracts"
+        -->
+        <Transformation>
+            <Pattern><![CDATA[(?<prefix>.*?)\.Contracts\.(?<suffix>.*?)]]></Pattern>
+            <Replacement>${prefix}.${suffix}</Replacement>
+        </Transformation>
+        <!--
+        append ".Mocks" onto the namespace
+        -->
+        <Transformation>
+            <Pattern><![CDATA[(?<name>.+)]]></Pattern>
+            <Replacement>${name}.Mocks</Replacement>
+        </Transformation>
+    </NamespaceTransformations>
+
+    <!--
+    Name transformations allow you to transform the original type name into a new name for the generated mock class.
+    Each transformation receives the output from the previous transformation, and the first transformation receives the original type name.
+    -->
+    <NameTransformations>
+        <!--
+        if the name is prefixed with "I", strip it off
+        -->
+        <Transformation>
+            <Pattern><![CDATA[I(?<name>[A-Z].*)]]></Pattern>
+            <Replacement>${name}</Replacement>
+        </Transformation>
+        <!--
+        if the name includes generic arguments, strip them out
+        -->
+        <Transformation>
+            <Pattern><![CDATA[(?<name>[A-Z].*)\<.*\>]]></Pattern>
+            <Replacement>${name}</Replacement>
+        </Transformation>
+        <!--
+        append "Mock" onto the name
+        -->
+        <Transformation>
+            <Pattern><![CDATA[(?<name>.+)]]></Pattern>
+            <Replacement>${name}Mock</Replacement>
+        </Transformation>
+    </NameTransformations>
+
+    <!--
+    To determine whether a mock should be generated for a given interface, its assembly-qualified name (e.g. "Name.Space.TypeName, AssemblyName") is matched
+    against the filters specified below. Filters either Include or Exclude interfaces that match their pattern. Filters are executed in the order
+    they appear, so latter filters can override the result of an earlier filter.
+    -->
+    <Interfaces>
+        <Include>
+            <Pattern>WorkoutWotch\.Services\..*</Pattern>
+        </Include>
+        <Exclude>
+            <Pattern>WorkoutWotch\.Services\.iOS\..*</Pattern>
+        </Exclude>
+    </Interfaces>
+</Mocks>

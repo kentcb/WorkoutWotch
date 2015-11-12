@@ -34,6 +34,66 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DebugAttribute.cs" />
+    <Compile Include="Mocks.g.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Mocks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Actions\AudioActionBuilder.cs" />
+    <Compile Include="Models\Actions\AudioActionFixture.cs" />
+    <Compile Include="Models\Actions\DoNotAwaitActionBuilder.cs" />
+    <Compile Include="Models\Actions\DoNotAwaitActionFixture.cs" />
+    <Compile Include="Models\Actions\MetronomeActionBuilder.cs" />
+    <Compile Include="Models\Actions\MetronomeActionFixture.cs" />
+    <Compile Include="Models\Actions\ParallelActionBuilder.cs" />
+    <Compile Include="Models\Actions\ParallelActionFixture.cs" />
+    <Compile Include="Models\Actions\SayActionBuilder.cs" />
+    <Compile Include="Models\Actions\SayActionFixture.cs" />
+    <Compile Include="Models\Actions\SequenceActionBuilder.cs" />
+    <Compile Include="Models\Actions\SequenceActionFixture.cs" />
+    <Compile Include="Models\Actions\WaitActionBuilder.cs" />
+    <Compile Include="Models\Actions\WaitActionFixture.cs" />
+    <Compile Include="Models\Actions\WaitWithPromptActionBuilder.cs" />
+    <Compile Include="Models\Actions\WaitWithPromptActionFixture.cs" />
+    <Compile Include="Models\EventMatchers\NumberedEventMatcherFixture.cs" />
+    <Compile Include="Models\EventMatchers\TypedEventMatcherFixture.cs" />
+    <Compile Include="Models\Events\AfterExerciseEventFixture.cs" />
+    <Compile Include="Models\Events\AfterRepetitionEventFixture.cs" />
+    <Compile Include="Models\Events\AfterSetEventFixture.cs" />
+    <Compile Include="Models\Events\BeforeExerciseEventFixture.cs" />
+    <Compile Include="Models\Events\BeforeRepetitionEventFixture.cs" />
+    <Compile Include="Models\Events\BeforeSetEventFixture.cs" />
+    <Compile Include="Models\Events\DuringRepetitionEventFixture.cs" />
+    <Compile Include="Models\ExecutionContextFixture.cs" />
+    <Compile Include="Models\ExerciseBuilder.cs" />
+    <Compile Include="Models\ExerciseFixture.cs" />
+    <Compile Include="Models\ExerciseProgramBuilder.cs" />
+    <Compile Include="Models\ExerciseProgramFixture.cs" />
+    <Compile Include="Models\ExerciseProgramsBuilder.cs" />
+    <Compile Include="Models\ExerciseProgramsFixture.cs" />
+    <Compile Include="Models\Mocks\ActionMock.cs" />
+    <Compile Include="Models\Mocks\EventMatcherMock.cs" />
+    <Compile Include="Models\Mocks\EventMock.cs" />
+    <Compile Include="Models\Parsers\ActionListParserFixture.cs" />
+    <Compile Include="Models\Parsers\ActionParserFixture.cs" />
+    <Compile Include="Models\Parsers\BreakActionParserFixture.cs" />
+    <Compile Include="Models\Parsers\DoNotAwaitActionParserFixture.cs" />
+    <Compile Include="Models\Parsers\ExerciseParserFixture.cs" />
+    <Compile Include="Models\Parsers\ExerciseProgramParserFixture.cs" />
+    <Compile Include="Models\Parsers\ExerciseProgramsParserFixture.cs" />
+    <Compile Include="Models\Parsers\HeadingParserFixture.cs" />
+    <Compile Include="Models\Parsers\HorizontalWhitespaceParserFixture.cs" />
+    <Compile Include="Models\Parsers\MetronomeActionParserFixture.cs" />
+    <Compile Include="Models\Parsers\NewLineParserFixture.cs" />
+    <Compile Include="Models\Parsers\NumericalConstraintParserFixture.cs" />
+    <Compile Include="Models\Parsers\ParallelActionParserFixture.cs" />
+    <Compile Include="Models\Parsers\PrepareActionParserFixture.cs" />
+    <Compile Include="Models\Parsers\SayActionParserFixture.cs" />
+    <Compile Include="Models\Parsers\SequenceActionParserFixture.cs" />
+    <Compile Include="Models\Parsers\StringLiteralParserFixture.cs" />
+    <Compile Include="Models\Parsers\TimeSpanParserFixture.cs" />
+    <Compile Include="Models\Parsers\VerticalSeparationParserFixture.cs" />
+    <Compile Include="Models\Parsers\WaitActionParserFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
@@ -59,71 +119,16 @@
     <Compile Include="Services\State\Mocks\BlobCacheMock.cs" />
     <Compile Include="Services\State\Mocks\StateServiceMock.cs" />
     <Compile Include="Services\ExerciseDocument\Mocks\ExerciseDocumentServiceMock.cs" />
-    <Compile Include="Models\ExecutionContextFixture.cs" />
-    <Compile Include="Models\ExerciseFixture.cs" />
-    <Compile Include="Models\Mocks\ActionMock.cs" />
-    <Compile Include="Models\Mocks\EventMock.cs" />
-    <Compile Include="Models\Mocks\EventMatcherMock.cs" />
-    <Compile Include="Models\Events\AfterExerciseEventFixture.cs" />
-    <Compile Include="Models\Events\BeforeExerciseEventFixture.cs" />
-    <Compile Include="Models\Events\AfterRepetitionEventFixture.cs" />
-    <Compile Include="Models\Events\BeforeRepetitionEventFixture.cs" />
-    <Compile Include="Models\Events\DuringRepetitionEventFixture.cs" />
-    <Compile Include="Models\Events\BeforeSetEventFixture.cs" />
-    <Compile Include="Models\Events\AfterSetEventFixture.cs" />
-    <Compile Include="Models\ExerciseProgramFixture.cs" />
-    <Compile Include="Models\ExerciseProgramsFixture.cs" />
-    <Compile Include="Models\Actions\SequenceActionFixture.cs" />
-    <Compile Include="Models\Actions\ParallelActionFixture.cs" />
-    <Compile Include="Models\Actions\WaitActionFixture.cs" />
     <Compile Include="Utility\MathExtFixture.cs" />
     <Compile Include="Services\Audio\Mocks\AudioServiceMock.cs" />
     <Compile Include="Services\Delay\Mocks\DelayServiceMock.cs" />
     <Compile Include="Services\Speech\Mocks\SpeechServiceMock.cs" />
-    <Compile Include="Models\Actions\SayActionFixture.cs" />
-    <Compile Include="Models\Actions\AudioActionFixture.cs" />
-    <Compile Include="Models\Actions\MetronomeActionFixture.cs" />
-    <Compile Include="Models\Actions\WaitWithPromptActionFixture.cs" />
-    <Compile Include="Models\EventMatchers\TypedEventMatcherFixture.cs" />
-    <Compile Include="Models\EventMatchers\NumberedEventMatcherFixture.cs" />
-    <Compile Include="Models\Actions\DoNotAwaitActionFixture.cs" />
-    <Compile Include="Models\Parsers\StringLiteralParserFixture.cs" />
-    <Compile Include="Models\Parsers\NewLineParserFixture.cs" />
-    <Compile Include="Models\Parsers\TimeSpanParserFixture.cs" />
-    <Compile Include="Models\Parsers\WaitActionParserFixture.cs" />
-    <Compile Include="Models\Parsers\SayActionParserFixture.cs" />
-    <Compile Include="Models\Parsers\BreakActionParserFixture.cs" />
-    <Compile Include="Models\Parsers\PrepareActionParserFixture.cs" />
-    <Compile Include="Models\Parsers\MetronomeActionParserFixture.cs" />
-    <Compile Include="Models\Parsers\ActionParserFixture.cs" />
-    <Compile Include="Models\Parsers\ActionListParserFixture.cs" />
-    <Compile Include="Models\Parsers\SequenceActionParserFixture.cs" />
-    <Compile Include="Models\Parsers\ParallelActionParserFixture.cs" />
-    <Compile Include="Models\Parsers\NumericalConstraintParserFixture.cs" />
-    <Compile Include="Models\Parsers\ExerciseParserFixture.cs" />
-    <Compile Include="Models\Parsers\ExerciseProgramParserFixture.cs" />
-    <Compile Include="Models\Parsers\ExerciseProgramsParserFixture.cs" />
     <Compile Include="Services\Container\Mocks\ContainerServiceMock.cs" />
     <Compile Include="Services\Scheduler\Mocks\SchedulerServiceMock.cs" />
     <Compile Include="Services\Scheduler\Mocks\SchedulerMock.cs" />
-    <Compile Include="Models\Parsers\HeadingParserFixture.cs" />
-    <Compile Include="Models\Parsers\HorizontalWhitespaceParserFixture.cs" />
-    <Compile Include="Models\Parsers\VerticalSeparationParserFixture.cs" />
-    <Compile Include="Models\Parsers\DoNotAwaitActionParserFixture.cs" />
     <Compile Include="ViewModels\ExerciseProgramsViewModelFixture.cs" />
     <Compile Include="ViewModels\ExerciseProgramViewModelFixture.cs" />
     <Compile Include="ViewModels\ExerciseViewModelFixture.cs" />
-    <Compile Include="Models\ExerciseBuilder.cs" />
-    <Compile Include="Models\ExerciseProgramBuilder.cs" />
-    <Compile Include="Models\ExerciseProgramsBuilder.cs" />
-    <Compile Include="Models\Actions\AudioActionBuilder.cs" />
-    <Compile Include="Models\Actions\DoNotAwaitActionBuilder.cs" />
-    <Compile Include="Models\Actions\MetronomeActionBuilder.cs" />
-    <Compile Include="Models\Actions\ParallelActionBuilder.cs" />
-    <Compile Include="Models\Actions\SayActionBuilder.cs" />
-    <Compile Include="Models\Actions\SequenceActionBuilder.cs" />
-    <Compile Include="Models\Actions\WaitActionBuilder.cs" />
-    <Compile Include="Models\Actions\WaitWithPromptActionBuilder.cs" />
     <Compile Include="Services\State\StateServiceBuilder.cs" />
     <Compile Include="ViewModels\ExerciseProgramsViewModelBuilder.cs" />
     <Compile Include="ViewModels\ExerciseProgramViewModelBuilder.cs" />
@@ -197,7 +202,13 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Mocks.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Mocks.g.cs</LastGenOutput>
+    </Content>
+    <Content Include="Mocks.xml" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WorkoutWotch.Services\WorkoutWotch.Services.csproj">
       <Project>{35210740-7C04-4B7B-98A0-2322B9576434}</Project>
@@ -225,6 +236,10 @@
     <None Include="packages.config" />
     <None Include="Reactive\Testing\README.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>

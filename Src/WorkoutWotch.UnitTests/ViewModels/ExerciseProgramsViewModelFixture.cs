@@ -1,9 +1,4 @@
-﻿using Microsoft.Reactive.Testing;
-using System.Diagnostics;
-using ReactiveUI;
-using System.Reactive.Concurrency;
-
-namespace WorkoutWotch.UnitTests.ViewModels
+﻿namespace WorkoutWotch.UnitTests.ViewModels
 {
     using System;
     using System.Linq;

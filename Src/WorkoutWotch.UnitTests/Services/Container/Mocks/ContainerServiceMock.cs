@@ -17,28 +17,34 @@
     using WorkoutWotch.UnitTests.Services.Speech.Mocks;
     using WorkoutWotch.UnitTests.Services.State.Mocks;
 
-    public sealed class ContainerServiceMock : MockBase<IContainerService>, IContainerService
+    public sealed partial class ContainerServiceMock
     {
-        public ContainerServiceMock(MockBehavior behavior = MockBehavior.Strict)
-            : base(behavior)
+        partial void ConfigureLooseBehavior()
         {
-            if (behavior == MockBehavior.Loose)
-            {
-                this.When(x => x.Resolve<IAudioService>()).Return(new AudioServiceMock(MockBehavior.Loose));
-                this.When(x => x.Resolve<IContainerService>()).Return(this);
-                this.When(x => x.Resolve<IDelayService>()).Return(new DelayServiceMock(MockBehavior.Loose));
-                this.When(x => x.Resolve<IExerciseDocumentService>()).Return(new ExerciseDocumentServiceMock(MockBehavior.Loose));
-                this.When(x => x.Resolve<ILoggerService>()).Return(new LoggerServiceMock(MockBehavior.Loose));
-                this.When(x => x.Resolve<ISchedulerService>()).Return(new SchedulerServiceMock(MockBehavior.Loose));
-                this.When(x => x.Resolve<ISpeechService>()).Return(new SpeechServiceMock(MockBehavior.Loose));
-                this.When(x => x.Resolve<IStateService>()).Return(new StateServiceMock(MockBehavior.Loose));
-            }
-        }
-
-        public T Resolve<T>()
-            where T : class
-        {
-            return this.Apply(x => x.Resolve<T>());
+            this
+                .When(x => x.Resolve<IAudioService>())
+                .Return(new AudioServiceMock(MockBehavior.Loose));
+            this
+                .When(x => x.Resolve<IContainerService>())
+                .Return(this);
+            this
+                .When(x => x.Resolve<IDelayService>())
+                .Return(new DelayServiceMock(MockBehavior.Loose));
+            this
+                .When(x => x.Resolve<IExerciseDocumentService>())
+                .Return(new ExerciseDocumentServiceMock(MockBehavior.Loose));
+            this
+                .When(x => x.Resolve<ILoggerService>())
+                .Return(new LoggerServiceMock(MockBehavior.Loose));
+            this
+                .When(x => x.Resolve<ISchedulerService>())
+                .Return(new SchedulerServiceMock(MockBehavior.Loose));
+            this
+                .When(x => x.Resolve<ISpeechService>())
+                .Return(new SpeechServiceMock(MockBehavior.Loose));
+            this
+                .When(x => x.Resolve<IStateService>())
+                .Return(new StateServiceMock(MockBehavior.Loose));
         }
     }
 }
