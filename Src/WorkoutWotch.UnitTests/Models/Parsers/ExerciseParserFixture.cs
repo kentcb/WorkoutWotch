@@ -61,106 +61,103 @@
             new [] { typeof(TypedEventMatcher<BeforeExerciseEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* Before:\n  * Wait for 1s\n",
-            new [] { typeof(TypedEventMatcher<BeforeExerciseEvent>) })]
+            new[] { typeof(TypedEventMatcher<BeforeExerciseEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n*  \t Before:\n  * Wait for 1s\n",
-            new [] { typeof(TypedEventMatcher<BeforeExerciseEvent>) })]
+            new[] { typeof(TypedEventMatcher<BeforeExerciseEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* Before  \t: \t  \n  * Wait for 1s\n",
-            new [] { typeof(TypedEventMatcher<BeforeExerciseEvent>) })]
+            new[] { typeof(TypedEventMatcher<BeforeExerciseEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* Before:\n  * Wait for 1s\n* Before:\n  * Wait for 1s",
-            new [] { typeof(TypedEventMatcher<BeforeExerciseEvent>), typeof(TypedEventMatcher<BeforeExerciseEvent>) })]
+            new[] { typeof(TypedEventMatcher<BeforeExerciseEvent>), typeof(TypedEventMatcher<BeforeExerciseEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* Before:\n  * Wait for 1s\n\n\n\n\n\n* Before:\n  * Wait for 1s",
-            new [] { typeof(TypedEventMatcher<BeforeExerciseEvent>), typeof(TypedEventMatcher<BeforeExerciseEvent>) })]
+            new[] { typeof(TypedEventMatcher<BeforeExerciseEvent>), typeof(TypedEventMatcher<BeforeExerciseEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* Before:\n  * Wait for 1s\n\n\n  \t\n \t\t  \n* Before:\n  * Wait for 1s",
-            new [] { typeof(TypedEventMatcher<BeforeExerciseEvent>), typeof(TypedEventMatcher<BeforeExerciseEvent>) })]
+            new[] { typeof(TypedEventMatcher<BeforeExerciseEvent>), typeof(TypedEventMatcher<BeforeExerciseEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* After:\n  * Wait for 1s",
-            new [] { typeof(TypedEventMatcher<AfterExerciseEvent>) })]
+            new[] { typeof(TypedEventMatcher<AfterExerciseEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* Before set:\n  * Wait for 1s",
-            new [] { typeof(TypedEventMatcher<BeforeSetEvent>) })]
+            new[] { typeof(TypedEventMatcher<BeforeSetEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n*  \t Before set:\n  * Wait for 1s",
-            new [] { typeof(TypedEventMatcher<BeforeSetEvent>) })]
+            new[] { typeof(TypedEventMatcher<BeforeSetEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* Before set \t:  \t \n  * Wait for 1s",
-            new [] { typeof(TypedEventMatcher<BeforeSetEvent>) })]
+            new[] { typeof(TypedEventMatcher<BeforeSetEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* Before \t  set \t:  \t \n  * Wait for 1s",
-            new [] { typeof(TypedEventMatcher<BeforeSetEvent>) })]
+            new[] { typeof(TypedEventMatcher<BeforeSetEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* After set:\n  * Wait for 1s",
-            new [] { typeof(TypedEventMatcher<AfterSetEvent>) })]
+            new[] { typeof(TypedEventMatcher<AfterSetEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* After \t  set:\n  * Wait for 1s",
-            new [] { typeof(TypedEventMatcher<AfterSetEvent>) })]
+            new[] { typeof(TypedEventMatcher<AfterSetEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* Before rep:\n  * Wait for 1s",
-            new [] { typeof(TypedEventMatcher<BeforeRepetitionEvent>) })]
+            new[] { typeof(TypedEventMatcher<BeforeRepetitionEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* Before  \t rep:\n  * Wait for 1s",
-            new [] { typeof(TypedEventMatcher<BeforeRepetitionEvent>) })]
+            new[] { typeof(TypedEventMatcher<BeforeRepetitionEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* During rep:\n  * Wait for 1s",
-            new [] { typeof(TypedEventMatcher<DuringRepetitionEvent>) })]
+            new[] { typeof(TypedEventMatcher<DuringRepetitionEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* During \t  rep:\n  * Wait for 1s",
-            new [] { typeof(TypedEventMatcher<DuringRepetitionEvent>) })]
+            new[] { typeof(TypedEventMatcher<DuringRepetitionEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* After rep:\n  * Wait for 1s",
-            new [] { typeof(TypedEventMatcher<AfterRepetitionEvent>) })]
+            new[] { typeof(TypedEventMatcher<AfterRepetitionEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* After \t  rep:\n  * Wait for 1s",
-            new [] { typeof(TypedEventMatcher<AfterRepetitionEvent>) })]
+            new[] { typeof(TypedEventMatcher<AfterRepetitionEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* Before set 1:\n  * Wait for 1s",
-            new [] { typeof(NumberedEventMatcher<BeforeSetEvent>) })]
+            new[] { typeof(NumberedEventMatcher<BeforeSetEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* Before \t set \t 1:\n  * Wait for 1s",
-            new [] { typeof(NumberedEventMatcher<BeforeSetEvent>) })]
+            new[] { typeof(NumberedEventMatcher<BeforeSetEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* After set 1:\n  * Wait for 1s",
-            new [] { typeof(NumberedEventMatcher<AfterSetEvent>) })]
+            new[] { typeof(NumberedEventMatcher<AfterSetEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* After  \t set \t  1:\n  * Wait for 1s",
-            new [] { typeof(NumberedEventMatcher<AfterSetEvent>) })]
+            new[] { typeof(NumberedEventMatcher<AfterSetEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* Before rep 1:\n  * Wait for 1s",
-            new [] { typeof(NumberedEventMatcher<BeforeRepetitionEvent>) })]
+            new[] { typeof(NumberedEventMatcher<BeforeRepetitionEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* Before \t  rep \t  1:\n  * Wait for 1s",
-            new [] { typeof(NumberedEventMatcher<BeforeRepetitionEvent>) })]
+            new[] { typeof(NumberedEventMatcher<BeforeRepetitionEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* During rep 1:\n  * Wait for 1s",
-            new [] { typeof(NumberedEventMatcher<DuringRepetitionEvent>) })]
+            new[] { typeof(NumberedEventMatcher<DuringRepetitionEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* During \t  rep \t  1:\n  * Wait for 1s",
-            new [] { typeof(NumberedEventMatcher<DuringRepetitionEvent>) })]
+            new[] { typeof(NumberedEventMatcher<DuringRepetitionEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* After rep 1:\n  * Wait for 1s",
-            new [] { typeof(NumberedEventMatcher<AfterRepetitionEvent>) })]
+            new[] { typeof(NumberedEventMatcher<AfterRepetitionEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* After \t  rep \t  1:\n  * Wait for 1s",
-            new [] { typeof(NumberedEventMatcher<AfterRepetitionEvent>) })]
+            new[] { typeof(NumberedEventMatcher<AfterRepetitionEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* Before set:\n  * Wait for 1s\n* Before rep:\n  * Wait for 1s",
-            new [] { typeof(TypedEventMatcher<BeforeSetEvent>), typeof(TypedEventMatcher<BeforeRepetitionEvent>) })]
+            new[] { typeof(TypedEventMatcher<BeforeSetEvent>), typeof(TypedEventMatcher<BeforeRepetitionEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* BEFORE SET:\n  * Wait for 1s\n* BeFOre Rep:\n  * Wait for 1s",
-            new [] { typeof(TypedEventMatcher<BeforeSetEvent>), typeof(TypedEventMatcher<BeforeRepetitionEvent>) })]
-        [InlineData(
-            "## ignore\n* 1 set x 1 rep\n* Before set 1:\n  * Wait for 1s",
-            new [] { typeof(NumberedEventMatcher<BeforeSetEvent>) })]
+            new[] { typeof(TypedEventMatcher<BeforeSetEvent>), typeof(TypedEventMatcher<BeforeRepetitionEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n* Before reps 1..3:\n  * Wait for 1s",
-            new [] { typeof(NumberedEventMatcher<BeforeRepetitionEvent>) })]
+            new[] { typeof(NumberedEventMatcher<BeforeRepetitionEvent>) })]
         [InlineData(
             "## ignore\n* 1 set x 1 rep\n\n\n \n  \t\t  \t \n\t   \n* Before:\n  * Wait for 1s",
-            new [] { typeof(TypedEventMatcher<BeforeExerciseEvent>) })]
+            new[] { typeof(TypedEventMatcher<BeforeExerciseEvent>) })]
         public void can_parse_matchers_with_actions(string input, Type[] expectedMatcherTypes)
         {
             var result = ExerciseParser
