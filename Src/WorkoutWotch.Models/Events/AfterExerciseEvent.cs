@@ -16,7 +16,7 @@
 
         public Exercise Exercise => this.exercise;
 
-        public override string ToString()
-            => string.Format(CultureInfo.InvariantCulture, "After Exercise '{0}'", this.exercise.Name);
+        public override string ToString() =>
+            string.Format(CultureInfo.InvariantCulture, "After Exercise '{0}'", this.exercise.Name);
     }
 }

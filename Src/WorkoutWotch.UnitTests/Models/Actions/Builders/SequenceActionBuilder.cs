@@ -13,15 +13,16 @@
             this.children = new List<IAction>();
         }
 
-        public SequenceAction Build()
-        {
-            return new SequenceAction(this.children);
-        }
-
         public SequenceActionBuilder AddChild(IAction child)
         {
             this.children.Add(child);
             return this;
         }
+
+        public SequenceAction Build() =>
+            new SequenceAction(this.children);
+        
+        public static implicit operator SequenceAction(SequenceActionBuilder builder) =>
+            builder.Build();
     }
 }

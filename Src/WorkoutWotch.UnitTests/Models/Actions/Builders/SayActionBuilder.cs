@@ -16,13 +16,6 @@
             this.speechText = "speech text";
         }
 
-        public SayAction Build()
-        {
-            return new SayAction(
-                this.speechService,
-                this.speechText);
-        }
-
         public SayActionBuilder WithSpeechService(ISpeechService speechService)
         {
             this.speechService = speechService;
@@ -34,5 +27,13 @@
             this.speechText = speechText;
             return this;
         }
+
+        public SayAction Build() =>
+            new SayAction(
+                this.speechService,
+                this.speechText);
+        
+        public static implicit operator SayAction(SayActionBuilder builder) =>
+            builder.Build();
     }
 }

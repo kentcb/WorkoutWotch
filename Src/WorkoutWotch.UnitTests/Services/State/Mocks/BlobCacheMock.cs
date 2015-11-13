@@ -14,59 +14,35 @@
         {
         }
 
-        public IObservable<Unit> Shutdown
-        {
-            get { return this.Apply(x => x.Shutdown); }
-        }
+        public IObservable<Unit> Shutdown => this.Apply(x => x.Shutdown);
 
-        public IScheduler Scheduler
-        {
-            get { return this.Apply(x => x.Scheduler); }
-        }
+        public IScheduler Scheduler => this.Apply(x => x.Scheduler);
 
-        public IObservable<Unit> Insert(string key, byte[] data, DateTimeOffset? absoluteExpiration = default(DateTimeOffset?))
-        {
-            return this.Apply(x => x.Insert(key, data, absoluteExpiration));
-        }
+        public IObservable<Unit> Insert(string key, byte[] data, DateTimeOffset? absoluteExpiration = default(DateTimeOffset?)) =>
+            this.Apply(x => x.Insert(key, data, absoluteExpiration));
 
-        public IObservable<byte[]> Get(string key)
-        {
-            return this.Apply(x => x.Get(key));
-        }
+        public IObservable<byte[]> Get(string key) =>
+            this.Apply(x => x.Get(key));
 
-        public IObservable<IEnumerable<string>> GetAllKeys()
-        {
-            return this.Apply(x => x.GetAllKeys());
-        }
+        public IObservable<IEnumerable<string>> GetAllKeys() =>
+            this.Apply(x => x.GetAllKeys());
 
-        public IObservable<DateTimeOffset?> GetCreatedAt(string key)
-        {
-            return this.Apply(x => x.GetCreatedAt(key));
-        }
+        public IObservable<DateTimeOffset?> GetCreatedAt(string key) =>
+            this.Apply(x => x.GetCreatedAt(key));
 
-        public IObservable<Unit> Flush()
-        {
-            return this.Apply(x => x.Flush());
-        }
+        public IObservable<Unit> Flush() =>
+            this.Apply(x => x.Flush());
 
-        public IObservable<Unit> Invalidate(string key)
-        {
-            return this.Apply(x => x.Invalidate(key));
-        }
+        public IObservable<Unit> Invalidate(string key) =>
+            this.Apply(x => x.Invalidate(key));
 
-        public IObservable<Unit> InvalidateAll()
-        {
-            return this.Apply(x => x.InvalidateAll());
-        }
+        public IObservable<Unit> InvalidateAll() =>
+            this.Apply(x => x.InvalidateAll());
+ 
+        public IObservable<Unit> Vacuum() =>
+            this.Apply(x => x.Vacuum());
 
-        public IObservable<Unit> Vacuum()
-        {
-            return this.Apply(x => x.Vacuum());
-        }
-
-        public void Dispose()
-        {
+        public void Dispose() =>
             this.Apply(x => x.Dispose());
-        }
     }
 }

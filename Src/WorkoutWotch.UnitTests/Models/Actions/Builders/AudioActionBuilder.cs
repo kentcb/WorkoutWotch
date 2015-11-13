@@ -16,13 +16,6 @@
             this.audioResourceUri = "uri";
         }
 
-        public AudioAction Build()
-        {
-            return new AudioAction(
-                this.audioService,
-                this.audioResourceUri);
-        }
-
         public AudioActionBuilder WithAudioService(IAudioService audioService)
         {
             this.audioService = audioService;
@@ -34,5 +27,13 @@
             this.audioResourceUri = audioResourceUri;
             return this;
         }
+
+        public AudioAction Build() =>
+            new AudioAction(
+                this.audioService,
+                this.audioResourceUri);
+
+        public static implicit operator AudioAction(AudioActionBuilder builder) =>
+            builder.Build();
     }
 }

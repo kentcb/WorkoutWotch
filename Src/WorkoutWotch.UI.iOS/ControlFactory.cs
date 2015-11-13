@@ -21,43 +21,41 @@ namespace WorkoutWotch.UI.iOS
                 .RefCount();
         }
 
-        public static UILabel CreateLabel(PreferredFont font = PreferredFont.Body)
-            => new DynamicTypeAwareLabel(sharedDynamicTypeChanged, font);
+        public static UILabel CreateLabel(PreferredFont font = PreferredFont.Body) =>
+            new DynamicTypeAwareLabel(sharedDynamicTypeChanged, font);
 
-        public static UIButton CreateButton(PreferredFont font = PreferredFont.Headline, UIButtonType type = UIButtonType.System)
-            => new DynamicTypeAwareButton(sharedDynamicTypeChanged, font, type);
+        public static UIButton CreateButton(PreferredFont font = PreferredFont.Headline, UIButtonType type = UIButtonType.System) =>
+            new DynamicTypeAwareButton(sharedDynamicTypeChanged, font, type);
 
-        public static UITextField CreateTextField(PreferredFont font = PreferredFont.Body)
-            =>
-                new DynamicTypeAwareTextField(sharedDynamicTypeChanged, font)
-                {
-                    AutocorrectionType = UITextAutocorrectionType.No,
-                    AutocapitalizationType = UITextAutocapitalizationType.None,
-                    BorderStyle = UITextBorderStyle.RoundedRect,
-                    ClearButtonMode = UITextFieldViewMode.WhileEditing
-                };
+        public static UITextField CreateTextField(PreferredFont font = PreferredFont.Body) =>
+            new DynamicTypeAwareTextField(sharedDynamicTypeChanged, font)
+            {
+                AutocorrectionType = UITextAutocorrectionType.No,
+                AutocapitalizationType = UITextAutocapitalizationType.None,
+                BorderStyle = UITextBorderStyle.RoundedRect,
+                ClearButtonMode = UITextFieldViewMode.WhileEditing
+            };
 
-        public static UITextView CreateTextView(PreferredFont font = PreferredFont.Body)
-            => new DynamicTypeAwareTextView(sharedDynamicTypeChanged, font);
+        public static UITextView CreateTextView(PreferredFont font = PreferredFont.Body) =>
+            new DynamicTypeAwareTextView(sharedDynamicTypeChanged, font);
 
-        public static UIPickerView CreatePicker()
-            => new UIPickerView();
+        public static UIPickerView CreatePicker() =>
+            new UIPickerView();
 
-        public static UISlider CreateSlider()
-            => new UISlider();
+        public static UISlider CreateSlider() =>
+            new UISlider();
 
-        public static UIActivityIndicatorView CreateActivityIndicator()
-            => 
-                new UIActivityIndicatorView
-                {
-                    ActivityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
-                };
+        public static UIActivityIndicatorView CreateActivityIndicator() => 
+            new UIActivityIndicatorView
+            {
+                ActivityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+            };
 
-        public static UIProgressView CreateProgressView()
-            => new UIProgressView();
+        public static UIProgressView CreateProgressView() =>
+            new UIProgressView();
 
-        public static UIImageView CreateImage()
-            => new UIImageView();
+        public static UIImageView CreateImage() =>
+            new UIImageView();
 
         private static UIFont GetUIFontForPreferredFont(PreferredFont font)
         {
@@ -121,8 +119,8 @@ namespace WorkoutWotch.UI.iOS
                 }
             }
 
-            private void UpdateFont()
-                => this.Font = GetUIFontForPreferredFont(this.font);
+            private void UpdateFont() =>
+                this.Font = GetUIFontForPreferredFont(this.font);
         }
 
         private sealed class DynamicTypeAwareButton : UIButton
@@ -165,8 +163,8 @@ namespace WorkoutWotch.UI.iOS
                 }
             }
 
-            private void UpdateFont()
-                => this.Font = GetUIFontForPreferredFont(this.font);
+            private void UpdateFont() =>
+                this.Font = GetUIFontForPreferredFont(this.font);
         }
 
         private sealed class DynamicTypeAwareTextField : UITextField
@@ -208,8 +206,8 @@ namespace WorkoutWotch.UI.iOS
                 }
             }
 
-            private void UpdateFont()
-                => this.Font = GetUIFontForPreferredFont(this.font);
+            private void UpdateFont() =>
+                this.Font = GetUIFontForPreferredFont(this.font);
         }
 
         private sealed class DynamicTypeAwareTextView : UITextView
@@ -251,8 +249,8 @@ namespace WorkoutWotch.UI.iOS
                 }
             }
 
-            private void UpdateFont()
-                => this.Font = GetUIFontForPreferredFont(this.font);
+            private void UpdateFont() =>
+                this.Font = GetUIFontForPreferredFont(this.font);
         }
     }
 }

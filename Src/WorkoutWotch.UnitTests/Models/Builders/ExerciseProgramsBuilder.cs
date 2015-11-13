@@ -12,11 +12,6 @@
             this.programs = new List<ExerciseProgram>();
         }
 
-        public ExercisePrograms Build()
-        {
-            return new ExercisePrograms(this.programs);
-        }
-
         public ExerciseProgramsBuilder AddProgram(ExerciseProgram program)
         {
             this.programs.Add(program);
@@ -32,5 +27,11 @@
 
             return this;
         }
+
+        public ExercisePrograms Build() =>
+            new ExercisePrograms(this.programs);
+        
+        public static implicit operator ExercisePrograms(ExerciseProgramsBuilder builder) =>
+            builder.Build();
     }
 }

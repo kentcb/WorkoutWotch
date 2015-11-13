@@ -16,10 +16,10 @@
 
         public TimeSpan Duration => this.innerAction.Duration;
 
-        public async Task ExecuteAsync(ExecutionContext context)
-            =>  await this
-                    .innerAction
-                    .ExecuteAsync(context)
-                    .ContinueOnAnyContext();
+        public async Task ExecuteAsync(ExecutionContext context) =>
+            await this
+                .innerAction
+                .ExecuteAsync(context)
+                .ContinueOnAnyContext();
     }
 }

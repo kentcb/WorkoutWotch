@@ -18,13 +18,6 @@
             this.innerAction = new ActionMock(MockBehavior.Loose);
         }
 
-        public DoNotAwaitAction Build()
-        {
-            return new DoNotAwaitAction(
-                this.loggerService,
-                this.innerAction);
-        }
-
         public DoNotAwaitActionBuilder WithLoggerService(ILoggerService loggerService)
         {
             this.loggerService = loggerService;
@@ -36,5 +29,13 @@
             this.innerAction = innerAction;
             return this;
         }
+
+        public DoNotAwaitAction Build() =>
+            new DoNotAwaitAction(
+                this.loggerService,
+                this.innerAction);
+
+        public static implicit operator DoNotAwaitAction(DoNotAwaitActionBuilder builder) =>
+            builder.Build();
     }
 }

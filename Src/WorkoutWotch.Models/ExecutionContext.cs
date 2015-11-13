@@ -112,20 +112,20 @@ namespace WorkoutWotch.Models
                 .ToTask(this.CancellationToken);
         }
 
-        public void Cancel()
-            =>  this.cancelRequested.OnNext(Unit.Default);
+        public void Cancel() =>
+            this.cancelRequested.OnNext(Unit.Default);
 
-        internal void AddProgress(TimeSpan progressDelta)
-            =>  this.progressDeltas.OnNext(progressDelta);
+        internal void AddProgress(TimeSpan progressDelta) =>
+            this.progressDeltas.OnNext(progressDelta);
 
-        internal void SetCurrentExercise(Exercise exercise)
-            => this.CurrentExercise = exercise;
+        internal void SetCurrentExercise(Exercise exercise) =>
+            this.CurrentExercise = exercise;
 
-        internal void SetCurrentSet(int set)
-            => this.CurrentSet = set;
+        internal void SetCurrentSet(int set) =>
+            this.CurrentSet = set;
 
-        internal void SetCurrentRepetition(int repetition)
-            => this.CurrentRepetition = repetition;
+        internal void SetCurrentRepetition(int repetition) =>
+            this.CurrentRepetition = repetition;
 
         protected override void Dispose(bool disposing)
         {

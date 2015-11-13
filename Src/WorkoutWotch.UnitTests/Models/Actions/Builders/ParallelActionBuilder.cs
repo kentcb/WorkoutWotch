@@ -13,15 +13,17 @@
             this.children = new List<IAction>();
         }
 
-        public ParallelAction Build()
-        {
-            return new ParallelAction(this.children);
-        }
-
         public ParallelActionBuilder AddChild(IAction child)
         {
             this.children.Add(child);
             return this;
         }
+
+        public ParallelAction Build() =>
+            new ParallelAction(this.children);
+        
+
+        public static implicit operator ParallelAction(ParallelActionBuilder builder) =>
+            builder.Build();
     }
 }

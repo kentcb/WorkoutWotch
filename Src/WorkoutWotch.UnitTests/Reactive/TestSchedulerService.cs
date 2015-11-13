@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Reactive.Concurrency;
+    using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using Microsoft.Reactive.Testing;
     using WorkoutWotch.Services.Contracts.Scheduler;
@@ -58,12 +59,16 @@
 
         public IScheduler TaskPoolScheduler => this.taskPoolScheduler;
 
-        public IDisposable Pump()
-            => Pump(TimeSpan.FromMilliseconds(10));
+        public IDisposable Pump() =>
+            Pump(TimeSpan.FromMilliseconds(10));
 
         // useful hack to allow tests to automatically pump any scheduled items
-        public IDisposable Pump(TimeSpan frequency)
-            => Observable.Timer(TimeSpan.Zero, frequency).Subscribe(_ => this.Start());
+        public IDisposable Pump(TimeSpan frequency) =>
+            new CompositeDisposable(
+                Observable
+                    .Timer(TimeSpan.Zero, frequency)
+                    .Subscribe(_ => this.AdvanceMinimal()),
+                Disposable.Create(() => this.Stop()));
 
         public void Start()
         {
@@ -86,6 +91,14 @@
             foreach (var testScheduler in this.GetTestSchedulers())
             {
                 testScheduler.AdvanceTo(time);
+            }
+        }
+
+        public void Stop()
+        {
+            foreach (var testScheduler in this.GetTestSchedulers())
+            {
+                testScheduler.Stop();
             }
         }
 

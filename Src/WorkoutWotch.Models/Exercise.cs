@@ -114,10 +114,10 @@ namespace WorkoutWotch.Models
             yield return new AfterExerciseEvent(executionContext, this);
         }
 
-        private IEnumerable<EventWithActions> GetEventsWithActions(ExecutionContext executionContext)
-            =>  this
-                    .GetEvents(executionContext)
-                    .Select(x => new EventWithActions(x, this.GetActionsForEvent(x)));
+        private IEnumerable<EventWithActions> GetEventsWithActions(ExecutionContext executionContext) =>
+            this
+                .GetEvents(executionContext)
+                .Select(x => new EventWithActions(x, this.GetActionsForEvent(x)));
 
         private IEnumerable<IAction> GetActionsForEvent(IEvent @event)
         {
@@ -152,7 +152,7 @@ namespace WorkoutWotch.Models
 
             public IEvent Event => this.@event;
 
-            public IImmutableList<IAction> Actions =>  this.actions;
+            public IImmutableList<IAction> Actions => this.actions;
         }
     }
 }

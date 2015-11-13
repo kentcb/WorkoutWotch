@@ -411,4 +411,78 @@ namespace WorkoutWotch.UnitTests.Services.Speech.Mocks
         }
     }
 }
+namespace WorkoutWotch.UnitTests.Models.Mocks
+{
+    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "3.1.2.0")]
+    [System.Runtime.CompilerServices.CompilerGenerated]
+    public partial class ActionMock : global::Kent.Boogaart.PCLMock.MockBase<global::WorkoutWotch.Models.IAction>, global::WorkoutWotch.Models.IAction
+    {
+        public ActionMock(global::Kent.Boogaart.PCLMock.MockBehavior behavior = global::Kent.Boogaart.PCLMock.MockBehavior.Strict): base (behavior)
+        {
+            if ((behavior) == (global::Kent.Boogaart.PCLMock.MockBehavior.Loose))
+            {
+                ConfigureLooseBehavior();
+            }
+        }
+
+        partial void ConfigureLooseBehavior();
+        public global::System.TimeSpan Duration
+        {
+            get
+            {
+                return this.Apply(x => x.Duration);
+            }
+        }
+
+        public global::System.Threading.Tasks.Task ExecuteAsync(global::WorkoutWotch.Models.ExecutionContext context)
+        {
+            return this.Apply(x => x.ExecuteAsync(context));
+        }
+    }
+}
+namespace WorkoutWotch.UnitTests.Models.Mocks
+{
+    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "3.1.2.0")]
+    [System.Runtime.CompilerServices.CompilerGenerated]
+    public partial class EventMock : global::Kent.Boogaart.PCLMock.MockBase<global::WorkoutWotch.Models.IEvent>, global::WorkoutWotch.Models.IEvent
+    {
+        public EventMock(global::Kent.Boogaart.PCLMock.MockBehavior behavior = global::Kent.Boogaart.PCLMock.MockBehavior.Strict): base (behavior)
+        {
+            if ((behavior) == (global::Kent.Boogaart.PCLMock.MockBehavior.Loose))
+            {
+                ConfigureLooseBehavior();
+            }
+        }
+
+        partial void ConfigureLooseBehavior();
+        public global::WorkoutWotch.Models.ExecutionContext ExecutionContext
+        {
+            get
+            {
+                return this.Apply(x => x.ExecutionContext);
+            }
+        }
+    }
+}
+namespace WorkoutWotch.UnitTests.Models.Mocks
+{
+    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "3.1.2.0")]
+    [System.Runtime.CompilerServices.CompilerGenerated]
+    public partial class EventMatcherMock : global::Kent.Boogaart.PCLMock.MockBase<global::WorkoutWotch.Models.IEventMatcher>, global::WorkoutWotch.Models.IEventMatcher
+    {
+        public EventMatcherMock(global::Kent.Boogaart.PCLMock.MockBehavior behavior = global::Kent.Boogaart.PCLMock.MockBehavior.Strict): base (behavior)
+        {
+            if ((behavior) == (global::Kent.Boogaart.PCLMock.MockBehavior.Loose))
+            {
+                ConfigureLooseBehavior();
+            }
+        }
+
+        partial void ConfigureLooseBehavior();
+        public System.Boolean Matches(global::WorkoutWotch.Models.IEvent @event)
+        {
+            return this.Apply(x => x.Matches(@event));
+        }
+    }
+}
 

@@ -35,7 +35,7 @@
 
         public TimeSpan Duration => this.duration;
 
-        public IImmutableList<Exercise> Exercises =>  this.exercises;
+        public IImmutableList<Exercise> Exercises => this.exercises;
 
         public async Task ExecuteAsync(ExecutionContext context)
         {

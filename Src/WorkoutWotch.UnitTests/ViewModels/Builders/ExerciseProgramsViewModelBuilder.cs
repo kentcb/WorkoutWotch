@@ -42,18 +42,6 @@
             this.WithCachedDocument(null);
         }
 
-        public ExerciseProgramsViewModel Build()
-        {
-            return new ExerciseProgramsViewModel(
-                this.audioService,
-                this.delayService,
-                this.exerciseDocumentService,
-                this.loggerService,
-                this.schedulerService,
-                this.speechService,
-                this.stateService);
-        }
-
         public ExerciseProgramsViewModelBuilder WithAudioService(IAudioService audioService)
         {
             this.audioService = audioService;
@@ -121,5 +109,18 @@
 
             return this.WithStateService(stateService);
         }
+
+        public ExerciseProgramsViewModel Build() =>
+            new ExerciseProgramsViewModel(
+                this.audioService,
+                this.delayService,
+                this.exerciseDocumentService,
+                this.loggerService,
+                this.schedulerService,
+                this.speechService,
+                this.stateService);
+        
+        public static implicit operator ExerciseProgramsViewModel(ExerciseProgramsViewModelBuilder builder) =>
+            builder.Build();
     }
 }

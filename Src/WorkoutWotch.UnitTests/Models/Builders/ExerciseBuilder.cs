@@ -29,17 +29,6 @@
             this.repetitionCount = 1;
         }
 
-        public Exercise Build()
-        {
-            return new Exercise(
-                this.loggerService,
-                this.speechService,
-                this.name,
-                this.setCount,
-                this.repetitionCount,
-                this.matchersWithActions);
-        }
-
         public ExerciseBuilder WithLoggerService(ILoggerService loggerService)
         {
             this.loggerService = loggerService;
@@ -83,9 +72,16 @@
             return this.AddMatcherWithAction(new MatcherWithAction(matcher, action));
         }
 
-        public static implicit operator Exercise(ExerciseBuilder builder)
-        {
-            return builder.Build();
-        }
+        public Exercise Build() =>
+            new Exercise(
+                this.loggerService,
+                this.speechService,
+                this.name,
+                this.setCount,
+                this.repetitionCount,
+                this.matchersWithActions);
+
+        public static implicit operator Exercise(ExerciseBuilder builder) =>
+            builder.Build();
     }
 }

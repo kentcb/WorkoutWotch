@@ -217,14 +217,14 @@ namespace WorkoutWotch.ViewModels
             }
         }
 
-        private async Task OnStartAsync(object state)
-            => await this.StartAsync(((TimeSpan?)state).GetValueOrDefault(TimeSpan.Zero));
+        private async Task OnStartAsync(object state) =>
+            await this.StartAsync(((TimeSpan?)state).GetValueOrDefault(TimeSpan.Zero));
 
-        private async Task OnSkipBackwardsAsync(object state)
-            => await this.SkipBackwardsAsync();
+        private async Task OnSkipBackwardsAsync(object state) =>
+            await this.SkipBackwardsAsync();
 
-        private async Task OnSkipForwardsAsync(object state)
-            => await this.SkipForwardsAsync();
+        private async Task OnSkipForwardsAsync(object state) =>
+            await this.SkipForwardsAsync();
 
         private async Task StartAsync(TimeSpan skipTo = default(TimeSpan), bool isPaused = false)
         {

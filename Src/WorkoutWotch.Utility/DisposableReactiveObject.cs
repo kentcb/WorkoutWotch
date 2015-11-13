@@ -76,8 +76,8 @@
         {
         }
 
-        protected virtual void OnDisposing()
-            => this.Disposing.Raise(this);
+        protected virtual void OnDisposing() =>
+            this.Disposing.Raise(this);
 
         protected void MarkAsDisposed()
         {

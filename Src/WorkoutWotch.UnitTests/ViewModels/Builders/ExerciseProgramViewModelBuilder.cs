@@ -22,14 +22,6 @@
             this.model = new ExerciseProgramBuilder().Build();
         }
 
-        public ExerciseProgramViewModel Build()
-        {
-            return new ExerciseProgramViewModel(
-                this.loggerService,
-                this.schedulerService,
-                this.model);
-        }
-
         public ExerciseProgramViewModelBuilder WithLoggerService(ILoggerService loggerService)
         {
             this.loggerService = loggerService;
@@ -47,5 +39,14 @@
             this.model = model;
             return this;
         }
+
+        public ExerciseProgramViewModel Build() =>
+            new ExerciseProgramViewModel(
+                this.loggerService,
+                this.schedulerService,
+                this.model);
+        
+        public static implicit operator ExerciseProgramViewModel(ExerciseProgramViewModelBuilder builder) =>
+            builder.Build();
     }
 }

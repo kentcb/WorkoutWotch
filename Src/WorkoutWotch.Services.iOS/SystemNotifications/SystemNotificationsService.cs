@@ -31,7 +31,7 @@ namespace WorkoutWotch.Services.iOS.SystemNotifications
             }
         }
 
-        private void ContentSizeCategoryChanged(NSNotification notification)
-            => this.dynamicTypeChanged.OnNext(Unit.Default);
+        private void ContentSizeCategoryChanged(NSNotification notification) =>
+            this.dynamicTypeChanged.OnNext(Unit.Default);
     }
 }

@@ -22,15 +22,6 @@
             this.promptSpeechText = "prompt";
         }
 
-        public WaitWithPromptAction Build()
-        {
-            return new WaitWithPromptAction(
-                this.delayService,
-                this.speechService,
-                this.duration,
-                this.promptSpeechText);
-        }
-
         public WaitWithPromptActionBuilder WithDelayService(IDelayService delayService)
         {
             this.delayService = delayService;
@@ -54,5 +45,15 @@
             this.promptSpeechText = promptSpeechText;
             return this;
         }
+
+        public WaitWithPromptAction Build() =>
+            new WaitWithPromptAction(
+                this.delayService,
+                this.speechService,
+                this.duration,
+                this.promptSpeechText);
+        
+        public static implicit operator WaitWithPromptAction(WaitWithPromptActionBuilder builder) =>
+            builder.Build();
     }
 }

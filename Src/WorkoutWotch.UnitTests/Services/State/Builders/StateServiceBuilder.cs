@@ -18,13 +18,6 @@
             this.loggerService = new LoggerServiceMock(MockBehavior.Loose);
         }
 
-        public StateService Build()
-        {
-            return new StateService(
-                this.blobCache,
-                this.loggerService);
-        }
-
         public StateServiceBuilder WithBlobCache(IBlobCache blobCache)
         {
             this.blobCache = blobCache;
@@ -36,5 +29,13 @@
             this.loggerService = loggerService;
             return this;
         }
+
+        public StateService Build() =>
+            new StateService(
+                this.blobCache,
+                this.loggerService);
+
+        public static implicit operator StateService(StateServiceBuilder builder) =>
+            builder.Build();
     }
 }

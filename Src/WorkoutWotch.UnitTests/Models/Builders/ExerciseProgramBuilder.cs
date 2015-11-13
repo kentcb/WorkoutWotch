@@ -19,14 +19,6 @@
             this.name = "Name";
         }
 
-        public ExerciseProgram Build()
-        {
-            return new ExerciseProgram(
-                this.loggerService,
-                this.name,
-                this.exercises);
-        }
-
         public ExerciseProgramBuilder WithLoggerService(ILoggerService loggerService)
         {
             this.loggerService = loggerService;
@@ -55,9 +47,13 @@
             return this;
         }
 
-        public static implicit operator ExerciseProgram(ExerciseProgramBuilder builder)
-        {
-            return builder.Build();
-        }
+        public ExerciseProgram Build() =>
+            new ExerciseProgram(
+                this.loggerService,
+                this.name,
+                this.exercises);
+
+        public static implicit operator ExerciseProgram(ExerciseProgramBuilder builder) =>
+            builder.Build();
     }
 }

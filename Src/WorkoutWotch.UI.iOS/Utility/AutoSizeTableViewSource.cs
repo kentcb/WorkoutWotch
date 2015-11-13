@@ -26,14 +26,10 @@ namespace WorkoutWotch.UI.iOS.Utility
             this.estimatedRowHeight = estimatedRowHeight;
         }
 
-        public override nfloat EstimatedHeight(UITableView tableView, NSIndexPath indexPath)
-        {
-            return this.estimatedRowHeight;
-        }
+        public override nfloat EstimatedHeight(UITableView tableView, NSIndexPath indexPath) =>
+            this.estimatedRowHeight;
 
-        public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
-        {
-            return UITableView.AutomaticDimension;
-        }
+        public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath) =>
+            UITableView.AutomaticDimension;
     }
 }

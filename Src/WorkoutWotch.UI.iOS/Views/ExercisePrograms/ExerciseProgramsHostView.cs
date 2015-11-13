@@ -100,11 +100,11 @@ namespace WorkoutWotch.UI.iOS.Views.ExercisePrograms
                 .AddTo(this.Disposables);
         }
 
-        private static bool IsLoadingStatus(ExerciseProgramsViewModelStatus status)
-            => status == ExerciseProgramsViewModelStatus.Loading;
+        private static bool IsLoadingStatus(ExerciseProgramsViewModelStatus status) =>
+            status == ExerciseProgramsViewModelStatus.Loading;
 
-        private static bool IsErrorStatus(ExerciseProgramsViewModelStatus status)
-            => status == ExerciseProgramsViewModelStatus.ParseFailed || status == ExerciseProgramsViewModelStatus.LoadFailed;
+        private static bool IsErrorStatus(ExerciseProgramsViewModelStatus status) =>
+            status == ExerciseProgramsViewModelStatus.ParseFailed || status == ExerciseProgramsViewModelStatus.LoadFailed;
 
         private static string GetErrorMessage(ExerciseProgramsViewModelStatus status)
         {

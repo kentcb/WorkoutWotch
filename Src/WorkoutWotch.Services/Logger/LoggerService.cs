@@ -59,8 +59,8 @@
             }
         }
 
-        private bool IsLevelEnabled(LogLevel level)
-            => this.threshold <= level;
+        private bool IsLevelEnabled(LogLevel level) =>
+            this.threshold <= level;
 
         private sealed class Logger : ILogger
         {
@@ -85,23 +85,23 @@
 
             public bool IsErrorEnabled => this.owner.IsErrorEnabled;
 
-            public void Debug(string message)
-                => this.Log(LogLevel.Debug, message);
+            public void Debug(string message) =>
+                this.Log(LogLevel.Debug, message);
 
-            public void Debug(string format, params object[] args)
-                => this.Log(LogLevel.Debug, format, args);
+            public void Debug(string format, params object[] args) =>
+                this.Log(LogLevel.Debug, format, args);
 
-            public void Debug(Exception exception, string format, params object[] args)
-                => this.Log(LogLevel.Debug, exception, format, args);
+            public void Debug(Exception exception, string format, params object[] args) =>
+                this.Log(LogLevel.Debug, exception, format, args);
 
-            public void Info(string message)
-                => this.Log(LogLevel.Info, message);
+            public void Info(string message) =>
+                this.Log(LogLevel.Info, message);
 
-            public void Info(string format, params object[] args)
-                => this.Log(LogLevel.Info, format, args);
+            public void Info(string format, params object[] args) =>
+                this.Log(LogLevel.Info, format, args);
 
-            public void Info(Exception exception, string format, params object[] args)
-                => this.Log(LogLevel.Info, exception, format, args);
+            public void Info(Exception exception, string format, params object[] args) =>
+                this.Log(LogLevel.Info, exception, format, args);
 
             public IDisposable Perf(string message)
             {
@@ -129,23 +129,23 @@
                 return new PerfBlock(this, message);
             }
 
-            public void Warn(string message)
-                => this.Log(LogLevel.Warn, message);
+            public void Warn(string message) =>
+                this.Log(LogLevel.Warn, message);
 
-            public void Warn(string format, params object[] args)
-                => this.Log(LogLevel.Warn, format, args);
+            public void Warn(string format, params object[] args) =>
+                this.Log(LogLevel.Warn, format, args);
 
-            public void Warn(Exception exception, string format, params object[] args)
-                => this.Log(LogLevel.Warn, exception, format, args);
+            public void Warn(Exception exception, string format, params object[] args) =>
+                this.Log(LogLevel.Warn, exception, format, args);
 
-            public void Error(string message)
-                => this.Log(LogLevel.Error, message);
+            public void Error(string message) =>
+                this.Log(LogLevel.Error, message);
 
-            public void Error(string format, params object[] args)
-                => this.Log(LogLevel.Error, format, args);
+            public void Error(string format, params object[] args) =>
+                this.Log(LogLevel.Error, format, args);
 
-            public void Error(Exception exception, string format, params object[] args)
-                => this.Log(LogLevel.Error, exception, format, args);
+            public void Error(Exception exception, string format, params object[] args) =>
+                this.Log(LogLevel.Error, exception, format, args);
 
             private void Log(LogLevel level, string format, params object[] args)
             {

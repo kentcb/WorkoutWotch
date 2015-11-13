@@ -68,6 +68,9 @@ All patterns specified in this file are .NET regular expressions.
     -->
     <Interfaces>
         <Include>
+            <Pattern>WorkoutWotch\.Models\..*</Pattern>
+        </Include>
+        <Include>
             <Pattern>WorkoutWotch\.Services\..*</Pattern>
         </Include>
         <Exclude>

@@ -9,7 +9,7 @@
         {
         }
 
-        public override string ToString()
-            => string.Format(CultureInfo.InvariantCulture, "Before Set {0}", this.Number);
+        public override string ToString() =>
+            string.Format(CultureInfo.InvariantCulture, "Before Set {0}", this.Number);
     }
 }

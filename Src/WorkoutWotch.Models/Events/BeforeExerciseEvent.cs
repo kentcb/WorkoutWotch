@@ -16,7 +16,7 @@ namespace WorkoutWotch.Models.Events
 
         public Exercise Exercise => this.exercise;
 
-        public override string ToString()
-            => string.Format(CultureInfo.InvariantCulture, "Before Exercise '{0}'", this.exercise.Name);
+        public override string ToString() =>
+            string.Format(CultureInfo.InvariantCulture, "Before Exercise '{0}'", this.exercise.Name);
     }
 }

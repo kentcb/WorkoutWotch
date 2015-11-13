@@ -72,8 +72,6 @@
     <Compile Include="Models\Builders\ExerciseProgramsBuilder.cs" />
     <Compile Include="Models\ExerciseProgramsFixture.cs" />
     <Compile Include="Models\Mocks\ActionMock.cs" />
-    <Compile Include="Models\Mocks\EventMatcherMock.cs" />
-    <Compile Include="Models\Mocks\EventMock.cs" />
     <Compile Include="Models\Parsers\ActionListParserFixture.cs" />
     <Compile Include="Models\Parsers\ActionParserFixture.cs" />
     <Compile Include="Models\Parsers\BreakActionParserFixture.cs" />

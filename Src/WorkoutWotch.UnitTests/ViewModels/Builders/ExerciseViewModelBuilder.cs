@@ -22,14 +22,6 @@
             this.executionContext = Observable.Never<ExecutionContext>();
         }
 
-        public ExerciseViewModel Build()
-        {
-            return new ExerciseViewModel(
-                this.schedulerService,
-                this.model,
-                this.executionContext);
-        }
-
         public ExerciseViewModelBuilder WithSchedulerService(ISchedulerService schedulerService)
         {
             this.schedulerService = schedulerService;
@@ -54,9 +46,13 @@
             return this;
         }
 
-        public static implicit operator ExerciseViewModel(ExerciseViewModelBuilder builder)
-        {
-            return builder.Build();
-        }
+        public ExerciseViewModel Build() =>
+            new ExerciseViewModel(
+                this.schedulerService,
+                this.model,
+                this.executionContext);
+
+        public static implicit operator ExerciseViewModel(ExerciseViewModelBuilder builder) =>
+            builder.Build();
     }
 }

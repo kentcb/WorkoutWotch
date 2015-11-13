@@ -16,13 +16,6 @@
             this.delayService = new DelayServiceMock(MockBehavior.Loose);
         }
 
-        public WaitAction Build()
-        {
-            return new WaitAction(
-                this.delayService,
-                this.delay);
-        }
-
         public WaitActionBuilder WithDelayService(IDelayService delayService)
         {
             this.delayService = delayService;
@@ -35,9 +28,12 @@
             return this;
         }
 
-        public static implicit operator WaitAction(WaitActionBuilder builder)
-        {
-            return builder.Build();
-        }
+        public WaitAction Build() =>
+            new WaitAction(
+                this.delayService,
+                this.delay);
+
+        public static implicit operator WaitAction(WaitActionBuilder builder) =>
+            builder.Build();
     }
 }

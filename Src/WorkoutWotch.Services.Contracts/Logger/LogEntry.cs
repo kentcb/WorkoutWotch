@@ -19,29 +19,14 @@ namespace WorkoutWotch.Services.Contracts.Logger
             this.message = message;
         }
 
-        public DateTime Timestamp
-        {
-            get { return this.timestamp; }
-        }
+        public DateTime Timestamp => this.timestamp;
 
-        public string Name
-        {
-            get { return this.name; }
-        }
+        public string Name => this.name;
 
-        public LogLevel Level
-        {
-            get { return this.level; }
-        }
+        public LogLevel Level => this.level;
 
-        public int ThreadId
-        {
-            get { return this.threadId; }
-        }
+        public int ThreadId => this.threadId;
 
-        public string Message
-        {
-            get { return this.message; }
-        }
+        public string Message => this.message;
     }
 }

@@ -25,15 +25,6 @@
             this.loggerService = new LoggerServiceMock(MockBehavior.Loose);
         }
 
-        public MetronomeAction Build()
-        {
-            return new MetronomeAction(
-                this.audioService,
-                this.delayService,
-                this.loggerService,
-                this.ticks);
-        }
-
         public MetronomeActionBuilder WithAudioService(IAudioService audioService)
         {
             this.audioService = audioService;
@@ -57,5 +48,15 @@
             this.ticks.Add(metronomeTick);
             return this;
         }
+
+        public MetronomeAction Build() =>
+            new MetronomeAction(
+                this.audioService,
+                this.delayService,
+                this.loggerService,
+                this.ticks);
+
+        public static implicit operator MetronomeAction(MetronomeActionBuilder builder) =>
+            builder.Build();
     }
 }
