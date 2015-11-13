@@ -93,7 +93,8 @@
         [Fact]
         public void duration_returns_zero_if_there_are_no_actions()
         {
-            var sut = new ExerciseBuilder().Build();
+            var sut = new ExerciseBuilder()
+                .Build();
             Assert.Equal(TimeSpan.Zero, sut.Duration);
         }
 
@@ -146,7 +147,8 @@
         [Fact]
         public async Task execute_async_throws_if_execution_context_is_null()
         {
-            var sut = new ExerciseBuilder().Build();
+            var sut = new ExerciseBuilder()
+                .Build();
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
@@ -342,7 +344,8 @@
         [Fact]
         public async Task execute_async_updates_the_current_exercise_in_the_context()
         {
-            var sut = new ExerciseBuilder().Build();
+            var sut = new ExerciseBuilder()
+                .Build();
             var context = new ExecutionContext();
 
             await sut.ExecuteAsync(context);

@@ -19,7 +19,7 @@
         {
             this.loggerService = new LoggerServiceMock(MockBehavior.Loose);
             this.schedulerService = new SchedulerServiceMock(MockBehavior.Loose);
-            this.model = new ExerciseProgramBuilder().Build();
+            this.model = new ExerciseProgramBuilder();
         }
 
         public ExerciseProgramViewModelBuilder WithLoggerService(ILoggerService loggerService)

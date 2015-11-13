@@ -19,14 +19,14 @@
         public void matches_returns_false_if_the_event_is_of_a_different_type()
         {
             var sut = new TypedEventMatcher<BeforeExerciseEvent>();
-            Assert.False(sut.Matches(new AfterExerciseEvent(new ExecutionContext(), new ExerciseBuilder().Build())));
+            Assert.False(sut.Matches(new AfterExerciseEvent(new ExecutionContext(), new ExerciseBuilder())));
         }
 
         [Fact]
         public void matches_returns_true_if_the_event_is_of_the_same_type()
         {
             var sut = new TypedEventMatcher<AfterExerciseEvent>();
-            Assert.True(sut.Matches(new AfterExerciseEvent(new ExecutionContext(), new ExerciseBuilder().Build())));
+            Assert.True(sut.Matches(new AfterExerciseEvent(new ExecutionContext(), new ExerciseBuilder())));
         }
 
         [Fact]

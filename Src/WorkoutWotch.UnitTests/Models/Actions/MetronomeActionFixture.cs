@@ -43,7 +43,8 @@
         [Fact]
         public void duration_is_zero_if_there_are_no_ticks()
         {
-            var sut = new MetronomeActionBuilder().Build();
+            var sut = new MetronomeActionBuilder()
+                .Build();
 
             Assert.Equal(TimeSpan.Zero, sut.Duration);
         }
@@ -64,7 +65,8 @@
         [Fact]
         public async Task execute_async_throws_if_context_is_null()
         {
-            var sut = new MetronomeActionBuilder().Build();
+            var sut = new MetronomeActionBuilder()
+                .Build();
 
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }

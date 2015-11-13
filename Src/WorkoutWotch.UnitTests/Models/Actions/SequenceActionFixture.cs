@@ -26,7 +26,8 @@
         [Fact]
         public void duration_is_zero_if_there_are_no_child_actions()
         {
-            var sut = new SequenceActionBuilder().Build();
+            var sut = new SequenceActionBuilder()
+                .Build();
 
             Assert.Equal(TimeSpan.Zero, sut.Duration);
         }
@@ -62,7 +63,8 @@
         [Fact]
         public async Task execute_async_throws_if_context_is_null()
         {
-            var sut = new SequenceActionBuilder().Build();
+            var sut = new SequenceActionBuilder()
+                .Build();
 
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }

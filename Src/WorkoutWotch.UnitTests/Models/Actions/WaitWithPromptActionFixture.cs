@@ -55,7 +55,8 @@
         [Fact]
         public async Task execute_async_throws_if_the_context_is_null()
         {
-            var sut = new WaitWithPromptActionBuilder().Build();
+            var sut = new WaitWithPromptActionBuilder()
+                .Build();
 
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }

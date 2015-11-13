@@ -27,7 +27,8 @@
         [Fact]
         public void duration_returns_zero()
         {
-            var sut = new SayActionBuilder().Build();
+            var sut = new SayActionBuilder()
+                .Build();
 
             Assert.Equal(TimeSpan.Zero, sut.Duration);
         }
@@ -35,7 +36,8 @@
         [Fact]
         public async Task execute_async_throws_if_context_is_null()
         {
-            var sut = new SayActionBuilder().Build();
+            var sut = new SayActionBuilder()
+                .Build();
 
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
@@ -43,7 +45,8 @@
         [Fact]
         public async Task execute_async_cancels_if_context_is_cancelled()
         {
-            var sut = new SayActionBuilder().Build();
+            var sut = new SayActionBuilder()
+                .Build();
 
             using (var context = new ExecutionContext())
             {
@@ -56,7 +59,8 @@
         [Fact]
         public void execute_async_pauses_if_context_is_paused()
         {
-            var sut = new SayActionBuilder().Build();
+            var sut = new SayActionBuilder()
+                .Build();
 
             using (var context = new ExecutionContext())
             {

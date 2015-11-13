@@ -17,7 +17,8 @@
         [Fact]
         public void ctor_throws_if_scheduler_service_is_null()
         {
-            var model = new ExerciseBuilder().Build();
+            var model = new ExerciseBuilder()
+                .Build();
             Assert.Throws<ArgumentNullException>(() => new ExerciseViewModel(null, model, Observable.Never<ExecutionContext>()));
         }
 
@@ -30,7 +31,8 @@
         [Fact]
         public void ctor_throws_if_execution_context_is_null()
         {
-            var model = new ExerciseBuilder().Build();
+            var model = new ExerciseBuilder()
+                .Build();
             Assert.Throws<ArgumentNullException>(() => new ExerciseViewModel(new TestSchedulerService(), model, null));
         }
 
@@ -72,7 +74,8 @@
         [Fact]
         public void progress_time_span_is_zero_if_there_is_no_execution_context()
         {
-            var sut = new ExerciseViewModelBuilder().Build();
+            var sut = new ExerciseViewModelBuilder()
+                .Build();
 
             Assert.Equal(TimeSpan.Zero, sut.ProgressTimeSpan);
         }
@@ -80,8 +83,10 @@
         [Fact]
         public void progress_time_span_is_zero_if_no_progress_has_been_made_through_this_exercise()
         {
-            var model1 = new ExerciseBuilder().Build();
-            var model2 = new ExerciseBuilder().Build();
+            var model1 = new ExerciseBuilder()
+                .Build();
+            var model2 = new ExerciseBuilder()
+                .Build();
             var executionContext = new ExecutionContext();
             var sut = new ExerciseViewModelBuilder()
                 .WithModel(model2)
@@ -98,7 +103,8 @@
         public void progress_time_span_reflects_any_progression_through_the_exercise()
         {
             var scheduler = new TestSchedulerService();
-            var model = new ExerciseBuilder().Build();
+            var model = new ExerciseBuilder()
+                .Build();
             var executionContext = new ExecutionContext();
             var sut = new ExerciseViewModelBuilder()
                 .WithSchedulerService(scheduler)
@@ -124,8 +130,10 @@
         public void progress_time_span_is_not_reset_to_zero_if_another_exercise_is_started()
         {
             var scheduler = new TestSchedulerService();
-            var model1 = new ExerciseBuilder().Build();
-            var model2 = new ExerciseBuilder().Build();
+            var model1 = new ExerciseBuilder()
+                .Build();
+            var model2 = new ExerciseBuilder()
+                .Build();
             var executionContext = new ExecutionContext();
             var sut = new ExerciseViewModelBuilder()
                 .WithSchedulerService(scheduler)
@@ -152,7 +160,8 @@
         public void progress_time_span_is_reset_to_zero_if_the_execution_context_changes()
         {
             var scheduler = new TestSchedulerService();
-            var model = new ExerciseBuilder().Build();
+            var model = new ExerciseBuilder()
+                .Build();
             var executionContext = new ExecutionContext();
             var executionContextSubject = new Subject<ExecutionContext>();
             var sut = new ExerciseViewModelBuilder()
@@ -177,7 +186,8 @@
         public void progress_time_span_is_reset_to_zero_if_the_execution_context_changes_to_null()
         {
             var scheduler = new TestSchedulerService();
-            var model = new ExerciseBuilder().Build();
+            var model = new ExerciseBuilder()
+                .Build();
             var executionContext = new ExecutionContext();
             var executionContextSubject = new Subject<ExecutionContext>();
             var sut = new ExerciseViewModelBuilder()
@@ -254,7 +264,8 @@
         public void is_active_is_true_if_this_exercise_is_the_current_exercise()
         {
             var scheduler = new TestSchedulerService();
-            var model = new ExerciseBuilder().Build();
+            var model = new ExerciseBuilder()
+                .Build();
             var executionContext = new ExecutionContext();
             var sut = new ExerciseViewModelBuilder()
                 .WithSchedulerService(scheduler)
@@ -274,8 +285,10 @@
         public void is_active_is_false_if_this_exercise_is_not_the_current_exercise()
         {
             var scheduler = new TestSchedulerService();
-            var model1 = new ExerciseBuilder().Build();
-            var model2 = new ExerciseBuilder().Build();
+            var model1 = new ExerciseBuilder()
+                .Build();
+            var model2 = new ExerciseBuilder()
+                .Build();
             var executionContext = new ExecutionContext();
             var sut = new ExerciseViewModelBuilder()
                 .WithSchedulerService(scheduler)

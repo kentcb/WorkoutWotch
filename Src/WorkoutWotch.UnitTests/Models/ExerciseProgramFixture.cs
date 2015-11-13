@@ -33,7 +33,7 @@
         [Fact]
         public void ctor_throws_if_any_exercise_is_null()
         {
-            Assert.Throws<ArgumentException>(() => new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", new Exercise[] { new ExerciseBuilder().Build(), null }));
+            Assert.Throws<ArgumentException>(() => new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", new Exercise[] { new ExerciseBuilder(), null }));
         }
 
         [Theory]
@@ -71,7 +71,8 @@
         [Fact]
         public void duration_is_zero_if_there_are_no_exercises()
         {
-            var sut = new ExerciseProgramBuilder().Build();
+            var sut = new ExerciseProgramBuilder()
+                .Build();
 
             Assert.Equal(TimeSpan.Zero, sut.Duration);
         }
@@ -92,14 +93,11 @@
 
             var sut = new ExerciseProgramBuilder()
                 .AddExercise(new ExerciseBuilder()
-                    .WithBeforeExerciseAction(action1)
-                    .Build())
+                    .WithBeforeExerciseAction(action1))
                 .AddExercise(new ExerciseBuilder()
-                    .WithBeforeExerciseAction(action2)
-                    .Build())
+                    .WithBeforeExerciseAction(action2))
                 .AddExercise(new ExerciseBuilder()
-                    .WithBeforeExerciseAction(action1)
-                    .Build())
+                    .WithBeforeExerciseAction(action1))
                 .Build();
 
             Assert.Equal(TimeSpan.FromSeconds(12), sut.Duration);
@@ -108,7 +106,8 @@
         [Fact]
         public void execute_async_throws_if_the_context_is_null()
         {
-            var sut = new ExerciseProgramBuilder().Build();
+            var sut = new ExerciseProgramBuilder()
+                .Build();
 
             Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
@@ -121,11 +120,9 @@
 
             var sut = new ExerciseProgramBuilder()
                 .AddExercise(new ExerciseBuilder()
-                    .WithBeforeExerciseAction(action1)
-                    .Build())
+                    .WithBeforeExerciseAction(action1))
                 .AddExercise(new ExerciseBuilder()
-                    .WithBeforeExerciseAction(action2)
-                    .Build())
+                    .WithBeforeExerciseAction(action2))
                 .Build();
 
             using (var executionContext = new ExecutionContext())
@@ -171,14 +168,11 @@
 
             var sut = new ExerciseProgramBuilder()
                 .AddExercise(new ExerciseBuilder()
-                    .WithBeforeExerciseAction(action1)
-                    .Build())
+                    .WithBeforeExerciseAction(action1))
                 .AddExercise(new ExerciseBuilder()
-                    .WithBeforeExerciseAction(action2)
-                    .Build())
+                    .WithBeforeExerciseAction(action2))
                 .AddExercise(new ExerciseBuilder()
-                    .WithBeforeExerciseAction(action3)
-                    .Build())
+                    .WithBeforeExerciseAction(action3))
                 .Build();
 
             using (var executionContext = new ExecutionContext(TimeSpan.FromSeconds(23)))

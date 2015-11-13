@@ -26,7 +26,8 @@
         [Fact]
         public void duration_is_zero_if_there_are_no_children()
         {
-            var sut = new ParallelActionBuilder().Build();
+            var sut = new ParallelActionBuilder()
+                .Build();
 
             Assert.Equal(TimeSpan.Zero, sut.Duration);
         }
@@ -68,7 +69,8 @@
         [Fact]
         public async Task execute_async_throws_if_the_execution_context_is_null()
         {
-            var sut = new ParallelActionBuilder().Build();
+            var sut = new ParallelActionBuilder()
+                .Build();
 
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }

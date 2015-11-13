@@ -28,7 +28,8 @@
         [Fact]
         public async Task get_async_throws_if_key_is_null()
         {
-            var sut = new StateServiceBuilder().Build();
+            var sut = new StateServiceBuilder()
+                .Build();
 
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.GetAsync<string>(null));
         }
@@ -57,7 +58,8 @@
         [Fact]
         public async Task set_async_throws_if_key_is_null()
         {
-            var sut = new StateServiceBuilder().Build();
+            var sut = new StateServiceBuilder()
+                .Build();
 
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.SetAsync<string>(null, "foo"));
         }
@@ -86,7 +88,8 @@
         [Fact]
         public void remove_async_throws_if_key_is_null()
         {
-            var sut = new StateServiceBuilder().Build();
+            var sut = new StateServiceBuilder()
+                .Build();
 
             Assert.ThrowsAsync<ArgumentNullException>(() => sut.RemoveAsync<string>(null));
         }
@@ -115,7 +118,8 @@
         [Fact]
         public async Task save_async_executes_all_tasks_returned_by_saved_callbacks()
         {
-            var sut = new StateServiceBuilder().Build();
+            var sut = new StateServiceBuilder()
+                .Build();
             var firstExecuted = false;
             var secondExecuted = false;
             sut.RegisterSaveCallback(_ => Task.Run(() => firstExecuted = true));
@@ -172,7 +176,8 @@
         [Fact]
         public async Task save_async_does_not_fail_if_a_save_callback_fails()
         {
-            var sut = new StateServiceBuilder().Build();
+            var sut = new StateServiceBuilder()
+                .Build();
             sut.RegisterSaveCallback(_ => Task.Run(() => { throw new Exception("Failed"); }));
 
             await sut.SaveAsync();
@@ -204,7 +209,8 @@
         [Fact]
         public void register_save_callback_throws_if_save_task_factory_is_null()
         {
-            var sut = new StateServiceBuilder().Build();
+            var sut = new StateServiceBuilder()
+                .Build();
 
             Assert.Throws<ArgumentNullException>(() => sut.RegisterSaveCallback(null));
         }
@@ -212,7 +218,8 @@
         [Fact]
         public async Task register_save_callback_returns_a_registration_handle_that_unregisters_the_callback_when_disposed()
         {
-            var sut = new StateServiceBuilder().Build();
+            var sut = new StateServiceBuilder()
+                .Build();
             var firstExecuted = false;
             var secondExecuted = false;
             var handle = sut.RegisterSaveCallback(_ => Task.Run(() => firstExecuted = true));

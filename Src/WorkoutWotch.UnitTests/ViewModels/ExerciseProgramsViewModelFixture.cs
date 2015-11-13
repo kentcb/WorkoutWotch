@@ -60,7 +60,8 @@
         [Fact]
         public void parse_error_message_is_null_by_default()
         {
-            var sut = new ExerciseProgramsViewModelBuilder().Build();
+            var sut = new ExerciseProgramsViewModelBuilder()
+                .Build();
 
             Assert.Null(sut.ParseErrorMessage);
         }

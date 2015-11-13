@@ -44,7 +44,8 @@
         [Fact]
         public async Task execute_async_throws_if_context_is_null()
         {
-            var sut = new WaitActionBuilder().Build();
+            var sut = new WaitActionBuilder()
+                .Build();
 
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }

@@ -90,7 +90,8 @@
         [Fact]
         public void is_started_is_false_by_default()
         {
-            var sut = new ExerciseProgramViewModelBuilder().Build();
+            var sut = new ExerciseProgramViewModelBuilder()
+                .Build();
 
             Assert.False(sut.IsStarted);
         }
@@ -124,7 +125,8 @@
         [Fact]
         public void is_start_visible_is_true_by_default()
         {
-            var sut = new ExerciseProgramViewModelBuilder().Build();
+            var sut = new ExerciseProgramViewModelBuilder()
+                .Build();
 
             Assert.True(sut.IsStartVisible);
         }
@@ -158,7 +160,8 @@
         [Fact]
         public void is_paused_is_false_by_default()
         {
-            var sut = new ExerciseProgramViewModelBuilder().Build();
+            var sut = new ExerciseProgramViewModelBuilder()
+                .Build();
 
             Assert.False(sut.IsPaused);
         }
@@ -204,7 +207,8 @@
         [Fact]
         public void is_pause_visible_is_false_by_default()
         {
-            var sut = new ExerciseProgramViewModelBuilder().Build();
+            var sut = new ExerciseProgramViewModelBuilder()
+                .Build();
 
             Assert.False(sut.IsPauseVisible);
         }
@@ -276,7 +280,8 @@
         [Fact]
         public void is_resume_visible_is_false_by_default()
         {
-            var sut = new ExerciseProgramViewModelBuilder().Build();
+            var sut = new ExerciseProgramViewModelBuilder()
+                .Build();
 
             Assert.False(sut.IsResumeVisible);
         }
