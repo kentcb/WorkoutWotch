@@ -50,27 +50,27 @@ namespace WorkoutWotch.ViewModels
 
             this.isStarted = this.WhenAnyValue(x => x.ExecutionContext)
                 .Select(x => x != null)
-                .ObserveOn(schedulerService.SynchronizationContextScheduler)
+                .ObserveOn(schedulerService.MainScheduler)
                 .ToProperty(this, x => x.IsStarted)
                 .AddTo(this.disposables);
 
             this.isPaused = this.WhenAnyValue(x => x.ExecutionContext)
                 .Select(x => x == null ? Observable.Return(false) : x.WhenAnyValue(y => y.IsPaused))
                 .Switch()
-                .ObserveOn(schedulerService.SynchronizationContextScheduler)
+                .ObserveOn(schedulerService.MainScheduler)
                 .ToProperty(this, x => x.IsPaused)
                 .AddTo(this.disposables);
 
             this.progressTimeSpan = this.WhenAnyValue(x => x.ExecutionContext)
                 .Select(x => x == null ? Observable.Return(TimeSpan.Zero) : x.WhenAnyValue(y => y.Progress))
                 .Switch()
-                .ObserveOn(schedulerService.SynchronizationContextScheduler)
+                .ObserveOn(schedulerService.MainScheduler)
                 .ToProperty(this, x => x.ProgressTimeSpan)
                 .AddTo(this.disposables);
 
             this.progress = this.WhenAnyValue(x => x.ProgressTimeSpan)
                 .Select(x => x.TotalMilliseconds / this.model.Duration.TotalMilliseconds)
-                .ObserveOn(schedulerService.SynchronizationContextScheduler)
+                .ObserveOn(schedulerService.MainScheduler)
                 .ToProperty(this, x => x.Progress)
                 .AddTo(this.disposables);
 
@@ -79,7 +79,7 @@ namespace WorkoutWotch.ViewModels
                     x => x.ExecutionContext.CurrentExercise,
                     (ec, currentExercise) => ec == null ? null : currentExercise)
                 .Select(x => this.Exercises.SingleOrDefault(y => y.Model == x))
-                .ObserveOn(schedulerService.SynchronizationContextScheduler)
+                .ObserveOn(schedulerService.MainScheduler)
                 .ToProperty(this, x => x.CurrentExercise)
                 .AddTo(this.disposables);
 
@@ -87,19 +87,19 @@ namespace WorkoutWotch.ViewModels
                 .Select(x => !x);
 
             this.startCommand = ReactiveCommand
-                .CreateAsyncTask(canStart, this.OnStartAsync, schedulerService.SynchronizationContextScheduler)
+                .CreateAsyncTask(canStart, this.OnStartAsync, schedulerService.MainScheduler)
                 .AddTo(this.disposables);
 
             var canPause = this.WhenAnyValue(x => x.IsStarted)
                 .CombineLatest(this.WhenAnyValue(x => x.ExecutionContext.IsPaused), (isStarted, isPaused) => isStarted && !isPaused);
 
-            this.pauseCommand = ReactiveCommand.Create(canPause, schedulerService.SynchronizationContextScheduler)
+            this.pauseCommand = ReactiveCommand.Create(canPause, schedulerService.MainScheduler)
                 .AddTo(this.disposables);
 
             var canResume = this.WhenAnyValue(x => x.IsStarted)
                 .CombineLatest(this.WhenAnyValue(x => x.ExecutionContext.IsPaused), (isStarted, isPaused) => isStarted && isPaused);
 
-            this.resumeCommand = ReactiveCommand.Create(canResume, schedulerService.SynchronizationContextScheduler)
+            this.resumeCommand = ReactiveCommand.Create(canResume, schedulerService.MainScheduler)
                 .AddTo(this.disposables);
 
             var canSkipBackwards = this.WhenAnyValue(
@@ -108,7 +108,7 @@ namespace WorkoutWotch.ViewModels
                     (ec, progress) => new { ExecutionContext = ec, Progress = progress })
                 .Select(x => x.ExecutionContext != null && x.Progress >= skipBackwardsThreshold);
 
-            this.skipBackwardsCommand = ReactiveCommand.CreateAsyncTask(canSkipBackwards, this.OnSkipBackwardsAsync, schedulerService.SynchronizationContextScheduler)
+            this.skipBackwardsCommand = ReactiveCommand.CreateAsyncTask(canSkipBackwards, this.OnSkipBackwardsAsync, schedulerService.MainScheduler)
                 .AddTo(this.disposables);
 
             var canSkipForwards = this.WhenAnyValue(
@@ -117,7 +117,7 @@ namespace WorkoutWotch.ViewModels
                     (ec, currentExercise) => new { ExecutionContext = ec, CurrentExercise = currentExercise })
                 .Select(x => x.ExecutionContext != null && x.CurrentExercise != null && x.CurrentExercise != this.exercises.LastOrDefault());
 
-            this.skipForwardsCommand = ReactiveCommand.CreateAsyncTask(canSkipForwards, this.OnSkipForwardsAsync, schedulerService.SynchronizationContextScheduler)
+            this.skipForwardsCommand = ReactiveCommand.CreateAsyncTask(canSkipForwards, this.OnSkipForwardsAsync, schedulerService.MainScheduler)
                 .AddTo(this.disposables);
 
             this.isStartVisible = this.startCommand

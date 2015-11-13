@@ -19,7 +19,7 @@
             get;
         }
 
-        IScheduler SynchronizationContextScheduler
+        IScheduler MainScheduler
         {
             get;
         }

@@ -266,11 +266,11 @@ namespace WorkoutWotch.UnitTests.Services.Scheduler.Mocks
             }
         }
 
-        public global::System.Reactive.Concurrency.IScheduler SynchronizationContextScheduler
+        public global::System.Reactive.Concurrency.IScheduler MainScheduler
         {
             get
             {
-                return this.Apply(x => x.SynchronizationContextScheduler);
+                return this.Apply(x => x.MainScheduler);
             }
         }
 

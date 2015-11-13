@@ -79,26 +79,26 @@
 
             this.parseErrorMessage = safeResults
                 .Select(x => x.Item.WasSuccessful ? null : x.Item.ToString())
-                .ObserveOn(schedulerService.SynchronizationContextScheduler)
+                .ObserveOn(schedulerService.MainScheduler)
                 .ToProperty(this, x => x.ParseErrorMessage)
                 .AddTo(this.disposables);
 
             this.status = results
                 .Select(x => !x.Item.WasSuccessful ? ExerciseProgramsViewModelStatus.ParseFailed : x.Source == DocumentSource.Cache ? ExerciseProgramsViewModelStatus.LoadedFromCache : ExerciseProgramsViewModelStatus.LoadedFromCloud)
                 .Catch(Observable.Return(ExerciseProgramsViewModelStatus.LoadFailed))
-                .ObserveOn(schedulerService.SynchronizationContextScheduler)
+                .ObserveOn(schedulerService.MainScheduler)
                 .ToProperty(this, x => x.Status)
                 .AddTo(this.disposables);
 
             this.model = safeResults
                 .Select(x => x.Item.WasSuccessful ? x.Item.Value : null)
-                .ObserveOn(schedulerService.SynchronizationContextScheduler)
+                .ObserveOn(schedulerService.MainScheduler)
                 .ToProperty(this, x => x.Model)
                 .AddTo(this.disposables);
 
             this.programs = this.WhenAnyValue(x => x.Model)
                 .Select(x => x == null ? null : x.Programs.CreateDerivedCollection(y => new ExerciseProgramViewModel(loggerService, schedulerService, y)))
-                .ObserveOn(schedulerService.SynchronizationContextScheduler)
+                .ObserveOn(schedulerService.MainScheduler)
                 .ToProperty(this, x => x.Programs)
                 .AddTo(this.disposables);
 

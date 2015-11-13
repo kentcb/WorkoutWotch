@@ -16,7 +16,7 @@
                 .When(x => x.ImmediateScheduler)
                 .Return(new SchedulerMock(MockBehavior.Loose));
             this
-                .When(x => x.SynchronizationContextScheduler)
+                .When(x => x.MainScheduler)
                 .Return(new SchedulerMock(MockBehavior.Loose));
             this
                 .When(x => x.TaskPoolScheduler)

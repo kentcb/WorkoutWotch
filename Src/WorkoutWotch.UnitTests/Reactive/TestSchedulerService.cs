@@ -14,7 +14,7 @@
         private readonly TestScheduler defaultScheduler;
         private readonly TestScheduler currentThreadScheduler;
         private readonly TestScheduler immediateScheduler;
-        private readonly TestScheduler synchronizationContextScheduler;
+        private readonly TestScheduler mainScheduler;
         private readonly TestScheduler eventLoopScheduler;
         private readonly TestScheduler newThreadScheduler;
         private readonly TestScheduler taskPoolScheduler;
@@ -28,7 +28,7 @@
             {
                 this.currentThreadScheduler =
                     this.immediateScheduler =
-                    this.synchronizationContextScheduler =
+                    this.mainScheduler =
                     this.eventLoopScheduler =
                     this.newThreadScheduler =
                     this.taskPoolScheduler =
@@ -38,7 +38,7 @@
             {
                 this.currentThreadScheduler = new TestScheduler();
                 this.immediateScheduler = new TestScheduler();
-                this.synchronizationContextScheduler = new TestScheduler();
+                this.mainScheduler = new TestScheduler();
                 this.eventLoopScheduler = new TestScheduler();
                 this.newThreadScheduler = new TestScheduler();
                 this.taskPoolScheduler = new TestScheduler();
@@ -51,7 +51,7 @@
 
         public IScheduler ImmediateScheduler => this.immediateScheduler;
 
-        public IScheduler SynchronizationContextScheduler => this.synchronizationContextScheduler;
+        public IScheduler MainScheduler => this.mainScheduler;
 
         public IScheduler EventLoopScheduler => this.eventLoopScheduler;
 
@@ -124,7 +124,7 @@
             yield return this.defaultScheduler;
             yield return this.currentThreadScheduler;
             yield return this.immediateScheduler;
-            yield return this.synchronizationContextScheduler;
+            yield return this.mainScheduler;
             yield return this.eventLoopScheduler;
             yield return this.newThreadScheduler;
             yield return this.taskPoolScheduler;

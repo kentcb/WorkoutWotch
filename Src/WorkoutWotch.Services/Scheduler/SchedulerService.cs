@@ -7,11 +7,11 @@
 
     public sealed class SchedulerService : ISchedulerService
     {
-        private readonly IScheduler synchronizationContextScheduler;
+        private readonly IScheduler mainScheduler;
 
         public SchedulerService()
         {
-            this.synchronizationContextScheduler = new SynchronizationContextScheduler(SynchronizationContext.Current);
+            this.mainScheduler = new SynchronizationContextScheduler(SynchronizationContext.Current);
         }
 
         public IScheduler DefaultScheduler => Rx.DefaultScheduler.Instance;
@@ -20,7 +20,7 @@
 
         public IScheduler ImmediateScheduler => Rx.ImmediateScheduler.Instance;
 
-        public IScheduler SynchronizationContextScheduler => this.synchronizationContextScheduler;
+        public IScheduler MainScheduler => this.mainScheduler;
 
         public IScheduler TaskPoolScheduler => Rx.TaskPoolScheduler.Default;
     }
