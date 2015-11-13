@@ -64,7 +64,6 @@
     <Compile Include="Speech\SpeechService.cs" />
     <Compile Include="SystemNotifications\ISystemNotificationsService.cs" />
     <Compile Include="SystemNotifications\SystemNotificationsService.cs" />
-    <Compile Include="ExerciseDocument\CannedExerciseDocumentService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WorkoutWotch.Services.Contracts\WorkoutWotch.Services.Contracts.csproj">
@@ -78,9 +77,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="ExerciseDocument\DefaultExerciseDocument.mkd" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

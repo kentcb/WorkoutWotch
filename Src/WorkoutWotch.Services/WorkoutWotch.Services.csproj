@@ -30,6 +30,7 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ExerciseDocument\CannedExerciseDocumentService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
@@ -82,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <EmbeddedResource Include="ExerciseDocument\DefaultExerciseDocument.mkd" />
     <None Include="packages.config" />
   </ItemGroup>
 </Project>

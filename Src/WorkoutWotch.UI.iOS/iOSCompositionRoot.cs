@@ -1,11 +1,11 @@
 ﻿namespace WorkoutWotch.UI.iOS
 {
     using System;
+    using Services.ExerciseDocument;
     using WorkoutWotch.Services.Contracts.Audio;
     using WorkoutWotch.Services.Contracts.ExerciseDocument;
     using WorkoutWotch.Services.Contracts.Speech;
     using WorkoutWotch.Services.iOS.Audio;
-    using WorkoutWotch.Services.iOS.ExerciseDocument;
     using WorkoutWotch.Services.iOS.Speech;
     using WorkoutWotch.Services.iOS.SystemNotifications;
     using WorkoutWotch.UI.iOS.Views.ExercisePrograms;
