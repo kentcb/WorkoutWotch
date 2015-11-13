@@ -5,7 +5,7 @@
     using Kent.Boogaart.HelperTrinity.Extensions;
     using Microsoft.Reactive.Testing;
 
-    public static class Extensions
+    public static class TestSchedulerExtensions
     {
         public static void AdvanceBy(this TestScheduler @this, TimeSpan time)
         {
@@ -19,24 +19,12 @@
             @this.AdvanceTo(dateTime.Ticks);
         }
 
-        public static void AdvanceBy(this TestSchedulerService @this, TimeSpan time)
-        {
-            @this.AssertNotNull(nameof(@this));
-            @this.AdvanceBy(time.Ticks);
-        }
-
-        public static void AdvanceTo(this TestSchedulerService @this, DateTime dateTime)
-        {
-            @this.AssertNotNull(nameof(@this));
-            @this.AdvanceTo(dateTime.Ticks);
-        }
-
-        public static void AdvanceMinimal(this TestSchedulerService @this) =>
+        public static void AdvanceMinimal(this TestScheduler @this) =>
             // not technically minimal, but advancing by a single tick doesn't always work as expected (a bug in Rx?)
             @this.AdvanceBy(TimeSpan.FromMilliseconds(1));
 
         // because "Start" is an awfully misleading name. See http://kent-boogaart.com/blog/the-peril-of-virtualtimescheduler.start/
-        public static void AdvanceUntilEmpty(this TestSchedulerService @this) =>
+        public static void AdvanceUntilEmpty(this TestScheduler @this) =>
             @this.Start();
 
         public static void ScheduleRelative(this TestScheduler @this, TimeSpan dueTime, Action action)

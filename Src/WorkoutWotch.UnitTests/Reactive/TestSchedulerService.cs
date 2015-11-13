@@ -70,29 +70,39 @@
                     .Subscribe(_ => this.AdvanceMinimal()),
                 Disposable.Create(() => this.Stop()));
 
-        public void Start()
+        public void AdvanceUntilEmpty()
         {
             foreach (var testScheduler in this.GetTestSchedulers())
             {
-                testScheduler.Start();
+                testScheduler.AdvanceUntilEmpty();
             }
         }
 
-        public void AdvanceBy(long time)
+        public void AdvanceBy(long ticks)
         {
             foreach (var testScheduler in this.GetTestSchedulers())
             {
-                testScheduler.AdvanceBy(time);
+                testScheduler.AdvanceBy(ticks);
             }
         }
 
-        public void AdvanceTo(long time)
+        public void AdvanceBy(TimeSpan time) =>
+            this.AdvanceBy(time.Ticks);
+
+        public void AdvanceTo(long ticks)
         {
             foreach (var testScheduler in this.GetTestSchedulers())
             {
-                testScheduler.AdvanceTo(time);
+                testScheduler.AdvanceTo(ticks);
             }
         }
+
+        public void AdvanceTo(DateTime dateTime) =>
+            this.AdvanceTo(dateTime.Ticks);
+
+        public void AdvanceMinimal() =>
+            // not technically minimal, but advancing by a single tick doesn't always work as expected (a bug in Rx?)
+            this.AdvanceBy(TimeSpan.FromMilliseconds(1));
 
         public void Stop()
         {

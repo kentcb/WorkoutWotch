@@ -80,7 +80,7 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.NotNull(sut.ParseErrorMessage);
             Assert.Equal("Parsing failure: unexpected '#'; expected end of input (Line 3, Column 1); recently consumed: rogram\r\n\r\n", sut.ParseErrorMessage);
         }
@@ -109,11 +109,11 @@
 
             documents.OnNext(badDocument);
 
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.NotNull(sut.ParseErrorMessage);
 
             documents.OnNext(goodDocument);
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.Null(sut.ParseErrorMessage);
         }
 
@@ -128,7 +128,7 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.NotNull(sut.Programs);
             Assert.Equal(1, sut.Programs.Count);
             Assert.Equal("First Program", sut.Programs.ElementAt(0).Name);
@@ -143,7 +143,7 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.Null(sut.Programs);
         }
 
@@ -158,7 +158,7 @@
                 .WithCachedDocument(document)
                 .Build();
 
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.NotNull(sut.Programs);
             Assert.Equal(1, sut.Programs.Count);
         }
@@ -174,7 +174,7 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.NotNull(sut.Programs);
             Assert.Equal(1, sut.Programs.Count);
         }
@@ -200,7 +200,7 @@
                 .WithStateService(stateService)
                 .Build();
 
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.NotNull(sut.Programs);
             Assert.Equal(1, sut.Programs.Count);
         }
@@ -220,7 +220,7 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.NotNull(sut.Programs);
             Assert.Equal(2, sut.Programs.Count);
         }
@@ -240,7 +240,7 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.Equal(ExerciseProgramsViewModelStatus.ParseFailed, sut.Status);
         }
 
@@ -255,7 +255,7 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.Equal(ExerciseProgramsViewModelStatus.LoadedFromCache, sut.Status);
         }
 
@@ -270,7 +270,7 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.Equal(ExerciseProgramsViewModelStatus.LoadedFromCloud, sut.Status);
         }
 
@@ -289,7 +289,7 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.Equal(ExerciseProgramsViewModelStatus.LoadFailed, sut.Status);
         }
 
@@ -314,7 +314,7 @@
                 .WithStateService(stateService)
                 .Build();
 
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.Equal(ExerciseProgramsViewModelStatus.LoadedFromCloud, sut.Status);
 
             stateService
@@ -342,7 +342,7 @@
                 .WithStateService(stateService)
                 .Build();
 
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.Equal(ExerciseProgramsViewModelStatus.LoadedFromCache, sut.Status);
 
             stateService

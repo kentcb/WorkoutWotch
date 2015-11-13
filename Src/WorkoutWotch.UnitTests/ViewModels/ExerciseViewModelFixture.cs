@@ -108,15 +108,15 @@
 
             executionContext.SetCurrentExercise(model);
 
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.Equal(TimeSpan.Zero, sut.ProgressTimeSpan);
 
             executionContext.AddProgress(TimeSpan.FromSeconds(3));
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.Equal(TimeSpan.FromSeconds(3), sut.ProgressTimeSpan);
 
             executionContext.AddProgress(TimeSpan.FromSeconds(2));
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.Equal(TimeSpan.FromSeconds(5), sut.ProgressTimeSpan);
         }
 
@@ -136,15 +136,15 @@
             executionContext.SetCurrentExercise(model1);
             executionContext.AddProgress(TimeSpan.FromSeconds(3));
 
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.Equal(TimeSpan.FromSeconds(3), sut.ProgressTimeSpan);
 
             executionContext.SetCurrentExercise(model2);
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.Equal(TimeSpan.FromSeconds(3), sut.ProgressTimeSpan);
 
             executionContext.AddProgress(TimeSpan.FromSeconds(3));
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.Equal(TimeSpan.FromSeconds(3), sut.ProgressTimeSpan);
         }
 
@@ -165,11 +165,11 @@
             executionContext.SetCurrentExercise(model);
 
             executionContext.AddProgress(TimeSpan.FromSeconds(3));
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.Equal(TimeSpan.FromSeconds(3), sut.ProgressTimeSpan);
 
             executionContextSubject.OnNext(new ExecutionContext());
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.Equal(TimeSpan.Zero, sut.ProgressTimeSpan);
         }
 
@@ -190,11 +190,11 @@
             executionContext.SetCurrentExercise(model);
 
             executionContext.AddProgress(TimeSpan.FromSeconds(3));
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.Equal(TimeSpan.FromSeconds(3), sut.ProgressTimeSpan);
 
             executionContextSubject.OnNext(null);
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.Equal(TimeSpan.Zero, sut.ProgressTimeSpan);
         }
 
@@ -233,7 +233,7 @@
             executionContext.SetCurrentExercise(model);
             executionContext.AddProgress(TimeSpan.FromMilliseconds(progressInMs));
 
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
 
             Assert.Equal(expectedProgress, sut.Progress);
         }
@@ -246,7 +246,7 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.False(sut.IsActive);
         }
 
@@ -262,11 +262,11 @@
                 .WithModel(model)
                 .Build();
 
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.False(sut.IsActive);
 
             executionContext.SetCurrentExercise(model);
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.True(sut.IsActive);
         }
 
@@ -283,11 +283,11 @@
                 .WithModel(model1)
                 .Build();
 
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.False(sut.IsActive);
 
             executionContext.SetCurrentExercise(model2);
-            scheduler.Start();
+            scheduler.AdvanceUntilEmpty();
             Assert.False(sut.IsActive);
         }
     }

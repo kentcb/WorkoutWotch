@@ -98,7 +98,7 @@
     </Compile>
     <Compile Include="Services\Logger\LoggerServiceFixture.cs" />
     <Compile Include="System\Reactive\Linq\ObservableExtensions.cs" />
-    <Compile Include="Reactive\Extensions.cs" />
+    <Compile Include="Reactive\TestSchedulerExtensions.cs" />
     <Compile Include="Reactive\TestSchedulerService.cs" />
     <Compile Include="Reactive\Testing\ColdObservable.cs" />
     <Compile Include="Reactive\Testing\GlobalSuppressions.cs" />
