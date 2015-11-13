@@ -227,6 +227,44 @@
         }
 
         [Fact]
+        public void programs_is_populated_from_cache_whilst_document_from_cloud_loads()
+        {
+            var cacheDocument = "# First Program";
+            var cloudDocument = @"
+# First Program
+# Second Program";
+            var scheduler = new TestSchedulerService();
+
+            var exerciseDocumentService = new ExerciseDocumentServiceMock(MockBehavior.Loose);
+
+            exerciseDocumentService
+                .When(x => x.ExerciseDocument)
+                .Return(
+                    Observable
+                        .Return(cloudDocument)
+                        .Delay(TimeSpan.FromSeconds(3), scheduler.TaskPoolScheduler));
+
+            var sut = new ExerciseProgramsViewModelBuilder()
+                .WithExerciseDocumentService(exerciseDocumentService)
+                .WithCachedDocument(cacheDocument)
+                .WithSchedulerService(scheduler)
+                .Build();
+
+            scheduler.AdvanceMinimal();
+
+            Assert.NotNull(sut.Programs);
+            Assert.Equal(1, sut.Programs.Count);
+
+            scheduler.AdvanceBy(TimeSpan.FromSeconds(2));
+            Assert.NotNull(sut.Programs);
+            Assert.Equal(1, sut.Programs.Count);
+
+            scheduler.AdvanceBy(TimeSpan.FromSeconds(2));
+            Assert.NotNull(sut.Programs);
+            Assert.Equal(2, sut.Programs.Count);
+        }
+
+        [Fact]
         public void status_is_parse_failed_if_the_document_could_not_be_parsed()
         {
             var document = @"# First Program
