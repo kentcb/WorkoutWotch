@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Reactive.Linq;
     using System.Threading.Tasks;
     using Builders;
     using Kent.Boogaart.PCLMock;
@@ -104,12 +105,12 @@
         }
 
         [Fact]
-        public void execute_async_throws_if_the_context_is_null()
+        public async Task execute_async_throws_if_the_context_is_null()
         {
             var sut = new ExerciseProgramBuilder()
                 .Build();
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
         }
 
         [Fact]

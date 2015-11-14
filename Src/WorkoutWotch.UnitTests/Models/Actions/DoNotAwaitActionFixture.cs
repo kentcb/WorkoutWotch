@@ -1,6 +1,8 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Actions
 {
     using System;
+    using System.Reactive;
+    using System.Reactive.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Builders;
@@ -51,22 +53,21 @@
         }
 
         [Fact]
-        public void execute_async_does_not_wait_for_inner_actions_execution_to_complete_before_itself_completing()
+        public async Task execute_async_does_not_wait_for_inner_actions_execution_to_complete_before_itself_completing()
         {
             var action = new ActionMock();
-            var tcs = new TaskCompletionSource<bool>();
 
             action
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
-                .Return(tcs.Task);
+                .Return(Observable.Never<Unit>());
 
             var sut = new DoNotAwaitActionBuilder()
                 .WithInnerAction(action)
                 .Build();
 
-            var task = sut.ExecuteAsync(new ExecutionContext());
-
-            Assert.True(task.Wait(TimeSpan.FromSeconds(3)));
+            await sut
+                .ExecuteAsync(new ExecutionContext())
+                .TimeoutIfTooSlow();
         }
 
         [Fact]
@@ -87,7 +88,7 @@
 
             action
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
-                .Return(Task.Run(() => { throw new InvalidOperationException("Something bad happened"); }));
+                .Return(Observable.Throw<Unit>(new InvalidOperationException("Something bad happened")));
 
             var sut = new DoNotAwaitActionBuilder()
                 .WithLoggerService(loggerService)

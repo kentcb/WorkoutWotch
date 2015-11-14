@@ -35,9 +35,9 @@
   <ItemGroup>
     <Compile Include="DebugAttribute.cs" />
     <Compile Include="Mocks.g.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
       <DependentUpon>Mocks.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
     </Compile>
     <Compile Include="Models\Actions\Builders\AudioActionBuilder.cs" />
     <Compile Include="Models\Actions\AudioActionFixture.cs" />
@@ -96,6 +96,8 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Services\Delay\Builders\DelayServiceBuilder.cs" />
+    <Compile Include="Services\Delay\DelayServiceFixture.cs" />
     <Compile Include="Services\Logger\LoggerServiceFixture.cs" />
     <Compile Include="System\Reactive\Linq\ObservableExtensions.cs" />
     <Compile Include="Reactive\TestSchedulerExtensions.cs" />

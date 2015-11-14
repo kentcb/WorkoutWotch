@@ -1,6 +1,8 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Actions
 {
     using System;
+    using System.Reactive;
+    using System.Reactive.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Builders;
@@ -57,18 +59,25 @@
         }
 
         [Fact]
-        public void execute_async_pauses_if_context_is_paused()
+        public async Task execute_async_pauses_if_context_is_paused()
         {
+            var speechService = new SpeechServiceMock(MockBehavior.Loose);
             var sut = new SayActionBuilder()
+                .WithSpeechService(speechService)
                 .Build();
 
             using (var context = new ExecutionContext())
             {
                 context.IsPaused = true;
 
-                var task = sut.ExecuteAsync(context);
+                await sut
+                    .ExecuteAsync(context)
+                    .Timeout(TimeSpan.FromMilliseconds(10))
+                    .Catch(Observable.Return(Unit.Default));
 
-                Assert.False(task.Wait(TimeSpan.FromMilliseconds(50)));
+                speechService
+                    .Verify(x => x.SpeakAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                    .WasNotCalled();
             }
         }
 

@@ -4,8 +4,8 @@
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Linq;
+    using System.Reactive;
     using System.Reactive.Linq;
-    using System.Threading.Tasks;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using ReactiveUI;
 
@@ -30,10 +30,10 @@
 
         public IImmutableList<IAction> Children =>  this.children;
 
-        public async Task ExecuteAsync(ExecutionContext context)
+        public IObservable<Unit> ExecuteAsync(ExecutionContext context)
         {
             context.AssertNotNull(nameof(context));
-                
+
             var childrenToExecute = this
                 .children
                 .Where(x => context.SkipAhead == TimeSpan.Zero || context.SkipAhead < x.Duration)
@@ -44,19 +44,19 @@
             {
                 // although this shouldn't really happen, we've been asked to execute even though the skip ahead exceeds even our longest-running child
                 context.AddProgress(this.Duration);
-                return;
+                return Observable.Return(Unit.Default);
             }
 
             var shadowedContext = CreateShadowExecutionContext(context);
 
             // only the longest-running child gets the real execution context. The other actions get a shadowed context so that progress does not compound incorrectly
-            var executionTasks = childrenToExecute
+            var childExecutions = childrenToExecute
                 .Select((action, index) => action.ExecuteAsync(index == 0 ? context : shadowedContext))
                 .ToList();
 
-            await Task
-                .WhenAll(executionTasks)
-                .ContinueOnAnyContext();
+            return Observable
+                .CombineLatest(childExecutions)
+                .Select(_ => Unit.Default);
         }
 
         private static ExecutionContext CreateShadowExecutionContext(ExecutionContext context)

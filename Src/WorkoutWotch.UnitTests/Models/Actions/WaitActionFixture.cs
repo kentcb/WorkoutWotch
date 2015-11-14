@@ -1,6 +1,7 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Actions
 {
     using System;
+    using System.Reactive;
     using System.Reactive.Linq;
     using System.Reactive.Threading.Tasks;
     using System.Threading;
@@ -63,7 +64,7 @@
             delayService
                 .When(x => x.DelayAsync(It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()))
                 .Do<TimeSpan, CancellationToken>((t, ct) => totalDelay += t)
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             var sut = new WaitActionBuilder()
                 .WithDelayService(delayService)
@@ -87,7 +88,7 @@
             delayService
                 .When(x => x.DelayAsync(It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()))
                 .Do<TimeSpan, CancellationToken>((t, ct) => totalDelay += t)
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             var sut = new WaitActionBuilder()
                 .WithDelayService(delayService)
@@ -111,7 +112,7 @@
             delayService
                 .When(x => x.DelayAsync(It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()))
                 .Do<TimeSpan, CancellationToken>((t, ct) => totalDelay += t)
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             var sut = new WaitActionBuilder()
                 .WithDelayService(delayService)
@@ -120,9 +121,9 @@
 
             using (var context = new ExecutionContext(TimeSpan.FromMilliseconds(skipInMs)) { IsPaused = true })
             {
-                var task = sut.ExecuteAsync(context);
-
-                Assert.False(task.Wait(TimeSpan.FromMilliseconds(50)));
+                sut
+                    .ExecuteAsync(context)
+                    .Ignore();
 
                 await context
                     .WhenAnyValue(x => x.Progress)
@@ -189,14 +190,14 @@
                                 context.Cancel();
                             }
                         })
-                    .Return(Task.FromResult(true));
+                    .Return(Observable.Return(Unit.Default));
 
                 var sut = new WaitActionBuilder()
                     .WithDelayService(delayService)
                     .WithDelay(TimeSpan.FromSeconds(50))
                     .Build();
 
-                await Assert.ThrowsAsync<OperationCanceledException>(async () => await sut.ExecuteAsync(context));
+                await Assert.ThrowsAsync<TaskCanceledException>(async () => await sut.ExecuteAsync(context));
                 Assert.True(context.IsCancelled);
             }
         }
@@ -219,15 +220,14 @@
                                 context.IsPaused = true;
                             }
                         })
-                    .Return(Task.FromResult(true));
+                    .Return(Observable.Return(Unit.Default));
 
                 var sut = new WaitActionBuilder()
                     .WithDelayService(delayService)
                     .WithDelay(TimeSpan.FromSeconds(50))
                     .Build();
 
-                var task = sut.ExecuteAsync(context);
-                Assert.False(task.Wait(TimeSpan.FromMilliseconds(50)));
+                await Assert.ThrowsAsync<TimeoutException>(async () => await sut.ExecuteAsync(context).Timeout(TimeSpan.FromMilliseconds(50)));
 
                 await context
                     .WhenAnyValue(x => x.IsPaused)

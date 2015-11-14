@@ -86,12 +86,12 @@
         }
 
         [Fact]
-        public void remove_async_throws_if_key_is_null()
+        public async Task remove_async_throws_if_key_is_null()
         {
             var sut = new StateServiceBuilder()
                 .Build();
 
-            Assert.ThrowsAsync<ArgumentNullException>(() => sut.RemoveAsync<string>(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.RemoveAsync<string>(null));
         }
 
         [Fact]
@@ -122,8 +122,8 @@
                 .Build();
             var firstExecuted = false;
             var secondExecuted = false;
-            sut.RegisterSaveCallback(_ => Task.Run(() => firstExecuted = true));
-            sut.RegisterSaveCallback(_ => Task.Run(() => secondExecuted = true));
+            sut.RegisterSaveCallback(_ => Observable.Start(() => firstExecuted = true).Select(__ => Unit.Default));
+            sut.RegisterSaveCallback(_ => Observable.Start(() => secondExecuted = true).Select(__ => Unit.Default));
 
             await sut.SaveAsync();
 
@@ -147,9 +147,9 @@
 
             var firstExecuted = false;
             var secondExecuted = false;
-            sut.RegisterSaveCallback(_ => Task.Run(() => firstExecuted = true));
+            sut.RegisterSaveCallback(_ => Observable.Start(() => firstExecuted = true).Select(__ => Unit.Default));
             sut.RegisterSaveCallback(_ => null);
-            sut.RegisterSaveCallback(_ => Task.Run(() => secondExecuted = true));
+            sut.RegisterSaveCallback(_ => Observable.Start(() => secondExecuted = true).Select(__ => Unit.Default));
 
             await sut.SaveAsync();
 
@@ -178,7 +178,7 @@
         {
             var sut = new StateServiceBuilder()
                 .Build();
-            sut.RegisterSaveCallback(_ => Task.Run(() => { throw new Exception("Failed"); }));
+            sut.RegisterSaveCallback(_ => Observable.Throw<Unit>(new Exception("Failed")));
 
             await sut.SaveAsync();
         }
@@ -197,13 +197,24 @@
                 .WithLoggerService(loggerService)
                 .Build();
 
-            sut.RegisterSaveCallback(_ => Task.Run(() => { throw new Exception("whatever"); }));
+            sut.RegisterSaveCallback(_ => Observable.Throw<Unit>(new Exception("whatever")));
 
             await sut.SaveAsync();
 
             logger
                 .Verify(x => x.Error(It.IsAny<Exception>(), It.IsAny<string>(), It.IsAny<object[]>()))
                 .WasCalledExactlyOnce();
+        }
+
+        [Fact]
+        public async Task save_async_completes_even_if_there_are_no_save_callbacks()
+        {
+            var sut = new StateServiceBuilder()
+                .Build();
+
+            await sut
+                .SaveAsync()
+                .TimeoutIfTooSlow();
         }
 
         [Fact]
@@ -222,8 +233,8 @@
                 .Build();
             var firstExecuted = false;
             var secondExecuted = false;
-            var handle = sut.RegisterSaveCallback(_ => Task.Run(() => firstExecuted = true));
-            sut.RegisterSaveCallback(_ => Task.Run(() => secondExecuted = true));
+            var handle = sut.RegisterSaveCallback(_ => Observable.Start(() => firstExecuted = true).Select(__ => Unit.Default));
+            sut.RegisterSaveCallback(_ => Observable.Start(() => secondExecuted = true).Select(__ => Unit.Default));
 
             handle.Dispose();
 

@@ -1,6 +1,7 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Mocks
 {
-    using System.Threading.Tasks;
+    using System.Reactive;
+    using System.Reactive.Linq;
     using Kent.Boogaart.PCLMock;
     using WorkoutWotch.Models;
 
@@ -10,7 +11,7 @@
         {
             this
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
         }
     }
 }

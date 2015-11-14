@@ -1,7 +1,8 @@
 ﻿namespace WorkoutWotch.Models.Actions
 {
     using System;
-    using System.Threading.Tasks;
+    using System.Reactive;
+    using System.Reactive.Linq;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using WorkoutWotch.Services.Contracts.Delay;
 
@@ -26,7 +27,7 @@
 
         public TimeSpan Duration => this.delay;
 
-        public async Task ExecuteAsync(ExecutionContext context)
+        public IObservable<Unit> ExecuteAsync(ExecutionContext context)
         {
             context.AssertNotNull(nameof(context));
 
@@ -39,23 +40,31 @@
                 context.AddProgress(skipAhead);
             }
 
-            while (remainingDelay > TimeSpan.Zero)
-            {
-                context.CancellationToken.ThrowIfCancellationRequested();
+            return Observable
+                .Create<Unit>(
+                    async observer =>
+                    {
+                        while (remainingDelay > TimeSpan.Zero)
+                        {
+                            context.CancellationToken.ThrowIfCancellationRequested();
 
-                await context
-                    .WaitWhilePausedAsync()
-                    .ContinueOnAnyContext();
+                            await context
+                                .WaitWhilePausedAsync();
 
-                var delayFor = MathExt.Min(remainingDelay, maximumDelayTime);
+                            var delayFor = MathExt.Min(remainingDelay, maximumDelayTime);
 
-                await this.delayService
-                    .DelayAsync(delayFor, context.CancellationToken)
-                    .ContinueOnAnyContext();
+                            await this
+                                .delayService
+                                .DelayAsync(delayFor, context.CancellationToken);
 
-                remainingDelay -= delayFor;
-                context.AddProgress(delayFor);
-            }
+                            remainingDelay -= delayFor;
+                            context.AddProgress(delayFor);
+                        }
+
+                        observer.OnNext(Unit.Default);
+                        observer.OnCompleted();
+                    })
+                .RunAsync(context.CancellationToken);
         }
     }
 }

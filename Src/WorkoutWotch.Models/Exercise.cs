@@ -4,12 +4,13 @@ namespace WorkoutWotch.Models
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Linq;
-    using System.Threading.Tasks;
+    using System.Reactive;
+    using System.Reactive.Linq;
     using Kent.Boogaart.HelperTrinity.Extensions;
-    using WorkoutWotch.Services.Contracts.Logger;
-    using WorkoutWotch.Services.Contracts.Speech;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Models.Events;
+    using WorkoutWotch.Services.Contracts.Logger;
+    using WorkoutWotch.Services.Contracts.Speech;
 
     public sealed class Exercise
     {
@@ -66,25 +67,34 @@ namespace WorkoutWotch.Models
 
         public TimeSpan Duration => this.duration;
 
-        public async Task ExecuteAsync(ExecutionContext context)
+        public IObservable<Unit> ExecuteAsync(ExecutionContext context)
         {
             context.AssertNotNull(nameof(context));
 
-            foreach (var eventWithActions in this.GetEventsWithActions(context))
-            {
-                foreach (var action in eventWithActions.Actions)
-                {
-                    if (context.SkipAhead > TimeSpan.Zero && context.SkipAhead >= action.Duration)
+            return Observable
+                .Create<Unit>(
+                    async observer =>
                     {
-                        this.logger.Debug("Skipping action {0} for event {1} because its duration ({2}) is less than the remaining skip ahead ({3}).", action, eventWithActions.Event, action.Duration, context.SkipAhead);
-                        context.AddProgress(action.Duration);
-                        continue;
-                    }
+                        foreach (var eventWithActions in this.GetEventsWithActions(context))
+                        {
+                            foreach (var action in eventWithActions.Actions)
+                            {
+                                if (context.SkipAhead > TimeSpan.Zero && context.SkipAhead >= action.Duration)
+                                {
+                                    this.logger.Debug("Skipping action {0} for event {1} because its duration ({2}) is less than the remaining skip ahead ({3}).", action, eventWithActions.Event, action.Duration, context.SkipAhead);
+                                    context.AddProgress(action.Duration);
+                                    continue;
+                                }
 
-                    this.logger.Debug("Executing action {0} for event {1}.", action, eventWithActions.Event);
-                    await action.ExecuteAsync(context).ContinueOnAnyContext();
-                }
-            }
+                                this.logger.Debug("Executing action {0} for event {1}.", action, eventWithActions.Event);
+                                await action.ExecuteAsync(context);
+                            }
+                        }
+
+                        observer.OnNext(Unit.Default);
+                        observer.OnCompleted();
+                    })
+                .RunAsync(context.CancellationToken);
         }
 
         private IEnumerable<IEvent> GetEvents(ExecutionContext executionContext)

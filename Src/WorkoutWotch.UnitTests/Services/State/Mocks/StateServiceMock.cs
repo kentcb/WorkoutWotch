@@ -1,8 +1,8 @@
 ﻿namespace WorkoutWotch.UnitTests.Services.State.Mocks
 {
-    using System;
+    using System.Reactive;
     using System.Reactive.Disposables;
-    using System.Threading.Tasks;
+    using System.Reactive.Linq;
     using Kent.Boogaart.PCLMock;
     using WorkoutWotch.Services.Contracts.State;
 
@@ -12,9 +12,9 @@
         {
             this
                 .When(x => x.SaveAsync())
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
             this
-                .When(x => x.RegisterSaveCallback(It.IsAny<Func<IStateService, Task>>()))
+                .When(x => x.RegisterSaveCallback(It.IsAny<SaveCallback>()))
                 .Return(Disposable.Empty);
         }
     }

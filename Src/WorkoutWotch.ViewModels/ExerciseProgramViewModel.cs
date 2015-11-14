@@ -2,9 +2,10 @@ namespace WorkoutWotch.ViewModels
 {
     using System;
     using System.Linq;
+    using System.Reactive;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
-    using System.Threading.Tasks;
+    using System.Threading;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using ReactiveUI;
     using WorkoutWotch.Models;
@@ -87,11 +88,12 @@ namespace WorkoutWotch.ViewModels
                 .Select(x => !x);
 
             this.startCommand = ReactiveCommand
-                .CreateAsyncTask(canStart, this.OnStartAsync, schedulerService.MainScheduler)
+                .CreateAsyncObservable(canStart, this.OnStartAsync, schedulerService.MainScheduler)
                 .AddTo(this.disposables);
 
             var canPause = this.WhenAnyValue(x => x.IsStarted)
-                .CombineLatest(this.WhenAnyValue(x => x.ExecutionContext.IsPaused), (isStarted, isPaused) => isStarted && !isPaused);
+                .CombineLatest(this.WhenAnyValue(x => x.ExecutionContext.IsPaused), (isStarted, isPaused) => isStarted && !isPaused)
+                .ObserveOn(schedulerService.MainScheduler);
 
             this.pauseCommand = ReactiveCommand.Create(canPause, schedulerService.MainScheduler)
                 .AddTo(this.disposables);
@@ -106,18 +108,20 @@ namespace WorkoutWotch.ViewModels
                     x => x.ExecutionContext,
                     x => x.ProgressTimeSpan,
                     (ec, progress) => new { ExecutionContext = ec, Progress = progress })
-                .Select(x => x.ExecutionContext != null && x.Progress >= skipBackwardsThreshold);
+                .Select(x => x.ExecutionContext != null && x.Progress >= skipBackwardsThreshold)
+                .ObserveOn(schedulerService.MainScheduler);
 
-            this.skipBackwardsCommand = ReactiveCommand.CreateAsyncTask(canSkipBackwards, this.OnSkipBackwardsAsync, schedulerService.MainScheduler)
+            this.skipBackwardsCommand = ReactiveCommand.CreateAsyncObservable(canSkipBackwards, this.OnSkipBackwardsAsync, schedulerService.MainScheduler)
                 .AddTo(this.disposables);
 
             var canSkipForwards = this.WhenAnyValue(
                     x => x.ExecutionContext,
                     x => x.CurrentExercise,
                     (ec, currentExercise) => new { ExecutionContext = ec, CurrentExercise = currentExercise })
-                .Select(x => x.ExecutionContext != null && x.CurrentExercise != null && x.CurrentExercise != this.exercises.LastOrDefault());
+                .Select(x => x.ExecutionContext != null && x.CurrentExercise != null && x.CurrentExercise != this.exercises.LastOrDefault())
+                .ObserveOn(schedulerService.MainScheduler);
 
-            this.skipForwardsCommand = ReactiveCommand.CreateAsyncTask(canSkipForwards, this.OnSkipForwardsAsync, schedulerService.MainScheduler)
+            this.skipForwardsCommand = ReactiveCommand.CreateAsyncObservable(canSkipForwards, this.OnSkipForwardsAsync, schedulerService.MainScheduler)
                 .AddTo(this.disposables);
 
             this.isStartVisible = this.startCommand
@@ -217,16 +221,16 @@ namespace WorkoutWotch.ViewModels
             }
         }
 
-        private async Task OnStartAsync(object state) =>
-            await this.StartAsync(((TimeSpan?)state).GetValueOrDefault(TimeSpan.Zero));
+        private IObservable<Unit> OnStartAsync(object state) =>
+            this.StartAsync(((TimeSpan?)state).GetValueOrDefault(TimeSpan.Zero));
 
-        private async Task OnSkipBackwardsAsync(object state) =>
-            await this.SkipBackwardsAsync();
+        private IObservable<Unit> OnSkipBackwardsAsync(object state) =>
+            this.SkipBackwardsAsync();
 
-        private async Task OnSkipForwardsAsync(object state) =>
-            await this.SkipForwardsAsync();
+        private IObservable<Unit> OnSkipForwardsAsync(object state) =>
+            this.SkipForwardsAsync();
 
-        private async Task StartAsync(TimeSpan skipTo = default(TimeSpan), bool isPaused = false)
+        private IObservable<Unit> StartAsync(TimeSpan skipTo = default(TimeSpan), bool isPaused = false)
         {
             this.logger.Debug("Starting {0} from {1}.", isPaused ? "paused" : "unpaused", skipTo);
 
@@ -235,26 +239,25 @@ namespace WorkoutWotch.ViewModels
                 IsPaused = isPaused
             };
 
-            using (executionContext)
-            {
-                this.ExecutionContext = executionContext;
-
-                try
-                {
-                    await this.model.ExecuteAsync(executionContext);
-                }
-                catch (OperationCanceledException)
-                {
-                    // swallow
-                }
-            }
-
-            this.ExecutionContext = null;
-
-            this.logger.Debug("Start completed.");
+            return Observable
+                .Using(
+                    () => executionContext,
+                    ec =>
+                        Observable
+                            .Start(() => this.ExecutionContext = ec)
+                            .SelectMany(_ => this.model.ExecuteAsync(ec)))
+                .Catch<Unit, OperationCanceledException>(_ => Observable.Return(Unit.Default))
+                .Do(
+                    _ =>
+                    {
+                        this.ExecutionContext = null;
+                        this.logger.Debug("Start completed.");
+                    })
+                .FirstAsync()
+                .RunAsync(CancellationToken.None);
         }
 
-        public async Task StopAsync()
+        public IObservable<Unit> StopAsync()
         {
             this.logger.Debug("Stopping.");
 
@@ -263,19 +266,21 @@ namespace WorkoutWotch.ViewModels
             if (executionContext == null)
             {
                 this.logger.Warn("Execution context is null - cannot stop.");
-                return;
+                return Observable.Return(Unit.Default);
             }
 
             executionContext.Cancel();
 
-            await this.WhenAnyValue(x => x.IsStarted)
+            return this
+                .WhenAnyValue(x => x.IsStarted)
                 .Where(x => !x)
-                .FirstAsync();
-
-            this.logger.Debug("Stop completed.");
+                .Select(_ => Unit.Default)
+                .Do(_ => this.logger.Debug("Stop completed."))
+                .FirstAsync()
+                .RunAsync(CancellationToken.None);
         }
 
-        private async Task SkipBackwardsAsync()
+        private IObservable<Unit> SkipBackwardsAsync()
         {
             this.logger.Debug("Skipping backwards.");
 
@@ -284,7 +289,7 @@ namespace WorkoutWotch.ViewModels
             if (executionContext == null)
             {
                 this.logger.Warn("Execution context is null - cannot skip backwards.");
-                return;
+                return Observable.Return(Unit.Default);
             }
 
             var totalProgress = executionContext.Progress;
@@ -303,23 +308,23 @@ namespace WorkoutWotch.ViewModels
                 priorExercise = exercise.Model;
             }
 
-            await this.StopAsync();
+            return this
+                .StopAsync()
+                .Do(
+                    _ =>
+                    {
+                        var skipTo = totalProgress -
+                            currentExerciseProgress -
+                            (currentExerciseProgress < skipBackwardsThreshold && priorExercise != null ? priorExercise.Duration : TimeSpan.Zero);
 
-            var skipTo = totalProgress -
-                currentExerciseProgress -
-                (currentExerciseProgress < skipBackwardsThreshold && priorExercise != null ? priorExercise.Duration : TimeSpan.Zero);
-
-            // we do not want to await the task
-            #pragma warning disable 4014
-
-            this.StartAsync(skipTo, isPaused);
-
-            #pragma warning restore 4014
-
-            this.logger.Debug("Skip backwards completed.");
+                        this.StartAsync(skipTo, isPaused);
+                        this.logger.Debug("Skip backwards completed.");
+                    })
+                .FirstAsync()
+                .RunAsync(CancellationToken.None);
         }
 
-        private async Task SkipForwardsAsync()
+        private IObservable<Unit> SkipForwardsAsync()
         {
             this.logger.Debug("Skipping forwards.");
 
@@ -328,7 +333,7 @@ namespace WorkoutWotch.ViewModels
             if (executionContext == null)
             {
                 this.logger.Warn("Execution context is null - cannot skip forwards.");
-                return;
+                return Observable.Return(Unit.Default);
             }
 
             var totalProgress = executionContext.Progress;
@@ -336,16 +341,16 @@ namespace WorkoutWotch.ViewModels
             var currentExercise = executionContext.CurrentExercise;
             var isPaused = executionContext.IsPaused;
 
-            await this.StopAsync();
-
-            // we do not want to await the task
-            #pragma warning disable 4014
-
-            this.StartAsync(totalProgress - currentExerciseProgress + currentExercise.Duration, isPaused);
-
-            #pragma warning restore 4014
-
-            this.logger.Debug("Skip forwards completed.");
+            return this
+                .StopAsync()
+                .Do(
+                    _ =>
+                    {
+                        this.StartAsync(totalProgress - currentExerciseProgress + currentExercise.Duration, isPaused);
+                        this.logger.Debug("Skip forwards completed.");
+                    })
+                .FirstAsync()
+                .RunAsync(CancellationToken.None);
         }
 
         private void OnThrownException(Exception exception)

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Reactive;
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
     using System.Threading.Tasks;
@@ -189,11 +190,11 @@
 
             stateService
                 .When(x => x.GetAsync<string>(It.IsAny<string>()))
-                .Return(Task.Run<string>((Func<string>)(() => { throw new InvalidOperationException(); })));
+                .Return(Observable.Throw<string>(new InvalidOperationException()));
 
             stateService
                 .When(x => x.SetAsync<string>(It.IsAny<string>(), It.IsAny<string>()))
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             var sut = new ExerciseProgramsViewModelBuilder()
                 .WithCloudDocument(document)
@@ -341,11 +342,11 @@
 
             stateService
                 .When(x => x.GetAsync<string>(It.IsAny<string>()))
-                .Return(Task.FromResult<string>(null));
+                .Return(Observable.Return<string>(null));
 
             stateService
                 .When(x => x.SetAsync<string>(It.IsAny<string>(), It.IsAny<string>()))
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             var sut = new ExerciseProgramsViewModelBuilder()
                 .WithCloudDocument(document)
@@ -370,11 +371,11 @@
 
             stateService
                 .When(x => x.GetAsync<string>(It.IsAny<string>()))
-                .Return(Task.FromResult<string>(document));
+                .Return(Observable.Return(document));
 
             stateService
                 .When(x => x.SetAsync<string>(It.IsAny<string>(), It.IsAny<string>()))
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             var sut = new ExerciseProgramsViewModelBuilder()
                 .WithSchedulerService(scheduler)

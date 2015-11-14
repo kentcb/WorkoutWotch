@@ -1,49 +1,47 @@
 namespace WorkoutWotch.Services.iOS.Audio
 {
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
+    using System.Reactive;
+    using System.Reactive.Linq;
     using System.Threading;
-    using System.Threading.Tasks;
     using AVFoundation;
+    using Contracts.Scheduler;
     using Foundation;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using WorkoutWotch.Services.Contracts.Audio;
 
     public sealed class AudioService : IAudioService
     {
-        private readonly IDictionary<AVAudioPlayer, TaskCompletionSource<bool>> activeAudioPlayers;
+        private readonly ISchedulerService schedulerService;
 
-        public AudioService()
+        public AudioService(ISchedulerService schedulerService)
         {
-            this.activeAudioPlayers = new Dictionary<AVAudioPlayer, TaskCompletionSource<bool>>();
+            schedulerService.AssertNotNull(nameof(schedulerService));
+
+            this.schedulerService = schedulerService;
         }
 
-        public Task PlayAsync(string resourceUri)
+        public IObservable<Unit> PlayAsync(string resourceUri)
         {
             resourceUri.AssertNotNull(nameof(resourceUri));
 
-            var tcs = new TaskCompletionSource<bool>();
             var url = new NSUrl(resourceUri);
             var audioPlayer = AVAudioPlayer.FromUrl(url);
-            this.activeAudioPlayers[audioPlayer] = tcs;
+            var finishedPlaying = Observable
+                .FromEventPattern<AVStatusEventArgs>(x => audioPlayer.FinishedPlaying += x, x => audioPlayer.FinishedPlaying -= x)
+                .Select(_ => Unit.Default)
+                .Publish();
 
-            audioPlayer.FinishedPlaying += this.OnAudioPlayerFinishedPlaying;
+            finishedPlaying
+                .ObserveOn(this.schedulerService.MainScheduler)
+                .Subscribe(_ => audioPlayer.Dispose());
+
+            finishedPlaying.Connect();
             audioPlayer.Play();
 
-            return tcs.Task;
-        }
-
-        private void OnAudioPlayerFinishedPlaying(object sender, EventArgs e)
-        {
-            var audioPlayer = (AVAudioPlayer)sender;
-            Debug.Assert(this.activeAudioPlayers.ContainsKey(audioPlayer));
-            var tcs = this.activeAudioPlayers[audioPlayer];
-
-            this.activeAudioPlayers.Remove(audioPlayer);
-            tcs.TrySetResult(true);
-
-            SynchronizationContext.Current.Post(_ => audioPlayer.Dispose(), state: null);
+            return finishedPlaying
+                .FirstAsync()
+                .RunAsync(CancellationToken.None);
         }
     }
 }

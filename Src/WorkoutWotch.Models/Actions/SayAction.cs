@@ -1,7 +1,8 @@
 ﻿namespace WorkoutWotch.Models.Actions
 {
     using System;
-    using System.Threading.Tasks;
+    using System.Reactive;
+    using System.Reactive.Linq;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using WorkoutWotch.Services.Contracts.Speech;
 
@@ -23,18 +24,15 @@
 
         public string SpeechText => this.speechText;
 
-        public async Task ExecuteAsync(ExecutionContext context)
+        public IObservable<Unit> ExecuteAsync(ExecutionContext context)
         {
             context.AssertNotNull(nameof(context));
             context.CancellationToken.ThrowIfCancellationRequested();
 
-            await context
+            return context
                 .WaitWhilePausedAsync()
-                .ContinueOnAnyContext();
-
-            await this.speechService
-                .SpeakAsync(this.speechText, context.CancellationToken)
-                .ContinueOnAnyContext();
+                .SelectMany(_ => this.speechService.SpeakAsync(this.speechText, context.CancellationToken))
+                .FirstAsync();
         }
     }
 }

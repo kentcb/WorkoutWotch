@@ -5,9 +5,7 @@ namespace WorkoutWotch.Models
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
-    using System.Reactive.Threading.Tasks;
     using System.Threading;
-    using System.Threading.Tasks;
     using ReactiveUI;
     using WorkoutWotch.Utility;
 
@@ -15,11 +13,11 @@ namespace WorkoutWotch.Models
     {
         private readonly CompositeDisposable disposables;
         private readonly CancellationTokenSource cancellationTokenSource;
-        private readonly ObservableAsPropertyHelper<bool> isCancelled;
-        private readonly ObservableAsPropertyHelper<TimeSpan> progress;
-        private readonly ObservableAsPropertyHelper<TimeSpan> currentExerciseProgress;
         private readonly Subject<Unit> cancelRequested;
         private readonly Subject<TimeSpan> progressDeltas;
+        private bool isCancelled;
+        private TimeSpan progress;
+        private TimeSpan currentExerciseProgress;
         private bool isPaused;
         private Exercise currentExercise;
         private int currentSet;
@@ -36,9 +34,8 @@ namespace WorkoutWotch.Models
             this.progressDeltas = new Subject<TimeSpan>()
                 .AddTo(this.disposables);
 
-            this.isCancelled = this.cancelRequested
-                .Select(_ => true)
-                .ToProperty(this, x => x.IsCancelled)
+            this.cancelRequested
+                .Subscribe(_ => this.IsCancelled = true)
                 .AddTo(this.disposables);
 
             this.WhenAnyValue(x => x.IsCancelled)
@@ -46,18 +43,17 @@ namespace WorkoutWotch.Models
                 .Subscribe(_ => this.cancellationTokenSource.Cancel())
                 .AddTo(this.disposables);
 
-            this.progress = this.progressDeltas
+            this.progressDeltas
                 .Scan((running, next) => running + next)
-                .ToProperty(this, x => x.Progress)
+                .Subscribe(x => this.Progress = x)
                 .AddTo(this.disposables);
 
-            this.currentExerciseProgress = this.WhenAnyValue(x => x.CurrentExercise)
+            this.WhenAnyValue(x => x.CurrentExercise)
                 .Select(x => this.progressDeltas.StartWith(TimeSpan.Zero).Scan((running, next) => running + next))
                 .Switch()
-                .ToProperty(this, x => x.CurrentExerciseProgress)
+                .Subscribe(x => this.CurrentExerciseProgress = x)
                 .AddTo(this.disposables);
 
-            // cannot use ToProperty without also "hacking in" the immediate scheduler - see https://github.com/reactiveui/ReactiveUI/issues/785
             this.progressDeltas
                 .StartWith(skipAhead)
                 .Scan((running, next) => running - next)
@@ -68,7 +64,11 @@ namespace WorkoutWotch.Models
 
         public CancellationToken CancellationToken => this.cancellationTokenSource.Token;
 
-        public bool IsCancelled => this.isCancelled.Value;
+        public bool IsCancelled
+        {
+            get { return this.isCancelled; }
+            private set { this.RaiseAndSetIfChanged(ref this.isCancelled, value); }
+        }
 
         public bool IsPaused
         {
@@ -94,9 +94,17 @@ namespace WorkoutWotch.Models
             private set { this.RaiseAndSetIfChanged(ref this.currentRepetition, value); }
         }
 
-        public TimeSpan Progress => this.progress.Value;
+        public TimeSpan Progress
+        {
+            get { return this.progress; }
+            private set { this.RaiseAndSetIfChanged(ref this.progress, value); }
+        }
 
-        public TimeSpan CurrentExerciseProgress => this.currentExerciseProgress.Value;
+        public TimeSpan CurrentExerciseProgress
+        {
+            get { return this.currentExerciseProgress; }
+            private set { this.RaiseAndSetIfChanged(ref this.currentExerciseProgress, value); }
+        }
 
         public TimeSpan SkipAhead
         {
@@ -104,13 +112,12 @@ namespace WorkoutWotch.Models
             private set { this.RaiseAndSetIfChanged(ref this.skipAhead, value); }
         }
 
-        public Task WaitWhilePausedAsync()
-        {
-            return this.WhenAnyValue(x => x.IsPaused)
+        public IObservable<Unit> WaitWhilePausedAsync() =>
+            this.WhenAnyValue(x => x.IsPaused)
                 .Where(x => !x)
                 .FirstAsync()
-                .ToTask(this.CancellationToken);
-        }
+                .Select(_ => Unit.Default)
+                .RunAsync(this.CancellationToken);
 
         public void Cancel() =>
             this.cancelRequested.OnNext(Unit.Default);

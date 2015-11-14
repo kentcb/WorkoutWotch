@@ -4,7 +4,6 @@
     using System.Reactive;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
-    using System.Reactive.Threading.Tasks;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using ReactiveUI;
     using Services.Contracts.Audio;
@@ -54,7 +53,6 @@
 
             var documentsFromCache = this.stateService
                 .GetAsync<string>(exerciseProgramsCacheKey)
-                .ToObservable()
                 .Where(x => x != null)
                 .Select(x => new DocumentSourceWith<string>(DocumentSource.Cache, x));
 
@@ -82,6 +80,11 @@
                 .ObserveOn(schedulerService.MainScheduler)
                 .ToProperty(this, x => x.ParseErrorMessage)
                 .AddTo(this.disposables);
+
+// HACK: TODO: remove this
+safeResults
+    .Subscribe()
+    .AddTo(disposables);
 
             this.status = results
                 .Select(x => !x.Item.WasSuccessful ? ExerciseProgramsViewModelStatus.ParseFailed : x.Source == DocumentSource.Cache ? ExerciseProgramsViewModelStatus.LoadedFromCache : ExerciseProgramsViewModelStatus.LoadedFromCloud)

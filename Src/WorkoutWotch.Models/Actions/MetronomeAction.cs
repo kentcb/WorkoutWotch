@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
-    using System.Threading.Tasks;
+    using System.Reactive;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using WorkoutWotch.Services.Contracts.Audio;
     using WorkoutWotch.Services.Contracts.Delay;
@@ -29,14 +29,13 @@
 
         public IImmutableList<MetronomeTick> Ticks => this.ticks;
 
-        public async Task ExecuteAsync(ExecutionContext context)
+        public IObservable<Unit> ExecuteAsync(ExecutionContext context)
         {
             context.AssertNotNull(nameof(context));
 
-            await this
+            return this
                 .innerAction
-                .ExecuteAsync(context)
-                .ContinueOnAnyContext();
+                .ExecuteAsync(context);
         }
 
         private static IEnumerable<IAction> GetInnerActions(IAudioService audioService, IDelayService delayService, ILoggerService loggerService, IEnumerable<MetronomeTick> ticks)

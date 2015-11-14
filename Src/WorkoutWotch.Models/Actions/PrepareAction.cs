@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.Models.Actions
 {
     using System;
-    using System.Threading.Tasks;
+    using System.Reactive;
     using WorkoutWotch.Services.Contracts.Delay;
     using WorkoutWotch.Services.Contracts.Speech;
 
@@ -16,10 +16,9 @@
 
         public TimeSpan Duration => this.innerAction.Duration;
 
-        public async Task ExecuteAsync(ExecutionContext context) =>
-            await this
+        public IObservable<Unit> ExecuteAsync(ExecutionContext context) =>
+            this
                 .innerAction
-                .ExecuteAsync(context)
-                .ContinueOnAnyContext();
+                .ExecuteAsync(context);
     }
 }

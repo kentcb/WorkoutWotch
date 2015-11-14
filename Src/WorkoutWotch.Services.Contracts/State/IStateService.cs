@@ -1,18 +1,20 @@
 ﻿namespace WorkoutWotch.Services.Contracts.State
 {
     using System;
-    using System.Threading.Tasks;
+    using System.Reactive;
+
+    public delegate IObservable<Unit> SaveCallback(IStateService stateService);
 
     public interface IStateService
     {
-        Task<T> GetAsync<T>(string key);
+        IObservable<T> GetAsync<T>(string key);
 
-        Task SetAsync<T>(string key, T value);
+        IObservable<Unit> SetAsync<T>(string key, T value);
 
-        Task RemoveAsync<T>(string key);
+        IObservable<Unit> RemoveAsync<T>(string key);
 
-        Task SaveAsync();
+        IObservable<Unit> SaveAsync();
 
-        IDisposable RegisterSaveCallback(Func<IStateService, Task> saveTaskFactory);
+        IDisposable RegisterSaveCallback(SaveCallback saveCallback);
     }
 }

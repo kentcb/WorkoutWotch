@@ -59,7 +59,8 @@
         protected abstract IAudioService CreateAudioService();
 
         private IDelayService CreateDelayService() =>
-            new DelayService();
+            new DelayService(
+                this.schedulerService.Value);
 
         protected abstract IExerciseDocumentService CreateExerciseDocumentService();
 

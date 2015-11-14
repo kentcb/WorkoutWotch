@@ -1,8 +1,9 @@
 namespace WorkoutWotch.Services.iOS.Speech
 {
-    using System.Reactive.Disposables;
+    using System;
+    using System.Reactive;
+    using System.Reactive.Linq;
     using System.Threading;
-    using System.Threading.Tasks;
     using AVFoundation;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using WorkoutWotch.Services.Contracts.Speech;
@@ -11,41 +12,50 @@ namespace WorkoutWotch.Services.iOS.Speech
     {
         private static readonly AVSpeechSynthesisVoice voice = AVSpeechSynthesisVoice.FromLanguage("en-AU");
 
-        public Task SpeakAsync(string speechString, CancellationToken cancellationToken = default(CancellationToken))
+        public IObservable<Unit> SpeakAsync(string speechString, CancellationToken cancellationToken = default(CancellationToken))
         {
             speechString.AssertNotNull(nameof(speechString));
 
-            var tcs = new TaskCompletionSource<bool>();
             var utterance = new AVSpeechUtterance(speechString)
             {
                 Voice = voice,
-                Rate = 0.6f
+                Rate = 0.55f
             };
             var synthesizer = new AVSpeechSynthesizer();
-            var disposables = new CompositeDisposable(utterance, synthesizer);
+            var finishedUtterance = Observable
+                .FromEventPattern<AVSpeechSynthesizerUteranceEventArgs>(x => synthesizer.DidFinishSpeechUtterance += x, x => synthesizer.DidFinishSpeechUtterance -= x)
+                .Select(_ => Unit.Default)
+                .Publish();
 
-            synthesizer.DidFinishSpeechUtterance +=
-                (sender, e) =>
-                {
-                    disposables.Dispose();
-                    tcs.TrySetResult(true);
-                };
+            finishedUtterance
+                .Subscribe(
+                    _ =>
+                    {
+                        utterance.Dispose();
+                        synthesizer.Dispose();
+                    });
 
             if (cancellationToken.CanBeCanceled)
             {
-                synthesizer.DidCancelSpeechUtterance +=
-                    (sender, e) =>
-                    {
-                        disposables.Dispose();
-                        tcs.TrySetCanceled();
-                    };
-
                 cancellationToken.Register(() => synthesizer.StopSpeaking(AVSpeechBoundary.Immediate));
+
+                Observable
+                    .FromEventPattern<AVSpeechSynthesizerUteranceEventArgs>(x => synthesizer.DidCancelSpeechUtterance += x, x => synthesizer.DidCancelSpeechUtterance -= x)
+                    .Select(_ => Unit.Default)
+                    .Subscribe(
+                        _ =>
+                        {
+                            utterance.Dispose();
+                            synthesizer.Dispose();
+                        });
             }
 
             synthesizer.SpeakUtterance(utterance);
+            finishedUtterance.Connect();
 
-            return tcs.Task;
+            return finishedUtterance
+                .FirstAsync()
+                .RunAsync(cancellationToken);
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading.Tasks;
+    using System.Reactive;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using WorkoutWotch.Services.Contracts.Delay;
     using WorkoutWotch.Services.Contracts.Speech;
@@ -28,14 +28,13 @@
 
         public TimeSpan Duration => this.innerAction.Duration;
 
-        public async Task ExecuteAsync(ExecutionContext context)
+        public IObservable<Unit> ExecuteAsync(ExecutionContext context)
         {
             context.AssertNotNull(nameof(context));
 
-            await this
+            return this
                 .innerAction
-                .ExecuteAsync(context)
-                .ContinueOnAnyContext();
+                .ExecuteAsync(context);
         }
 
         private static IEnumerable<IAction> GetInnerActions(IDelayService delayService, ISpeechService speechService, TimeSpan duration, string promptSpeechText)

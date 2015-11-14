@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reactive;
+    using System.Reactive.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Builders;
@@ -81,12 +83,12 @@
             audioService
                 .When(x => x.PlayAsync(It.IsAny<string>()))
                 .Do<string>((resource) => actionsPerformed.Add("Played audio resource " + resource))
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             delayService
                 .When(x => x.DelayAsync(It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()))
                 .Do<TimeSpan, CancellationToken>((period, ct) => actionsPerformed.Add("Delayed for " + period))
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             var sut = new MetronomeActionBuilder()
                 .WithAudioService(audioService)

@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.UnitTests.ViewModels.Builders
 {
+    using System.Reactive;
     using System.Reactive.Linq;
-    using System.Threading.Tasks;
     using Kent.Boogaart.PCLMock;
     using Services.Audio.Mocks;
     using Services.Delay.Mocks;
@@ -101,11 +101,11 @@
 
             stateService
                 .When(x => x.GetAsync<string>(It.IsAny<string>()))
-                .Return(Task.FromResult(cachedDocument));
+                .Return(Observable.Return(cachedDocument));
 
             stateService
                 .When(x => x.SetAsync<string>(It.IsAny<string>(), It.IsAny<string>()))
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             return this.WithStateService(stateService);
         }

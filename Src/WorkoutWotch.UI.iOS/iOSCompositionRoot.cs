@@ -27,7 +27,8 @@
                 this.exerciseProgramsViewModel.Value);
 
         protected override IAudioService CreateAudioService() =>
-            new AudioService();
+            new AudioService(
+                this.schedulerService.Value);
 
         protected override IExerciseDocumentService CreateExerciseDocumentService() =>
             //new iCloudExerciseDocumentService(

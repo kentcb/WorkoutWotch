@@ -1,6 +1,7 @@
 ﻿namespace WorkoutWotch.UnitTests.Services.Audio.Mocks
 {
-    using System.Threading.Tasks;
+    using System.Reactive;
+    using System.Reactive.Linq;
     using Kent.Boogaart.PCLMock;
 
     public sealed partial class AudioServiceMock
@@ -9,7 +10,7 @@
         {
             this
                 .When(x => x.PlayAsync(It.IsAny<string>()))
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
         }
     }
 }

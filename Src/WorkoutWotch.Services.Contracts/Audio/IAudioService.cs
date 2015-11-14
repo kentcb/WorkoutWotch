@@ -1,9 +1,10 @@
 ﻿namespace WorkoutWotch.Services.Contracts.Audio
 {
-    using System.Threading.Tasks;
+    using System;
+    using System.Reactive;
 
     public interface IAudioService
     {
-        Task PlayAsync(string resourceUri);
+        IObservable<Unit> PlayAsync(string resourceUri);
     }
 }

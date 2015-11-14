@@ -1,6 +1,8 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Actions
 {
     using System;
+    using System.Reactive;
+    using System.Reactive.Linq;
     using System.Threading.Tasks;
     using Builders;
     using Kent.Boogaart.PCLMock;
@@ -287,22 +289,22 @@
             action1
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.AddProgress(action1.Duration))
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             action2
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.AddProgress(action2.Duration))
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             action3
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.AddProgress(action3.Duration))
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             action4
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.AddProgress(action4.Duration))
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             var sut = new ParallelActionBuilder()
                 .AddChild(action1)
@@ -346,22 +348,22 @@
             action1
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.AddProgress(action1.Duration))
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             action2
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.AddProgress(action2.Duration))
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             action3
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.AddProgress(action3.Duration))
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             action4
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.AddProgress(action4.Duration))
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             var sut = new ParallelActionBuilder()
                 .AddChild(action1)
@@ -403,7 +405,7 @@
             action1
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.Cancel())
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             var sut = new ParallelActionBuilder()
                 .AddChild(action1)
@@ -436,7 +438,7 @@
             action1
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.Cancel())
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             var sut = new ParallelActionBuilder()
                 .AddChild(action1)
@@ -469,7 +471,7 @@
             action1
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.IsPaused = true)
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             var sut = new ParallelActionBuilder()
                 .AddChild(action1)
@@ -502,7 +504,7 @@
             action1
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.IsPaused = true)
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             var sut = new ParallelActionBuilder()
                 .AddChild(action1)

@@ -1,6 +1,5 @@
 ﻿namespace WorkoutWotch.Models.Parsers
 {
-    using System;
     using System.Globalization;
     using System.Text;
     using Sprache;

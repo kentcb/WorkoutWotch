@@ -19,6 +19,16 @@
             return this;
         }
 
+        public SequenceActionBuilder AddChildren(IEnumerable<IAction> children)
+        {
+            foreach (var child in children)
+            {
+                this.AddChild(child);
+            }
+
+            return this;
+        }
+
         public SequenceAction Build() =>
             new SequenceAction(this.children);
         

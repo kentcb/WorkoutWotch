@@ -1,6 +1,8 @@
 ﻿namespace WorkoutWotch.UnitTests.Models
 {
     using System;
+    using System.Reactive;
+    using System.Reactive.Linq;
     using System.Threading.Tasks;
     using Builders;
     using ReactiveUI;
@@ -39,35 +41,51 @@
         public void wait_while_paused_async_completes_immediately_if_not_paused()
         {
             var sut = new ExecutionContext();
-            var task = sut.WaitWhilePausedAsync();
-            Assert.True(task.IsCompleted);
+            var completed = false;
+            sut
+                .WaitWhilePausedAsync()
+                .Subscribe(_ => completed = true);
+            Assert.True(completed);
         }
 
         [Fact]
-        public void wait_while_paused_async_waits_until_unpaused()
+        public async Task wait_while_paused_async_waits_until_unpaused()
         {
             var sut = new ExecutionContext();
             sut.IsPaused = true;
-            var task = sut.WaitWhilePausedAsync();
 
-            Assert.False(task.Wait(TimeSpan.FromMilliseconds(10)));
+            await Assert.ThrowsAsync<TimeoutException>(
+                async () =>
+                    await sut
+                        .WaitWhilePausedAsync()
+                        .Timeout(TimeSpan.FromMilliseconds(10)));
+
             sut.IsPaused = false;
-            Assert.True(task.Wait(TimeSpan.FromMilliseconds(10)));
+
+            await sut
+                .WaitWhilePausedAsync()
+                .TimeoutIfTooSlow();
         }
 
         [Fact]
-        public void wait_while_paused_async_cancels_if_the_context_is_cancelled()
+        public async Task wait_while_paused_async_cancels_if_the_context_is_cancelled()
         {
             var sut = new ExecutionContext();
             sut.IsPaused = true;
-            var task = sut.WaitWhilePausedAsync();
 
-            Assert.False(task.Wait(TimeSpan.FromMilliseconds(10)));
+            await Assert.ThrowsAsync<TimeoutException>(
+                async () =>
+                    await sut
+                        .WaitWhilePausedAsync()
+                        .Timeout(TimeSpan.FromMilliseconds(10)));
+
             sut.Cancel();
 
-            var ex = Assert.Throws<AggregateException>(() => task.Wait(TimeSpan.FromMilliseconds(500)));
-            Assert.Equal(1, ex.InnerExceptions.Count);
-            Assert.True(ex.InnerExceptions[0] is TaskCanceledException);
+            await Assert.ThrowsAsync<OperationCanceledException>(
+                async () =>
+                    await sut
+                        .WaitWhilePausedAsync()
+                        .TimeoutIfTooSlow());
         }
 
         [Fact]

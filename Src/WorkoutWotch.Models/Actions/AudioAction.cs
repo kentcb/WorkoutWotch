@@ -1,7 +1,8 @@
 ﻿namespace WorkoutWotch.Models.Actions
 {
     using System;
-    using System.Threading.Tasks;
+    using System.Reactive;
+    using System.Reactive.Linq;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using WorkoutWotch.Services.Contracts.Audio;
 
@@ -21,18 +22,16 @@
 
         public TimeSpan Duration => TimeSpan.Zero;
 
-        public async Task ExecuteAsync(ExecutionContext context)
+        public IObservable<Unit> ExecuteAsync(ExecutionContext context)
         {
             context.AssertNotNull(nameof(context));
             context.CancellationToken.ThrowIfCancellationRequested();
 
-            await context
+            return context
                 .WaitWhilePausedAsync()
-                .ContinueOnAnyContext();
-
-            await this.audioService
-                .PlayAsync(this.audioResourceUri)
-                .ContinueOnAnyContext();
+                .SelectMany(_ => this.audioService.PlayAsync(this.audioResourceUri))
+                .FirstAsync()
+                .RunAsync(context.CancellationToken);
         }
     }
 }

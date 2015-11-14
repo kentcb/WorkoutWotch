@@ -1,11 +1,12 @@
 ﻿namespace WorkoutWotch.Services.State
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Diagnostics;
     using System.Linq;
-    using System.Reactive.Threading.Tasks;
-    using System.Threading.Tasks;
+    using System.Reactive;
+    using System.Reactive.Linq;
+    using System.Threading;
     using Akavache;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using WorkoutWotch.Services.Contracts.Logger;
@@ -16,8 +17,8 @@
     {
         private readonly IBlobCache blobCache;
         private readonly ILogger logger;
-        private readonly IList<Func<IStateService, Task>> saveCallbacks;
         private readonly object sync;
+        private volatile IImmutableList<SaveCallback> saveCallbacks;
 
         public StateService(IBlobCache blobCache, ILoggerService loggerService)
         {
@@ -26,84 +27,98 @@
 
             this.blobCache = blobCache;
             this.logger = loggerService.GetLogger(this.GetType());
-            this.saveCallbacks = new List<Func<IStateService, Task>>();
+            this.saveCallbacks = ImmutableList<SaveCallback>.Empty;
             this.sync = new object();
         }
 
-        public Task<T> GetAsync<T>(string key)
+        public IObservable<T> GetAsync<T>(string key)
         {
             key.AssertNotNull(nameof(key));
-            return this.blobCache.GetObject<T>(key).ToTask();
+
+            return this
+                .blobCache
+                .GetObject<T>(key);
         }
 
-        public Task SetAsync<T>(string key, T value)
+        public IObservable<Unit> SetAsync<T>(string key, T value)
         {
             key.AssertNotNull(nameof(key));
-            return this.blobCache.InsertObject<T>(key, value).ToTask();
+
+            return this
+                .blobCache
+                .InsertObject<T>(key, value);
         }
 
-        public Task RemoveAsync<T>(string key)
+        public IObservable<Unit> RemoveAsync<T>(string key)
         {
             key.AssertNotNull(nameof(key));
-            return this.blobCache.InvalidateObject<T>(key).ToTask();
+
+            return this
+                .blobCache
+                .InvalidateObject<T>(key);
         }
 
-        public async Task SaveAsync()
+        public IObservable<Unit> SaveAsync() =>
+            Observable
+                .Start(
+                    () =>
+                    {
+                        lock (this.sync)
+                        {
+                            return Observable
+                                .CombineLatest(
+                                    this
+                                        .saveCallbacks
+                                        .Select(x => x(this))
+                                        .Where(x => x != null)
+                                        .DefaultIfEmpty(Observable.Return(Unit.Default))
+                                        .ToList());
+                        }
+                    })
+                .Switch()
+                .Select(_ => Unit.Default)
+                .Catch(
+                    (Exception ex) =>
+                    {
+                        this.logger.Error(ex, "Failed to save.");
+                        return Observable.Return(Unit.Default);
+                    })
+                .RunAsync(CancellationToken.None);
+
+        public IDisposable RegisterSaveCallback(SaveCallback saveCallback)
         {
-            IList<Task> saveTasks;
+            saveCallback.AssertNotNull(nameof(saveCallback));
 
             lock (this.sync)
             {
-                saveTasks = this.saveCallbacks
-                    .Select(x => x(this))
-                    .Where(x => x != null)
-                    .ToList();
+                this.saveCallbacks = this.saveCallbacks.Add(saveCallback);
             }
 
-            try
-            {
-                await Task.WhenAll(saveTasks);
-            }
-            catch (Exception ex)
-            {
-                this.logger.Error(ex, "Failed to save.");
-            }
+            return new RegistrationHandle(this, saveCallback);
         }
 
-        public IDisposable RegisterSaveCallback(Func<IStateService, Task> saveTaskFactory)
+        private void UnregisterSaveCallback(SaveCallback saveCallback)
         {
-            saveTaskFactory.AssertNotNull(nameof(saveTaskFactory));
+            Debug.Assert(saveCallback != null);
 
             lock (this.sync)
             {
-                this.saveCallbacks.Add(saveTaskFactory);
-            }
-
-            return new RegistrationHandle(this, saveTaskFactory);
-        }
-
-        private void UnregisterSaveCallback(Func<IStateService, Task> saveTaskFactory)
-        {
-            Debug.Assert(saveTaskFactory != null);
-
-            lock (this.sync)
-            {
-                this.saveCallbacks.Remove(saveTaskFactory);
+                this.saveCallbacks = this.saveCallbacks.Remove(saveCallback);
             }
         }
 
         private sealed class RegistrationHandle : DisposableBase
         {
             private readonly StateService owner;
-            private readonly Func<IStateService, Task> saveTaskFactory;
+            private readonly SaveCallback saveCallback;
 
-            public RegistrationHandle(StateService owner, Func<IStateService, Task> saveTaskFactory)
+            public RegistrationHandle(StateService owner, SaveCallback saveCallback)
             {
                 Debug.Assert(owner != null);
-                Debug.Assert(saveTaskFactory != null);
+                Debug.Assert(saveCallback != null);
 
                 this.owner = owner;
-                this.saveTaskFactory = saveTaskFactory;
+                this.saveCallback = saveCallback;
             }
 
             protected override void Dispose(bool disposing)
@@ -112,7 +127,7 @@
 
                 if (disposing)
                 {
-                    this.owner.UnregisterSaveCallback(this.saveTaskFactory);
+                    this.owner.UnregisterSaveCallback(this.saveCallback);
                 }
             }
         }

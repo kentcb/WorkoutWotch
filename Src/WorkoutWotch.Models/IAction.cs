@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.Models
 {
     using System;
-    using System.Threading.Tasks;
+    using System.Reactive;
 
     public interface IAction
     {
@@ -10,6 +10,6 @@
             get;
         }
 
-        Task ExecuteAsync(ExecutionContext context);
+        IObservable<Unit> ExecuteAsync(ExecutionContext context);
     }
 }

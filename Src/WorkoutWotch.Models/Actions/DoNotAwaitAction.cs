@@ -1,7 +1,8 @@
 ﻿namespace WorkoutWotch.Models.Actions
 {
     using System;
-    using System.Threading.Tasks;
+    using System.Reactive;
+    using System.Reactive.Linq;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using WorkoutWotch.Services.Contracts.Logger;
 
@@ -23,22 +24,18 @@
 
         public IAction InnerAction => this.innerAction;
 
-        public Task ExecuteAsync(ExecutionContext context)
+        public IObservable<Unit> ExecuteAsync(ExecutionContext context)
         {
             context.AssertNotNull(nameof(context));
 
-            this.innerAction
+            this
+                .innerAction
                 .ExecuteAsync(context)
-                .ContinueWith(
-                    x =>
-                    {
-                        if (x.IsFaulted)
-                        {
-                            this.logger.Error("Failed to execute inner action: " + x.Exception);
-                        }
-                    });
+                .Subscribe(
+                    _ => { },
+                    ex => this.logger.Error("Failed to execute inner action: " + ex));
 
-            return Task.FromResult(true);
+            return Observable.Return(Unit.Default);
         }
     }
 }

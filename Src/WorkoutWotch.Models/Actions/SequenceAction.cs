@@ -4,7 +4,8 @@
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Linq;
-    using System.Threading.Tasks;
+    using System.Reactive;
+    using System.Reactive.Linq;
     using Kent.Boogaart.HelperTrinity.Extensions;
 
     public sealed class SequenceAction : IAction
@@ -28,22 +29,40 @@
 
         public IImmutableList<IAction> Children =>  this.children;
 
-        public async Task ExecuteAsync(ExecutionContext context)
+        public IObservable<Unit> ExecuteAsync(ExecutionContext context)
         {
             context.AssertNotNull(nameof(context));
 
-            foreach (var child in this.children)
-            {
-                context.CancellationToken.ThrowIfCancellationRequested();
+            var childExecutions = this
+                .children
+                .Select(
+                    child => Observable
+                        .Return(Unit.Default)
+                        .Select(
+                            _ =>
+                            {
+                                context.CancellationToken.ThrowIfCancellationRequested();
+                                var execute = true;
 
-                if (context.SkipAhead > TimeSpan.Zero && context.SkipAhead >= child.Duration)
-                {
-                    context.AddProgress(child.Duration);
-                    continue;
-                }
+                                if (context.SkipAhead > TimeSpan.Zero && context.SkipAhead >= child.Duration)
+                                {
+                                    context.AddProgress(child.Duration);
+                                    execute = false;
+                                }
 
-                await child.ExecuteAsync(context).ContinueOnAnyContext();
-            }
+                                return new
+                                {
+                                    Child = child,
+                                    Execute = execute
+                                };
+                            })
+                        .Where(x => x.Execute)
+                        .SelectMany(x => x.Child.ExecuteAsync(context)))
+                .DefaultIfEmpty(Observable.Return(Unit.Default));
+
+            return Observable
+                .Concat(childExecutions)
+                .RunAsync(context.CancellationToken);
         }
     }
 }

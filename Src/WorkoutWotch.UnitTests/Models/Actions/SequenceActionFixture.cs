@@ -1,6 +1,10 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Actions
 {
     using System;
+    using System.Linq;
+    using System.Reactive;
+    using System.Reactive.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using Builders;
     using Kent.Boogaart.PCLMock;
@@ -96,6 +100,41 @@
                 action3
                     .Verify(x => x.ExecuteAsync(context))
                     .WasCalledExactlyOnce();
+            }
+        }
+
+        [Fact]
+        public async Task execute_async_executes_each_child_action_in_order()
+        {
+            var childCount = 10;
+            var childExecutionOrder = new int[childCount];
+            var executionOrder = 0;
+            var childActions = Enumerable
+                .Range(0, childCount)
+                .Select(
+                    (i, _) =>
+                    {
+                        var childAction = new ActionMock(MockBehavior.Loose);
+                        childAction
+                            .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                            .Do(() => childExecutionOrder[i] = Interlocked.Increment(ref executionOrder))
+                            .Return(Observable.Return(Unit.Default));
+                        return childAction;
+                    })
+                .ToList();
+            
+            var sut = new SequenceActionBuilder()
+                .AddChildren(childActions)
+                .Build();
+
+            using (var context = new ExecutionContext())
+            {
+                await sut.ExecuteAsync(context);
+
+                for (var i = 0; i < childExecutionOrder.Length; ++i)
+                {
+                    Assert.Equal(i + 1, childExecutionOrder[i]);
+                }
             }
         }
 
@@ -202,8 +241,8 @@
             {
                 action2
                     .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
-                    .Do(context.Cancel)
-                    .Return(Task.FromResult(true));
+                    .Do(() => context.Cancel())
+                    .Return(Observable.Return(Unit.Default));
 
                 await Assert.ThrowsAsync<OperationCanceledException>(async () => await sut.ExecuteAsync(context));
 
@@ -219,6 +258,17 @@
                     .Verify(x => x.ExecuteAsync(context))
                     .WasNotCalled();
             }
+        }
+
+        [Fact]
+        public async Task execute_async_completes_even_if_there_are_no_child_actions()
+        {
+            var sut = new SequenceActionBuilder()
+                .Build();
+
+            await sut
+                .ExecuteAsync(new ExecutionContext())
+                .TimeoutIfTooSlow();
         }
     }
 }

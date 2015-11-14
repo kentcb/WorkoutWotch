@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Reactive;
+    using System.Reactive.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Builders;
@@ -71,12 +73,12 @@
             delayService
                 .When(x => x.DelayAsync(It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()))
                 .Do<TimeSpan, CancellationToken>((duration, ct) => performedActions.Add("Delayed for " + duration))
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             speechService
                 .When(x => x.SpeakAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .Do<string, CancellationToken>((speechText, cty) => performedActions.Add("Saying '" + speechText + "'"))
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             var sut = new WaitWithPromptActionBuilder()
                 .WithDelayService(delayService)
@@ -107,12 +109,12 @@
             delayService
                 .When(x => x.DelayAsync(It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()))
                 .Do<TimeSpan, CancellationToken>((duration, ct) => performedActions.Add("Delayed for " + duration))
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             speechService
                 .When(x => x.SpeakAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .Do<string, CancellationToken>((speechText, cty) => performedActions.Add("Saying '" + speechText + "'"))
-                .Return(Task.FromResult(true));
+                .Return(Observable.Return(Unit.Default));
 
             var sut = new WaitWithPromptActionBuilder()
                 .WithDelayService(delayService)

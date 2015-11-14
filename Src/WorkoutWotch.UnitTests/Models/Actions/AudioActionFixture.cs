@@ -1,6 +1,8 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Actions
 {
     using System;
+    using System.Reactive;
+    using System.Reactive.Linq;
     using System.Threading.Tasks;
     using Builders;
     using Kent.Boogaart.PCLMock;
@@ -54,18 +56,25 @@
         }
 
         [Fact]
-        public void execute_async_pauses_if_context_is_paused()
+        public async Task execute_async_pauses_if_context_is_paused()
         {
+            var audioService = new AudioServiceMock(MockBehavior.Loose);
             var sut = new AudioActionBuilder()
+                .WithAudioService(audioService)
                 .Build();
 
             using (var context = new ExecutionContext())
             {
                 context.IsPaused = true;
 
-                var task = sut.ExecuteAsync(context);
+                await sut
+                    .ExecuteAsync(context)
+                    .Timeout(TimeSpan.FromMilliseconds(10))
+                    .Catch(Observable.Return(Unit.Default));
 
-                Assert.False(task.Wait(TimeSpan.FromMilliseconds(50)));
+                audioService
+                    .Verify(x => x.PlayAsync(It.IsAny<string>()))
+                    .WasNotCalled();
             }
         }
 

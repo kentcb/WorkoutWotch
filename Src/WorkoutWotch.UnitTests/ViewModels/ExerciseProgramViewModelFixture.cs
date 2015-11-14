@@ -9,8 +9,8 @@
     using Models.Actions.Builders;
     using Models.Builders;
     using ReactiveUI;
+    using Services.Delay.Builders;
     using WorkoutWotch.Models;
-    using WorkoutWotch.Services.Delay;
     using WorkoutWotch.UnitTests.Models.Mocks;
     using WorkoutWotch.UnitTests.Reactive;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
@@ -175,7 +175,7 @@
                     .AddExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(
                             new WaitActionBuilder()
-                                .WithDelayService(new DelayService())
+                                .WithDelayService(new DelayServiceBuilder().Build())
                                 .WithDelay(TimeSpan.FromMinutes(1))
                                 .Build())))
                 .WithSchedulerService(scheduler)
@@ -248,7 +248,7 @@
                     .AddExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(
                             new WaitActionBuilder()
-                                .WithDelayService(new DelayService())
+                                .WithDelayService(new DelayServiceBuilder().Build())
                                 .WithDelay(TimeSpan.FromMinutes(1))
                                 .Build())))
                 .WithSchedulerService(scheduler)
@@ -295,7 +295,7 @@
                     .AddExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(
                             new WaitActionBuilder()
-                                .WithDelayService(new DelayService())
+                                .WithDelayService(new DelayServiceBuilder().Build())
                                 .WithDelay(TimeSpan.FromMinutes(1))
                                 .Build())))
                 .WithSchedulerService(scheduler)
@@ -334,7 +334,7 @@
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
-                        Task.Run(async () =>
+                        Observable.StartAsync(async () =>
                         {
                             ec.AddProgress(TimeSpan.FromSeconds(1));
                             ec.AddProgress(TimeSpan.FromSeconds(3));
@@ -382,7 +382,7 @@
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
-                        Task.Run(async () =>
+                        Observable.StartAsync(async () =>
                         {
                             ec.AddProgress(TimeSpan.FromSeconds(15));
                             ec.AddProgress(TimeSpan.FromSeconds(30));
@@ -426,7 +426,7 @@
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
-                        Task.Run(async () =>
+                        Observable.StartAsync(async () =>
                         {
                             ec.IsPaused = true;
                             await ec.WaitWhilePausedAsync();
@@ -462,7 +462,7 @@
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
-                        Task.Run(async () =>
+                        Observable.StartAsync(async () =>
                         {
                             ec.AddProgress(TimeSpan.FromSeconds(1));
                             ec.IsPaused = true;
@@ -497,7 +497,7 @@
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
-                        Task.Run(async () =>
+                        Observable.StartAsync(async () =>
                         {
                             ec.AddProgress(TimeSpan.FromSeconds(4));
                             ec.IsPaused = true;
@@ -549,7 +549,7 @@
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
-                        Task.Run(async () =>
+                        Observable.StartAsync(async () =>
                         {
                             ec.AddProgress(TimeSpan.FromSeconds(0.5));
                             ec.IsPaused = true;
@@ -613,7 +613,7 @@
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
-                        Task.Run(async () =>
+                        Observable.StartAsync(async () =>
                         {
                             ec.IsPaused = true;
                             await ec.WaitWhilePausedAsync();
@@ -668,7 +668,7 @@
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
-                        Task.Run(async () =>
+                        Observable.StartAsync(async () =>
                         {
                             ec.IsPaused = true;
                             await ec.WaitWhilePausedAsync();
@@ -728,7 +728,7 @@
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
-                        Task.Run(async () =>
+                        Observable.StartAsync(async () =>
                         {
                             ec.IsPaused = true;
                             await ec.WaitWhilePausedAsync();
