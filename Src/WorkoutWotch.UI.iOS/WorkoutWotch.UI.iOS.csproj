@@ -23,13 +23,20 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <MtouchDebug>true</MtouchDebug>
+    <MtouchDebug>True</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchI18n>
     </MtouchI18n>
     <MtouchArch>i386</MtouchArch>
-    <MtouchUseRefCounting>true</MtouchUseRefCounting>
+    <MtouchUseRefCounting>True</MtouchUseRefCounting>
     <MtouchLink>None</MtouchLink>
+    <MtouchSdkVersion>9.1</MtouchSdkVersion>
+    <MtouchProfiling>False</MtouchProfiling>
+    <MtouchFastDev>False</MtouchFastDev>
+    <MtouchUseLlvm>False</MtouchUseLlvm>
+    <MtouchUseThumb>False</MtouchUseThumb>
+    <MtouchUseSGen>True</MtouchUseSGen>
+    <MtouchOptimizePNGs>True</MtouchOptimizePNGs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>full</DebugType>
@@ -48,9 +55,9 @@
     <MtouchDebug>False</MtouchDebug>
     <MtouchProfiling>False</MtouchProfiling>
     <MtouchFastDev>False</MtouchFastDev>
-    <MtouchUseLlvm>False</MtouchUseLlvm>
+    <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchUseThumb>False</MtouchUseThumb>
-    <MtouchUseSGen>False</MtouchUseSGen>
+    <MtouchUseSGen>True</MtouchUseSGen>
     <MtouchOptimizePNGs>True</MtouchOptimizePNGs>
     <MtouchExtraArgs>--xml=${ProjectDir}/Linker.xml</MtouchExtraArgs>
   </PropertyGroup>
@@ -65,13 +72,19 @@
     <ConsolePause>false</ConsolePause>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchDebug>true</MtouchDebug>
+    <MtouchDebug>True</MtouchDebug>
     <MtouchI18n>
     </MtouchI18n>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <MtouchProfiling>true</MtouchProfiling>
-    <MtouchUseRefCounting>true</MtouchUseRefCounting>
+    <MtouchProfiling>True</MtouchProfiling>
+    <MtouchUseRefCounting>True</MtouchUseRefCounting>
     <MtouchLink>None</MtouchLink>
+    <MtouchSdkVersion>9.1</MtouchSdkVersion>
+    <MtouchFastDev>False</MtouchFastDev>
+    <MtouchUseLlvm>False</MtouchUseLlvm>
+    <MtouchUseThumb>False</MtouchUseThumb>
+    <MtouchUseSGen>True</MtouchUseSGen>
+    <MtouchOptimizePNGs>True</MtouchOptimizePNGs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>full</DebugType>
@@ -85,8 +98,17 @@
     <MtouchArch>ARMv7, ARM64</MtouchArch>
     <MtouchI18n>
     </MtouchI18n>
-    <MtouchUseRefCounting>true</MtouchUseRefCounting>
+    <MtouchUseRefCounting>True</MtouchUseRefCounting>
     <MtouchExtraArgs>--xml=${ProjectDir}/Linker.xml</MtouchExtraArgs>
+    <MtouchSdkVersion>9.1</MtouchSdkVersion>
+    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchDebug>False</MtouchDebug>
+    <MtouchProfiling>False</MtouchProfiling>
+    <MtouchFastDev>False</MtouchFastDev>
+    <MtouchUseLlvm>True</MtouchUseLlvm>
+    <MtouchUseThumb>False</MtouchUseThumb>
+    <MtouchUseSGen>True</MtouchUseSGen>
+    <MtouchOptimizePNGs>True</MtouchOptimizePNGs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
     <DebugType>full</DebugType>
@@ -106,7 +128,15 @@
     <IpaIncludeArtwork>true</IpaIncludeArtwork>
     <IpaPackageName>
     </IpaPackageName>
-    <MtouchUseRefCounting>true</MtouchUseRefCounting>
+    <MtouchUseRefCounting>True</MtouchUseRefCounting>
+    <MtouchSdkVersion>9.1</MtouchSdkVersion>
+    <MtouchDebug>False</MtouchDebug>
+    <MtouchProfiling>False</MtouchProfiling>
+    <MtouchFastDev>False</MtouchFastDev>
+    <MtouchUseLlvm>True</MtouchUseLlvm>
+    <MtouchUseThumb>False</MtouchUseThumb>
+    <MtouchUseSGen>True</MtouchUseSGen>
+    <MtouchOptimizePNGs>True</MtouchOptimizePNGs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
     <DebugType>full</DebugType>
@@ -127,9 +157,9 @@
     <MtouchDebug>False</MtouchDebug>
     <MtouchProfiling>False</MtouchProfiling>
     <MtouchFastDev>False</MtouchFastDev>
-    <MtouchUseLlvm>False</MtouchUseLlvm>
+    <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchUseThumb>False</MtouchUseThumb>
-    <MtouchUseSGen>False</MtouchUseSGen>
+    <MtouchUseSGen>True</MtouchUseSGen>
     <MtouchOptimizePNGs>True</MtouchOptimizePNGs>
     <MtouchExtraArgs>--xml=${ProjectDir}/Linker.xml</MtouchExtraArgs>
   </PropertyGroup>
@@ -140,9 +170,23 @@
     <MtouchProfiling>False</MtouchProfiling>
     <MtouchFastDev>False</MtouchFastDev>
     <MtouchArch>i386</MtouchArch>
-    <MtouchUseLlvm>False</MtouchUseLlvm>
+    <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchUseThumb>False</MtouchUseThumb>
-    <MtouchUseSGen>False</MtouchUseSGen>
+    <MtouchUseSGen>True</MtouchUseSGen>
+    <MtouchUseRefCounting>False</MtouchUseRefCounting>
+    <MtouchOptimizePNGs>True</MtouchOptimizePNGs>
+    <MtouchI18n />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhoneSimulator'">
+    <MtouchSdkVersion>9.1</MtouchSdkVersion>
+    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchDebug>False</MtouchDebug>
+    <MtouchProfiling>False</MtouchProfiling>
+    <MtouchFastDev>False</MtouchFastDev>
+    <MtouchArch>i386</MtouchArch>
+    <MtouchUseLlvm>True</MtouchUseLlvm>
+    <MtouchUseThumb>False</MtouchUseThumb>
+    <MtouchUseSGen>True</MtouchUseSGen>
     <MtouchUseRefCounting>False</MtouchUseRefCounting>
     <MtouchOptimizePNGs>True</MtouchOptimizePNGs>
     <MtouchI18n />
