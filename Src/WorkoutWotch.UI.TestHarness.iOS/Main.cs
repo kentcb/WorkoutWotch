@@ -1,4 +1,4 @@
-namespace WorkoutWotch.UI.TestHarness
+namespace WorkoutWotch.UI.TestHarness.iOS
 {
     using UIKit;
 

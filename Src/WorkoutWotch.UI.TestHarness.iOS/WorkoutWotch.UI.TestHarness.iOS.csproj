@@ -6,7 +6,7 @@
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ProjectGuid>{6FD34322-75F5-41F2-A470-A35B852755BB}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>WorkoutWotch.UI.TestHarness</RootNamespace>
+    <RootNamespace>WorkoutWotch.UI.TestHarness.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>WorkoutWotchUITestHarness</AssemblyName>
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
@@ -106,6 +106,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.1.36.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.1.36\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-Core.2.2.5\lib\portable-windows8+net45+wp8\System.Reactive.Core.dll</HintPath>
       <Private>True</Private>
@@ -158,8 +162,8 @@
       <HintPath>..\packages\xunit.extensibility.execution.2.1.0\lib\xamarinios\xunit.execution.dotnet.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="xunit.runner.devices, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.runner.devices.1.2.0\lib\Xamarin.iOS\xunit.runner.devices.dll</HintPath>
+    <Reference Include="xunit.runner.devices, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.runner.devices.1.2.2\lib\Xamarin.iOS\xunit.runner.devices.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="xunit.runner.utility.dotnet, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
@@ -197,7 +201,7 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Xamarin.Forms.1.5.1.6471\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Xamarin.Forms.1.5.1.6471\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets'))" />
-    <Error Condition="!Exists('..\packages\xunit.runner.devices.1.2.0\build\Xamarin.iOS\xunit.runner.devices.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.devices.1.2.0\build\Xamarin.iOS\xunit.runner.devices.targets'))" />
+    <Error Condition="!Exists('..\packages\xunit.runner.devices.1.2.2\build\Xamarin.iOS\xunit.runner.devices.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.devices.1.2.2\build\Xamarin.iOS\xunit.runner.devices.targets'))" />
   </Target>
-  <Import Project="..\packages\xunit.runner.devices.1.2.0\build\Xamarin.iOS\xunit.runner.devices.targets" Condition="Exists('..\packages\xunit.runner.devices.1.2.0\build\Xamarin.iOS\xunit.runner.devices.targets')" />
+  <Import Project="..\packages\xunit.runner.devices.1.2.2\build\Xamarin.iOS\xunit.runner.devices.targets" Condition="Exists('..\packages\xunit.runner.devices.1.2.2\build\Xamarin.iOS\xunit.runner.devices.targets')" />
 </Project>
