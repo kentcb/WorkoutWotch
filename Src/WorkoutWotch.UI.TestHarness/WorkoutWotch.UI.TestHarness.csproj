@@ -97,6 +97,10 @@
     </MtouchI18n>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ReactiveUI, Version=6.90.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Lib\ReactiveUI\iOS\ReactiveUI.dll</HintPath>
+    </Reference>
     <Reference Include="Splat, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Splat.1.6.2\lib\Xamarin.iOS10\Splat.dll</HintPath>
       <Private>True</Private>
