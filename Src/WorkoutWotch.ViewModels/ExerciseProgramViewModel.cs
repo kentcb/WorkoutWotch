@@ -31,11 +31,11 @@ namespace WorkoutWotch.ViewModels
         private readonly ObservableAsPropertyHelper<TimeSpan> progressTimeSpan;
         private readonly ObservableAsPropertyHelper<double> progress;
         private readonly ObservableAsPropertyHelper<ExerciseViewModel> currentExercise;
-        private readonly IReactiveCommand startCommand;
-        private readonly IReactiveCommand<object> pauseCommand;
-        private readonly IReactiveCommand<object> resumeCommand;
-        private readonly IReactiveCommand skipBackwardsCommand;
-        private readonly IReactiveCommand skipForwardsCommand;
+        private readonly ReactiveCommand<Unit> startCommand;
+        private readonly ReactiveCommand<object> pauseCommand;
+        private readonly ReactiveCommand<object> resumeCommand;
+        private readonly ReactiveCommand<Unit> skipBackwardsCommand;
+        private readonly ReactiveCommand<Unit> skipForwardsCommand;
         private ExecutionContext executionContext;
 
         public ExerciseProgramViewModel(ILoggerService loggerService, ISchedulerService schedulerService, ExerciseProgram model)
@@ -195,15 +195,15 @@ namespace WorkoutWotch.ViewModels
 
         public bool IsResumeVisible => this.isResumeVisible.Value;
 
-        public IReactiveCommand StartCommand => this.startCommand;
+        public ReactiveCommand<Unit> StartCommand => this.startCommand;
 
-        public IReactiveCommand PauseCommand => this.pauseCommand;
+        public ReactiveCommand<object> PauseCommand => this.pauseCommand;
 
-        public IReactiveCommand ResumeCommand => this.resumeCommand;
+        public ReactiveCommand<object> ResumeCommand => this.resumeCommand;
 
-        public IReactiveCommand SkipBackwardsCommand => this.skipBackwardsCommand;
+        public ReactiveCommand<Unit> SkipBackwardsCommand => this.skipBackwardsCommand;
 
-        public IReactiveCommand SkipForwardsCommand => this.skipForwardsCommand;
+        public ReactiveCommand<Unit> SkipForwardsCommand => this.skipForwardsCommand;
 
         private ExecutionContext ExecutionContext
         {
