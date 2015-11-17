@@ -32,25 +32,31 @@ namespace WorkoutWotch.ViewModels
                 .ToProperty(this, x => x.ExecutionContext)
                 .AddTo(this.disposables);
 
-            this.isActive = this.WhenAnyValue(
-                    x => x.ExecutionContext,
-                    x => x.ExecutionContext.CurrentExercise,
-                    (ec, currentExercise) => ec != null && currentExercise == this.model)
+            this.isActive = Observable
+                .CombineLatest(
+                    this
+                        .WhenAnyValue(x => x.ExecutionContext)
+                        .Select(ec => ec == null ? Observable.Never<TimeSpan>() : ec.WhenAnyValue(x => x.SkipAhead))
+                        .Switch(),
+                    this
+                        .WhenAnyValue(x => x.ExecutionContext)
+                        .Select(ec => ec == null ? Observable.Never<Exercise>() : ec.WhenAnyValue(x => x.CurrentExercise))
+                        .Switch(),
+                    (skip, current) => skip == TimeSpan.Zero && current == this.model)
                 .ObserveOn(schedulerService.MainScheduler)
                 .ToProperty(this, x => x.IsActive)
                 .AddTo(this.disposables);
 
-            // TODO: HACK: why can't I use currentExercise instead of this.ExecutionContext.CurrentExercise below?
-            // Rx seems to be passing through the old exercise for currentExercise with the new value for currentExerciseProgress
-            this.progressTimeSpan = this.WhenAnyValue(x => x.ExecutionContext)
+            this.progressTimeSpan = this
+                .WhenAnyValue(x => x.ExecutionContext)
                 .Select(
-                    _ => this.WhenAnyValue(
-                        x => x.ExecutionContext.CurrentExercise,
-                        x => x.ExecutionContext.CurrentExerciseProgress,
-                        (currentExercise, currentExerciseProgress) => this.ExecutionContext.CurrentExercise == this.model ? currentExerciseProgress : (TimeSpan?)null)
-                    .Where(x => x.HasValue)
-                    .Select(x => x.Value)
-                    .StartWith(TimeSpan.Zero))
+                    ec =>
+                        ec == null
+                            ? Observable.Return(TimeSpan.Zero)
+                            : ec
+                                .WhenAnyValue(x => x.CurrentExerciseProgress)
+                                .Where(_ => ec.CurrentExercise == this.model)
+                                .StartWith(TimeSpan.Zero))
                 .Switch()
                 .ObserveOn(schedulerService.MainScheduler)
                 .ToProperty(this, x => x.ProgressTimeSpan)
@@ -60,9 +66,9 @@ namespace WorkoutWotch.ViewModels
                     x => x.Duration,
                     x => x.ProgressTimeSpan,
                     (duration, progressTimeSpan) => progressTimeSpan.Value.TotalMilliseconds / duration.Value.TotalMilliseconds)
-                .Select(x => double.IsNaN(x) || double.IsInfinity(x) ? 0d : x)
-                .Select(x => Math.Min(1d, x))
-                .Select(x => Math.Max(0d, x))
+                .Select(progressRatio => double.IsNaN(progressRatio) || double.IsInfinity(progressRatio) ? 0d : progressRatio)
+                .Select(progressRatio => Math.Min(1d, progressRatio))
+                .Select(progressRatio => Math.Max(0d, progressRatio))
                 .ObserveOn(schedulerService.MainScheduler)
                 .ToProperty(this, x => x.Progress)
                 .AddTo(this.disposables);

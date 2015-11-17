@@ -1,7 +1,9 @@
 ﻿namespace WorkoutWotch.UnitTests.ViewModels.Builders
 {
+    using global::ReactiveUI;
     using Kent.Boogaart.PCLMock;
     using Models.Builders;
+    using ReactiveUI.Mocks;
     using WorkoutWotch.Models;
     using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.Contracts.Scheduler;
@@ -13,12 +15,14 @@
     {
         private ILoggerService loggerService;
         private ISchedulerService schedulerService;
+        private IScreen hostScreen;
         private ExerciseProgram model;
 
         public ExerciseProgramViewModelBuilder()
         {
             this.loggerService = new LoggerServiceMock(MockBehavior.Loose);
             this.schedulerService = new SchedulerServiceMock(MockBehavior.Loose);
+            this.hostScreen = new ScreenMock(MockBehavior.Loose);
             this.model = new ExerciseProgramBuilder();
         }
 
@@ -34,6 +38,12 @@
             return this;
         }
 
+        public ExerciseProgramViewModelBuilder WithHostScreen(IScreen hostScreen)
+        {
+            this.hostScreen = hostScreen;
+            return this;
+        }
+
         public ExerciseProgramViewModelBuilder WithModel(ExerciseProgram model)
         {
             this.model = model;
@@ -44,6 +54,7 @@
             new ExerciseProgramViewModel(
                 this.loggerService,
                 this.schedulerService,
+                this.hostScreen,
                 this.model);
         
         public static implicit operator ExerciseProgramViewModel(ExerciseProgramViewModelBuilder builder) =>

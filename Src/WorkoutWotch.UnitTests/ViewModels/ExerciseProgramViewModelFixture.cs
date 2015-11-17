@@ -5,16 +5,14 @@
     using System.Reactive.Threading.Tasks;
     using System.Threading.Tasks;
     using Builders;
+    using global::ReactiveUI;
     using Kent.Boogaart.PCLMock;
     using Models.Actions.Builders;
     using Models.Builders;
-    using ReactiveUI;
     using Services.Delay.Builders;
     using WorkoutWotch.Models;
     using WorkoutWotch.UnitTests.Models.Mocks;
     using WorkoutWotch.UnitTests.Reactive;
-    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
-    using WorkoutWotch.ViewModels;
     using Xunit;
 
     public class ExerciseProgramViewModelFixture
@@ -22,19 +20,25 @@
         [Fact]
         public void ctor_throws_if_logger_service_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramViewModel(null, new TestSchedulerService(), new ExerciseProgramBuilder().Build()));
+            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramViewModelBuilder().WithLoggerService(null).Build());
         }
 
         [Fact]
         public void ctor_throws_if_scheduler_service_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramViewModel(new LoggerServiceMock(), null, new ExerciseProgramBuilder().Build()));
+            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramViewModelBuilder().WithSchedulerService(null).Build());
+        }
+
+        [Fact]
+        public void ctor_throws_if_host_screen_is_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramViewModelBuilder().WithHostScreen(null).Build());
         }
 
         [Fact]
         public void ctor_throws_if_model_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramViewModel(new LoggerServiceMock(), new TestSchedulerService(), null));
+            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramViewModelBuilder().WithModel(null).Build());
         }
 
         [Theory]
@@ -110,23 +114,24 @@
                 .ToListAsync()
                 .ToTask();
 
-            using (scheduler.Pump())
-            {
-                sut.StartCommand.Execute(null);
+            sut.StartCommand.Execute(null);
+            scheduler.AdvanceMinimal();
 
-                var isStarted = await isStartedTask;
+            var isStarted = await isStartedTask;
 
-                Assert.False(isStarted[0]);
-                Assert.True(isStarted[1]);
-                Assert.False(isStarted[2]);
-            }
+            Assert.False(isStarted[0]);
+            Assert.True(isStarted[1]);
+            Assert.False(isStarted[2]);
         }
 
         [Fact]
         public void is_start_visible_is_true_by_default()
         {
+            var scheduler = new TestSchedulerService();
             var sut = new ExerciseProgramViewModelBuilder()
+                .WithSchedulerService(scheduler)
                 .Build();
+            scheduler.AdvanceMinimal();
 
             Assert.True(sut.IsStartVisible);
         }
@@ -138,6 +143,7 @@
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithSchedulerService(scheduler)
                 .Build();
+            scheduler.AdvanceMinimal();
 
             var isStartVisibleTask = sut
                 .WhenAnyValue(x => x.IsStartVisible)
@@ -147,7 +153,7 @@
 
             using (scheduler.Pump())
             {
-                sut.StartCommand.Execute(null);
+                await sut.StartCommand.ExecuteAsync();
 
                 var isStartVisible = await isStartVisibleTask;
 
@@ -796,6 +802,41 @@
                 Assert.Equal("Exercise 3", currentExercises[2].Name);
                 Assert.Equal("Exercise 2", currentExercises[3].Name);
             }
+        }
+
+        [Fact]
+        public void execution_context_is_cancelled_if_user_navigates_away()
+        {
+            var scheduler = new TestSchedulerService();
+            var sut = new ExerciseProgramViewModelBuilder()
+                .WithModel(new ExerciseProgramBuilder()
+                    .AddExercise(new ExerciseBuilder()
+                        .WithBeforeExerciseAction(
+                            new WaitActionBuilder()
+                                .WithDelayService(new DelayServiceBuilder().Build())
+                                .WithDelay(TimeSpan.FromMinutes(1))
+                                .Build())))
+                .WithSchedulerService(scheduler)
+                .Build();
+            sut
+                .HostScreen
+                .Router
+                .NavigationStack
+                .Add(sut);
+
+            sut.StartCommand.Execute(null);
+            scheduler.AdvanceMinimal();
+
+            Assert.True(sut.IsStarted);
+
+            sut
+                .HostScreen
+                .Router
+                .NavigateBack
+                .Execute(null);
+            scheduler.AdvanceMinimal();
+
+            Assert.False(sut.IsStarted);
         }
     }
 }

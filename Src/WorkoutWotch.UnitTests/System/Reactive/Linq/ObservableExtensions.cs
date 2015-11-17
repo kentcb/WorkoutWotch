@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Reactive.Linq;
     using Kent.Boogaart.HelperTrinity.Extensions;
 
     public static class ObservableExtensions
@@ -22,7 +21,7 @@
             @this.AssertNotNull(nameof(@this));
 
             return @this
-                .Timeout(TimeSpan.FromSeconds(10));
+                .Timeout(TimeSpan.FromSeconds(3));
         }
     }
 }

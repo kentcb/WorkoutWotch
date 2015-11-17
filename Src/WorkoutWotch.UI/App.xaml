@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WorkoutWotch.UI.App"
+             xmlns:controls="clr-namespace:WorkoutWotch.UI.Controls;assembly=WorkoutWotch.UI">
+    <Application.Resources>
+        <ResourceDictionary>
+            <Color x:Key="BackgroundColor">#F9E8B8</Color>
+            <Color x:Key="ForegroundColor">#94700C</Color>
+            <Color x:Key="NavigationColor">#EDB824</Color>
+            <Color x:Key="DisabledColor">#989898</Color>
+
+            <!-- TODO: XF cannot yet apply page styles implicitly (as of 2.0.0) -->
+            <Style x:Key="PageStyle" TargetType="Page">
+                <Setter Property="BackgroundColor" Value="{StaticResource BackgroundColor}"/>
+            </Style>
+
+            <Style TargetType="Label">
+                <Setter Property="FontSize" Value="Default"/>
+                <Setter Property="TextColor" Value="{StaticResource ForegroundColor}"/>
+            </Style>
+
+            <Style TargetType="ListView">
+                <Setter Property="BackgroundColor" Value="Transparent"/>
+                <Setter Property="SeparatorColor" Value="{StaticResource NavigationColor}"/>
+            </Style>
+
+            <Style TargetType="controls:ControlButton">
+                <Setter Property="EnabledTintColor" Value="{StaticResource NavigationColor}"/>
+                <Setter Property="DisabledTintColor" Value="{StaticResource DisabledColor}"/>
+            </Style>
+            
+            <Style TargetType="ActivityIndicator">
+                <Setter Property="Color" Value="{StaticResource NavigationColor}"/>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

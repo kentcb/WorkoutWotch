@@ -7,8 +7,8 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Builders;
+    using global::ReactiveUI;
     using Kent.Boogaart.PCLMock;
-    using ReactiveUI;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.UnitTests.Services.Delay.Mocks;

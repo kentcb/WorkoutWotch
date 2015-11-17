@@ -2,7 +2,9 @@
 {
     using System.Reactive;
     using System.Reactive.Linq;
+    using global::ReactiveUI;
     using Kent.Boogaart.PCLMock;
+    using ReactiveUI.Mocks;
     using Services.Audio.Mocks;
     using Services.Delay.Mocks;
     using Services.Speech.Mocks;
@@ -28,6 +30,8 @@
         private ISchedulerService schedulerService;
         private ISpeechService speechService;
         private IStateService stateService;
+        private IScreen hostScreen;
+        private ExerciseProgramViewModelFactory exerciseProgramViewModelFactory;
 
         public ExerciseProgramsViewModelBuilder()
         {
@@ -38,6 +42,12 @@
             this.schedulerService = new SchedulerServiceMock(MockBehavior.Loose);
             this.speechService = new SpeechServiceMock(MockBehavior.Loose);
             this.stateService = new StateServiceMock(MockBehavior.Loose);
+            this.hostScreen = new ScreenMock(MockBehavior.Loose);
+            this.exerciseProgramViewModelFactory =
+                model =>
+                    new ExerciseProgramViewModelBuilder()
+                        .WithModel(model)
+                        .Build();
 
             this.WithCachedDocument(null);
         }
@@ -84,6 +94,18 @@
             return this;
         }
 
+        public ExerciseProgramsViewModelBuilder WithHostScreen(IScreen hostScreen)
+        {
+            this.hostScreen = hostScreen;
+            return this;
+        }
+
+        public ExerciseProgramsViewModelBuilder WithExerciseProgramViewModelFactory(ExerciseProgramViewModelFactory exerciseProgramViewModelFactory)
+        {
+            this.exerciseProgramViewModelFactory = exerciseProgramViewModelFactory;
+            return this;
+        }
+
         public ExerciseProgramsViewModelBuilder WithCloudDocument(string cloudDocument)
         {
             var exerciseDocumentService = new ExerciseDocumentServiceMock(MockBehavior.Loose);
@@ -118,7 +140,9 @@
                 this.loggerService,
                 this.schedulerService,
                 this.speechService,
-                this.stateService);
+                this.stateService,
+                this.hostScreen,
+                this.exerciseProgramViewModelFactory);
         
         public static implicit operator ExerciseProgramsViewModel(ExerciseProgramsViewModelBuilder builder) =>
             builder.Build();

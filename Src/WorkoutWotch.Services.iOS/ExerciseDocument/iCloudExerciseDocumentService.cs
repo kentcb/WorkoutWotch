@@ -167,6 +167,10 @@ namespace WorkoutWotch.Services.iOS.ExerciseDocument
                             this.logger.Error("Failed to open document.");
                             this.exerciseDocument.OnError(new InvalidOperationException("Failed to open document."));
                         }
+                        else
+                        {
+                            this.logger.Info("Loaded document.");
+                        }
                     });
             }
             else

@@ -6,6 +6,6 @@ namespace WorkoutWotch.ViewModels
         ParseFailed,
         LoadFailed,
         LoadedFromCache,
-        LoadedFromCloud
+        LoadedFromService
     }
 }

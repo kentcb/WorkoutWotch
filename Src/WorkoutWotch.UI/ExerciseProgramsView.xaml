@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<rxui:ReactiveContentPage
+        x:Class="WorkoutWotch.UI.ExerciseProgramsView"
+        x:TypeArguments="vms:ExerciseProgramsViewModel"
+        xmlns="http://xamarin.com/schemas/2014/forms"
+        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+        xmlns:rxui="clr-namespace:ReactiveUI.XamForms;assembly=ReactiveUI.XamForms"
+        xmlns:vms="clr-namespace:WorkoutWotch.ViewModels;assembly=WorkoutWotch.ViewModels"
+        xmlns:views="clr-namespace:WorkoutWotch.UI;assembly=WorkoutWotch.UI"
+        Style="{StaticResource PageStyle}">
+    <Grid>
+        <ListView x:Name="exerciseProgramsListView">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <views:ExerciseProgramCellView ViewModel="{Binding .}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <StackLayout
+            x:Name="errorLayout"
+            VerticalOptions="Center">
+            <Label
+                x:Name="errorLabel"
+                HorizontalOptions="Center"/>
+            <Label
+                x:Name="errorDetailLabel"
+                HorizontalOptions="Center"
+                FontSize="Small"/>
+        </StackLayout>
+
+        <ActivityIndicator
+            x:Name="activityIndicator"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"/>
+    </Grid>
+</rxui:ReactiveContentPage>

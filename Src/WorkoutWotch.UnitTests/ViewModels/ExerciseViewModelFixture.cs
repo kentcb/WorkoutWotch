@@ -114,15 +114,15 @@
 
             executionContext.SetCurrentExercise(model);
 
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.Equal(TimeSpan.Zero, sut.ProgressTimeSpan);
 
             executionContext.AddProgress(TimeSpan.FromSeconds(3));
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.Equal(TimeSpan.FromSeconds(3), sut.ProgressTimeSpan);
 
             executionContext.AddProgress(TimeSpan.FromSeconds(2));
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.Equal(TimeSpan.FromSeconds(5), sut.ProgressTimeSpan);
         }
 
@@ -131,8 +131,10 @@
         {
             var scheduler = new TestSchedulerService();
             var model1 = new ExerciseBuilder()
+                .WithName("model 1")
                 .Build();
             var model2 = new ExerciseBuilder()
+                .WithName("model 2")
                 .Build();
             var executionContext = new ExecutionContext();
             var sut = new ExerciseViewModelBuilder()
@@ -144,15 +146,15 @@
             executionContext.SetCurrentExercise(model1);
             executionContext.AddProgress(TimeSpan.FromSeconds(3));
 
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.Equal(TimeSpan.FromSeconds(3), sut.ProgressTimeSpan);
 
             executionContext.SetCurrentExercise(model2);
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.Equal(TimeSpan.FromSeconds(3), sut.ProgressTimeSpan);
 
             executionContext.AddProgress(TimeSpan.FromSeconds(3));
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.Equal(TimeSpan.FromSeconds(3), sut.ProgressTimeSpan);
         }
 
@@ -174,11 +176,11 @@
             executionContext.SetCurrentExercise(model);
 
             executionContext.AddProgress(TimeSpan.FromSeconds(3));
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.Equal(TimeSpan.FromSeconds(3), sut.ProgressTimeSpan);
 
             executionContextSubject.OnNext(new ExecutionContext());
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.Equal(TimeSpan.Zero, sut.ProgressTimeSpan);
         }
 
@@ -200,11 +202,11 @@
             executionContext.SetCurrentExercise(model);
 
             executionContext.AddProgress(TimeSpan.FromSeconds(3));
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.Equal(TimeSpan.FromSeconds(3), sut.ProgressTimeSpan);
 
             executionContextSubject.OnNext(null);
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.Equal(TimeSpan.Zero, sut.ProgressTimeSpan);
         }
 
@@ -243,7 +245,7 @@
             executionContext.SetCurrentExercise(model);
             executionContext.AddProgress(TimeSpan.FromMilliseconds(progressInMs));
 
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
 
             Assert.Equal(expectedProgress, sut.Progress);
         }
@@ -256,7 +258,7 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.False(sut.IsActive);
         }
 
@@ -273,11 +275,11 @@
                 .WithModel(model)
                 .Build();
 
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.False(sut.IsActive);
 
             executionContext.SetCurrentExercise(model);
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.True(sut.IsActive);
         }
 
@@ -296,11 +298,11 @@
                 .WithModel(model1)
                 .Build();
 
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.False(sut.IsActive);
 
             executionContext.SetCurrentExercise(model2);
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.False(sut.IsActive);
         }
     }

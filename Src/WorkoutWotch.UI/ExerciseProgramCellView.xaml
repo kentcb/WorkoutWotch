@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<rxui:ReactiveTextCell
+        x:Class="WorkoutWotch.UI.ExerciseProgramCellView"
+        x:TypeArguments="vms:ExerciseProgramViewModel"
+        xmlns="http://xamarin.com/schemas/2014/forms"
+        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+        xmlns:rxui="clr-namespace:ReactiveUI.XamForms;assembly=ReactiveUI.XamForms"
+        xmlns:vms="clr-namespace:WorkoutWotch.ViewModels;assembly=WorkoutWotch.ViewModels"
+        xmlns:b="clr-namespace:WorkoutWotch.UI.Behaviors;assembly=WorkoutWotch.UI"
+        TextColor="{StaticResource ForegroundColor}"
+        DetailColor="{StaticResource NavigationColor}"/>
+<!-- TODO: XF does not yet support text cell styles (as of 2.0.0) -->

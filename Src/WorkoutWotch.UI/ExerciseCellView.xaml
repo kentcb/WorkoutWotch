@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<rxui:ReactiveViewCell
+        x:Class="WorkoutWotch.UI.ExerciseCellView"
+        x:TypeArguments="vms:ExerciseViewModel"
+        xmlns="http://xamarin.com/schemas/2014/forms"
+        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+        xmlns:rxui="clr-namespace:ReactiveUI.XamForms;assembly=ReactiveUI.XamForms"
+        xmlns:vms="clr-namespace:WorkoutWotch.ViewModels;assembly=WorkoutWotch.ViewModels"
+        xmlns:b="clr-namespace:WorkoutWotch.UI.Behaviors;assembly=WorkoutWotch.UI"
+        b:CellBehavior.IsSelectable="False">
+    <Grid x:Name="rootLayout" Padding="20,0,20,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Label
+            x:Name="nameLabel"/>
+        <Label
+            x:Name="durationLabel"
+            Grid.Column="1"/>
+
+        <ProgressBar
+            x:Name="progressBar"
+            Grid.Row="1"
+            Grid.ColumnSpan="2"/>
+    </Grid>
+</rxui:ReactiveViewCell>

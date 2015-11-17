@@ -59,6 +59,18 @@
         }
 
         [Fact]
+        public void ctor_throws_if_host_screen_is_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModelBuilder().WithHostScreen(null).Build());
+        }
+
+        [Fact]
+        public void ctor_throws_if_exercise_program_view_model_factory_is_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModelBuilder().WithExerciseProgramViewModelFactory(null).Build());
+        }
+
+        [Fact]
         public void parse_error_message_is_null_by_default()
         {
             var sut = new ExerciseProgramsViewModelBuilder()
@@ -82,7 +94,7 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.NotNull(sut.ParseErrorMessage);
             Assert.Equal("Parsing failure: unexpected '#'; expected end of input (Line 3, Column 1); recently consumed: rogram\r\n\r\n", sut.ParseErrorMessage);
         }
@@ -111,11 +123,11 @@
 
             documents.OnNext(badDocument);
 
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.NotNull(sut.ParseErrorMessage);
 
             documents.OnNext(goodDocument);
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.Null(sut.ParseErrorMessage);
         }
 
@@ -130,7 +142,7 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.NotNull(sut.Programs);
             Assert.Equal(1, sut.Programs.Count);
             Assert.Equal("First Program", sut.Programs.ElementAt(0).Name);
@@ -145,7 +157,7 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.Null(sut.Programs);
         }
 
@@ -160,7 +172,7 @@
                 .WithCachedDocument(document)
                 .Build();
 
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.NotNull(sut.Programs);
             Assert.Equal(1, sut.Programs.Count);
         }
@@ -176,7 +188,7 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.NotNull(sut.Programs);
             Assert.Equal(1, sut.Programs.Count);
         }
@@ -202,7 +214,7 @@
                 .WithStateService(stateService)
                 .Build();
 
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.NotNull(sut.Programs);
             Assert.Equal(1, sut.Programs.Count);
         }
@@ -222,7 +234,7 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.NotNull(sut.Programs);
             Assert.Equal(2, sut.Programs.Count);
         }
@@ -280,7 +292,7 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.Equal(ExerciseProgramsViewModelStatus.ParseFailed, sut.Status);
         }
 
@@ -295,7 +307,7 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.Equal(ExerciseProgramsViewModelStatus.LoadedFromCache, sut.Status);
         }
 
@@ -310,8 +322,8 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            scheduler.AdvanceUntilEmpty();
-            Assert.Equal(ExerciseProgramsViewModelStatus.LoadedFromCloud, sut.Status);
+            scheduler.AdvanceMinimal();
+            Assert.Equal(ExerciseProgramsViewModelStatus.LoadedFromService, sut.Status);
         }
 
         [Fact]
@@ -329,7 +341,7 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.Equal(ExerciseProgramsViewModelStatus.LoadFailed, sut.Status);
         }
 
@@ -354,8 +366,8 @@
                 .WithStateService(stateService)
                 .Build();
 
-            scheduler.AdvanceUntilEmpty();
-            Assert.Equal(ExerciseProgramsViewModelStatus.LoadedFromCloud, sut.Status);
+            scheduler.AdvanceMinimal();
+            Assert.Equal(ExerciseProgramsViewModelStatus.LoadedFromService, sut.Status);
 
             stateService
                 .Verify(x => x.SetAsync<string>("ExerciseProgramsDocument", document))
@@ -382,12 +394,75 @@
                 .WithStateService(stateService)
                 .Build();
 
-            scheduler.AdvanceUntilEmpty();
+            scheduler.AdvanceMinimal();
             Assert.Equal(ExerciseProgramsViewModelStatus.LoadedFromCache, sut.Status);
 
             stateService
                 .Verify(x => x.SetAsync<string>("ExerciseProgramsDocument", document))
                 .WasNotCalled();
+        }
+
+        [Fact]
+        public void selected_program_instigates_routing_when_set_to_non_null_value()
+        {
+            var sut = new ExerciseProgramsViewModelBuilder()
+                .Build();
+            var navigationStack = sut
+                .HostScreen
+                .Router
+                .NavigationStack;
+
+            Assert.Empty(navigationStack);
+
+            var routeTo = new ExerciseProgramViewModelBuilder()
+                .Build();
+            sut.SelectedProgram = routeTo;
+            
+            Assert.Equal(1, navigationStack.Count);
+            Assert.Same(routeTo, navigationStack[0]);
+        }
+
+        [Fact]
+        public void selected_program_does_not_instigate_routing_when_set_to_null_value()
+        {
+            var sut = new ExerciseProgramsViewModelBuilder()
+                .Build();
+            var navigationStack = sut
+                .HostScreen
+                .Router
+                .NavigationStack;
+
+            Assert.Empty(navigationStack);
+
+            var routeTo = new ExerciseProgramViewModelBuilder()
+                .Build();
+            sut.SelectedProgram = routeTo;
+            Assert.Equal(1, navigationStack.Count);
+
+            sut.SelectedProgram = null;
+            Assert.Equal(1, navigationStack.Count);
+        }
+
+        [Fact]
+        public async Task selected_program_resets_to_null_when_returning_to_exercise_programs_view_model()
+        {
+            var sut = new ExerciseProgramsViewModelBuilder()
+                .Build();
+            sut.SelectedProgram = new ExerciseProgramViewModelBuilder()
+                .Build();
+            sut
+                .HostScreen
+                .Router
+                .NavigationStack
+                .Add(sut);
+
+            await sut
+                .HostScreen
+                .Router
+                .NavigateBack
+                .ExecuteAsync();
+
+            Assert.Null(sut.SelectedProgram);
         }
     }
 }

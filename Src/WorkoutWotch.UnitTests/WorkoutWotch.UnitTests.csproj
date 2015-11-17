@@ -39,22 +39,25 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="Models\Actions\Builders\AudioActionBuilder.cs" />
     <Compile Include="Models\Actions\AudioActionFixture.cs" />
+    <Compile Include="Models\Actions\Builders\AudioActionBuilder.cs" />
     <Compile Include="Models\Actions\Builders\DoNotAwaitActionBuilder.cs" />
-    <Compile Include="Models\Actions\DoNotAwaitActionFixture.cs" />
     <Compile Include="Models\Actions\Builders\MetronomeActionBuilder.cs" />
-    <Compile Include="Models\Actions\MetronomeActionFixture.cs" />
     <Compile Include="Models\Actions\Builders\ParallelActionBuilder.cs" />
-    <Compile Include="Models\Actions\ParallelActionFixture.cs" />
     <Compile Include="Models\Actions\Builders\SayActionBuilder.cs" />
-    <Compile Include="Models\Actions\SayActionFixture.cs" />
     <Compile Include="Models\Actions\Builders\SequenceActionBuilder.cs" />
-    <Compile Include="Models\Actions\SequenceActionFixture.cs" />
     <Compile Include="Models\Actions\Builders\WaitActionBuilder.cs" />
-    <Compile Include="Models\Actions\WaitActionFixture.cs" />
     <Compile Include="Models\Actions\Builders\WaitWithPromptActionBuilder.cs" />
+    <Compile Include="Models\Actions\DoNotAwaitActionFixture.cs" />
+    <Compile Include="Models\Actions\MetronomeActionFixture.cs" />
+    <Compile Include="Models\Actions\ParallelActionFixture.cs" />
+    <Compile Include="Models\Actions\SayActionFixture.cs" />
+    <Compile Include="Models\Actions\SequenceActionFixture.cs" />
+    <Compile Include="Models\Actions\WaitActionFixture.cs" />
     <Compile Include="Models\Actions\WaitWithPromptActionFixture.cs" />
+    <Compile Include="Models\Builders\ExerciseBuilder.cs" />
+    <Compile Include="Models\Builders\ExerciseProgramBuilder.cs" />
+    <Compile Include="Models\Builders\ExerciseProgramsBuilder.cs" />
     <Compile Include="Models\EventMatchers\NumberedEventMatcherFixture.cs" />
     <Compile Include="Models\EventMatchers\TypedEventMatcherFixture.cs" />
     <Compile Include="Models\Events\AfterExerciseEventFixture.cs" />
@@ -65,11 +68,8 @@
     <Compile Include="Models\Events\BeforeSetEventFixture.cs" />
     <Compile Include="Models\Events\DuringRepetitionEventFixture.cs" />
     <Compile Include="Models\ExecutionContextFixture.cs" />
-    <Compile Include="Models\Builders\ExerciseBuilder.cs" />
     <Compile Include="Models\ExerciseFixture.cs" />
-    <Compile Include="Models\Builders\ExerciseProgramBuilder.cs" />
     <Compile Include="Models\ExerciseProgramFixture.cs" />
-    <Compile Include="Models\Builders\ExerciseProgramsBuilder.cs" />
     <Compile Include="Models\ExerciseProgramsFixture.cs" />
     <Compile Include="Models\Mocks\ActionMock.cs" />
     <Compile Include="Models\Parsers\ActionListParserFixture.cs" />
@@ -96,9 +96,22 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ReactiveUI\Mocks\ScreenMock.cs" />
+    <Compile Include="Services\Audio\Mocks\AudioServiceMock.cs" />
     <Compile Include="Services\Delay\Builders\DelayServiceBuilder.cs" />
     <Compile Include="Services\Delay\DelayServiceFixture.cs" />
+    <Compile Include="Services\Delay\Mocks\DelayServiceMock.cs" />
+    <Compile Include="Services\ExerciseDocument\Mocks\ExerciseDocumentServiceMock.cs" />
     <Compile Include="Services\Logger\LoggerServiceFixture.cs" />
+    <Compile Include="Services\Logger\Mocks\LoggerMock.cs" />
+    <Compile Include="Services\Logger\Mocks\LoggerServiceMock.cs" />
+    <Compile Include="Services\Scheduler\Mocks\SchedulerMock.cs" />
+    <Compile Include="Services\Scheduler\Mocks\SchedulerServiceMock.cs" />
+    <Compile Include="Services\Speech\Mocks\SpeechServiceMock.cs" />
+    <Compile Include="Services\State\Builders\StateServiceBuilder.cs" />
+    <Compile Include="Services\State\Mocks\BlobCacheMock.cs" />
+    <Compile Include="Services\State\Mocks\StateServiceMock.cs" />
+    <Compile Include="Services\State\StateServiceFixture.cs" />
     <Compile Include="System\Reactive\Linq\ObservableExtensions.cs" />
     <Compile Include="Reactive\TestSchedulerExtensions.cs" />
     <Compile Include="Reactive\TestSchedulerService.cs" />
@@ -113,25 +126,13 @@
     <Compile Include="Reactive\Testing\Recorded.cs" />
     <Compile Include="Reactive\Testing\Subscription.cs" />
     <Compile Include="Reactive\Testing\TestScheduler.cs" />
-    <Compile Include="Services\State\StateServiceFixture.cs" />
-    <Compile Include="Services\Logger\Mocks\LoggerMock.cs" />
-    <Compile Include="Services\Logger\Mocks\LoggerServiceMock.cs" />
-    <Compile Include="Services\State\Mocks\BlobCacheMock.cs" />
-    <Compile Include="Services\State\Mocks\StateServiceMock.cs" />
-    <Compile Include="Services\ExerciseDocument\Mocks\ExerciseDocumentServiceMock.cs" />
     <Compile Include="Utility\MathExtFixture.cs" />
-    <Compile Include="Services\Audio\Mocks\AudioServiceMock.cs" />
-    <Compile Include="Services\Delay\Mocks\DelayServiceMock.cs" />
-    <Compile Include="Services\Speech\Mocks\SpeechServiceMock.cs" />
-    <Compile Include="Services\Scheduler\Mocks\SchedulerServiceMock.cs" />
-    <Compile Include="Services\Scheduler\Mocks\SchedulerMock.cs" />
-    <Compile Include="ViewModels\ExerciseProgramsViewModelFixture.cs" />
-    <Compile Include="ViewModels\ExerciseProgramViewModelFixture.cs" />
-    <Compile Include="ViewModels\ExerciseViewModelFixture.cs" />
-    <Compile Include="Services\State\Builders\StateServiceBuilder.cs" />
     <Compile Include="ViewModels\Builders\ExerciseProgramsViewModelBuilder.cs" />
     <Compile Include="ViewModels\Builders\ExerciseProgramViewModelBuilder.cs" />
     <Compile Include="ViewModels\Builders\ExerciseViewModelBuilder.cs" />
+    <Compile Include="ViewModels\ExerciseProgramsViewModelFixture.cs" />
+    <Compile Include="ViewModels\ExerciseProgramViewModelFixture.cs" />
+    <Compile Include="ViewModels\ExerciseViewModelFixture.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\packages\xunit.core.2.0.0\build\portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.core.props" Condition="Exists('..\packages\xunit.core.2.0.0\build\portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.core.props')" />
