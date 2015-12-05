@@ -47,6 +47,10 @@
         </type>
     </assembly>
 
+    <assembly fullname="ReactiveUI.XamForms">
+        <type fullname="*"/>
+    </assembly>
+    
     <assembly fullname="Akavache">
         <type fullname="*"/>
     </assembly>

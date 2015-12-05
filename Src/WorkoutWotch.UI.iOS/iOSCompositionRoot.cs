@@ -16,9 +16,9 @@
 
         protected override IExerciseDocumentService CreateExerciseDocumentService() =>
             // just used canned data - useful for getting you up and running quickly
-            new CannedExerciseDocumentService();
+            //new CannedExerciseDocumentService();
             // comment the above lines and uncomment this line if you want to use an iCloud-based document service
-            //new iCloudExerciseDocumentService(this.loggerService.Value);
+            new iCloudExerciseDocumentService(this.loggerService.Value);
 
         protected override ISpeechService CreateSpeechService() =>
             new SpeechService();

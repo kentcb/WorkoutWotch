@@ -1,7 +1,6 @@
 ﻿namespace WorkoutWotch.ViewModels
 {
     using System;
-    using System.Reactive;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using Kent.Boogaart.HelperTrinity.Extensions;
