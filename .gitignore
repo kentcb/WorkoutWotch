@@ -71,6 +71,9 @@ ipch/
 *.sdf
 *.cachefile
 
+# Visua Studio
+.vs/
+
 # Visual Studio profiler
 *.psess
 *.vsp
