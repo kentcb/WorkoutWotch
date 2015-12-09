@@ -21,11 +21,11 @@ namespace WorkoutWotch.Services.iOS.Audio
             this.schedulerService = schedulerService;
         }
 
-        public IObservable<Unit> PlayAsync(string resourceUri)
+        public IObservable<Unit> PlayAsync(string name)
         {
-            resourceUri.AssertNotNull(nameof(resourceUri));
+            name.AssertNotNull(nameof(name));
 
-            var url = new NSUrl(resourceUri);
+            var url = new NSUrl("Audio/" + name + ".mp3");
             var audioPlayer = AVAudioPlayer.FromUrl(url);
             var finishedPlaying = Observable
                 .FromEventPattern<AVStatusEventArgs>(x => audioPlayer.FinishedPlaying += x, x => audioPlayer.FinishedPlaying -= x)

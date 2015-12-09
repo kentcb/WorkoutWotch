@@ -43,25 +43,22 @@
             context.AssertNotNull(nameof(context));
 
             return Observable
-                .Create<Unit>(
-                    async observer =>
-                    {
-                        foreach (var exercise in this.exercises)
-                        {
-                            if (context.SkipAhead > TimeSpan.Zero && context.SkipAhead >= exercise.Duration)
+                .Concat(
+                    this
+                        .exercises
+                        .Select(
+                            exercise =>
                             {
-                                this.logger.Debug("Skipping exercise '{0}' because its duration ({1}) is less than the remaining skip ahead ({2}).", exercise.Name, exercise.Duration, context.SkipAhead);
-                                context.AddProgress(exercise.Duration);
-                                continue;
-                            }
+                                if (context.SkipAhead > TimeSpan.Zero && context.SkipAhead >= exercise.Duration)
+                                {
+                                    this.logger.Debug("Skipping exercise '{0}' because its duration ({1}) is less than the remaining skip ahead ({2}).", exercise.Name, exercise.Duration, context.SkipAhead);
+                                    context.AddProgress(exercise.Duration);
+                                    return Observable.Return(Unit.Default);
+                                }
 
-                            this.logger.Debug("Executing exercise '{0}'.", exercise.Name);
-                            await exercise.ExecuteAsync(context);
-                        }
-
-                        observer.OnNext(Unit.Default);
-                        observer.OnCompleted();
-                    })
+                                this.logger.Debug("Executing exercise '{0}'.", exercise.Name);
+                                return exercise.ExecuteAsync(context);
+                            }))
                 .RunAsync(context.CancellationToken);
         }
     }

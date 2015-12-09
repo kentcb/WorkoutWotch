@@ -1,8 +1,8 @@
 ﻿namespace WorkoutWotch.UnitTests.Models
 {
     using System;
+    using System.Reactive;
     using System.Reactive.Linq;
-    using System.Threading.Tasks;
     using Builders;
     using global::ReactiveUI;
     using WorkoutWotch.Models;
@@ -48,43 +48,45 @@
         }
 
         [Fact]
-        public async Task wait_while_paused_async_waits_until_unpaused()
+        public void wait_while_paused_async_waits_until_unpaused()
         {
             var sut = new ExecutionContext();
             sut.IsPaused = true;
 
-            await Assert.ThrowsAsync<TimeoutException>(
-                async () =>
-                    await sut
-                        .WaitWhilePausedAsync()
-                        .Timeout(TimeSpan.FromMilliseconds(10)));
+            var executed = false;
+            sut
+                .WaitWhilePausedAsync()
+                .Subscribe(_ => executed = true);
+
+            Assert.False(executed);
 
             sut.IsPaused = false;
 
-            await sut
-                .WaitWhilePausedAsync()
-                .TimeoutIfTooSlow();
+            Assert.True(executed);
         }
 
         [Fact]
-        public async Task wait_while_paused_async_cancels_if_the_context_is_cancelled()
+        public void wait_while_paused_async_cancels_if_the_context_is_cancelled()
         {
             var sut = new ExecutionContext();
             sut.IsPaused = true;
 
-            await Assert.ThrowsAsync<TimeoutException>(
-                async () =>
-                    await sut
-                        .WaitWhilePausedAsync()
-                        .Timeout(TimeSpan.FromMilliseconds(10)));
+            var cancelled = false;
+            sut
+                .WaitWhilePausedAsync()
+                .Catch<Unit, OperationCanceledException>(
+                    _ =>
+                    {
+                        cancelled = true;
+                        return Observable.Return(Unit.Default);
+                    })
+                .Subscribe();
+
+            Assert.False(cancelled);
 
             sut.Cancel();
 
-            await Assert.ThrowsAsync<OperationCanceledException>(
-                async () =>
-                    await sut
-                        .WaitWhilePausedAsync()
-                        .TimeoutIfTooSlow());
+            Assert.True(cancelled);
         }
 
         [Fact]

@@ -62,33 +62,40 @@ namespace WorkoutWotch.ViewModels
             this.disposables = new CompositeDisposable();
             this.exercises = this.model.Exercises.CreateDerivedCollection(x => new ExerciseViewModel(schedulerService, x, this.WhenAnyValue(y => y.ExecutionContext)));
 
-            this.WhenAnyValue(x => x.ExecutionContext)
-                .Select(x => x != null)
+            this
+                .WhenAnyValue(
+                    x => x.ExecutionContext,
+                    x => x.ExecutionContext.IsCancelled,
+                    (ec, isCancelled) => ec != null && !isCancelled)
                 .ObserveOn(schedulerService.MainScheduler)
                 .Subscribe(x => this.IsStarted = x)
                 .AddTo(this.disposables);
 
-            this.WhenAnyValue(x => x.ExecutionContext)
+            this
+                .WhenAnyValue(x => x.ExecutionContext)
                 .Select(x => x == null ? Observable.Return(false) : x.WhenAnyValue(y => y.IsPaused))
                 .Switch()
                 .ObserveOn(schedulerService.MainScheduler)
                 .Subscribe(x => this.IsPaused = x)
                 .AddTo(this.disposables);
 
-            this.WhenAnyValue(x => x.ExecutionContext)
+            this
+                .WhenAnyValue(x => x.ExecutionContext)
                 .Select(x => x == null ? Observable.Return(TimeSpan.Zero) : x.WhenAnyValue(y => y.Progress))
                 .Switch()
                 .ObserveOn(schedulerService.MainScheduler)
                 .Subscribe(x => this.ProgressTimeSpan = x)
                 .AddTo(this.disposables);
 
-            this.WhenAnyValue(x => x.ProgressTimeSpan)
+            this
+                .WhenAnyValue(x => x.ProgressTimeSpan)
                 .Select(x => x.TotalMilliseconds / this.model.Duration.TotalMilliseconds)
                 .ObserveOn(schedulerService.MainScheduler)
                 .Subscribe(x => this.Progress = x)
                 .AddTo(this.disposables);
 
-            this.WhenAnyValue(
+            this
+                .WhenAnyValue(
                     x => x.ExecutionContext,
                     x => x.ExecutionContext.CurrentExercise,
                     (ec, currentExercise) => ec == null ? null : currentExercise)
@@ -97,46 +104,56 @@ namespace WorkoutWotch.ViewModels
                 .Subscribe(x => this.CurrentExercise = x)
                 .AddTo(this.disposables);
 
-            var canStart = this.WhenAnyValue(x => x.IsStarted)
+            var canStart = this
+                .WhenAnyValue(x => x.IsStarted)
                 .Select(x => !x)
-                .ObserveOn(schedulerService.MainScheduler);
+                .ObserveOn(schedulerService.MainScheduler)
+                .Do(x => System.Diagnostics.Debug.WriteLine("CanStart changing to " + x));
 
             this.startCommand = ReactiveCommand
                 .CreateAsyncObservable(canStart, this.OnStartAsync, schedulerService.MainScheduler)
                 .AddTo(this.disposables);
 
-            var canPause = this.WhenAnyValue(x => x.IsStarted)
+            var canPause = this
+                .WhenAnyValue(x => x.IsStarted)
                 .CombineLatest(this.WhenAnyValue(x => x.ExecutionContext.IsPaused), (isStarted, isPaused) => isStarted && !isPaused)
                 .ObserveOn(schedulerService.MainScheduler);
 
-            this.pauseCommand = ReactiveCommand.CreateAsyncObservable(canPause, this.OnPauseAsync, schedulerService.MainScheduler)
+            this.pauseCommand = ReactiveCommand
+                .CreateAsyncObservable(canPause, this.OnPauseAsync, schedulerService.MainScheduler)
                 .AddTo(this.disposables);
 
-            var canResume = this.WhenAnyValue(x => x.IsStarted)
+            var canResume = this
+                .WhenAnyValue(x => x.IsStarted)
                 .CombineLatest(this.WhenAnyValue(x => x.ExecutionContext.IsPaused), (isStarted, isPaused) => isStarted && isPaused)
                 .ObserveOn(schedulerService.MainScheduler);
 
-            this.resumeCommand = ReactiveCommand.CreateAsyncObservable(canResume, this.OnResumeAsync, schedulerService.MainScheduler)
+            this.resumeCommand = ReactiveCommand
+                .CreateAsyncObservable(canResume, this.OnResumeAsync, schedulerService.MainScheduler)
                 .AddTo(this.disposables);
 
-            var canSkipBackwards = this.WhenAnyValue(
+            var canSkipBackwards = this
+                .WhenAnyValue(
                     x => x.ExecutionContext,
                     x => x.ProgressTimeSpan,
                     (ec, progress) => new { ExecutionContext = ec, Progress = progress })
                 .Select(x => x.ExecutionContext != null && x.Progress >= skipBackwardsThreshold)
                 .ObserveOn(schedulerService.MainScheduler);
 
-            this.skipBackwardsCommand = ReactiveCommand.CreateAsyncObservable(canSkipBackwards, this.OnSkipBackwardsAsync, schedulerService.MainScheduler)
+            this.skipBackwardsCommand = ReactiveCommand
+                .CreateAsyncObservable(canSkipBackwards, this.OnSkipBackwardsAsync, schedulerService.MainScheduler)
                 .AddTo(this.disposables);
 
-            var canSkipForwards = this.WhenAnyValue(
+            var canSkipForwards = this
+                .WhenAnyValue(
                     x => x.ExecutionContext,
                     x => x.CurrentExercise,
                     (ec, currentExercise) => new { ExecutionContext = ec, CurrentExercise = currentExercise })
                 .Select(x => x.ExecutionContext != null && x.CurrentExercise != null && x.CurrentExercise != this.exercises.LastOrDefault())
                 .ObserveOn(schedulerService.MainScheduler);
 
-            this.skipForwardsCommand = ReactiveCommand.CreateAsyncObservable(canSkipForwards, this.OnSkipForwardsAsync, schedulerService.MainScheduler)
+            this.skipForwardsCommand = ReactiveCommand
+                .CreateAsyncObservable(canSkipForwards, this.OnSkipForwardsAsync, schedulerService.MainScheduler)
                 .AddTo(this.disposables);
 
             this.startCommand
@@ -156,27 +173,27 @@ namespace WorkoutWotch.ViewModels
 
             this.startCommand
                 .ThrownExceptions
-                .Subscribe(this.OnThrownException)
+                .Subscribe(ex => this.OnThrownException("start", ex))
                 .AddTo(this.disposables);
 
             this.pauseCommand
                 .ThrownExceptions
-                .Subscribe(this.OnThrownException)
+                .Subscribe(ex => this.OnThrownException("pause", ex))
                 .AddTo(this.disposables);
 
             this.resumeCommand
                 .ThrownExceptions
-                .Subscribe(this.OnThrownException)
+                .Subscribe(ex => this.OnThrownException("resume", ex))
                 .AddTo(this.disposables);
 
             this.skipBackwardsCommand
                 .ThrownExceptions
-                .Subscribe(this.OnThrownException)
+                .Subscribe(ex => this.OnThrownException("skip backwards", ex))
                 .AddTo(this.disposables);
 
             this.skipForwardsCommand
                 .ThrownExceptions
-                .Subscribe(this.OnThrownException)
+                .Subscribe(ex => this.OnThrownException("skip forwards", ex))
                 .AddTo(this.disposables);
 
             // we don't use a reactive command here because switching in different commands causes it to get confused and
@@ -291,12 +308,12 @@ namespace WorkoutWotch.ViewModels
 
         private IObservable<Unit> OnPauseAsync(object _) =>
             Observable
-                .Start(() => this.ExecutionContext.IsPaused = true)
+                .Start(() => this.ExecutionContext.IsPaused = true, this.schedulerService.MainScheduler)
                 .Select(__ => Unit.Default);
 
         private IObservable<Unit> OnResumeAsync(object _) =>
             Observable
-                .Start(() => this.ExecutionContext.IsPaused = false)
+                .Start(() => this.ExecutionContext.IsPaused = false, this.schedulerService.MainScheduler)
                 .Select(__ => Unit.Default);
 
         private IObservable<Unit> OnSkipBackwardsAsync(object _) =>
@@ -314,21 +331,18 @@ namespace WorkoutWotch.ViewModels
                 IsPaused = isPaused
             };
 
+            var disposables = new CompositeDisposable(
+                executionContext,
+                Disposable.Create(() => this.ExecutionContext = null));
+
             return Observable
                 .Using(
-                    () => executionContext,
-                    ec =>
-                        Observable
-                            .Start(() => this.ExecutionContext = ec)
-                            .SelectMany(_ => this.model.ExecuteAsync(ec)))
-                .Catch<Unit, OperationCanceledException>(_ => Observable.Return(Unit.Default))
-                .Do(
+                    () => disposables,
                     _ =>
-                    {
-                        this.ExecutionContext = null;
-                        this.logger.Debug("Start completed.");
-                    })
-                .FirstAsync()
+                        Observable
+                            .Start(() => this.ExecutionContext = executionContext, this.schedulerService.MainScheduler)
+                            .SelectMany(__ => this.model.ExecuteAsync(executionContext)))
+                .Catch<Unit, OperationCanceledException>(_ => Observable.Return(Unit.Default))
                 .RunAsync(CancellationToken.None);
         }
 
@@ -428,9 +442,9 @@ namespace WorkoutWotch.ViewModels
                 .RunAsync(CancellationToken.None);
         }
 
-        private void OnThrownException(Exception exception)
+        private void OnThrownException(string source, Exception exception)
         {
-            this.logger.Error(exception, "An unhandled exception occurred in a command handler.");
+            this.logger.Error(exception, "An unhandled exception occurred in the {0} command handler.", source);
 
             // don't just swallow it - now that we've logged it, make sure it isn't ignored
             throw new InvalidOperationException("Unhandled exception in command handler.", exception);
@@ -445,7 +459,11 @@ namespace WorkoutWotch.ViewModels
                 this.owner = owner;
             }
 
+#pragma warning disable CS0067
+
             public event EventHandler CanExecuteChanged;
+
+#pragma warning restore CS0067
 
             public bool CanExecute(object parameter) =>
                 true;

@@ -8,15 +8,14 @@ namespace WorkoutWotch.UI.iOS.Renderers
     using Xamarin.Forms;
     using Xamarin.Forms.Platform.iOS;
 
-    public sealed class ControlButtonRenderer : ButtonRenderer
+    public sealed class ControlButtonRenderer : ImageRenderer
     {
-        protected override void OnElementChanged(ElementChangedEventArgs<Button> e)
+        protected override void OnElementChanged(ElementChangedEventArgs<Image> e)
         {
             base.OnElementChanged(e);
 
             if (e.NewElement != null && this.Control != null)
             {
-                UpdateImage((ControlButton)e.NewElement, this.Control);
                 UpdateTintColor((ControlButton)this.Element, this.Control);
             }
         }
@@ -27,12 +26,10 @@ namespace WorkoutWotch.UI.iOS.Renderers
 
             switch (e.PropertyName)
             {
-                case nameof(ControlButton.ImageSource):
-                    UpdateImage((ControlButton)this.Element, this.Control);
-                    break;
-                case nameof(ControlButton.IsEnabled):
+                case nameof(ControlButton.IsEnabledEx):
                 case nameof(ControlButton.EnabledTintColor):
                 case nameof(ControlButton.DisabledTintColor):
+                case nameof(Image.Source):
                     UpdateTintColor((ControlButton)this.Element, this.Control);
                     break;
                 default:
@@ -40,20 +37,10 @@ namespace WorkoutWotch.UI.iOS.Renderers
             }
         }
 
-        private static void UpdateImage(ControlButton element, UIButton nativeView)
+        private static void UpdateTintColor(ControlButton element, UIImageView nativeView)
         {
-            var fileImageSource = (FileImageSource)element.ImageSource;
-
-            if (fileImageSource == null)
-            {
-                nativeView.SetImage(null, UIControlState.Normal);
-                return;
-            }
-
-            nativeView.SetImage(UIImage.FromBundle(fileImageSource.File), UIControlState.Normal);
+            nativeView.TintColor = (element.IsEnabledEx ? element.EnabledTintColor : element.DisabledTintColor).ToUIColor();
+            nativeView.Image = nativeView.Image.ImageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate);
         }
-
-        private static void UpdateTintColor(ControlButton element, UIButton nativeView) =>
-            nativeView.TintColor = (element.IsEnabled ? element.EnabledTintColor : element.DisabledTintColor).ToUIColor();
     }
 }

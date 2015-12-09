@@ -1,6 +1,7 @@
 ﻿namespace WorkoutWotch.Services.State
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Diagnostics;
     using System.Linq;
@@ -58,24 +59,23 @@
                 .InvalidateObject<T>(key);
         }
 
-        public IObservable<Unit> SaveAsync() =>
-            Observable
-                .Start(
-                    () =>
-                    {
-                        lock (this.sync)
-                        {
-                            return Observable
-                                .CombineLatest(
-                                    this
-                                        .saveCallbacks
-                                        .Select(x => x(this))
-                                        .Where(x => x != null)
-                                        .DefaultIfEmpty(Observable.Return(Unit.Default))
-                                        .ToList());
-                        }
-                    })
-                .Switch()
+        public IObservable<Unit> SaveAsync()
+        {
+            IObservable<IList<Unit>> saves;
+
+            lock (this.sync)
+            {
+                saves = Observable
+                    .CombineLatest(
+                        this
+                            .saveCallbacks
+                            .Select(x => x(this))
+                            .Where(x => x != null)
+                            .DefaultIfEmpty(Observable.Return(Unit.Default))
+                            .ToList());
+            }
+
+            return saves
                 .Select(_ => Unit.Default)
                 .Catch(
                     (Exception ex) =>
@@ -84,6 +84,7 @@
                         return Observable.Return(Unit.Default);
                     })
                 .RunAsync(CancellationToken.None);
+        }
 
         public IDisposable RegisterSaveCallback(SaveCallback saveCallback)
         {

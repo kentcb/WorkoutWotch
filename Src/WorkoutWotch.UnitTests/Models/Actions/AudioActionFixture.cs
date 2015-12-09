@@ -1,9 +1,6 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Actions
 {
     using System;
-    using System.Reactive;
-    using System.Reactive.Linq;
-    using System.Threading.Tasks;
     using Builders;
     using Kent.Boogaart.PCLMock;
     using WorkoutWotch.Models;
@@ -34,15 +31,15 @@
         }
 
         [Fact]
-        public async Task execute_async_throws_if_context_is_null()
+        public void execute_async_throws_if_context_is_null()
         {
             var sut = new AudioActionBuilder()
                 .Build();
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
+            Assert.Throws<ArgumentNullException>(() => sut.ExecuteAsync(null));
         }
 
         [Fact]
-        public async Task execute_async_cancels_if_context_is_cancelled()
+        public void execute_async_cancels_if_context_is_cancelled()
         {
             var sut = new AudioActionBuilder()
                 .Build();
@@ -51,12 +48,12 @@
             {
                 context.Cancel();
 
-                await Assert.ThrowsAsync<OperationCanceledException>(async () => await sut.ExecuteAsync(context));
+                Assert.Throws<OperationCanceledException>(() => sut.ExecuteAsync(context));
             }
         }
 
         [Fact]
-        public async Task execute_async_pauses_if_context_is_paused()
+        public void execute_async_pauses_if_context_is_paused()
         {
             var audioService = new AudioServiceMock(MockBehavior.Loose);
             var sut = new AudioActionBuilder()
@@ -67,10 +64,7 @@
             {
                 context.IsPaused = true;
 
-                await sut
-                    .ExecuteAsync(context)
-                    .Timeout(TimeSpan.FromMilliseconds(10))
-                    .Catch(Observable.Return(Unit.Default));
+                sut.ExecuteAsync(context);
 
                 audioService
                     .Verify(x => x.PlayAsync(It.IsAny<string>()))
@@ -79,21 +73,21 @@
         }
 
         [Theory]
-        [InlineData("uri")]
-        [InlineData("some_uri")]
-        [InlineData("some/other/uri")]
-        public async Task execute_async_passes_the_audio_resource_uri_onto_the_audio_service(string audioResourceUri)
+        [InlineData("name")]
+        [InlineData("some_name")]
+        [InlineData("some_other_name")]
+        public void execute_async_passes_the_audio_name_onto_the_audio_service(string audioName)
         {
             var audioService = new AudioServiceMock(MockBehavior.Loose);
             var sut = new AudioActionBuilder()
                 .WithAudioService(audioService)
-                .WithAudioResourceUri(audioResourceUri)
+                .WithAudioName(audioName)
                 .Build();
 
-            await sut.ExecuteAsync(new ExecutionContext());
+            sut.ExecuteAsync(new ExecutionContext());
 
             audioService
-                .Verify(x => x.PlayAsync(audioResourceUri))
+                .Verify(x => x.PlayAsync(audioName))
                 .WasCalledExactlyOnce();
         }
     }

@@ -12,8 +12,7 @@
         Style="{StaticResource PageStyle}">
     <Grid Padding="20">
         <Grid.RowDefinitions>
-            <!-- TODO: shouldn't need to hard-code a height here, but XF squashes our buttons if we don't (last checked v2.0.0) -->
-            <RowDefinition Height="150"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -21,18 +20,22 @@
         <StackLayout
             Orientation="Horizontal"
             HorizontalOptions="Center"
-            Spacing="-20">
+            Spacing="-10">
             <controls:ControlButton
                 x:Name="skipBackwardButton"
-                ImageSource="SkipBackward"
-                IsEnabled="True"/>
+                Source="SkipBackward"/>
+            <!--
+            hard-coded dimensions here are for Android's sake, because during the transition between images, it might
+            re-layout, which will briefly collapse to zero space without hard-coded dimensions
+            -->
             <controls:ControlButton
                 x:Name="playbackButton"
-                ImageSource="Play"/>
+                Source="Play"
+                WidthRequest="128"
+                HeightRequest="128"/>
             <controls:ControlButton
                 x:Name="skipForwardButton"
-                ImageSource="SkipForward"
-                IsEnabled="True"/>
+                Source="SkipForward"/>
         </StackLayout>
 
         <ProgressBar

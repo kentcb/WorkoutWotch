@@ -1,10 +1,8 @@
 ﻿namespace WorkoutWotch.UnitTests.Services.Logger
 {
     using System;
-    using System.Reactive.Linq;
-    using System.Reactive.Threading.Tasks;
     using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
+    using global::ReactiveUI;
     using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.Logger;
     using Xunit;
@@ -84,15 +82,13 @@
         }
 
         [Fact]
-        public async Task log_entries_ticks_for_log_calls_within_the_configured_threshold()
+        public void log_entries_ticks_for_log_calls_within_the_configured_threshold()
         {
             var sut = new LoggerService();
             var logger = sut.GetLogger("test");
-            var entriesTask = sut
+            var entries = sut
                 .Entries
-                .Take(3)
-                .ToListAsync()
-                .ToTask();
+                .CreateCollection();
 
             sut.Threshold = LogLevel.Info;
             logger.Debug("Whatever");
@@ -105,8 +101,7 @@
             logger.Debug("foo");
             logger.Error("An error message");
 
-            var entries = await entriesTask;
-
+            Assert.Equal(3, entries.Count);
             Assert.Equal("An informational message", entries[0].Message);
             Assert.Equal(LogLevel.Info, entries[0].Level);
             Assert.Equal("A warning message", entries[1].Message);
@@ -116,52 +111,44 @@
         }
 
         [Fact]
-        public async Task log_entries_can_be_formatted()
+        public void log_entries_can_be_formatted()
         {
             var sut = new LoggerService();
             var logger = sut.GetLogger("test");
-            var entryTask = sut
+            var entry = sut
                 .Entries
-                .FirstAsync()
-                .TimeoutIfTooSlow()
-                .ToTask();
+                .CreateCollection();
 
             logger.Debug("A message with a parameter: {0}", 42);
 
-            var entry = await entryTask;
-
-            Assert.Equal("A message with a parameter: 42", entry.Message);
+            Assert.Equal(1, entry.Count);
+            Assert.Equal("A message with a parameter: 42", entry[0].Message);
         }
 
         [Fact]
-        public async Task log_entries_can_contain_exception_details()
+        public void log_entries_can_contain_exception_details()
         {
             var sut = new LoggerService();
             var logger = sut.GetLogger("test");
-            var entryTask = sut
+            var entry = sut
                 .Entries
-                .FirstAsync()
-                .TimeoutIfTooSlow()
-                .ToTask();
+                .CreateCollection();
 
             logger.Debug(new InvalidOperationException("foo"), "A message with an exception and a parameter ({0}): ", 42);
 
-            var entry = await entryTask;
-
-            Assert.Equal("A message with an exception and a parameter (42): System.InvalidOperationException: foo", entry.Message);
+            Assert.Equal(1, entry.Count);
+            Assert.Equal("A message with an exception and a parameter (42): System.InvalidOperationException: foo", entry[0].Message);
         }
 
         [Fact]
-        public async Task logging_perf_is_a_noop_if_perf_level_is_disabled()
+        public void logging_perf_is_a_noop_if_perf_level_is_disabled()
         {
             var sut = new LoggerService();
             var logger = sut.GetLogger("test");
             sut.Threshold = LogLevel.Warn;
-            var entryTask = sut
+            var entry = sut
                 .Entries
-                .FirstAsync()
-                .TimeoutIfTooSlow()
-                .ToTask();
+                .CreateCollection();
 
             using (logger.Perf("This shouldn't be logged"))
             {
@@ -169,30 +156,26 @@
 
             logger.Warn("This should be logged");
 
-            var entry = await entryTask;
-
-            Assert.Equal("This should be logged", entry.Message);
+            Assert.Equal(1, entry.Count);
+            Assert.Equal("This should be logged", entry[0].Message);
         }
 
         [Fact]
-        public async Task logging_perf_adds_extra_performance_information_to_the_log_message()
+        public void logging_perf_adds_extra_performance_information_to_the_log_message()
         {
             var sut = new LoggerService();
             var logger = sut.GetLogger("test");
-            var entryTask = sut
+            var entry = sut
                 .Entries
-                .FirstAsync()
-                .TimeoutIfTooSlow()
-                .ToTask();
+                .CreateCollection();
 
             using (logger.Perf("Some performance {0}", "entry"))
             {
             }
 
-            var entry = await entryTask;
-
+            Assert.Equal(1, entry.Count);
             // Some performance entry [00:00:00.0045605 (4ms)]
-            Assert.True(Regex.IsMatch(entry.Message, @"Some performance entry \[\d\d:\d\d:\d\d\.\d*? \(\d*?ms\)\]"));
+            Assert.True(Regex.IsMatch(entry[0].Message, @"Some performance entry \[\d\d:\d\d:\d\d\.\d*? \(\d*?ms\)\]"));
         }
     }
 }

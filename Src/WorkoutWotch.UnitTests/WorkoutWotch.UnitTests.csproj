@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\xunit.runner.visualstudio.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.runner.visualstudio.props')" />
   <Import Project="..\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props" Condition="Exists('..\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -112,7 +113,6 @@
     <Compile Include="Services\State\Mocks\BlobCacheMock.cs" />
     <Compile Include="Services\State\Mocks\StateServiceMock.cs" />
     <Compile Include="Services\State\StateServiceFixture.cs" />
-    <Compile Include="System\Reactive\Linq\ObservableExtensions.cs" />
     <Compile Include="Reactive\TestSchedulerExtensions.cs" />
     <Compile Include="Reactive\TestSchedulerService.cs" />
     <Compile Include="Reactive\Testing\ColdObservable.cs" />
@@ -202,6 +202,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\Lib\ReactiveUI\net45\ReactiveUI.dll">
+      <Link>net45\ReactiveUI.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Mocks.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Mocks.g.cs</LastGenOutput>
@@ -237,6 +241,7 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -244,5 +249,6 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props'))" />
+    <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.runner.visualstudio.props'))" />
   </Target>
 </Project>

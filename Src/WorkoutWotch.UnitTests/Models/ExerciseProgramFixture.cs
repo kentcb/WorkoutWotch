@@ -3,7 +3,6 @@
     using System;
     using System.Linq;
     using System.Reactive.Linq;
-    using System.Threading.Tasks;
     using Builders;
     using Kent.Boogaart.PCLMock;
     using WorkoutWotch.Models;
@@ -105,16 +104,16 @@
         }
 
         [Fact]
-        public async Task execute_async_throws_if_the_context_is_null()
+        public void execute_async_throws_if_the_context_is_null()
         {
             var sut = new ExerciseProgramBuilder()
                 .Build();
 
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
+            Assert.Throws<ArgumentNullException>(() => sut.ExecuteAsync(null));
         }
 
         [Fact]
-        public async Task execute_async_executes_each_exercise()
+        public void execute_async_executes_each_exercise()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
             var action2 = new ActionMock(MockBehavior.Loose);
@@ -128,7 +127,7 @@
 
             using (var executionContext = new ExecutionContext())
             {
-                await sut.ExecuteAsync(executionContext);
+                sut.ExecuteAsync(executionContext);
 
                 action1
                     .Verify(x => x.ExecuteAsync(executionContext))
@@ -141,7 +140,7 @@
         }
 
         [Fact]
-        public async Task execute_async_skips_exercises_that_are_shorter_than_the_skip_ahead()
+        public void execute_async_skips_exercises_that_are_shorter_than_the_skip_ahead()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
             var action2 = new ActionMock(MockBehavior.Loose);
@@ -178,7 +177,7 @@
 
             using (var executionContext = new ExecutionContext(TimeSpan.FromSeconds(23)))
             {
-                await sut.ExecuteAsync(executionContext);
+                sut.ExecuteAsync(executionContext);
 
                 action3
                     .Verify(x => x.ExecuteAsync(executionContext))

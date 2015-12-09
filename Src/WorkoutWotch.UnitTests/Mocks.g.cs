@@ -420,9 +420,9 @@ namespace WorkoutWotch.UnitTests.Services.Audio.Mocks
         }
 
         partial void ConfigureLooseBehavior();
-        public global::System.IObservable<global::System.Reactive.Unit> PlayAsync(System.String resourceUri)
+        public global::System.IObservable<global::System.Reactive.Unit> PlayAsync(System.String name)
         {
-            return this.Apply(x => x.PlayAsync(resourceUri));
+            return this.Apply(x => x.PlayAsync(name));
         }
     }
 }

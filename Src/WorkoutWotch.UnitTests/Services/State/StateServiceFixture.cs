@@ -3,7 +3,6 @@
     using System;
     using System.Reactive;
     using System.Reactive.Linq;
-    using System.Threading.Tasks;
     using Builders;
     using Kent.Boogaart.PCLMock;
     using WorkoutWotch.Services.State;
@@ -26,12 +25,12 @@
         }
 
         [Fact]
-        public async Task get_async_throws_if_key_is_null()
+        public void get_async_throws_if_key_is_null()
         {
             var sut = new StateServiceBuilder()
                 .Build();
 
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.GetAsync<string>(null));
+            Assert.Throws<ArgumentNullException>(() => sut.GetAsync<string>(null));
         }
 
         [Fact]
@@ -56,12 +55,12 @@
         }
 
         [Fact]
-        public async Task set_async_throws_if_key_is_null()
+        public void set_async_throws_if_key_is_null()
         {
             var sut = new StateServiceBuilder()
                 .Build();
 
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.SetAsync<string>(null, "foo"));
+            Assert.Throws<ArgumentNullException>(() => sut.SetAsync(null, "foo"));
         }
 
         [Fact]
@@ -86,12 +85,12 @@
         }
 
         [Fact]
-        public async Task remove_async_throws_if_key_is_null()
+        public void remove_async_throws_if_key_is_null()
         {
             var sut = new StateServiceBuilder()
                 .Build();
 
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.RemoveAsync<string>(null));
+            Assert.Throws<ArgumentNullException>(() => sut.RemoveAsync<string>(null));
         }
 
         [Fact]
@@ -116,23 +115,35 @@
         }
 
         [Fact]
-        public async Task save_async_executes_all_tasks_returned_by_saved_callbacks()
+        public void save_async_executes_all_tasks_returned_by_saved_callbacks()
         {
             var sut = new StateServiceBuilder()
                 .Build();
             var firstExecuted = false;
             var secondExecuted = false;
-            sut.RegisterSaveCallback(_ => Observable.Start(() => firstExecuted = true).Select(__ => Unit.Default));
-            sut.RegisterSaveCallback(_ => Observable.Start(() => secondExecuted = true).Select(__ => Unit.Default));
+            sut
+                .RegisterSaveCallback(
+                    _ =>
+                    {
+                        firstExecuted = true;
+                        return Observable.Return(Unit.Default);
+                    });
+            sut
+                .RegisterSaveCallback(
+                    _ =>
+                    {
+                        secondExecuted = true;
+                        return Observable.Return(Unit.Default);
+                    });
 
-            await sut.SaveAsync();
+            sut.SaveAsync();
 
             Assert.True(firstExecuted);
             Assert.True(secondExecuted);
         }
 
         [Fact]
-        public async Task save_async_ignores_any_null_tasks_returned_by_saved_callbacks()
+        public void save_async_ignores_any_null_tasks_returned_by_saved_callbacks()
         {
             var logger = new LoggerMock(MockBehavior.Loose);
             var loggerService = new LoggerServiceMock(MockBehavior.Loose);
@@ -147,11 +158,23 @@
 
             var firstExecuted = false;
             var secondExecuted = false;
-            sut.RegisterSaveCallback(_ => Observable.Start(() => firstExecuted = true).Select(__ => Unit.Default));
+            sut
+                .RegisterSaveCallback(
+                    _ =>
+                    {
+                        firstExecuted = true;
+                        return Observable.Return(Unit.Default);
+                    });
             sut.RegisterSaveCallback(_ => null);
-            sut.RegisterSaveCallback(_ => Observable.Start(() => secondExecuted = true).Select(__ => Unit.Default));
+            sut
+                .RegisterSaveCallback(
+                    _ =>
+                    {
+                        secondExecuted = true;
+                        return Observable.Return(Unit.Default);
+                    });
 
-            await sut.SaveAsync();
+            sut.SaveAsync();
 
             Assert.True(firstExecuted);
             Assert.True(secondExecuted);
@@ -174,17 +197,17 @@
         }
 
         [Fact]
-        public async Task save_async_does_not_fail_if_a_save_callback_fails()
+        public void save_async_does_not_fail_if_a_save_callback_fails()
         {
             var sut = new StateServiceBuilder()
                 .Build();
             sut.RegisterSaveCallback(_ => Observable.Throw<Unit>(new Exception("Failed")));
 
-            await sut.SaveAsync();
+            sut.SaveAsync();
         }
 
         [Fact]
-        public async Task save_async_logs_an_error_if_a_save_callback_fails()
+        public void save_async_logs_an_error_if_a_save_callback_fails()
         {
             var logger = new LoggerMock(MockBehavior.Loose);
             var loggerService = new LoggerServiceMock(MockBehavior.Loose);
@@ -199,7 +222,7 @@
 
             sut.RegisterSaveCallback(_ => Observable.Throw<Unit>(new Exception("whatever")));
 
-            await sut.SaveAsync();
+            sut.SaveAsync();
 
             logger
                 .Verify(x => x.Error(It.IsAny<Exception>(), It.IsAny<string>(), It.IsAny<object[]>()))
@@ -207,14 +230,17 @@
         }
 
         [Fact]
-        public async Task save_async_completes_even_if_there_are_no_save_callbacks()
+        public void save_async_completes_even_if_there_are_no_save_callbacks()
         {
             var sut = new StateServiceBuilder()
                 .Build();
 
-            await sut
+            var completed = false;
+            sut
                 .SaveAsync()
-                .TimeoutIfTooSlow();
+                .Subscribe(_ => completed = true);
+
+            Assert.True(completed);
         }
 
         [Fact]
@@ -227,18 +253,31 @@
         }
 
         [Fact]
-        public async Task register_save_callback_returns_a_registration_handle_that_unregisters_the_callback_when_disposed()
+        public void register_save_callback_returns_a_registration_handle_that_unregisters_the_callback_when_disposed()
         {
             var sut = new StateServiceBuilder()
                 .Build();
             var firstExecuted = false;
             var secondExecuted = false;
-            var handle = sut.RegisterSaveCallback(_ => Observable.Start(() => firstExecuted = true).Select(__ => Unit.Default));
-            sut.RegisterSaveCallback(_ => Observable.Start(() => secondExecuted = true).Select(__ => Unit.Default));
+
+            var handle = sut
+                .RegisterSaveCallback(
+                    _ =>
+                    {
+                        firstExecuted = true;
+                        return Observable.Return(Unit.Default);
+                    });
+            sut
+                .RegisterSaveCallback(
+                    _ =>
+                    {
+                        secondExecuted = true;
+                        return Observable.Return(Unit.Default);
+                    });
 
             handle.Dispose();
 
-            await sut.SaveAsync();
+            sut.SaveAsync();
 
             Assert.False(firstExecuted);
             Assert.True(secondExecuted);

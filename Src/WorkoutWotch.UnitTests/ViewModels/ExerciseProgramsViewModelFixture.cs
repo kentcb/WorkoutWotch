@@ -444,7 +444,7 @@
         }
 
         [Fact]
-        public async Task selected_program_resets_to_null_when_returning_to_exercise_programs_view_model()
+        public void selected_program_resets_to_null_when_returning_to_exercise_programs_view_model()
         {
             var sut = new ExerciseProgramsViewModelBuilder()
                 .Build();
@@ -456,7 +456,7 @@
                 .NavigationStack
                 .Add(sut);
 
-            await sut
+            sut
                 .HostScreen
                 .Router
                 .NavigateBack

@@ -8,12 +8,12 @@
     internal sealed class AudioActionBuilder
     {
         private IAudioService audioService;
-        private string audioResourceUri;
+        private string audioName;
 
         public AudioActionBuilder()
         {
             this.audioService = new AudioServiceMock(MockBehavior.Loose);
-            this.audioResourceUri = "uri";
+            this.audioName = "name";
         }
 
         public AudioActionBuilder WithAudioService(IAudioService audioService)
@@ -22,16 +22,16 @@
             return this;
         }
 
-        public AudioActionBuilder WithAudioResourceUri(string audioResourceUri)
+        public AudioActionBuilder WithAudioName(string audioName)
         {
-            this.audioResourceUri = audioResourceUri;
+            this.audioName = audioName;
             return this;
         }
 
         public AudioAction Build() =>
             new AudioAction(
                 this.audioService,
-                this.audioResourceUri);
+                this.audioName);
 
         public static implicit operator AudioAction(AudioActionBuilder builder) =>
             builder.Build();

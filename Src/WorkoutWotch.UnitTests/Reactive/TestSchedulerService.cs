@@ -59,17 +59,6 @@
 
         public IScheduler TaskPoolScheduler => this.taskPoolScheduler;
 
-        public IDisposable Pump() =>
-            Pump(TimeSpan.FromMilliseconds(10));
-
-        // useful hack to allow tests to automatically pump any scheduled items
-        public IDisposable Pump(TimeSpan frequency) =>
-            new CompositeDisposable(
-                Observable
-                    .Timer(TimeSpan.Zero, frequency)
-                    .Subscribe(_ => this.AdvanceMinimal()),
-                Disposable.Create(() => this.Stop()));
-
         public void AdvanceUntilEmpty()
         {
             foreach (var testScheduler in this.GetTestSchedulers())
@@ -101,8 +90,8 @@
             this.AdvanceTo(dateTime.Ticks);
 
         public void AdvanceMinimal() =>
-            // not technically minimal, but advancing by a single tick doesn't always work as expected (a bug in Rx?)
-            this.AdvanceBy(TimeSpan.FromMilliseconds(1));
+            // not technically minimal, but advancing by only one or a few ticks doesn't always work as expected (a bug in Rx?)
+            this.AdvanceBy(10);
 
         public void Stop()
         {

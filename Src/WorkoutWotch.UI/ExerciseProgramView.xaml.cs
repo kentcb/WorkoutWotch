@@ -5,8 +5,9 @@
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Reactive.Threading.Tasks;
-    using ReactiveUI;
-    using ReactiveUI.XamForms;
+    using Controls;
+    using global::ReactiveUI;
+    using global::ReactiveUI.XamForms;
     using WorkoutWotch.ViewModels;
     using Xamarin.Forms;
 
@@ -42,34 +43,33 @@
                                 x => x.ViewModel.IsPauseVisible,
                                 x => x.ViewModel.IsResumeVisible,
                                 (isStartVisible, isPauseVisible, isResumeVisible) => isPauseVisible ? "Pause" : "Play")
-                            .Subscribe(imageName => this.playbackButton.ImageSource = new FileImageSource { File = imageName })
+                            .Subscribe(imageName => this.playbackButton.Source = new FileImageSource { File = imageName })
                             .AddTo(disposables);
 
                         this
-                            .skipBackwardButton
-                            .Events()
-                            .Clicked
+                            .WhenAnyObservable(x => x.ViewModel.SkipBackwardsCommand.IsExecuting)
+                            .Where(isExecuting => isExecuting)
                             .SelectMany(_ => this.AnimateButtonAsync(this.skipBackwardButton))
                             .Subscribe()
                             .AddTo(disposables);
                         this
                             .playbackButton
+                            .TapGestureRecognizer
                             .Events()
-                            .Clicked
+                            .Tapped
                             .SelectMany(_ => this.AnimateButtonAsync(this.playbackButton))
                             .Subscribe()
                             .AddTo(disposables);
                         this
-                            .skipForwardButton
-                            .Events()
-                            .Clicked
+                            .WhenAnyObservable(x => x.ViewModel.SkipForwardsCommand.IsExecuting)
+                            .Where(isExecuting => isExecuting)
                             .SelectMany(_ => this.AnimateButtonAsync(this.skipForwardButton))
                             .Subscribe()
                             .AddTo(disposables);
                     });
         }
 
-        private IObservable<Unit> AnimateButtonAsync(Button button) =>
+        private IObservable<Unit> AnimateButtonAsync(ControlButton button) =>
             button
                 .ScaleTo(0.95, 100, Easing.CubicOut)
                 .ToObservable()

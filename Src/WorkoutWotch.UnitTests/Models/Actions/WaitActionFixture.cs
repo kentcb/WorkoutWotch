@@ -1,9 +1,9 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Actions
 {
     using System;
+    using System.Linq;
     using System.Reactive;
     using System.Reactive.Linq;
-    using System.Reactive.Threading.Tasks;
     using System.Threading;
     using System.Threading.Tasks;
     using Builders;
@@ -43,12 +43,12 @@
         }
 
         [Fact]
-        public async Task execute_async_throws_if_context_is_null()
+        public void execute_async_throws_if_context_is_null()
         {
             var sut = new WaitActionBuilder()
                 .Build();
 
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
+            Assert.Throws<ArgumentNullException>(() => sut.ExecuteAsync(null));
         }
 
         [Theory]
@@ -56,7 +56,7 @@
         [InlineData(100)]
         [InlineData(1000)]
         [InlineData(23498)]
-        public async Task execute_async_breaks_for_the_specified_delay(int delayInMs)
+        public void execute_async_breaks_for_the_specified_delay(int delayInMs)
         {
             var delayService = new DelayServiceMock();
             var totalDelay = TimeSpan.Zero;
@@ -71,7 +71,7 @@
                 .WithDelay(TimeSpan.FromMilliseconds(delayInMs))
                 .Build();
 
-            await sut.ExecuteAsync(new ExecutionContext());
+            sut.ExecuteAsync(new ExecutionContext());
 
             Assert.Equal(TimeSpan.FromMilliseconds(delayInMs), totalDelay);
         }
@@ -80,7 +80,7 @@
         [InlineData(850, 800, 50)]
         [InlineData(850, 849, 1)]
         [InlineData(3478, 2921, 557)]
-        public async Task execute_async_skips_ahead_if_the_context_has_skip_ahead(int delayInMs, int skipInMs, int expectedDelayInMs)
+        public void execute_async_skips_ahead_if_the_context_has_skip_ahead(int delayInMs, int skipInMs, int expectedDelayInMs)
         {
             var delayService = new DelayServiceMock();
             var totalDelay = TimeSpan.Zero;
@@ -95,7 +95,7 @@
                 .WithDelay(TimeSpan.FromMilliseconds(delayInMs))
                 .Build();
 
-            await sut.ExecuteAsync(new ExecutionContext(TimeSpan.FromMilliseconds(skipInMs)));
+            sut.ExecuteAsync(new ExecutionContext(TimeSpan.FromMilliseconds(skipInMs)));
 
             Assert.Equal(TimeSpan.FromMilliseconds(expectedDelayInMs), totalDelay);
         }
@@ -104,7 +104,7 @@
         [InlineData(850, 800)]
         [InlineData(850, 849)]
         [InlineData(3478, 2921)]
-        public async Task execute_async_skips_ahead_if_the_context_has_skip_ahead_even_if_the_context_is_paused(int delayInMs, int skipInMs)
+        public void execute_async_skips_ahead_if_the_context_has_skip_ahead_even_if_the_context_is_paused(int delayInMs, int skipInMs)
         {
             var delayService = new DelayServiceMock();
             var totalDelay = TimeSpan.Zero;
@@ -121,21 +121,19 @@
 
             using (var context = new ExecutionContext(TimeSpan.FromMilliseconds(skipInMs)) { IsPaused = true })
             {
-                sut
-                    .ExecuteAsync(context)
-                    .Ignore();
-
-                await context
+                var progress = context
                     .WhenAnyValue(x => x.Progress)
-                    .Where(x => x == TimeSpan.FromMilliseconds(skipInMs))
-                    .FirstAsync()
-                    .TimeoutIfTooSlow()
-                    .ToTask();
+                    .Skip(1)
+                    .CreateCollection();
+
+                sut.ExecuteAsync(context);
+
+                Assert.Equal(TimeSpan.FromMilliseconds(skipInMs), progress.First());
             }
         }
 
         [Fact]
-        public async Task execute_async_reports_progress()
+        public void execute_async_reports_progress()
         {
             var delayService = new DelayServiceMock(MockBehavior.Loose);
             var sut = new WaitActionBuilder()
@@ -147,14 +145,14 @@
             {
                 Assert.Equal(TimeSpan.Zero, context.Progress);
 
-                await sut.ExecuteAsync(context);
+                sut.ExecuteAsync(context);
 
                 Assert.Equal(TimeSpan.FromMilliseconds(50), context.Progress);
             }
         }
 
         [Fact]
-        public async Task execute_async_reports_progress_correctly_even_if_the_skip_ahead_exceeds_the_wait_duration()
+        public void execute_async_reports_progress_correctly_even_if_the_skip_ahead_exceeds_the_wait_duration()
         {
             var delayService = new DelayServiceMock(MockBehavior.Loose);
             var sut = new WaitActionBuilder()
@@ -166,14 +164,14 @@
             {
                 Assert.Equal(TimeSpan.Zero, context.Progress);
 
-                await sut.ExecuteAsync(context);
+                sut.ExecuteAsync(context);
 
                 Assert.Equal(TimeSpan.FromMilliseconds(50), context.Progress);
             }
         }
 
         [Fact]
-        public async Task execute_async_bails_out_if_context_is_cancelled()
+        public void execute_async_bails_out_if_context_is_cancelled()
         {
             var delayService = new DelayServiceMock();
             var delayCallCount = 0;
@@ -197,13 +195,17 @@
                     .WithDelay(TimeSpan.FromSeconds(50))
                     .Build();
 
-                await Assert.ThrowsAsync<TaskCanceledException>(async () => await sut.ExecuteAsync(context));
+                sut.ExecuteAsync(context);
                 Assert.True(context.IsCancelled);
+
+                delayService
+                    .Verify(x => x.DelayAsync(It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()))
+                    .WasCalledExactly(times: 3);
             }
         }
 
         [Fact]
-        public async Task execute_async_pauses_if_context_is_paused()
+        public void execute_async_pauses_if_context_is_paused()
         {
             var delayService = new DelayServiceMock();
             var delayCallCount = 0;
@@ -212,14 +214,7 @@
             {
                 delayService
                     .When(x => x.DelayAsync(It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()))
-                    .Do(
-                        () =>
-                        {
-                            if (delayCallCount++ == 2)
-                            {
-                                context.IsPaused = true;
-                            }
-                        })
+                    .Do(() => context.IsPaused = delayCallCount++ == 2)
                     .Return(Observable.Return(Unit.Default));
 
                 var sut = new WaitActionBuilder()
@@ -227,16 +222,12 @@
                     .WithDelay(TimeSpan.FromSeconds(50))
                     .Build();
 
-                await Assert.ThrowsAsync<TimeoutException>(async () => await sut.ExecuteAsync(context).Timeout(TimeSpan.FromMilliseconds(50)));
-
-                await context
-                    .WhenAnyValue(x => x.IsPaused)
-                    .Where(x => x)
-                    .FirstAsync()
-                    .TimeoutIfTooSlow()
-                    .ToTask();
+                sut.ExecuteAsync(context);
 
                 Assert.True(context.IsPaused);
+                delayService
+                    .Verify(x => x.DelayAsync(It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()))
+                    .WasCalledExactly(times: 3);
             }
         }
     }

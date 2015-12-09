@@ -1,5 +1,6 @@
 ﻿namespace WorkoutWotch.UI
 {
+    using global::ReactiveUI;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using ReactiveUI;
     using Splat;
@@ -16,6 +17,7 @@
 
             this.RegisterViews(splatLocator);
             this.RegisterScreen(splatLocator, compositionRoot);
+            this.RegisterCommandBinders(splatLocator, compositionRoot);
             this.RegisterPlatformComponents(splatLocator, compositionRoot);
         }
 
@@ -27,6 +29,9 @@
 
         private void RegisterScreen(IMutableDependencyResolver splatLocator, CompositionRoot compositionRoot) =>
             splatLocator.RegisterConstant(compositionRoot.ResolveMainViewModel(), typeof(IScreen));
+
+        private void RegisterCommandBinders(IMutableDependencyResolver splatLocator, CompositionRoot compositionRoot) =>
+            splatLocator.RegisterConstant(new ControlButtonCommandBinder(), typeof(ICreatesCommandBinding));
 
         protected abstract void RegisterPlatformComponents(IMutableDependencyResolver splatLocator, CompositionRoot compositionRoot);
     }

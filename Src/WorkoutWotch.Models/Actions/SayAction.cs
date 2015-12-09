@@ -3,6 +3,7 @@
     using System;
     using System.Reactive;
     using System.Reactive.Linq;
+    using System.Threading;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using WorkoutWotch.Services.Contracts.Speech;
 
@@ -32,7 +33,8 @@
             return context
                 .WaitWhilePausedAsync()
                 .SelectMany(_ => this.speechService.SpeakAsync(this.speechText, context.CancellationToken))
-                .FirstAsync();
+                .FirstAsync()
+                .RunAsync(CancellationToken.None);
         }
     }
 }

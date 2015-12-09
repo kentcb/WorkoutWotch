@@ -9,15 +9,15 @@
     public sealed class AudioAction : IAction
     {
         private readonly IAudioService audioService;
-        private readonly string audioResourceUri;
+        private readonly string audioName;
 
-        public AudioAction(IAudioService audioService, string audioResourceUri)
+        public AudioAction(IAudioService audioService, string audioName)
         {
             audioService.AssertNotNull(nameof(audioService));
-            audioResourceUri.AssertNotNull(nameof(audioResourceUri));
+            audioName.AssertNotNull(nameof(audioName));
 
             this.audioService = audioService;
-            this.audioResourceUri = audioResourceUri;
+            this.audioName = audioName;
         }
 
         public TimeSpan Duration => TimeSpan.Zero;
@@ -29,7 +29,7 @@
 
             return context
                 .WaitWhilePausedAsync()
-                .SelectMany(_ => this.audioService.PlayAsync(this.audioResourceUri))
+                .SelectMany(_ => this.audioService.PlayAsync(this.audioName))
                 .FirstAsync()
                 .RunAsync(context.CancellationToken);
         }

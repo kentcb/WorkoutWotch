@@ -36,6 +36,7 @@
     </Compile>
     <Compile Include="DisposableBase.cs" />
     <Compile Include="ReactiveUI\WhenActivatedExtensions.cs" />
+    <Compile Include="System\Reactive\Disposables\SerialDisposable.cs" />
     <Compile Include="System\Reactive\Linq\ObservableExtensions.cs" />
     <Compile Include="System\Threading\Tasks\TaskExtensions.cs" />
     <Compile Include="DisposableReactiveObject.cs" />

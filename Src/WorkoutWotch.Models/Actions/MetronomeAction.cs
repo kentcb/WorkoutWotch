@@ -47,10 +47,10 @@
                 switch (tick.Type)
                 {
                     case MetronomeTickType.Click:
-                        yield return new DoNotAwaitAction(loggerService, new AudioAction(audioService, "Audio/MetronomeClick.mp3"));
+                        yield return new DoNotAwaitAction(loggerService, new AudioAction(audioService, "MetronomeClick"));
                         break;
                     case MetronomeTickType.Bell:
-                        yield return new DoNotAwaitAction(loggerService, new AudioAction(audioService, "Audio/MetronomeBell.mp3"));
+                        yield return new DoNotAwaitAction(loggerService, new AudioAction(audioService, "MetronomeBell"));
                         break;
                 }
             }

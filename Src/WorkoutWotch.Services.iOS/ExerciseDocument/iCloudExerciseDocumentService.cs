@@ -7,6 +7,7 @@ namespace WorkoutWotch.Services.iOS.ExerciseDocument
     using System.Threading.Tasks;
     using Foundation;
     using Kent.Boogaart.HelperTrinity.Extensions;
+    using Services.ExerciseDocument;
     using UIKit;
     using WorkoutWotch.Services.Contracts.ExerciseDocument;
     using WorkoutWotch.Services.Contracts.Logger;
@@ -207,7 +208,7 @@ namespace WorkoutWotch.Services.iOS.ExerciseDocument
 
         private static string GetDefaultExerciseDocument()
         {
-            using (var stream = typeof(iCloudExerciseDocumentService).Assembly.GetManifestResourceStream("WorkoutWotch.Services.iOS.ExerciseDocument.DefaultExerciseDocument.mkd"))
+            using (var stream = typeof(CannedExerciseDocumentService).Assembly.GetManifestResourceStream("WorkoutWotch.Services.ExerciseDocument.DefaultExerciseDocument.mkd"))
             using (var streamReader = new StreamReader(stream))
             {
                 return streamReader.ReadToEnd();

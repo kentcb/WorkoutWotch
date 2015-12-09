@@ -3,42 +3,34 @@
 
 # What is it?
 
-Workout Wotch is a mobile application (currently iOS only, but the vast majority of the code is platform-agnostic) that allows users to have their exercise programs dictated to them. It alleviates them of the need to count sets and reps, and can provide them with timing information for exercises that require a certain tempo.
+Workout Wotch is a mobile application (iOS and Android, with the vast majority of the code platform-agnostic) that allows users to have their exercise programs dictated to them. It alleviates them of the need to count sets and reps, and can provide them with timing information for exercises that require a certain tempo.
 
-Workout Wotch provides two screens. The first allows users to select an exercise program:
+Workout Wotch provides two screens. The first allows users to select an exercise program, and the second allows the user to control the playback of an exercise program:
 
-![Exercise Programs](Art/ExercisePrograms.png "Exercise Programs")
+![Animation](Art/Animation.gif "Animation")
 
-Once an exercise program has been selected, a second screen is displayed, which allows the user to control the playback of the exercise program:
-
-![Exercise Program](Art/ExerciseProgram.png "Exercise Program")
-
-No ability to edit exercise programs is provided within the app. Instead, changes can be made outside the app by editing a text file in iCloud. Once saved, the app will automatically refresh with the changes made. See below for more details.
+No ability to edit exercise programs is provided within the app. Instead, changes can be made outside the app by editing a text file. Once saved, the app will automatically refresh with the changes made. See below for details.
 
 
 # How do I use it?
 
-First, you will need to clone and build the code. Once built, you have a choice to make: whether to run with, or without, iCloud integration.
+First, you will need to clone and build the code. Once built, you have a choice to make: whether to run with, or without, cloud integration.
 
-**IMPORTANT**: regardless of whether you run with iCloud or not, you will want to run on an actual device rather than the simulator because speech synthesis is not currently supported in the simulator.
+## Running without Cloud Integration
 
-## Running without iCloud Integration
+Running without cloud integration can save you some setup hassle for iOS, but does not give you the ability to dynamically modify your exercise documents. Instead, the exercise documents available in the application will come from a "hard-coded" file.
 
-Running without iCloud integration saves you the hassle of setting up provisioning and entitlements, but does not give you the ability to dynamically modify your exercise documents. Instead, the exercise documents available in the application will come from a "hard-coded" file.
+To run without cloud integration, enable the `CannedExerciseDocumentService` by opening the *AndroidCompositionRoot.cs* or *iOSCompositionRoot.cs* file depending on your platform. Ensure the indicated line is uncommented.
 
-To run without iCloud integration, enable the `CannedExerciseDocumentService` by opening the *AppDelegate.Registrations.cs* file in the *WorkoutWotch.UI.iOS* project and uncommenting the indicated line:
+If you want to make changes to the exercise document, you'll need to modify the *DefaultExerciseDocument.mkd* file in the *WorkoutWotch.Services* project. See [writing exercise programs](Doc/writing-exercise-programs.md) for details on the syntax of the document.
 
-```C#
-// uncomment this if you want return a "canned" exercise document that can only be changed in code
-// this is useful if you don't want to have to set up iCloud integration
-container.Register<IExerciseDocumentService, CannedExerciseDocumentService>();
-```
+## Running with Google Drive Integration
 
-If you want to make changes to the exercise document, you'll need to modify the *DefaultExerciseDocument.mkd* file in the *WorkoutWotch.Services.iOS* project. See [writing exercise programs](Doc/writing-exercise-programs.md) for details on the syntax of the document.
+Running with Google Drive integration should be a straightforward affair. Simply edit the *AndroidCompositionRoot.cs* file and follow the comments. If it doesn't exist already, Workout Wotch will create a file named *Workout Wotch Exercise Programs.mkd* in the root of your Google Drive. See [writing exercise programs](Doc/writing-exercise-programs.md) for details on the syntax of the document.
 
 ## Running with iCloud Integration
 
-If you decide you want the "full Workout Wotch experience", you'll need to follow these steps to appease the Apple gods. If you prefer, you can [follow the instructions in my video](http://www.youtube.com/watch?v=I_jherfsRKk&t=22m30s) instead.
+If you decide you want the "full Workout Wotch experience" with iOS, you'll need to follow these steps to appease the Apple gods. If you prefer, you can [follow the instructions in my video](http://www.youtube.com/watch?v=I_jherfsRKk&t=22m30s) instead.
 
 1. Log onto the [apple developer portal](https://developer.apple.com/account/) and click on **Certificates** (or any of the other links down the left hand side).
 2. Click on **iCloud Containers** and create a new container called *WorkoutWotch*

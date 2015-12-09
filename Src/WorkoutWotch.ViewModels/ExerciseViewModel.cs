@@ -13,10 +13,10 @@ namespace WorkoutWotch.ViewModels
     {
         private readonly CompositeDisposable disposables;
         private readonly Exercise model;
-        private readonly ObservableAsPropertyHelper<ExecutionContext> executionContext;
-        private readonly ObservableAsPropertyHelper<TimeSpan> progressTimeSpan;
-        private readonly ObservableAsPropertyHelper<double> progress;
-        private readonly ObservableAsPropertyHelper<bool> isActive;
+        private ExecutionContext executionContext;
+        private TimeSpan progressTimeSpan;
+        private bool isActive;
+        private double progress;
 
         public ExerciseViewModel(ISchedulerService schedulerService, Exercise model, IObservable<ExecutionContext> executionContext)
         {
@@ -27,12 +27,12 @@ namespace WorkoutWotch.ViewModels
             this.disposables = new CompositeDisposable();
             this.model = model;
 
-            this.executionContext = executionContext
+            executionContext
                 .ObserveOn(schedulerService.MainScheduler)
-                .ToProperty(this, x => x.ExecutionContext)
+                .Subscribe(x => this.ExecutionContext = x)
                 .AddTo(this.disposables);
 
-            this.isActive = Observable
+            Observable
                 .CombineLatest(
                     this
                         .WhenAnyValue(x => x.ExecutionContext)
@@ -44,10 +44,10 @@ namespace WorkoutWotch.ViewModels
                         .Switch(),
                     (skip, current) => skip == TimeSpan.Zero && current == this.model)
                 .ObserveOn(schedulerService.MainScheduler)
-                .ToProperty(this, x => x.IsActive)
+                .Subscribe(x => this.IsActive = x)
                 .AddTo(this.disposables);
 
-            this.progressTimeSpan = this
+            this
                 .WhenAnyValue(x => x.ExecutionContext)
                 .Select(
                     ec =>
@@ -59,10 +59,11 @@ namespace WorkoutWotch.ViewModels
                                 .StartWith(TimeSpan.Zero))
                 .Switch()
                 .ObserveOn(schedulerService.MainScheduler)
-                .ToProperty(this, x => x.ProgressTimeSpan)
+                .Subscribe(x => this.ProgressTimeSpan = x)
                 .AddTo(this.disposables);
 
-            this.progress = this.WhenAny(
+            this
+                .WhenAny(
                     x => x.Duration,
                     x => x.ProgressTimeSpan,
                     (duration, progressTimeSpan) => progressTimeSpan.Value.TotalMilliseconds / duration.Value.TotalMilliseconds)
@@ -70,7 +71,7 @@ namespace WorkoutWotch.ViewModels
                 .Select(progressRatio => Math.Min(1d, progressRatio))
                 .Select(progressRatio => Math.Max(0d, progressRatio))
                 .ObserveOn(schedulerService.MainScheduler)
-                .ToProperty(this, x => x.Progress)
+                .Subscribe(x => this.Progress = x)
                 .AddTo(this.disposables);
         }
 
@@ -80,13 +81,29 @@ namespace WorkoutWotch.ViewModels
 
         public TimeSpan Duration => this.model.Duration;
 
-        public TimeSpan ProgressTimeSpan => this.progressTimeSpan.Value;
+        public TimeSpan ProgressTimeSpan
+        {
+            get { return this.progressTimeSpan; }
+            private set { this.RaiseAndSetIfChanged(ref this.progressTimeSpan, value); }
+        }
 
-        public double Progress => this.progress.Value;
+        public double Progress
+        {
+            get { return this.progress; }
+            private set { this.RaiseAndSetIfChanged(ref this.progress, value); }
+        }
 
-        public bool IsActive => this.isActive.Value;
+        public bool IsActive
+        {
+            get { return this.isActive; }
+            private set { this.RaiseAndSetIfChanged(ref this.isActive, value); }
+        }
 
-        private ExecutionContext ExecutionContext => this.executionContext.Value;
+        private ExecutionContext ExecutionContext
+        {
+            get { return this.executionContext; }
+            set { this.RaiseAndSetIfChanged(ref this.executionContext, value); }
+        }
 
         protected override void Dispose(bool disposing)
         {

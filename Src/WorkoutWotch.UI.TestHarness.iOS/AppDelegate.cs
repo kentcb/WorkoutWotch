@@ -1,6 +1,5 @@
 namespace WorkoutWotch.UI.TestHarness.iOS
 {
-    using System;
     using Foundation;
     using UIKit;
     using WorkoutWotch.UnitTests.Services.Logger;
@@ -16,16 +15,6 @@ namespace WorkoutWotch.UI.TestHarness.iOS
             AddExecutionAssembly(typeof(ExtensibilityPointFactory).Assembly);
 
             AddTestAssembly(typeof(LoggerServiceFixture).Assembly);
-
-            this.Writer = Console.Out;
-
-            #if false
-
-            // start running the test suites as soon as the application is loaded
-            AutoStart = true;
-            // crash the application (to ensure it's ended) and return to springboard
-            TerminateAfterExecution = true;
-            #endif
 
             return base.FinishedLaunching(app, options);
         }

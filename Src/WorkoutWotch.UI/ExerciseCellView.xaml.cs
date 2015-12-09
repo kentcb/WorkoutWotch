@@ -6,8 +6,8 @@
     using System.Reactive.Linq;
     using System.Reactive.Threading.Tasks;
     using System.Threading;
-    using ReactiveUI;
-    using ReactiveUI.XamForms;
+    using global::ReactiveUI;
+    using global::ReactiveUI.XamForms;
     using WorkoutWotch.ViewModels;
     using Xamarin.Forms;
 

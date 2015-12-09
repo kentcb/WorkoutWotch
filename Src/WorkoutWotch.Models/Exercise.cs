@@ -72,28 +72,26 @@ namespace WorkoutWotch.Models
             context.AssertNotNull(nameof(context));
 
             return Observable
-                .Create<Unit>(
-                    async observer =>
-                    {
-                        foreach (var eventWithActions in this.GetEventsWithActions(context))
-                        {
-                            foreach (var action in eventWithActions.Actions)
+                .Concat(
+                    this
+                        .GetEventsWithActions(context)
+                        .SelectMany(eventWithActions => eventWithActions.Actions.Select(action => new { Action = action, Event = eventWithActions.Event }))
+                        .Select(
+                            actionAndEvent =>
                             {
+                                var action = actionAndEvent.Action;
+                                var @event = actionAndEvent.Event;
+
                                 if (context.SkipAhead > TimeSpan.Zero && context.SkipAhead >= action.Duration)
                                 {
-                                    this.logger.Debug("Skipping action {0} for event {1} because its duration ({2}) is less than the remaining skip ahead ({3}).", action, eventWithActions.Event, action.Duration, context.SkipAhead);
+                                    this.logger.Debug("Skipping action {0} for event {1} because its duration ({2}) is less than the remaining skip ahead ({3}).", action, @event, action.Duration, context.SkipAhead);
                                     context.AddProgress(action.Duration);
-                                    continue;
+                                    return Observable.Return(Unit.Default);
                                 }
 
-                                this.logger.Debug("Executing action {0} for event {1}.", action, eventWithActions.Event);
-                                await action.ExecuteAsync(context);
-                            }
-                        }
-
-                        observer.OnNext(Unit.Default);
-                        observer.OnCompleted();
-                    })
+                                this.logger.Debug("Executing action {0} for event {1}.", action, @event);
+                                return action.ExecuteAsync(context);
+                            }))
                 .RunAsync(context.CancellationToken);
         }
 

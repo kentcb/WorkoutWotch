@@ -1,9 +1,9 @@
 ﻿namespace WorkoutWotch.UnitTests.ViewModels
 {
     using System;
+    using System.Linq;
+    using System.Reactive;
     using System.Reactive.Linq;
-    using System.Reactive.Threading.Tasks;
-    using System.Threading.Tasks;
     using Builders;
     using global::ReactiveUI;
     using Kent.Boogaart.PCLMock;
@@ -101,24 +101,22 @@
         }
 
         [Fact]
-        public async Task is_started_cycles_correctly_if_start_command_is_executed()
+        public void is_started_cycles_correctly_if_start_command_is_executed()
         {
             var scheduler = new TestSchedulerService();
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithSchedulerService(scheduler)
                 .Build();
+            scheduler.AdvanceMinimal();
 
-            var isStartedTask = sut
+            var isStarted = sut
                 .WhenAnyValue(x => x.IsStarted)
-                .Take(3)
-                .ToListAsync()
-                .ToTask();
+                .CreateCollection();
 
             sut.StartCommand.Execute(null);
             scheduler.AdvanceMinimal();
 
-            var isStarted = await isStartedTask;
-
+            Assert.Equal(3, isStarted.Count);
             Assert.False(isStarted[0]);
             Assert.True(isStarted[1]);
             Assert.False(isStarted[2]);
@@ -137,7 +135,7 @@
         }
 
         [Fact]
-        public async Task is_start_visible_cycles_correctly_if_start_command_is_executed()
+        public void is_start_visible_cycles_correctly_if_start_command_is_executed()
         {
             var scheduler = new TestSchedulerService();
             var sut = new ExerciseProgramViewModelBuilder()
@@ -145,22 +143,21 @@
                 .Build();
             scheduler.AdvanceMinimal();
 
-            var isStartVisibleTask = sut
+            var isStartVisible = sut
                 .WhenAnyValue(x => x.IsStartVisible)
-                .Take(3)
-                .ToListAsync()
-                .ToTask();
+                .CreateCollection();
 
-            using (scheduler.Pump())
-            {
-                await sut.StartCommand.ExecuteAsync();
+            sut.StartCommand.Execute(null);
+            scheduler.AdvanceMinimal();
 
-                var isStartVisible = await isStartVisibleTask;
-
-                Assert.True(isStartVisible[0]);
-                Assert.False(isStartVisible[1]);
-                Assert.True(isStartVisible[2]);
-            }
+            // TODO: the extra 2 values here appears to be due to ReactiveCommand's CanExecuteObservable implementation
+            //       try this again once ReactiveCommand is re-written
+            Assert.Equal(5, isStartVisible.Count);
+            Assert.True(isStartVisible[0]);
+            Assert.False(isStartVisible[1]);
+            Assert.True(isStartVisible[2]);
+            Assert.False(isStartVisible[3]);
+            Assert.True(isStartVisible[4]);
         }
 
         [Fact]
@@ -173,7 +170,7 @@
         }
 
         [Fact]
-        public async Task is_paused_cycles_correctly_if_pause_command_is_executed()
+        public void is_paused_cycles_correctly_if_pause_command_is_executed()
         {
             var scheduler = new TestSchedulerService();
             var sut = new ExerciseProgramViewModelBuilder()
@@ -187,27 +184,15 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            using (scheduler.Pump())
-            {
-                await sut.WhenAnyValue(x => x.IsPaused)
-                    .Where(x => !x)
-                    .FirstAsync()
-                    .TimeoutIfTooSlow();
+            Assert.False(sut.IsPaused);
 
-                sut.StartCommand.Execute(null);
+            sut.StartCommand.Execute(null);
+            scheduler.AdvanceMinimal();
+            Assert.False(sut.IsPaused);
 
-                await sut.WhenAnyValue(x => x.IsPaused)
-                    .Where(x => !x)
-                    .FirstAsync()
-                    .TimeoutIfTooSlow();
-
-                sut.PauseCommand.Execute(null);
-
-                await sut.WhenAnyValue(x => x.IsPaused)
-                    .Where(x => x)
-                    .FirstAsync()
-                    .TimeoutIfTooSlow();
-            }
+            sut.PauseCommand.Execute(null);
+            scheduler.AdvanceMinimal();
+            Assert.True(sut.IsPaused);
         }
 
         [Fact]
@@ -220,33 +205,43 @@
         }
 
         [Fact]
-        public async Task is_pause_visible_cycles_correctly_if_start_command_is_executed()
+        public void is_pause_visible_cycles_correctly_if_start_command_is_executed()
         {
             var scheduler = new TestSchedulerService();
+            var action = new ActionMock(MockBehavior.Loose);
+            action
+                .When(x => x.Duration)
+                .Return(TimeSpan.FromMinutes(1));
+            action
+                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .Return<ExecutionContext>(
+                    ec =>
+                        Observable
+                            .Return(Unit.Default)
+                            .Do(_ => { })
+                            .Delay(TimeSpan.FromMinutes(1), scheduler.DefaultScheduler)
+                            .Do(_ => ec.AddProgress(TimeSpan.FromMinutes(1))));
             var sut = new ExerciseProgramViewModelBuilder()
+                .WithModel(
+                    new ExerciseProgramBuilder()
+                        .AddExercise(
+                            new ExerciseBuilder()
+                                .WithBeforeExerciseAction(action)))
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            var isPauseVisibleTask = sut
-                .WhenAnyValue(x => x.IsPauseVisible)
-                .Take(3)
-                .ToListAsync()
-                .ToTask();
+            Assert.False(sut.IsPauseVisible);
 
-            using (scheduler.Pump())
-            {
-                sut.StartCommand.Execute(null);
+            sut.StartCommand.Execute(null);
+            scheduler.AdvanceMinimal();
+            Assert.True(sut.IsPauseVisible);
 
-                var isPauseVisible = await isPauseVisibleTask;
-
-                Assert.False(isPauseVisible[0]);
-                Assert.True(isPauseVisible[1]);
-                Assert.False(isPauseVisible[2]);
-            }
+            scheduler.AdvanceBy(TimeSpan.FromMinutes(10));
+            Assert.False(sut.IsPauseVisible);
         }
 
         [Fact]
-        public async Task is_pause_visible_cycles_correctly_if_pause_command_is_executed()
+        public void is_pause_visible_cycles_correctly_if_pause_command_is_executed()
         {
             var scheduler = new TestSchedulerService();
             var sut = new ExerciseProgramViewModelBuilder()
@@ -260,27 +255,20 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            using (scheduler.Pump())
-            {
-                await sut.WhenAnyValue(x => x.IsPauseVisible)
-                    .Where(x => !x)
-                    .FirstAsync()
-                    .TimeoutIfTooSlow();
+            var isPauseVisible = sut
+                .WhenAnyValue(x => x.IsPauseVisible)
+                .CreateCollection();
 
-                sut.StartCommand.Execute(null);
+            sut.StartCommand.Execute(null);
+            scheduler.AdvanceMinimal();
 
-                await sut.WhenAnyValue(x => x.IsPauseVisible)
-                    .Where(x => x)
-                    .FirstAsync()
-                    .TimeoutIfTooSlow();
+            sut.PauseCommand.Execute(null);
+            scheduler.AdvanceMinimal();
 
-                sut.PauseCommand.Execute(null);
-
-                await sut.WhenAnyValue(x => x.IsPauseVisible)
-                    .Where(x => !x)
-                    .FirstAsync()
-                    .TimeoutIfTooSlow();
-            }
+            Assert.Equal(3, isPauseVisible.Count);
+            Assert.False(isPauseVisible[0]);
+            Assert.True(isPauseVisible[1]);
+            Assert.False(isPauseVisible[2]);
         }
 
         [Fact]
@@ -293,7 +281,7 @@
         }
 
         [Fact]
-        public async Task is_resume_visible_cycles_correctly_if_start_command_is_executed_and_execution_is_paused()
+        public void is_resume_visible_cycles_correctly_if_start_command_is_executed_and_execution_is_paused()
         {
             var scheduler = new TestSchedulerService();
             var sut = new ExerciseProgramViewModelBuilder()
@@ -307,31 +295,23 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            using (scheduler.Pump())
-            {
-                await sut.WhenAnyValue(x => x.IsResumeVisible)
-                    .Where(x => !x)
-                    .FirstAsync()
-                    .TimeoutIfTooSlow();
+            var isResumeVisible = sut
+                .WhenAnyValue(x => x.IsResumeVisible)
+                .CreateCollection();
 
-                sut.StartCommand.Execute(null);
+            sut.StartCommand.Execute(null);
+            scheduler.AdvanceMinimal();
 
-                await sut.WhenAnyValue(x => x.IsResumeVisible)
-                    .Where(x => !x)
-                    .FirstAsync()
-                    .TimeoutIfTooSlow();
+            sut.PauseCommand.Execute(null);
+            scheduler.AdvanceMinimal();
 
-                sut.PauseCommand.Execute(null);
-
-                await sut.WhenAnyValue(x => x.IsResumeVisible)
-                    .Where(x => x)
-                    .FirstAsync()
-                    .TimeoutIfTooSlow();
-            }
+            Assert.Equal(2, isResumeVisible.Count);
+            Assert.False(isResumeVisible[0]);
+            Assert.True(isResumeVisible[1]);
         }
 
         [Fact]
-        public async Task progress_time_span_is_updated_throughout_execution()
+        public void progress_time_span_is_updated_throughout_execution()
         {
             var scheduler = new TestSchedulerService();
             var action = new ActionMock(MockBehavior.Loose);
@@ -340,14 +320,14 @@
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
-                        Observable.StartAsync(async () =>
-                        {
-                            ec.AddProgress(TimeSpan.FromSeconds(1));
-                            ec.AddProgress(TimeSpan.FromSeconds(3));
+                    {
+                        ec.AddProgress(TimeSpan.FromSeconds(1));
+                        ec.AddProgress(TimeSpan.FromSeconds(3));
 
-                            ec.IsPaused = true;
-                            await ec.WaitWhilePausedAsync();
-                        }));
+                        ec.IsPaused = true;
+
+                        return ec.WaitWhilePausedAsync();
+                    });
 
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
@@ -356,26 +336,21 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            var progressTimeSpanTask = sut
+            var progressTimeSpan = sut
                 .WhenAnyValue(x => x.ProgressTimeSpan)
-                .Take(3)
-                .ToListAsync()
-                .ToTask();
+                .CreateCollection();
 
-            using (scheduler.Pump())
-            {
-                sut.StartCommand.Execute(null);
+            sut.StartCommand.Execute(null);
+            scheduler.AdvanceMinimal();
 
-                var progressTimeSpan = await progressTimeSpanTask;
-
-                Assert.Equal(TimeSpan.Zero, progressTimeSpan[0]);
-                Assert.Equal(TimeSpan.FromSeconds(1), progressTimeSpan[1]);
-                Assert.Equal(TimeSpan.FromSeconds(4), progressTimeSpan[2]);
-            }
+            Assert.Equal(3, progressTimeSpan.Count);
+            Assert.Equal(TimeSpan.Zero, progressTimeSpan[0]);
+            Assert.Equal(TimeSpan.FromSeconds(1), progressTimeSpan[1]);
+            Assert.Equal(TimeSpan.FromSeconds(4), progressTimeSpan[2]);
         }
 
         [Fact]
-        public async Task progress_is_updated_throughout_execution()
+        public void progress_is_updated_throughout_execution()
         {
             var scheduler = new TestSchedulerService();
             var action = new ActionMock(MockBehavior.Loose);
@@ -388,14 +363,14 @@
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
-                        Observable.StartAsync(async () =>
-                        {
-                            ec.AddProgress(TimeSpan.FromSeconds(15));
-                            ec.AddProgress(TimeSpan.FromSeconds(30));
+                    {
+                        ec.AddProgress(TimeSpan.FromSeconds(15));
+                        ec.AddProgress(TimeSpan.FromSeconds(30));
 
-                            ec.IsPaused = true;
-                            await ec.WaitWhilePausedAsync();
-                        }));
+                        ec.IsPaused = true;
+
+                        return ec.WaitWhilePausedAsync();
+                    });
 
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
@@ -404,26 +379,21 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            var progressTask = sut
+            var progress = sut
                 .WhenAnyValue(x => x.Progress)
-                .Take(3)
-                .ToListAsync()
-                .ToTask();
+                .CreateCollection();
 
-            using (scheduler.Pump())
-            {
-                sut.StartCommand.Execute(null);
+            sut.StartCommand.Execute(null);
+            scheduler.AdvanceMinimal();
 
-                var progress = await progressTask;
-
-                Assert.Equal(0, progress[0]);
-                Assert.Equal(0.25, progress[1]);
-                Assert.Equal(0.75, progress[2]);
-            }
+            Assert.Equal(3, progress.Count);
+            Assert.Equal(0, progress[0]);
+            Assert.Equal(0.25, progress[1]);
+            Assert.Equal(0.75, progress[2]);
         }
 
         [Fact]
-        public async Task skip_backwards_command_is_disabled_if_on_first_exercise()
+        public void skip_backwards_command_is_disabled_if_on_first_exercise()
         {
             var scheduler = new TestSchedulerService();
             var action = new ActionMock(MockBehavior.Loose);
@@ -432,11 +402,10 @@
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
-                        Observable.StartAsync(async () =>
-                        {
-                            ec.IsPaused = true;
-                            await ec.WaitWhilePausedAsync();
-                        }));
+                    {
+                        ec.IsPaused = true;
+                        return ec.WaitWhilePausedAsync();
+                    });
 
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
@@ -445,21 +414,14 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            using (scheduler.Pump())
-            {
-                sut.StartCommand.Execute(null);
+            sut.StartCommand.Execute(null);
+            scheduler.AdvanceMinimal();
 
-                await sut.WhenAnyValue(x => x.IsPaused)
-                    .Where(x => x)
-                    .TimeoutIfTooSlow()
-                    .FirstAsync();
-
-                Assert.False(sut.SkipBackwardsCommand.CanExecute(null));
-            }
+            Assert.False(sut.SkipBackwardsCommand.CanExecute(null));
         }
 
         [Fact]
-        public async Task skip_backwards_command_is_enabled_if_sufficient_progress_has_been_made_through_first_exercise()
+        public void skip_backwards_command_is_enabled_if_sufficient_progress_has_been_made_through_first_exercise()
         {
             var scheduler = new TestSchedulerService();
             var action = new ActionMock(MockBehavior.Loose);
@@ -468,12 +430,11 @@
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
-                        Observable.StartAsync(async () =>
-                        {
-                            ec.AddProgress(TimeSpan.FromSeconds(1));
-                            ec.IsPaused = true;
-                            await ec.WaitWhilePausedAsync();
-                        }));
+                    {
+                        ec.AddProgress(TimeSpan.FromSeconds(1));
+                        ec.IsPaused = true;
+                        return ec.WaitWhilePausedAsync();
+                    });
 
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
@@ -482,19 +443,23 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            using (scheduler.Pump())
-            {
-                sut.StartCommand.Execute(null);
+            // TODO: technically, I should just check CanExecute(null) at the end, but without this subscription the RxCommand does not update CanExecute correctly
+            //       try changing this once I'm using new RxCommand
+            var canExecute = sut
+                .SkipBackwardsCommand
+                .CanExecuteObservable
+                .CreateCollection();
 
-                await sut.SkipBackwardsCommand.CanExecuteObservable
-                    .Where(x => x)
-                    .TimeoutIfTooSlow()
-                    .FirstAsync();
-            }
+            sut.StartCommand.Execute(null);
+            scheduler.AdvanceMinimal();
+
+            Assert.Equal(2, canExecute.Count);
+            Assert.False(canExecute[0]);
+            Assert.True(canExecute[1]);
         }
 
         [Fact]
-        public async Task skip_backwards_command_restarts_the_execution_context_from_the_start_of_the_current_exercise_if_sufficient_progress_has_been_made()
+        public void skip_backwards_command_restarts_the_execution_context_from_the_start_of_the_current_exercise_if_sufficient_progress_has_been_made()
         {
             var scheduler = new TestSchedulerService();
             var action = new ActionMock(MockBehavior.Loose);
@@ -503,12 +468,12 @@
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
-                        Observable.StartAsync(async () =>
-                        {
-                            ec.AddProgress(TimeSpan.FromSeconds(4));
-                            ec.IsPaused = true;
-                            await ec.WaitWhilePausedAsync();
-                        }));
+                    {
+                        ec.AddProgress(TimeSpan.FromSeconds(4));
+                        ec.IsPaused = true;
+
+                        return ec.WaitWhilePausedAsync();
+                    });
 
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
@@ -517,32 +482,24 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            var progressTask = sut.WhenAnyValue(x => x.ProgressTimeSpan)
-                .Take(3)
-                .ToListAsync()
-                .ToTask();
+            var progress = sut
+                .WhenAnyValue(x => x.ProgressTimeSpan)
+                .CreateCollection();
 
-            using (scheduler.Pump())
-            {
-                sut.StartCommand.Execute(null);
+            sut.StartCommand.Execute(null);
+            scheduler.AdvanceMinimal();
 
-                await sut.WhenAnyValue(x => x.IsPaused)
-                    .Where(x => x)
-                    .FirstAsync()
-                    .TimeoutIfTooSlow();
+            sut.SkipBackwardsCommand.Execute(null);
+            scheduler.AdvanceMinimal();
 
-                sut.SkipBackwardsCommand.Execute(null);
-
-                var progress = await progressTask;
-
-                Assert.Equal(TimeSpan.Zero, progress[0]);
-                Assert.Equal(TimeSpan.FromSeconds(4), progress[1]);
-                Assert.Equal(TimeSpan.Zero, progress[2]);
-            }
+            Assert.Equal(3, progress.Count);
+            Assert.Equal(TimeSpan.Zero, progress[0]);
+            Assert.Equal(TimeSpan.FromSeconds(4), progress[1]);
+            Assert.Equal(TimeSpan.Zero, progress[2]);
         }
 
         [Fact]
-        public async Task skip_backwards_command_restarts_the_execution_context_from_the_start_of_the_previous_exercise_if_the_current_exercise_if_only_recently_started()
+        public void skip_backwards_command_restarts_the_execution_context_from_the_start_of_the_previous_exercise_if_the_current_exercise_if_only_recently_started()
         {
             var scheduler = new TestSchedulerService();
             var action = new ActionMock();
@@ -555,12 +512,12 @@
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
-                        Observable.StartAsync(async () =>
-                        {
-                            ec.AddProgress(TimeSpan.FromSeconds(0.5));
-                            ec.IsPaused = true;
-                            await ec.WaitWhilePausedAsync();
-                        }));
+                    {
+                        ec.AddProgress(TimeSpan.FromSeconds(0.5));
+                        ec.IsPaused = true;
+
+                        return ec.WaitWhilePausedAsync();
+                    });
 
             var exercise1 = new ExerciseBuilder()
                 .WithName("Exercise 1")
@@ -579,34 +536,27 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            var progressTask = sut.WhenAnyValue(x => x.ProgressTimeSpan)
-                .Take(4)
-                .ToListAsync()
-                .ToTask();
+            var progress = sut
+                .WhenAnyValue(x => x.ProgressTimeSpan)
+                .CreateCollection();
 
-            using (scheduler.Pump())
-            {
-                // start from the second exercise
-                sut.StartCommand.Execute(exercise1.Duration);
+            // start from the second exercise
+            sut.StartCommand.Execute(exercise1.Duration);
+            scheduler.AdvanceMinimal();
 
-                await sut.WhenAnyValue(x => x.IsPaused)
-                    .Where(x => x)
-                    .TimeoutIfTooSlow()
-                    .FirstAsync();
+            sut.SkipBackwardsCommand.Execute(null);
+            scheduler.AdvanceMinimal();
 
-                sut.SkipBackwardsCommand.Execute(null);
-
-                var progress = await progressTask;
-
-                Assert.Equal(TimeSpan.Zero, progress[0]);
-                Assert.Equal(TimeSpan.FromSeconds(10), progress[1]);
-                Assert.Equal(TimeSpan.FromSeconds(10.5), progress[2]);
-                Assert.Equal(TimeSpan.Zero, progress[3]);
-            }
+            Assert.Equal(5, progress.Count);
+            Assert.Equal(TimeSpan.Zero, progress[0]);
+            Assert.Equal(TimeSpan.FromSeconds(10), progress[1]);
+            Assert.Equal(TimeSpan.FromSeconds(10.5), progress[2]);
+            Assert.Equal(TimeSpan.Zero, progress[3]);
+            Assert.Equal(TimeSpan.FromSeconds(10), progress[4]);
         }
 
         [Fact]
-        public async Task skip_forwards_command_is_disabled_if_on_last_exercise()
+        public void skip_forwards_command_is_disabled_if_on_last_exercise()
         {
             var scheduler = new TestSchedulerService();
             var action = new ActionMock();
@@ -619,11 +569,11 @@
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
-                        Observable.StartAsync(async () =>
-                        {
-                            ec.IsPaused = true;
-                            await ec.WaitWhilePausedAsync();
-                        }));
+                    {
+                        ec.IsPaused = true;
+
+                        return ec.WaitWhilePausedAsync();
+                    });
 
             var exercise1 = new ExerciseBuilder()
                 .WithName("Exercise 1")
@@ -642,26 +592,27 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            using (scheduler.Pump())
-            {
-                sut.StartCommand.Execute(null);
+            var canExecute = sut
+                .SkipForwardsCommand
+                .CanExecuteObservable
+                .CreateCollection();
 
-                await sut.WhenAnyValue(x => x.IsPaused)
-                    .Where(x => x)
-                    .TimeoutIfTooSlow()
-                    .FirstAsync();
+            sut.StartCommand.Execute(null);
+            scheduler.AdvanceMinimal();
 
-                sut.SkipForwardsCommand.Execute(null);
+            sut.SkipForwardsCommand.Execute(null);
+            scheduler.AdvanceMinimal();
 
-                await sut.SkipForwardsCommand.CanExecuteObservable
-                    .Where(x => !x)
-                    .TimeoutIfTooSlow()
-                    .FirstAsync();
-            }
+            Assert.Equal(5, canExecute.Count);
+            Assert.False(canExecute[0]);
+            Assert.True(canExecute[1]);
+            Assert.False(canExecute[2]);
+            Assert.True(canExecute[3]);
+            Assert.False(canExecute[4]);
         }
 
         [Fact]
-        public async Task skip_forwards_command_skips_to_the_next_exercise()
+        public void skip_forwards_command_skips_to_the_next_exercise()
         {
             var scheduler = new TestSchedulerService();
             var action = new ActionMock();
@@ -674,11 +625,11 @@
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
-                        Observable.StartAsync(async () =>
-                        {
-                            ec.IsPaused = true;
-                            await ec.WaitWhilePausedAsync();
-                        }));
+                    {
+                        ec.IsPaused = true;
+
+                        return ec.WaitWhilePausedAsync();
+                    });
 
             var exercise1 = new ExerciseBuilder()
                 .WithName("Exercise 1")
@@ -697,31 +648,23 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            var progressTask = sut.WhenAnyValue(x => x.ProgressTimeSpan)
-                .Take(2)
-                .ToListAsync()
-                .ToTask();
+            var progress = sut
+                .WhenAnyValue(x => x.ProgressTimeSpan)
+                .CreateCollection();
 
-            using (scheduler.Pump())
-            {
-                sut.StartCommand.Execute(null);
+            sut.StartCommand.Execute(null);
+            scheduler.AdvanceMinimal();
 
-                await sut.WhenAnyValue(x => x.IsPaused)
-                    .Where(x => x)
-                    .TimeoutIfTooSlow()
-                    .FirstAsync();
+            sut.SkipForwardsCommand.Execute(null);
+            scheduler.AdvanceMinimal();
 
-                sut.SkipForwardsCommand.Execute(null);
-
-                var progress = await progressTask;
-
-                Assert.Equal(TimeSpan.Zero, progress[0]);
-                Assert.Equal(TimeSpan.FromSeconds(10), progress[1]);
-            }
+            Assert.Equal(2, progress.Count);
+            Assert.Equal(TimeSpan.Zero, progress[0]);
+            Assert.Equal(TimeSpan.FromSeconds(10), progress[1]);
         }
 
         [Fact]
-        public async Task current_exercise_reflects_that_in_the_execution_context()
+        public void current_exercise_reflects_that_in_the_execution_context()
         {
             var scheduler = new TestSchedulerService();
             var action = new ActionMock();
@@ -734,11 +677,10 @@
                 .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
-                        Observable.StartAsync(async () =>
-                        {
-                            ec.IsPaused = true;
-                            await ec.WaitWhilePausedAsync();
-                        }));
+                    {
+                        ec.IsPaused = true;
+                        return ec.WaitWhilePausedAsync();
+                    });
 
             var exercise1 = new ExerciseBuilder()
                 .WithName("Exercise 1")
@@ -763,47 +705,23 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            var currentExercisesTask = sut.WhenAnyValue(x => x.CurrentExercise)
-                .Where(x => x != null)
-                .DistinctUntilChanged()
-                .Take(4)
-                .ToListAsync()
-                .ToTask();
+            sut.StartCommand.Execute(null);
+            scheduler.AdvanceMinimal();
+            Assert.Equal("Exercise 1", sut.CurrentExercise?.Name);
 
-            using (scheduler.Pump())
-            {
-                sut.StartCommand.Execute(null);
+            sut.SkipForwardsCommand.Execute(null);
+            scheduler.AdvanceMinimal();
+            Assert.Equal("Exercise 2", sut.CurrentExercise?.Name);
 
-                await sut.WhenAnyValue(x => x.IsPaused)
-                    .Where(x => x)
-                    .TimeoutIfTooSlow()
-                    .FirstAsync();
+            sut.SkipForwardsCommand.Execute(null);
+            scheduler.AdvanceMinimal();
+            Assert.Equal("Exercise 3", sut.CurrentExercise?.Name);
 
-                sut.SkipForwardsCommand.Execute(null);
-
-                await sut.SkipForwardsCommand.IsExecuting
-                    .Where(x => !x)
-                    .TimeoutIfTooSlow()
-                    .FirstAsync();
-
-                sut.SkipForwardsCommand.Execute(null);
-
-                await sut.SkipForwardsCommand.IsExecuting
-                    .Where(x => !x)
-                    .TimeoutIfTooSlow()
-                    .FirstAsync();
-
-                sut.SkipBackwardsCommand.Execute(null);
-
-                var currentExercises = await currentExercisesTask;
-
-                Assert.Equal("Exercise 1", currentExercises[0].Name);
-                Assert.Equal("Exercise 2", currentExercises[1].Name);
-                Assert.Equal("Exercise 3", currentExercises[2].Name);
-                Assert.Equal("Exercise 2", currentExercises[3].Name);
-            }
+            sut.SkipBackwardsCommand.Execute(null);
+            scheduler.AdvanceMinimal();
+            Assert.Equal("Exercise 2", sut.CurrentExercise?.Name);
         }
-
+        
         [Fact]
         public void execution_context_is_cancelled_if_user_navigates_away()
         {

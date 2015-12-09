@@ -2,6 +2,7 @@
 {
     using System;
     using System.Reactive;
+    using System.Reactive.Concurrency;
     using System.Reactive.Linq;
     using Kent.Boogaart.HelperTrinity.Extensions;
     using WorkoutWotch.Services.Contracts.Delay;
@@ -40,31 +41,44 @@
                 context.AddProgress(skipAhead);
             }
 
-            return Observable
-                .Create<Unit>(
-                    async observer =>
+            var remaining = Observable
+                .Generate(
+                    remainingDelay,
+                    r => r > TimeSpan.Zero,
+                    r =>
                     {
-                        while (remainingDelay > TimeSpan.Zero)
-                        {
-                            context.CancellationToken.ThrowIfCancellationRequested();
-
-                            await context
-                                .WaitWhilePausedAsync();
-
-                            var delayFor = MathExt.Min(remainingDelay, maximumDelayTime);
-
-                            await this
-                                .delayService
-                                .DelayAsync(delayFor, context.CancellationToken);
-
-                            remainingDelay -= delayFor;
-                            context.AddProgress(delayFor);
-                        }
-
-                        observer.OnNext(Unit.Default);
-                        observer.OnCompleted();
-                    })
+                        var delayFor = MathExt.Min(remainingDelay, maximumDelayTime);
+                        return r - delayFor;
+                    },
+                    r => r)
+                .Publish();
+            var nextRemaining = remaining
+                .Skip(1)
+                .Concat(Observable.Return(TimeSpan.Zero));
+            var delays = remaining
+                .Zip(
+                    nextRemaining,
+                    (current, next) => current - next);
+            var result = Observable
+                .Concat(
+                    delays
+                        .SelectMany(delay => context.WaitWhilePausedAsync().Select(_ => delay))
+                        .Select(
+                            delay =>
+                                Observable
+                                    .Defer(
+                                        () =>
+                                            this
+                                                .delayService
+                                                .DelayAsync(delay, context.CancellationToken)
+                                                .Select(_ => delay))))
+                .Do(delay => context.AddProgress(delay))
+                .Select(_ => Unit.Default)
                 .RunAsync(context.CancellationToken);
+
+            remaining.Connect();
+
+            return result;
         }
     }
 }

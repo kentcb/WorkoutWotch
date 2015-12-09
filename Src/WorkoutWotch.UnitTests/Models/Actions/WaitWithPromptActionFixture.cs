@@ -5,7 +5,6 @@
     using System.Reactive;
     using System.Reactive.Linq;
     using System.Threading;
-    using System.Threading.Tasks;
     using Builders;
     using Kent.Boogaart.PCLMock;
     using WorkoutWotch.Models;
@@ -55,16 +54,16 @@
         }
 
         [Fact]
-        public async Task execute_async_throws_if_the_context_is_null()
+        public void execute_async_throws_if_the_context_is_null()
         {
             var sut = new WaitWithPromptActionBuilder()
                 .Build();
 
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
+            Assert.Throws<ArgumentNullException>(() => sut.ExecuteAsync(null));
         }
 
         [Fact]
-        public async Task execute_async_composes_actions_appropriately_for_long_durations()
+        public void execute_async_composes_actions_appropriately_for_long_durations()
         {
             var delayService = new DelayServiceMock();
             var speechService = new SpeechServiceMock();
@@ -87,7 +86,7 @@
                 .WithPromptSpeechText("break")
                 .Build();
 
-            await sut.ExecuteAsync(new ExecutionContext());
+            sut.ExecuteAsync(new ExecutionContext());
 
             Assert.Equal(7, performedActions.Count);
             Assert.Equal("Saying 'break'", performedActions[0]);
@@ -100,7 +99,7 @@
         }
 
         [Fact]
-        public async Task execute_async_composes_actions_appropriately_for_short_durations()
+        public void execute_async_composes_actions_appropriately_for_short_durations()
         {
             var delayService = new DelayServiceMock();
             var speechService = new SpeechServiceMock();
@@ -123,7 +122,7 @@
                 .WithPromptSpeechText("break")
                 .Build();
 
-            await sut.ExecuteAsync(new ExecutionContext());
+            sut.ExecuteAsync(new ExecutionContext());
 
             Assert.Equal(2, performedActions.Count);
             Assert.Equal("Saying 'break'", performedActions[0]);
@@ -134,7 +133,7 @@
         [InlineData("hello")]
         [InlineData("hello world")]
         [InlineData("goodbye")]
-        public async Task execute_async_uses_the_specified_prompt_speech_text(string promptSpeechText)
+        public void execute_async_uses_the_specified_prompt_speech_text(string promptSpeechText)
         {
             var speechService = new SpeechServiceMock(MockBehavior.Loose);
 
@@ -144,7 +143,7 @@
                 .WithPromptSpeechText(promptSpeechText)
                 .Build();
 
-            await sut.ExecuteAsync(new ExecutionContext());
+            sut.ExecuteAsync(new ExecutionContext());
 
             speechService
                 .Verify(x => x.SpeakAsync(promptSpeechText, It.IsAny<CancellationToken>()))

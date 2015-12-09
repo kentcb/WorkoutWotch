@@ -34,27 +34,32 @@ namespace WorkoutWotch.Models
             this.progressDeltas = new Subject<TimeSpan>()
                 .AddTo(this.disposables);
 
-            this.cancelRequested
+            this
+                .cancelRequested
                 .Subscribe(_ => this.IsCancelled = true)
                 .AddTo(this.disposables);
 
-            this.WhenAnyValue(x => x.IsCancelled)
+            this
+                .WhenAnyValue(x => x.IsCancelled)
                 .Where(x => x)
                 .Subscribe(_ => this.cancellationTokenSource.Cancel())
                 .AddTo(this.disposables);
 
-            this.progressDeltas
+            this
+                .progressDeltas
                 .Scan((running, next) => running + next)
                 .Subscribe(x => this.Progress = x)
                 .AddTo(this.disposables);
 
-            this.WhenAnyValue(x => x.CurrentExercise)
+            this
+                .WhenAnyValue(x => x.CurrentExercise)
                 .Select(x => this.progressDeltas.StartWith(TimeSpan.Zero).Scan((running, next) => running + next))
                 .Switch()
                 .Subscribe(x => this.CurrentExerciseProgress = x)
                 .AddTo(this.disposables);
 
-            this.progressDeltas
+            this
+                .progressDeltas
                 .StartWith(skipAhead)
                 .Scan((running, next) => running - next)
                 .Select(x => x < TimeSpan.Zero ? TimeSpan.Zero : x)

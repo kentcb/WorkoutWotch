@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<resources>
+    <style name="Splash" parent="android:Theme">
+        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+    
+    <style name="Theme" parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/Theme.ActionBarStyle</item>
+    </style>
+
+    <!--
+    simply declaring and assigning this style is enough to ensure that there is some padding
+    between the icon and the title in the action bar. Seriously, Android?
+    -->
+    <style name="Theme.ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar">
+    </style>
+</resources>

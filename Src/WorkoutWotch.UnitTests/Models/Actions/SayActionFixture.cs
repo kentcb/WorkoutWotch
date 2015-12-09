@@ -1,10 +1,7 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Actions
 {
     using System;
-    using System.Reactive;
-    using System.Reactive.Linq;
     using System.Threading;
-    using System.Threading.Tasks;
     using Builders;
     using Kent.Boogaart.PCLMock;
     using WorkoutWotch.Models;
@@ -36,16 +33,16 @@
         }
 
         [Fact]
-        public async Task execute_async_throws_if_context_is_null()
+        public void execute_async_throws_if_context_is_null()
         {
             var sut = new SayActionBuilder()
                 .Build();
 
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
+            Assert.Throws<ArgumentNullException>(() => sut.ExecuteAsync(null));
         }
 
         [Fact]
-        public async Task execute_async_cancels_if_context_is_cancelled()
+        public void execute_async_cancels_if_context_is_cancelled()
         {
             var sut = new SayActionBuilder()
                 .Build();
@@ -54,12 +51,12 @@
             {
                 context.Cancel();
 
-                await Assert.ThrowsAsync<OperationCanceledException>(async () => await sut.ExecuteAsync(context));
+                Assert.Throws<OperationCanceledException>(() => sut.ExecuteAsync(context));
             }
         }
 
         [Fact]
-        public async Task execute_async_pauses_if_context_is_paused()
+        public void execute_async_pauses_if_context_is_paused()
         {
             var speechService = new SpeechServiceMock(MockBehavior.Loose);
             var sut = new SayActionBuilder()
@@ -70,10 +67,7 @@
             {
                 context.IsPaused = true;
 
-                await sut
-                    .ExecuteAsync(context)
-                    .Timeout(TimeSpan.FromMilliseconds(10))
-                    .Catch(Observable.Return(Unit.Default));
+                sut.ExecuteAsync(context);
 
                 speechService
                     .Verify(x => x.SpeakAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
@@ -85,7 +79,7 @@
         [InlineData("hello")]
         [InlineData("hello, world")]
         [InlineData("you've got nothing to say. nothing but the one thing.")]
-        public async Task execute_async_passes_the_speech_text_onto_the_speech_service(string speechText)
+        public void execute_async_passes_the_speech_text_onto_the_speech_service(string speechText)
         {
             var speechService = new SpeechServiceMock(MockBehavior.Loose);
             var sut = new SayActionBuilder()
@@ -93,7 +87,7 @@
                 .WithSpeechText(speechText)
                 .Build();
 
-            await sut.ExecuteAsync(new ExecutionContext());
+            sut.ExecuteAsync(new ExecutionContext());
 
             speechService
                 .Verify(x => x.SpeakAsync(speechText, It.IsAny<CancellationToken>()))

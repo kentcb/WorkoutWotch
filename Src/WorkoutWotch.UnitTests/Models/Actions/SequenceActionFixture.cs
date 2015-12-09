@@ -5,7 +5,6 @@
     using System.Reactive;
     using System.Reactive.Linq;
     using System.Threading;
-    using System.Threading.Tasks;
     using Builders;
     using Kent.Boogaart.PCLMock;
     using WorkoutWotch.Models;
@@ -65,16 +64,16 @@
         }
 
         [Fact]
-        public async Task execute_async_throws_if_context_is_null()
+        public void execute_async_throws_if_context_is_null()
         {
             var sut = new SequenceActionBuilder()
                 .Build();
 
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
+            Assert.Throws<ArgumentNullException>(() => sut.ExecuteAsync(null));
         }
 
         [Fact]
-        public async Task execute_async_executes_each_child_action()
+        public void execute_async_executes_each_child_action()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
             var action2 = new ActionMock(MockBehavior.Loose);
@@ -87,7 +86,7 @@
 
             using (var context = new ExecutionContext())
             {
-                await sut.ExecuteAsync(context);
+                sut.ExecuteAsync(context);
 
                 action1
                     .Verify(x => x.ExecuteAsync(context))
@@ -104,7 +103,7 @@
         }
 
         [Fact]
-        public async Task execute_async_executes_each_child_action_in_order()
+        public void execute_async_executes_each_child_action_in_order()
         {
             var childCount = 10;
             var childExecutionOrder = new int[childCount];
@@ -129,7 +128,7 @@
 
             using (var context = new ExecutionContext())
             {
-                await sut.ExecuteAsync(context);
+                sut.ExecuteAsync(context);
 
                 for (var i = 0; i < childExecutionOrder.Length; ++i)
                 {
@@ -139,7 +138,7 @@
         }
 
         [Fact]
-        public async Task execute_async_skips_child_actions_that_are_shorter_than_the_skip_ahead()
+        public void execute_async_skips_child_actions_that_are_shorter_than_the_skip_ahead()
         {
             var action1 = new ActionMock();
             var action2 = new ActionMock();
@@ -173,7 +172,7 @@
 
             using (var context = new ExecutionContext(TimeSpan.FromSeconds(11)))
             {
-                await sut.ExecuteAsync(context);
+                sut.ExecuteAsync(context);
 
                 action3
                     .Verify(x => x.ExecuteAsync(context))
@@ -182,7 +181,7 @@
         }
 
         [Fact]
-        public async Task execute_async_skips_child_actions_that_are_shorter_than_the_skip_ahead_even_if_the_context_is_paused()
+        public void execute_async_skips_child_actions_that_are_shorter_than_the_skip_ahead_even_if_the_context_is_paused()
         {
             var action1 = new ActionMock();
             var action2 = new ActionMock();
@@ -217,7 +216,7 @@
             using (var context = new ExecutionContext(TimeSpan.FromSeconds(11)))
             {
                 context.IsPaused = true;
-                await sut.ExecuteAsync(context);
+                sut.ExecuteAsync(context);
 
                 action3
                     .Verify(x => x.ExecuteAsync(context))
@@ -226,7 +225,7 @@
         }
 
         [Fact]
-        public async Task execute_async_stops_executing_if_the_context_is_cancelled()
+        public void execute_async_stops_executing_if_the_context_is_cancelled()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
             var action2 = new ActionMock(MockBehavior.Loose);
@@ -244,7 +243,7 @@
                     .Do(() => context.Cancel())
                     .Return(Observable.Return(Unit.Default));
 
-                await Assert.ThrowsAsync<OperationCanceledException>(async () => await sut.ExecuteAsync(context));
+                Assert.ThrowsAsync<OperationCanceledException>(async () => await sut.ExecuteAsync(context));
 
                 action1
                     .Verify(x => x.ExecuteAsync(context))
@@ -261,14 +260,17 @@
         }
 
         [Fact]
-        public async Task execute_async_completes_even_if_there_are_no_child_actions()
+        public void execute_async_completes_even_if_there_are_no_child_actions()
         {
             var sut = new SequenceActionBuilder()
                 .Build();
 
-            await sut
+            var completed = false;
+            sut
                 .ExecuteAsync(new ExecutionContext())
-                .TimeoutIfTooSlow();
+                .Subscribe(_ => completed = true);
+
+            Assert.True(completed);
         }
     }
 }

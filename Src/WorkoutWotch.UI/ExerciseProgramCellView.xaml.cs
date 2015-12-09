@@ -1,11 +1,10 @@
 ﻿namespace WorkoutWotch.UI
 {
     using System.Reactive.Disposables;
-    using ReactiveUI;
-    using ReactiveUI.XamForms;
-    using Xamarin.Forms;
-    using WorkoutWotch.ViewModels;
     using Behaviors;
+    using global::ReactiveUI;
+    using global::ReactiveUI.XamForms;
+    using WorkoutWotch.ViewModels;
 
     public partial class ExerciseProgramCellView : ReactiveTextCell<ExerciseProgramViewModel>
     {

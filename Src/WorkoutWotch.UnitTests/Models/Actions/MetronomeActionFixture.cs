@@ -6,7 +6,6 @@
     using System.Reactive;
     using System.Reactive.Linq;
     using System.Threading;
-    using System.Threading.Tasks;
     using Builders;
     using Kent.Boogaart.PCLMock;
     using WorkoutWotch.Models;
@@ -65,16 +64,16 @@
         }
 
         [Fact]
-        public async Task execute_async_throws_if_context_is_null()
+        public void execute_async_throws_if_context_is_null()
         {
             var sut = new MetronomeActionBuilder()
                 .Build();
 
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
+            Assert.Throws<ArgumentNullException>(() => sut.ExecuteAsync(null));
         }
 
         [Fact]
-        public async Task execute_async_composes_the_appropriate_actions()
+        public void execute_async_composes_the_appropriate_actions()
         {
             var audioService = new AudioServiceMock();
             var delayService = new DelayServiceMock();
@@ -100,16 +99,16 @@
                 .AddMetronomeTick(new MetronomeTick(TimeSpan.FromMilliseconds(30), MetronomeTickType.None))
                 .Build();
 
-            await sut.ExecuteAsync(new ExecutionContext());
+            sut.ExecuteAsync(new ExecutionContext());
 
             Assert.Equal(8, actionsPerformed.Count);
-            Assert.Equal("Played audio resource Audio/MetronomeBell.mp3", actionsPerformed[0]);
+            Assert.Equal("Played audio resource MetronomeBell", actionsPerformed[0]);
             Assert.Equal("Delayed for 00:00:00.0100000", actionsPerformed[1]);
-            Assert.Equal("Played audio resource Audio/MetronomeClick.mp3", actionsPerformed[2]);
+            Assert.Equal("Played audio resource MetronomeClick", actionsPerformed[2]);
             Assert.Equal("Delayed for 00:00:00.0200000", actionsPerformed[3]);
-            Assert.Equal("Played audio resource Audio/MetronomeClick.mp3", actionsPerformed[4]);
+            Assert.Equal("Played audio resource MetronomeClick", actionsPerformed[4]);
             Assert.Equal("Delayed for 00:00:00.0500000", actionsPerformed[5]);
-            Assert.Equal("Played audio resource Audio/MetronomeBell.mp3", actionsPerformed[6]);
+            Assert.Equal("Played audio resource MetronomeBell", actionsPerformed[6]);
             Assert.Equal("Delayed for 00:00:00.0300000", actionsPerformed[7]);
         }
     }

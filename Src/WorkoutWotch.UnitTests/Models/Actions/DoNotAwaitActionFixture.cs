@@ -4,7 +4,6 @@
     using System.Reactive;
     using System.Reactive.Linq;
     using System.Threading;
-    using System.Threading.Tasks;
     using Builders;
     using Kent.Boogaart.PCLMock;
     using WorkoutWotch.Models;
@@ -44,16 +43,16 @@
         }
 
         [Fact]
-        public async Task execute_async_throws_if_the_context_is_null()
+        public void execute_async_throws_if_the_context_is_null()
         {
             var sut = new DoNotAwaitActionBuilder()
                 .Build();
 
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.ExecuteAsync(null));
+            Assert.Throws<ArgumentNullException>(() => sut.ExecuteAsync(null));
         }
 
         [Fact]
-        public async Task execute_async_does_not_wait_for_inner_actions_execution_to_complete_before_itself_completing()
+        public void execute_async_does_not_wait_for_inner_actions_execution_to_complete_before_itself_completing()
         {
             var action = new ActionMock();
 
@@ -65,13 +64,16 @@
                 .WithInnerAction(action)
                 .Build();
 
-            await sut
+            var completed = false;
+            sut
                 .ExecuteAsync(new ExecutionContext())
-                .TimeoutIfTooSlow();
+                .Subscribe(_ => completed = true);
+
+            Assert.True(completed);
         }
 
         [Fact]
-        public async Task execute_async_logs_any_error_raised_by_the_inner_action()
+        public void execute_async_logs_any_error_raised_by_the_inner_action()
         {
             var waitHandle = new ManualResetEventSlim();
             var logger = new LoggerMock(MockBehavior.Loose);
@@ -95,7 +97,7 @@
                 .WithInnerAction(action)
                 .Build();
 
-            await sut.ExecuteAsync(new ExecutionContext());
+            sut.ExecuteAsync(new ExecutionContext());
 
             Assert.True(waitHandle.Wait(TimeSpan.FromSeconds(3)));
         }

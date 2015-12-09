@@ -5,8 +5,8 @@
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Reactive.Threading.Tasks;
-    using ReactiveUI;
-    using ReactiveUI.XamForms;
+    using global::ReactiveUI;
+    using global::ReactiveUI.XamForms;
     using WorkoutWotch.ViewModels;
     using Xamarin.Forms;
 
@@ -91,11 +91,12 @@
 
         private IObservable<Unit> AnimateListViewOpacity(bool isVisible) =>
             Observable
-                .Start(() =>
-                {
-                    this.exerciseProgramsListView.IsVisible = true;
-                }
-                , RxApp.MainThreadScheduler)
+                .Start(
+                    () =>
+                    {
+                        this.exerciseProgramsListView.IsVisible = true;
+                    },
+                    RxApp.MainThreadScheduler)
                 .SelectMany(
                     _ =>
                         this

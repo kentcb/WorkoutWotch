@@ -70,6 +70,10 @@
       <Project>{FF31957D-CE68-4633-9683-4D285C12F3F1}</Project>
       <Name>WorkoutWotch.Services.Contracts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WorkoutWotch.Services\WorkoutWotch.Services.csproj">
+      <Project>{35210740-7c04-4b7b-98a0-2322b9576434}</Project>
+      <Name>WorkoutWotch.Services</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WorkoutWotch.Utility\WorkoutWotch.Utility.csproj">
       <Project>{9F1656AA-40C6-4996-AEAE-780E0BEE19A2}</Project>
       <Name>WorkoutWotch.Utility</Name>

@@ -5,6 +5,6 @@
 
     public interface IAudioService
     {
-        IObservable<Unit> PlayAsync(string resourceUri);
+        IObservable<Unit> PlayAsync(string name);
     }
 }
