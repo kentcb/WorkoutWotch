@@ -1,7 +1,5 @@
-﻿using System.Resources;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+﻿using System.Reflection;
+using System.Resources;
 using Xamarin.Forms.Xaml;
 
 // General Information about an assembly is controlled through the following 
@@ -30,4 +28,4 @@ using Xamarin.Forms.Xaml;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
-//[assembly: XamlCompilation(XamlCompilationOptions.Compile)]
+[assembly: XamlCompilation(XamlCompilationOptions.Compile)]
