@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.kent_boogaart.workoutwotch" android:installLocation="auto" android:versionCode="1" android:versionName="0.1">
 	<uses-sdk android:minSdkVersion="21" />
-	<application android:label="Workout Wotch" android:theme="@style/Theme"></application>
+	<application android:label="Workout Wotch" android:theme="@style/Theme" android:icon="@drawable/icon"></application>
 </manifest>

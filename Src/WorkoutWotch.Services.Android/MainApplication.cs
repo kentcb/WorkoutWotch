@@ -5,7 +5,7 @@ using Android.OS;
 using Android.Runtime;
 using Plugin.CurrentActivity;
 
-namespace WorkoutWotch.UI.Android
+namespace WorkoutWotch.Services.Android
 {
 	//You can specify additional application information in this attribute
     [Application]

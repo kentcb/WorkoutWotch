@@ -4165,11 +4165,11 @@ namespace WorkoutWotch.UI.Android
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f060042
-			public const int ApplicationName = 2131099714;
-			
 			// aapt resource value: 0x7f060041
-			public const int Hello = 2131099713;
+			public const int ApplicationName = 2131099713;
+			
+			// aapt resource value: 0x7f060040
+			public const int Hello = 2131099712;
 			
 			// aapt resource value: 0x7f06002d
 			public const int abc_action_bar_home_description = 2131099693;
@@ -4327,8 +4327,8 @@ namespace WorkoutWotch.UI.Android
 			// aapt resource value: 0x7f060021
 			public const int common_signin_button_text_long = 2131099681;
 			
-			// aapt resource value: 0x7f060040
-			public const int library_name = 2131099712;
+			// aapt resource value: 0x7f060042
+			public const int library_name = 2131099714;
 			
 			// aapt resource value: 0x7f060022
 			public const int mr_media_route_button_content_description = 2131099682;
