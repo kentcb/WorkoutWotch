@@ -5,7 +5,7 @@
     using System.Reactive.Linq;
     using System.Threading;
     using Contracts.Scheduler;
-    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Utility;
     using WorkoutWotch.Services.Contracts.Delay;
 
     public sealed class DelayService : IDelayService
@@ -14,7 +14,7 @@
 
         public DelayService(ISchedulerService schedulerService)
         {
-            schedulerService.AssertNotNull(nameof(schedulerService));
+            Ensure.ArgumentNotNull(schedulerService, nameof(schedulerService));
             this.schedulerService = schedulerService;
         }
 

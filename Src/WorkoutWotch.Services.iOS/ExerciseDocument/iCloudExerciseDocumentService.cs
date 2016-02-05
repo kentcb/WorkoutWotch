@@ -6,9 +6,9 @@ namespace WorkoutWotch.Services.iOS.ExerciseDocument
     using System.Threading;
     using System.Threading.Tasks;
     using Foundation;
-    using Kent.Boogaart.HelperTrinity.Extensions;
     using Services.ExerciseDocument;
     using UIKit;
+    using Utility;
     using WorkoutWotch.Services.Contracts.ExerciseDocument;
     using WorkoutWotch.Services.Contracts.Logger;
 
@@ -24,7 +24,7 @@ namespace WorkoutWotch.Services.iOS.ExerciseDocument
 
         public iCloudExerciseDocumentService(ILoggerService loggerService)
         {
-            loggerService.AssertNotNull(nameof(loggerService));
+            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
 
             this.logger = loggerService.GetLogger(this.GetType());
             this.exerciseDocument = new BehaviorSubject<string>(null);

@@ -2,14 +2,14 @@
 {
     using System;
     using System.Reactive;
-    using Kent.Boogaart.HelperTrinity.Extensions;
+    using WorkoutWotch.Utility;
 
     public static class ParserExtensions
     {
         public static Parser<T> Token<T, U>(this Parser<T> @this, Parser<U> whitespace)
         {
-            @this.AssertNotNull(nameof(@this));
-            whitespace.AssertNotNull(nameof(whitespace));
+            Ensure.ArgumentNotNull(@this, nameof(@this));
+            Ensure.ArgumentNotNull(whitespace, nameof(whitespace));
 
             return
                 from _ in whitespace.Many()
@@ -20,14 +20,14 @@
 
         public static Parser<Unit> ToUnit<T>(this Parser<T> @this)
         {
-            @this.AssertNotNull(nameof(@this));
+            Ensure.ArgumentNotNull(@this, nameof(@this));
             return @this.Select(_ => Unit.Default);
         }
 
         public static Parser<T> Do<T>(this Parser<T> @this, Action<T> action)
         {
-            @this.AssertNotNull(nameof(@this));
-            action.AssertNotNull(nameof(action));
+            Ensure.ArgumentNotNull(@this, nameof(@this));
+            Ensure.ArgumentNotNull(action, nameof(action));
 
             return @this.Then(
                 x =>

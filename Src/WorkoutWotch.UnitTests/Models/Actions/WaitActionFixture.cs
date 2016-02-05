@@ -5,29 +5,15 @@
     using System.Reactive;
     using System.Reactive.Linq;
     using System.Threading;
-    using System.Threading.Tasks;
     using Builders;
     using global::ReactiveUI;
     using PCLMock;
     using WorkoutWotch.Models;
-    using WorkoutWotch.Models.Actions;
     using WorkoutWotch.UnitTests.Services.Delay.Mocks;
     using Xunit;
 
     public class WaitActionFixture
     {
-        [Fact]
-        public void ctor_throws_if_delay_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new WaitAction(null, TimeSpan.Zero));
-        }
-
-        [Fact]
-        public void ctor_throws_if_delay_is_less_than_zero()
-        {
-            Assert.Throws<ArgumentException>(() => new WaitAction(new DelayServiceMock(), TimeSpan.FromSeconds(-1)));
-        }
-
         [Theory]
         [InlineData(0)]
         [InlineData(100)]
@@ -40,15 +26,6 @@
                 .Build();
 
             Assert.Equal(TimeSpan.FromMilliseconds(delayInMs), sut.Duration);
-        }
-
-        [Fact]
-        public void execute_async_throws_if_context_is_null()
-        {
-            var sut = new WaitActionBuilder()
-                .Build();
-
-            Assert.Throws<ArgumentNullException>(() => sut.ExecuteAsync(null));
         }
 
         [Theory]

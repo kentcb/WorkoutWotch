@@ -1,7 +1,7 @@
 namespace WorkoutWotch.Models.Events
 {
     using System.Globalization;
-    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Utility;
 
     public sealed class BeforeExerciseEvent : EventBase
     {
@@ -10,7 +10,7 @@ namespace WorkoutWotch.Models.Events
         public BeforeExerciseEvent(ExecutionContext executionContext, Exercise exercise)
             : base(executionContext)
         {
-            exercise.AssertNotNull(nameof(exercise));
+            Ensure.ArgumentNotNull(exercise, nameof(exercise));
             this.exercise = exercise;
         }
 

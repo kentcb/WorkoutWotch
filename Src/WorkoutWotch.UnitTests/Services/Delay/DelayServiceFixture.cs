@@ -9,12 +9,6 @@
     public sealed class DelayServiceFixture
     {
         [Fact]
-        public void ctor_throws_if_scheduler_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new DelayServiceBuilder().WithSchedulerService(null).Build());
-        }
-
-        [Fact]
         public void delay_async_returns_observable_that_ticks_after_specified_delay()
         {
             var scheduler = new TestSchedulerService();

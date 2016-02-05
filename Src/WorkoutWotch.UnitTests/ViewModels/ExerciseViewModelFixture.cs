@@ -1,41 +1,17 @@
 ﻿namespace WorkoutWotch.UnitTests.ViewModels
 {
     using System;
-    using System.Reactive.Linq;
     using System.Reactive.Subjects;
     using Builders;
-    using PCLMock;
     using Models.Builders;
+    using PCLMock;
     using WorkoutWotch.Models;
     using WorkoutWotch.UnitTests.Models.Mocks;
     using WorkoutWotch.UnitTests.Reactive;
-    using WorkoutWotch.ViewModels;
     using Xunit;
 
     public class ExerciseViewModelFixture
     {
-        [Fact]
-        public void ctor_throws_if_scheduler_service_is_null()
-        {
-            var model = new ExerciseBuilder()
-                .Build();
-            Assert.Throws<ArgumentNullException>(() => new ExerciseViewModel(null, model, Observable.Never<ExecutionContext>()));
-        }
-
-        [Fact]
-        public void ctor_throws_if_model_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseViewModel(new TestSchedulerService(), null, Observable.Never<ExecutionContext>()));
-        }
-
-        [Fact]
-        public void ctor_throws_if_execution_context_is_null()
-        {
-            var model = new ExerciseBuilder()
-                .Build();
-            Assert.Throws<ArgumentNullException>(() => new ExerciseViewModel(new TestSchedulerService(), model, null));
-        }
-
         [Theory]
         [InlineData("Name")]
         [InlineData("Another name")]

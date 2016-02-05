@@ -3,7 +3,7 @@
     using System;
     using System.Reactive;
     using System.Reactive.Linq;
-    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Utility;
     using WorkoutWotch.Services.Contracts.Audio;
 
     public sealed class AudioAction : IAction
@@ -13,8 +13,8 @@
 
         public AudioAction(IAudioService audioService, string audioName)
         {
-            audioService.AssertNotNull(nameof(audioService));
-            audioName.AssertNotNull(nameof(audioName));
+            Ensure.ArgumentNotNull(audioService, nameof(audioService));
+            Ensure.ArgumentNotNull(audioName, nameof(audioName));
 
             this.audioService = audioService;
             this.audioName = audioName;
@@ -24,7 +24,7 @@
 
         public IObservable<Unit> ExecuteAsync(ExecutionContext context)
         {
-            context.AssertNotNull(nameof(context));
+            Ensure.ArgumentNotNull(context, nameof(context));
             context.CancellationToken.ThrowIfCancellationRequested();
 
             return context

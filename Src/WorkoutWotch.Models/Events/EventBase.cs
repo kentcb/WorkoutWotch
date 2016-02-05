@@ -1,6 +1,6 @@
 ﻿namespace WorkoutWotch.Models.Events
 {
-    using Kent.Boogaart.HelperTrinity.Extensions;
+    using WorkoutWotch.Utility;
 
     public abstract class EventBase : IEvent
     {
@@ -8,7 +8,7 @@
 
         protected EventBase(ExecutionContext executionContext)
         {
-            executionContext.AssertNotNull(nameof(executionContext));
+            Ensure.ArgumentNotNull(executionContext, nameof(executionContext));
             this.executionContext = executionContext;
         }
 

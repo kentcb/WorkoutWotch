@@ -1,8 +1,8 @@
 ﻿namespace WorkoutWotch.ViewModels
 {
     using System;
-    using Kent.Boogaart.HelperTrinity.Extensions;
     using ReactiveUI;
+    using Utility;
 
     public sealed class MainViewModel : ReactiveObject, IScreen
     {
@@ -12,7 +12,7 @@
         public MainViewModel(
             Func<ExerciseProgramsViewModel> exerciseProgramsViewModelFactory)
         {
-            exerciseProgramsViewModelFactory.AssertNotNull(nameof(exerciseProgramsViewModelFactory));
+            Ensure.ArgumentNotNull(exerciseProgramsViewModelFactory, nameof(exerciseProgramsViewModelFactory));
 
             this.router = new RoutingState();
             this.exerciseProgramsViewModelFactory = exerciseProgramsViewModelFactory;

@@ -13,12 +13,6 @@
         private const int msInMinute = 60 * msInSecond;
         private const int msInHour = 60 * msInMinute;
 
-        [Fact]
-        public void get_parser_throws_if_container_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => WaitActionParser.GetParser(null));
-        }
-
         [Theory]
         [InlineData("Wait for 1m 30s", 1 * msInMinute + 30 * msInSecond)]
         [InlineData("Wait for 1h 2m 5s", 1 * msInHour + 2 * msInMinute + 5 * msInSecond)]

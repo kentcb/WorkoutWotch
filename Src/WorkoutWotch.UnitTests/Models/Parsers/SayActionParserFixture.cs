@@ -1,6 +1,5 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Parsers
 {
-    using System;
     using PCLMock;
     using Services.Speech.Mocks;
     using Sprache;
@@ -9,12 +8,6 @@
 
     public class SayActionParserFixture
     {
-        [Fact]
-        public void get_parser_throws_if_speech_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => SayActionParser.GetParser(null));
-        }
-
         [Theory]
         [InlineData("Say 'hello'", "hello")]
         [InlineData(@"Say ""hello""", "hello")]

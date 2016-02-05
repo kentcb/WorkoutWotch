@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Reactive;
-    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Utility;
     using WorkoutWotch.Services.Contracts.Delay;
     using WorkoutWotch.Services.Contracts.Speech;
 
@@ -14,14 +14,10 @@
 
         public WaitWithPromptAction(IDelayService delayService, ISpeechService speechService, TimeSpan duration, string promptSpeechText)
         {
-            delayService.AssertNotNull(nameof(delayService));
-            speechService.AssertNotNull(nameof(speechService));
-            promptSpeechText.AssertNotNull(nameof(promptSpeechText));
-
-            if (duration < TimeSpan.Zero)
-            {
-                throw new ArgumentException("duration must be greater than or equal to zero.", "duration");
-            }
+            Ensure.ArgumentNotNull(delayService, nameof(delayService));
+            Ensure.ArgumentNotNull(speechService, nameof(speechService));
+            Ensure.ArgumentNotNull(promptSpeechText, nameof(promptSpeechText));
+            Ensure.ArgumentCondition(duration >= TimeSpan.Zero, "duration must be greater than or equal to zero.", nameof(duration));
 
             this.innerAction = new SequenceAction(GetInnerActions(delayService, speechService, duration, promptSpeechText));
         }
@@ -30,7 +26,7 @@
 
         public IObservable<Unit> ExecuteAsync(ExecutionContext context)
         {
-            context.AssertNotNull(nameof(context));
+            Ensure.ArgumentNotNull(context, nameof(context));
 
             return this
                 .innerAction

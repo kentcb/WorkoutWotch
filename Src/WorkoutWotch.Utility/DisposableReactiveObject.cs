@@ -2,7 +2,6 @@
 {
     using System;
     using System.Threading;
-    using Kent.Boogaart.HelperTrinity.Extensions;
     using ReactiveUI;
 
     public abstract class DisposableReactiveObject : ReactiveObject, IDisposable
@@ -48,36 +47,21 @@
             this.MarkAsDisposed();
         }
 
-        protected void VerifyNotDisposing()
-        {
-            if (this.IsDisposing)
-            {
-                throw new ObjectDisposedException(this.ObjectName);
-            }
-        }
+        protected void VerifyNotDisposing() =>
+            Ensure.Condition(!this.IsDisposing, () => new ObjectDisposedException(this.ObjectName));
 
-        protected void VerifyNotDisposed()
-        {
-            if (this.IsDisposed)
-            {
-                throw new ObjectDisposedException(this.ObjectName);
-            }
-        }
+        protected void VerifyNotDisposed() =>
+            Ensure.Condition(!this.IsDisposed, () => new ObjectDisposedException(this.ObjectName));
 
-        protected void VerifyNotDisposedOrDisposing()
-        {
-            if (this.IsDisposedOrDisposing)
-            {
-                throw new ObjectDisposedException(this.ObjectName);
-            }
-        }
+        protected void VerifyNotDisposedOrDisposing() =>
+            Ensure.Condition(!this.IsDisposedOrDisposing, () => new ObjectDisposedException(this.ObjectName));
 
         protected virtual void Dispose(bool disposing)
         {
         }
 
         protected virtual void OnDisposing() =>
-            this.Disposing.Raise(this);
+            this.Disposing?.Invoke(this, EventArgs.Empty);
 
         protected void MarkAsDisposed()
         {

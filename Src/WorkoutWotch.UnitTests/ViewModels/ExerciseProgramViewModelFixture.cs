@@ -1,14 +1,13 @@
 ﻿namespace WorkoutWotch.UnitTests.ViewModels
 {
     using System;
-    using System.Linq;
     using System.Reactive;
     using System.Reactive.Linq;
     using Builders;
     using global::ReactiveUI;
-    using PCLMock;
     using Models.Actions.Builders;
     using Models.Builders;
+    using PCLMock;
     using Services.Delay.Builders;
     using WorkoutWotch.Models;
     using WorkoutWotch.UnitTests.Models.Mocks;
@@ -17,30 +16,6 @@
 
     public class ExerciseProgramViewModelFixture
     {
-        [Fact]
-        public void ctor_throws_if_logger_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramViewModelBuilder().WithLoggerService(null).Build());
-        }
-
-        [Fact]
-        public void ctor_throws_if_scheduler_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramViewModelBuilder().WithSchedulerService(null).Build());
-        }
-
-        [Fact]
-        public void ctor_throws_if_host_screen_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramViewModelBuilder().WithHostScreen(null).Build());
-        }
-
-        [Fact]
-        public void ctor_throws_if_model_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramViewModelBuilder().WithModel(null).Build());
-        }
-
         [Theory]
         [InlineData("Name")]
         [InlineData("Some name")]

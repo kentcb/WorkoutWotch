@@ -2,7 +2,7 @@
 {
     using System;
     using System.Reactive.Disposables;
-    using Kent.Boogaart.HelperTrinity.Extensions;
+    using WorkoutWotch.Utility;
 
     public static class WhenActivatedExtensions
     {
@@ -11,7 +11,7 @@
             Action<CompositeDisposable> disposables,
             IViewFor view = null)
         {
-            @this.AssertNotNull(nameof(@this));
+            Ensure.ArgumentNotNull(@this, nameof(@this));
 
             return @this
                 .WhenActivated(
@@ -28,7 +28,7 @@
             this ISupportsActivation @this,
             Action<CompositeDisposable> disposables)
         {
-            @this.AssertNotNull(nameof(@this));
+            Ensure.ArgumentNotNull(@this, nameof(@this));
 
             @this
                 .WhenActivated(

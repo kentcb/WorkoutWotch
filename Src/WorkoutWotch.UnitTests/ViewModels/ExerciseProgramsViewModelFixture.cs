@@ -5,7 +5,6 @@
     using System.Reactive;
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
-    using System.Threading.Tasks;
     using Builders;
     using PCLMock;
     using WorkoutWotch.UnitTests.Reactive;
@@ -16,60 +15,6 @@
 
     public class ExerciseProgramsViewModelFixture
     {
-        [Fact]
-        public void ctor_throws_if_audio_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModelBuilder().WithAudioService(null).Build());
-        }
-
-        [Fact]
-        public void ctor_throws_if_delay_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModelBuilder().WithDelayService(null).Build());
-        }
-
-        [Fact]
-        public void ctor_throws_if_exercise_document_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModelBuilder().WithExerciseDocumentService(null).Build());
-        }
-
-        [Fact]
-        public void ctor_throws_if_logger_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModelBuilder().WithLoggerService(null).Build());
-        }
-
-        [Fact]
-        public void ctor_throws_if_scheduler_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModelBuilder().WithSchedulerService(null).Build());
-        }
-
-        [Fact]
-        public void ctor_throws_if_speech_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModelBuilder().WithSpeechService(null).Build());
-        }
-
-        [Fact]
-        public void ctor_throws_if_state_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModelBuilder().WithStateService(null).Build());
-        }
-
-        [Fact]
-        public void ctor_throws_if_host_screen_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModelBuilder().WithHostScreen(null).Build());
-        }
-
-        [Fact]
-        public void ctor_throws_if_exercise_program_view_model_factory_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgramsViewModelBuilder().WithExerciseProgramViewModelFactory(null).Build());
-        }
-
         [Fact]
         public void parse_error_message_is_null_by_default()
         {

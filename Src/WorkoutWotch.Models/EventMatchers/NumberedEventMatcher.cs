@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.Models.EventMatchers
 {
     using System;
-    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Utility;
     using WorkoutWotch.Models.Events;
 
     public sealed class NumberedEventMatcher<T> : IEventMatcher
@@ -11,7 +11,7 @@
 
         public NumberedEventMatcher(Func<T, bool> matches)
         {
-            matches.AssertNotNull(nameof(matches));
+            Ensure.ArgumentNotNull(matches, nameof(matches));
             this.matches = matches;
         }
 

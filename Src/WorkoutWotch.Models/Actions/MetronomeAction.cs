@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Reactive;
-    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Utility;
     using WorkoutWotch.Services.Contracts.Audio;
     using WorkoutWotch.Services.Contracts.Delay;
     using WorkoutWotch.Services.Contracts.Logger;
@@ -16,10 +16,10 @@
 
         public MetronomeAction(IAudioService audioService, IDelayService delayService, ILoggerService loggerService, IEnumerable<MetronomeTick> ticks)
         {
-            audioService.AssertNotNull(nameof(audioService));
-            delayService.AssertNotNull(nameof(delayService));
-            loggerService.AssertNotNull(nameof(loggerService));
-            ticks.AssertNotNull(nameof(ticks));
+            Ensure.ArgumentNotNull(audioService, nameof(audioService));
+            Ensure.ArgumentNotNull(delayService, nameof(delayService));
+            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
+            Ensure.ArgumentNotNull(ticks, nameof(ticks));
 
             this.ticks = ticks.ToImmutableList();
             this.innerAction = new SequenceAction(GetInnerActions(audioService, delayService, loggerService, this.ticks));
@@ -31,7 +31,7 @@
 
         public IObservable<Unit> ExecuteAsync(ExecutionContext context)
         {
-            context.AssertNotNull(nameof(context));
+            Ensure.ArgumentNotNull(context, nameof(context));
 
             return this
                 .innerAction

@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.Models.Parsers
 {
-    using Kent.Boogaart.HelperTrinity.Extensions;
     using Sprache;
+    using Utility;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Services.Contracts.Audio;
     using WorkoutWotch.Services.Contracts.Delay;
@@ -19,9 +19,9 @@
             IDelayService delayService,
             ILoggerService loggerService)
         {
-            audioService.AssertNotNull(nameof(audioService));
-            delayService.AssertNotNull(nameof(delayService));
-            loggerService.AssertNotNull(nameof(loggerService));
+            Ensure.ArgumentNotNull(audioService, nameof(audioService));
+            Ensure.ArgumentNotNull(delayService, nameof(delayService));
+            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
 
             return
                 from _ in Parse.IgnoreCase("metronome")

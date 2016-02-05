@@ -8,37 +8,12 @@
     using Builders;
     using PCLMock;
     using WorkoutWotch.Models;
-    using WorkoutWotch.Models.Actions;
     using WorkoutWotch.UnitTests.Services.Delay.Mocks;
     using WorkoutWotch.UnitTests.Services.Speech.Mocks;
     using Xunit;
 
     public class WaitWithPromptActionFixture
     {
-        [Fact]
-        public void ctor_throws_if_delay_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new WaitWithPromptAction(null, new SpeechServiceMock(), TimeSpan.FromSeconds(30), "whatever"));
-        }
-
-        [Fact]
-        public void ctor_throws_if_speech_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new WaitWithPromptAction(new DelayServiceMock(), null, TimeSpan.FromSeconds(30), "whatever"));
-        }
-
-        [Fact]
-        public void ctor_throws_if_duration_is_less_than_zero()
-        {
-            Assert.Throws<ArgumentException>(() => new WaitWithPromptAction(new DelayServiceMock(), new SpeechServiceMock(), TimeSpan.FromSeconds(-2), "whatever"));
-        }
-
-        [Fact]
-        public void ctor_throws_if_start_speech_text_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new WaitWithPromptAction(new DelayServiceMock(), new SpeechServiceMock(), TimeSpan.Zero, null));
-        }
-
         [Theory]
         [InlineData(0)]
         [InlineData(100)]
@@ -51,15 +26,6 @@
                 .Build();
 
             Assert.Equal(TimeSpan.FromMilliseconds(durationInMs), sut.Duration);
-        }
-
-        [Fact]
-        public void execute_async_throws_if_the_context_is_null()
-        {
-            var sut = new WaitWithPromptActionBuilder()
-                .Build();
-
-            Assert.Throws<ArgumentNullException>(() => sut.ExecuteAsync(null));
         }
 
         [Fact]

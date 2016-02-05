@@ -7,8 +7,8 @@ namespace WorkoutWotch.Services.iOS.Audio
     using AVFoundation;
     using Contracts.Scheduler;
     using Foundation;
-    using Kent.Boogaart.HelperTrinity.Extensions;
     using WorkoutWotch.Services.Contracts.Audio;
+    using WorkoutWotch.Utility;
 
     public sealed class AudioService : IAudioService
     {
@@ -16,14 +16,14 @@ namespace WorkoutWotch.Services.iOS.Audio
 
         public AudioService(ISchedulerService schedulerService)
         {
-            schedulerService.AssertNotNull(nameof(schedulerService));
+            Ensure.ArgumentNotNull(schedulerService, nameof(schedulerService));
 
             this.schedulerService = schedulerService;
         }
 
         public IObservable<Unit> PlayAsync(string name)
         {
-            name.AssertNotNull(nameof(name));
+            Ensure.ArgumentNotNull(name, nameof(name));
 
             var url = new NSUrl("Audio/" + name + ".mp3");
             var audioPlayer = AVAudioPlayer.FromUrl(url);

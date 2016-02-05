@@ -1,6 +1,5 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Parsers
 {
-    using System;
     using PCLMock;
     using Services.Audio.Mocks;
     using Services.Delay.Mocks;
@@ -12,30 +11,6 @@
 
     public class ExerciseProgramParserFixture
     {
-        [Fact]
-        public void get_parser_throws_if_audio_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExerciseProgramParser.GetParser(null, new DelayServiceMock(), new LoggerServiceMock(), new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void get_parser_throws_if_delay_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExerciseProgramParser.GetParser(new AudioServiceMock(), null, new LoggerServiceMock(), new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void get_parser_throws_if_logger_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExerciseProgramParser.GetParser(new AudioServiceMock(), new DelayServiceMock(), null, new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void get_parser_throws_if_speech_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExerciseProgramParser.GetParser(new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(), null));
-        }
-
         [Theory]
         [InlineData("# foo\n", "foo")]
         [InlineData("# Foo\n", "Foo")]

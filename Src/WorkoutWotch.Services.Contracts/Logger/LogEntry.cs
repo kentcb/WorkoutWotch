@@ -1,4 +1,4 @@
-namespace WorkoutWotch.Services.Contracts.Logger
+﻿namespace WorkoutWotch.Services.Contracts.Logger
 {
     using System;
 

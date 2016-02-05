@@ -1,6 +1,5 @@
 ﻿namespace WorkoutWotch.UnitTests.Models
 {
-    using System;
     using System.Linq;
     using Builders;
     using PCLMock;
@@ -13,18 +12,6 @@
 
     public class ExerciseProgramsFixture
     {
-        [Fact]
-        public void ctor_throws_if_programs_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ExercisePrograms(null));
-        }
-
-        [Fact]
-        public void ctor_throws_if_any_program_is_null()
-        {
-            Assert.Throws<ArgumentException>(() => new ExercisePrograms(new [] { new ExerciseProgramBuilder().Build(), null }));
-        }
-
         [Theory]
         [InlineData(0)]
         [InlineData(3)]
@@ -42,36 +29,6 @@
 
             Assert.Equal(programCount, sut.Programs.Count);
             Assert.True(sut.Programs.SequenceEqual(programs));
-        }
-
-        [Fact]
-        public void parse_throws_if_input_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.Parse(null, new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(), new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void parse_throws_if_audio_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.Parse("input", null, new DelayServiceMock(), new LoggerServiceMock(), new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void parse_throws_if_delay_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.Parse("input", new AudioServiceMock(), null, new LoggerServiceMock(), new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void parse_throws_if_logger_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.Parse("input", new AudioServiceMock(), new DelayServiceMock(), null, new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void parse_throws_if_speech_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.Parse("input", new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(), null));
         }
 
         [Theory]
@@ -92,36 +49,6 @@
 
             Assert.NotNull(result);
             Assert.True(result.Programs.Select(x => x.Name).SequenceEqual(expectedProgramNames));
-        }
-
-        [Fact]
-        public void try_parse_throws_if_input_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.TryParse(null, new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(), new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void try_parse_throws_if_audio_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.TryParse("input", null, new DelayServiceMock(), new LoggerServiceMock(), new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void try_parse_throws_if_delay_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.TryParse("input", new AudioServiceMock(), null, new LoggerServiceMock(), new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void try_parse_throws_if_logger_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.TryParse("input", new AudioServiceMock(), new DelayServiceMock(), null, new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void try_parse_throws_if_speech_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExercisePrograms.TryParse("input", new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(), null));
         }
 
         [Theory]

@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reactive;
     using System.Reactive.Linq;
     using System.Threading;
@@ -12,35 +11,10 @@
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.UnitTests.Services.Audio.Mocks;
     using WorkoutWotch.UnitTests.Services.Delay.Mocks;
-    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
     using Xunit;
 
     public class MetronomeActionFixture
     {
-        [Fact]
-        public void ctor_throws_if_audio_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new MetronomeAction(null, new DelayServiceMock(), new LoggerServiceMock(), Enumerable.Empty<MetronomeTick>()));
-        }
-
-        [Fact]
-        public void ctor_throws_if_delay_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new MetronomeAction(new AudioServiceMock(), null, new LoggerServiceMock(), Enumerable.Empty<MetronomeTick>()));
-        }
-
-        [Fact]
-        public void ctor_throws_if_logger_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new MetronomeAction(new AudioServiceMock(), new DelayServiceMock(), null, Enumerable.Empty<MetronomeTick>()));
-        }
-
-        [Fact]
-        public void ctor_throws_if_ticks_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new MetronomeAction(new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(), null));
-        }
-
         [Fact]
         public void duration_is_zero_if_there_are_no_ticks()
         {
@@ -61,15 +35,6 @@
                 .Build();
 
             Assert.Equal(TimeSpan.FromSeconds(3.5), sut.Duration);
-        }
-
-        [Fact]
-        public void execute_async_throws_if_context_is_null()
-        {
-            var sut = new MetronomeActionBuilder()
-                .Build();
-
-            Assert.Throws<ArgumentNullException>(() => sut.ExecuteAsync(null));
         }
 
         [Fact]

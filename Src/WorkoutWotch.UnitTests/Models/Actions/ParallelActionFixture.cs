@@ -6,24 +6,11 @@
     using Builders;
     using PCLMock;
     using WorkoutWotch.Models;
-    using WorkoutWotch.Models.Actions;
     using WorkoutWotch.UnitTests.Models.Mocks;
     using Xunit;
 
     public class ParallelActionFixture
     {
-        [Fact]
-        public void ctor_throws_if_children_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ParallelAction(null));
-        }
-
-        [Fact]
-        public void ctor_throws_if_any_child_is_null()
-        {
-            Assert.Throws<ArgumentException>(() => new ParallelAction(new [] { new ActionMock(), null, new ActionMock() }));
-        }
-
         [Fact]
         public void duration_is_zero_if_there_are_no_children()
         {
@@ -65,15 +52,6 @@
                 .Build();
 
             Assert.Equal(TimeSpan.FromSeconds(5), sut.Duration);
-        }
-
-        [Fact]
-        public void execute_async_throws_if_the_execution_context_is_null()
-        {
-            var sut = new ParallelActionBuilder()
-                .Build();
-
-            Assert.Throws<ArgumentNullException>(() => sut.ExecuteAsync(null));
         }
 
         [Fact]

@@ -8,24 +8,11 @@
     using Builders;
     using PCLMock;
     using WorkoutWotch.Models;
-    using WorkoutWotch.Models.Actions;
     using WorkoutWotch.UnitTests.Models.Mocks;
     using Xunit;
 
     public class SequenceActionFixture
     {
-        [Fact]
-        public void ctor_throws_if_children_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new SequenceAction(null));
-        }
-
-        [Fact]
-        public void ctor_throws_if_any_child_is_null()
-        {
-            Assert.Throws<ArgumentException>(() => new SequenceAction(new [] { new ActionMock(), null, new ActionMock() }));
-        }
-
         [Fact]
         public void duration_is_zero_if_there_are_no_child_actions()
         {
@@ -61,15 +48,6 @@
                 .Build();
 
             Assert.Equal(TimeSpan.FromSeconds(18), sut.Duration);
-        }
-
-        [Fact]
-        public void execute_async_throws_if_context_is_null()
-        {
-            var sut = new SequenceActionBuilder()
-                .Build();
-
-            Assert.Throws<ArgumentNullException>(() => sut.ExecuteAsync(null));
         }
 
         [Fact]

@@ -3,7 +3,6 @@ namespace WorkoutWotch.ViewModels
     using System;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
-    using Kent.Boogaart.HelperTrinity.Extensions;
     using ReactiveUI;
     using WorkoutWotch.Models;
     using WorkoutWotch.Services.Contracts.Scheduler;
@@ -20,9 +19,9 @@ namespace WorkoutWotch.ViewModels
 
         public ExerciseViewModel(ISchedulerService schedulerService, Exercise model, IObservable<ExecutionContext> executionContext)
         {
-            schedulerService.AssertNotNull(nameof(schedulerService));
-            model.AssertNotNull(nameof(model));
-            executionContext.AssertNotNull(nameof(executionContext));
+            Ensure.ArgumentNotNull(schedulerService, nameof(schedulerService));
+            Ensure.ArgumentNotNull(model, nameof(model));
+            Ensure.ArgumentNotNull(executionContext, nameof(executionContext));
 
             this.disposables = new CompositeDisposable();
             this.model = model;

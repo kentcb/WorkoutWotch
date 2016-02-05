@@ -1,9 +1,9 @@
 ﻿namespace WorkoutWotch.UI
 {
     using global::ReactiveUI;
-    using Kent.Boogaart.HelperTrinity.Extensions;
     using ReactiveUI;
     using Splat;
+    using Utility;
     using WorkoutWotch.ViewModels;
 
     // ReactiveUI depends on Splat, which is essentially a service locator. Thus, we cannot rely solely on our
@@ -13,7 +13,7 @@
     {
         public void Register(IMutableDependencyResolver splatLocator, CompositionRoot compositionRoot)
         {
-            splatLocator.AssertNotNull(nameof(splatLocator));
+            Ensure.ArgumentNotNull(splatLocator, nameof(splatLocator));
 
             this.RegisterViews(splatLocator);
             this.RegisterScreen(splatLocator, compositionRoot);

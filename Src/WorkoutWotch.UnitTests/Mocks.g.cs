@@ -192,74 +192,9 @@ namespace WorkoutWotch.UnitTests.Services.Logger.Mocks
             }
         }
 
-        public void Debug(System.String message)
+        public void Log(global::WorkoutWotch.Services.Contracts.Logger.LogLevel level, System.String message)
         {
-            this.Apply(x => x.Debug(message));
-        }
-
-        public void Debug(System.String format, System.Object[] args)
-        {
-            this.Apply(x => x.Debug(format, args));
-        }
-
-        public void Debug(global::System.Exception exception, System.String format, System.Object[] args)
-        {
-            this.Apply(x => x.Debug(exception, format, args));
-        }
-
-        public void Info(System.String message)
-        {
-            this.Apply(x => x.Info(message));
-        }
-
-        public void Info(System.String format, System.Object[] args)
-        {
-            this.Apply(x => x.Info(format, args));
-        }
-
-        public void Info(global::System.Exception exception, System.String format, System.Object[] args)
-        {
-            this.Apply(x => x.Info(exception, format, args));
-        }
-
-        public global::System.IDisposable Perf(System.String message)
-        {
-            return this.Apply(x => x.Perf(message));
-        }
-
-        public global::System.IDisposable Perf(System.String format, System.Object[] args)
-        {
-            return this.Apply(x => x.Perf(format, args));
-        }
-
-        public void Warn(System.String message)
-        {
-            this.Apply(x => x.Warn(message));
-        }
-
-        public void Warn(System.String format, System.Object[] args)
-        {
-            this.Apply(x => x.Warn(format, args));
-        }
-
-        public void Warn(global::System.Exception exception, System.String format, System.Object[] args)
-        {
-            this.Apply(x => x.Warn(exception, format, args));
-        }
-
-        public void Error(System.String message)
-        {
-            this.Apply(x => x.Error(message));
-        }
-
-        public void Error(System.String format, System.Object[] args)
-        {
-            this.Apply(x => x.Error(format, args));
-        }
-
-        public void Error(global::System.Exception exception, System.String format, System.Object[] args)
-        {
-            this.Apply(x => x.Error(exception, format, args));
+            this.Apply(x => x.Log(level, message));
         }
     }
 }

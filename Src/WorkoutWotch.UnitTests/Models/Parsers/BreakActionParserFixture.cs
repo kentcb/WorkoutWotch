@@ -14,18 +14,6 @@
         private const int msInMinute = 60 * msInSecond;
         private const int msInHour = 60 * msInMinute;
 
-        [Fact]
-        public void get_parser_throws_if_delay_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => BreakActionParser.GetParser(null, new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void get_parser_throws_if_speech_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => BreakActionParser.GetParser(new DelayServiceMock(), null));
-        }
-
         [Theory]
         [InlineData("Break for 24s", 24 * msInSecond)]
         [InlineData("Break for 1m 24s", 1 * msInMinute + 24 * msInSecond)]

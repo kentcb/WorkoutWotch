@@ -10,48 +10,11 @@
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Events;
     using WorkoutWotch.UnitTests.Models.Mocks;
-    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
     using WorkoutWotch.UnitTests.Services.Speech.Mocks;
     using Xunit;
 
     public class ExerciseFixture
     {
-        [Fact]
-        public void ctor_throws_if_logger_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new Exercise(null, new SpeechServiceMock(), "name", 3, 10, Enumerable.Empty<MatcherWithAction>()));
-        }
-
-        [Fact]
-        public void ctor_throws_if_speech_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new Exercise(new LoggerServiceMock(), null, "name", 3, 10, Enumerable.Empty<MatcherWithAction>()));
-        }
-
-        [Fact]
-        public void ctor_throws_if_name_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), null, 3, 10, Enumerable.Empty<MatcherWithAction>()));
-        }
-
-        [Fact]
-        public void ctor_throws_if_set_count_is_less_than_zero()
-        {
-            Assert.Throws<ArgumentException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "name", -3, 10, Enumerable.Empty<MatcherWithAction>()));
-        }
-
-        [Fact]
-        public void ctor_throws_if_repetition_count_is_less_than_zero()
-        {
-            Assert.Throws<ArgumentException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "name", 3, -10, Enumerable.Empty<MatcherWithAction>()));
-        }
-
-        [Fact]
-        public void ctor_throws_if_matchers_with_actions_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new Exercise(new LoggerServiceMock(MockBehavior.Loose), new SpeechServiceMock(), "name", 3, 10, null));
-        }
-
         [Theory]
         [InlineData("Name")]
         [InlineData("Some longer name")]
@@ -140,14 +103,6 @@
                 .Build();
 
             Assert.Equal(TimeSpan.FromSeconds(30), sut.Duration);
-        }
-
-        [Fact]
-        public void execute_async_throws_if_execution_context_is_null()
-        {
-            var sut = new ExerciseBuilder()
-                .Build();
-            Assert.Throws<ArgumentNullException>(() => sut.ExecuteAsync(null));
         }
 
         [Fact]

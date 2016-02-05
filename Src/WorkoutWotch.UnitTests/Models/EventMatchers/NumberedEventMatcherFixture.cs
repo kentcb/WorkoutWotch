@@ -9,12 +9,6 @@
     public class NumberedEventMatcherFixture
     {
         [Fact]
-        public void ctor_throws_if_matches_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new NumberedEventMatcher<BeforeSetEvent>(null));
-        }
-
-        [Fact]
         public void matches_returns_false_if_event_type_differs()
         {
             var sut = new NumberedEventMatcher<BeforeSetEvent>(_ => true);

@@ -16,10 +16,9 @@ namespace WorkoutWotch.Services.Android.ExerciseDocument
     using global::Android.Gms.Drive;
     using global::Android.Gms.Drive.Events;
     using global::Android.Gms.Drive.Query;
-    using Kent.Boogaart.HelperTrinity.Extensions;
-    using Plugin.CurrentActivity;
     using Services.ExerciseDocument;
     using WorkoutWotch.Services.Contracts.ExerciseDocument;
+    using WorkoutWotch.Utility;
 
     // TODO/WARNING: an unholy marriage of Rx and TPL follows
     public sealed class GoogleDriveExerciseDocumentService :
@@ -43,8 +42,8 @@ namespace WorkoutWotch.Services.Android.ExerciseDocument
             ILoggerService loggerService,
             IConnectionResultHandler connectionResultHandler)
         {
-            loggerService.AssertNotNull(nameof(loggerService));
-            connectionResultHandler.AssertNotNull(nameof(connectionResultHandler));
+            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
+            Ensure.ArgumentNotNull(connectionResultHandler, nameof(connectionResultHandler));
 
             this.logger = loggerService.GetLogger(this.GetType());
             this.connectionResultHandler = connectionResultHandler;

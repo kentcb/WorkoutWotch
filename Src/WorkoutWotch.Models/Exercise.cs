@@ -6,7 +6,7 @@ namespace WorkoutWotch.Models
     using System.Linq;
     using System.Reactive;
     using System.Reactive.Linq;
-    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Utility;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Models.Events;
     using WorkoutWotch.Services.Contracts.Logger;
@@ -24,20 +24,12 @@ namespace WorkoutWotch.Models
 
         public Exercise(ILoggerService loggerService, ISpeechService speechService, string name, int setCount, int repetitionCount, IEnumerable<MatcherWithAction> matchersWithActions)
         {
-            loggerService.AssertNotNull(nameof(loggerService));
-            speechService.AssertNotNull(nameof(speechService));
-            name.AssertNotNull(nameof(name));
-            matchersWithActions.AssertNotNull(nameof(matchersWithActions));
-
-            if (setCount < 0)
-            {
-                throw new ArgumentException("setCount cannot be less than zero.", "setCount");
-            }
-
-            if (repetitionCount < 0)
-            {
-                throw new ArgumentException("repetitionCount cannot be less than zero.", "repetitionCount");
-            }
+            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
+            Ensure.ArgumentNotNull(speechService, nameof(speechService));
+            Ensure.ArgumentNotNull(name, nameof(name));
+            Ensure.ArgumentNotNull(matchersWithActions, nameof(matchersWithActions));
+            Ensure.ArgumentCondition(setCount >= 0, "setCount cannot be less than zero.", "setCount");
+            Ensure.ArgumentCondition(repetitionCount >= 0, "repetitionCount cannot be less than zero.", "repetitionCount");
 
             this.logger = loggerService.GetLogger(this.GetType());
             this.speechService = speechService;
@@ -69,7 +61,7 @@ namespace WorkoutWotch.Models
 
         public IObservable<Unit> ExecuteAsync(ExecutionContext context)
         {
-            context.AssertNotNull(nameof(context));
+            Ensure.ArgumentNotNull(context, nameof(context));
 
             return Observable
                 .Concat(

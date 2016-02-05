@@ -14,36 +14,6 @@
 
     public class SequenceActionParserFixture
     {
-        [Fact]
-        public void get_parser_throws_if_indent_level_is_less_than_zero()
-        {
-            Assert.Throws<ArgumentException>(() => SequenceActionParser.GetParser(-1, new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(), new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void get_parser_throws_if_audio_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => SequenceActionParser.GetParser(0, null, new DelayServiceMock(), new LoggerServiceMock(), new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void get_parser_throws_if_delay_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => SequenceActionParser.GetParser(0, new AudioServiceMock(), null, new LoggerServiceMock(), new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void get_parser_throws_if_logger_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => SequenceActionParser.GetParser(0, new AudioServiceMock(), new DelayServiceMock(), null, new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void get_parser_throws_if_speech_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => SequenceActionParser.GetParser(0, new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(), null));
-        }
-
         [Theory]
         [InlineData(
             "Sequence:\n  * Say 'foo'\n  * Wait for 2s",

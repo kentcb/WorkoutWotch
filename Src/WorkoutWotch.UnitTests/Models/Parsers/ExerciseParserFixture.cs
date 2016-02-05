@@ -15,30 +15,6 @@
 
     public class ExerciseParserFixture
     {
-        [Fact]
-        public void get_parser_throws_if_audio_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExerciseParser.GetParser(null, new DelayServiceMock(), new LoggerServiceMock(), new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void get_parser_throws_if_delay_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExerciseParser.GetParser(new AudioServiceMock(), null, new LoggerServiceMock(), new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void get_parser_throws_if_logger_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExerciseParser.GetParser(new AudioServiceMock(), new DelayServiceMock(), null, new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void get_parser_throws_if_speech_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ExerciseParser.GetParser(new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(), null));
-        }
-
         [Theory]
         [InlineData("## foo\n* 1 set x 1 rep", "foo")]
         [InlineData("## Foo\n* 1 set x 1 rep", "Foo")]

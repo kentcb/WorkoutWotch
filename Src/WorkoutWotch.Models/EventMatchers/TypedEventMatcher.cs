@@ -1,13 +1,13 @@
 ﻿namespace WorkoutWotch.Models.EventMatchers
 {
-    using Kent.Boogaart.HelperTrinity.Extensions;
+    using WorkoutWotch.Utility;
 
     public sealed class TypedEventMatcher<T> : IEventMatcher
         where T : IEvent
     {
         public bool Matches(IEvent @event)
         {
-            @event.AssertNotNull(nameof(@event));
+            Ensure.ArgumentNotNull(@event, nameof(@event));
             return @event is T;
         }
     }

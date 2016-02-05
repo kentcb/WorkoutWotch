@@ -60,26 +60,14 @@
         }
 
         [Fact]
-        public void get_logger_throws_if_type_is_null()
-        {
-            var sut = new LoggerService();
-            Assert.Throws<ArgumentNullException>(() => sut.GetLogger((Type)null));
-        }
-
-        [Fact]
-        public void get_logger_throws_if_name_is_null()
-        {
-            var sut = new LoggerService();
-            Assert.Throws<ArgumentNullException>(() => sut.GetLogger((string)null));
-        }
-
-        [Fact]
         public void get_logger_for_type_returns_a_logger_with_the_full_name_of_the_type_as_its_name()
         {
             var sut = new LoggerService();
             var logger = sut.GetLogger(this.GetType());
             Assert.Equal(this.GetType().FullName, logger.Name);
         }
+
+#if DEBUG
 
         [Fact]
         public void log_entries_ticks_for_log_calls_within_the_configured_threshold()
@@ -159,6 +147,8 @@
             Assert.Equal(1, entry.Count);
             Assert.Equal("This should be logged", entry[0].Message);
         }
+
+#endif
 
         [Fact]
         public void logging_perf_adds_extra_performance_information_to_the_log_message()

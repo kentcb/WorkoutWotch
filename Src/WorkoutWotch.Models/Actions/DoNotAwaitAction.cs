@@ -3,7 +3,7 @@
     using System;
     using System.Reactive;
     using System.Reactive.Linq;
-    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Utility;
     using WorkoutWotch.Services.Contracts.Logger;
 
     public sealed class DoNotAwaitAction : IAction
@@ -13,8 +13,8 @@
 
         public DoNotAwaitAction(ILoggerService loggerService, IAction innerAction)
         {
-            loggerService.AssertNotNull(nameof(loggerService));
-            innerAction.AssertNotNull(nameof(innerAction));
+            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
+            Ensure.ArgumentNotNull(innerAction, nameof(innerAction));
 
             this.logger = loggerService.GetLogger(this.GetType());
             this.innerAction = innerAction;
@@ -26,7 +26,7 @@
 
         public IObservable<Unit> ExecuteAsync(ExecutionContext context)
         {
-            context.AssertNotNull(nameof(context));
+            Ensure.ArgumentNotNull(context, nameof(context));
 
             this
                 .innerAction

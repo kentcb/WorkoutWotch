@@ -1,6 +1,6 @@
 namespace WorkoutWotch.Models
 {
-    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Utility;
 
     public sealed class MatcherWithAction 
     {
@@ -9,8 +9,8 @@ namespace WorkoutWotch.Models
 
         public MatcherWithAction(IEventMatcher matcher, IAction action)
         {
-            matcher.AssertNotNull(nameof(matcher));
-            action.AssertNotNull(nameof(action));
+            Ensure.ArgumentNotNull(matcher, nameof(matcher));
+            Ensure.ArgumentNotNull(action, nameof(action));
 
             this.matcher = matcher;
             this.action = action;

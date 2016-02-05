@@ -2,9 +2,8 @@
 {
     using System;
     using System.Reactive;
-    using System.Reactive.Concurrency;
     using System.Reactive.Linq;
-    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Utility;
     using WorkoutWotch.Services.Contracts.Delay;
 
     public sealed class WaitAction : IAction
@@ -15,12 +14,8 @@
 
         public WaitAction(IDelayService delayService, TimeSpan delay)
         {
-            delayService.AssertNotNull(nameof(delayService));
-
-            if (delay < TimeSpan.Zero)
-            {
-                throw new ArgumentException("delay must be greater than or equal to zero.", "delay");
-            }
+            Ensure.ArgumentNotNull(delayService, nameof(delayService));
+            Ensure.ArgumentCondition(delay >= TimeSpan.Zero, "delay must be greater than or equal to zero.", nameof(delay));
 
             this.delayService = delayService;
             this.delay = delay;
@@ -30,7 +25,7 @@
 
         public IObservable<Unit> ExecuteAsync(ExecutionContext context)
         {
-            context.AssertNotNull(nameof(context));
+            Ensure.ArgumentNotNull(context, nameof(context));
 
             var remainingDelay = this.delay;
             var skipAhead = MathExt.Min(remainingDelay, context.SkipAhead);

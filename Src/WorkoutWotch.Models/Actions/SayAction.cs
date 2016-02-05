@@ -4,7 +4,7 @@
     using System.Reactive;
     using System.Reactive.Linq;
     using System.Threading;
-    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Utility;
     using WorkoutWotch.Services.Contracts.Speech;
 
     public sealed class SayAction : IAction
@@ -14,8 +14,8 @@
 
         public SayAction(ISpeechService speechService, string speechText)
         {
-            speechService.AssertNotNull(nameof(speechService));
-            speechText.AssertNotNull(nameof(speechText));
+            Ensure.ArgumentNotNull(speechService, nameof(speechService));
+            Ensure.ArgumentNotNull(speechText, nameof(speechText));
 
             this.speechService = speechService;
             this.speechText = speechText;
@@ -27,7 +27,7 @@
 
         public IObservable<Unit> ExecuteAsync(ExecutionContext context)
         {
-            context.AssertNotNull(nameof(context));
+            Ensure.ArgumentNotNull(context, nameof(context));
             context.CancellationToken.ThrowIfCancellationRequested();
 
             return context

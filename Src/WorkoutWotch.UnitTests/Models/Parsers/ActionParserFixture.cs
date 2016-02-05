@@ -13,36 +13,6 @@
 
     public class ActionParserFixture
     {
-        [Fact]
-        public void ctor_throws_if_indent_level_is_less_than_zero()
-        {
-            Assert.Throws<ArgumentException>(() => ActionParser.GetParser(-1, new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(), new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void ctor_throws_if_audio_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ActionParser.GetParser(0, null, new DelayServiceMock(), new LoggerServiceMock(), new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void ctor_throws_if_delay_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ActionParser.GetParser(0, new AudioServiceMock(), null, new LoggerServiceMock(), new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void ctor_throws_if_logger_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ActionParser.GetParser(0, new AudioServiceMock(), new DelayServiceMock(), null, new SpeechServiceMock()));
-        }
-
-        [Fact]
-        public void ctor_throws_if_speech_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => ActionParser.GetParser(0, new AudioServiceMock(), new DelayServiceMock(), new LoggerServiceMock(), null));
-        }
-
         [Theory]
         [InlineData("Break for 10s", 0, typeof(BreakAction))]
         [InlineData("Metronome at 1s, 2s, 3s", 0, typeof(MetronomeAction))]

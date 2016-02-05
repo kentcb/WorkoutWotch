@@ -1,6 +1,5 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.EventMatchers
 {
-    using System;
     using Builders;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.EventMatchers;
@@ -9,12 +8,6 @@
 
     public class TypedEventMatcherFixture
     {
-        [Fact]
-        public void matches_throws_if_event_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new TypedEventMatcher<BeforeExerciseEvent>().Matches(null));
-        }
-
         [Fact]
         public void matches_returns_false_if_the_event_is_of_a_different_type()
         {

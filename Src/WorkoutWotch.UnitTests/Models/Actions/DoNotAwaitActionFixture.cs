@@ -7,25 +7,13 @@
     using Builders;
     using PCLMock;
     using WorkoutWotch.Models;
-    using WorkoutWotch.Models.Actions;
+    using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.UnitTests.Models.Mocks;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
     using Xunit;
 
     public class DoNotAwaitActionFixture
     {
-        [Fact]
-        public void ctor_throws_if_logger_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new DoNotAwaitAction(null, new ActionMock()));
-        }
-
-        [Fact]
-        public void ctor_throws_if_inner_action_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new DoNotAwaitAction(new LoggerServiceMock(), null));
-        }
-
         [Fact]
         public void duration_always_returns_zero_regardless_of_inner_action_duration()
         {
@@ -40,15 +28,6 @@
                 .Build();
 
             Assert.Equal(TimeSpan.Zero, sut.Duration);
-        }
-
-        [Fact]
-        public void execute_async_throws_if_the_context_is_null()
-        {
-            var sut = new DoNotAwaitActionBuilder()
-                .Build();
-
-            Assert.Throws<ArgumentNullException>(() => sut.ExecuteAsync(null));
         }
 
         [Fact]
@@ -72,6 +51,8 @@
             Assert.True(completed);
         }
 
+#if DEBUG
+
         [Fact]
         public void execute_async_logs_any_error_raised_by_the_inner_action()
         {
@@ -81,7 +62,7 @@
             var action = new ActionMock(MockBehavior.Loose);
 
             logger
-                .When(x => x.Error(It.IsAny<string>()))
+                .When(x => x.Log(LogLevel.Error, It.IsAny<string>()))
                 .Do(waitHandle.Set);
 
             loggerService
@@ -101,5 +82,7 @@
 
             Assert.True(waitHandle.Wait(TimeSpan.FromSeconds(3)));
         }
+
+#endif
     }
 }

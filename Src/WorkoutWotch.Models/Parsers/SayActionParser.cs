@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.Models.Parsers
 {
-    using Kent.Boogaart.HelperTrinity.Extensions;
     using Sprache;
+    using Utility;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Services.Contracts.Speech;
 
@@ -9,7 +9,7 @@
     {
         public static Parser<SayAction> GetParser(ISpeechService speechService)
         {
-            speechService.AssertNotNull(nameof(speechService));
+            Ensure.ArgumentNotNull(speechService, nameof(speechService));
 
             return
                 from _ in Parse.IgnoreCase("say")

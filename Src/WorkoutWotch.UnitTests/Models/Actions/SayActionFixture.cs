@@ -5,24 +5,11 @@
     using Builders;
     using PCLMock;
     using WorkoutWotch.Models;
-    using WorkoutWotch.Models.Actions;
     using WorkoutWotch.UnitTests.Services.Speech.Mocks;
     using Xunit;
 
     public class SayActionFixture
     {
-        [Fact]
-        public void ctor_throws_if_speech_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new SayAction(null, "something to say"));
-        }
-
-        [Fact]
-        public void ctor_throws_if_speech_text_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new SayAction(new SpeechServiceMock(), null));
-        }
-
         [Fact]
         public void duration_returns_zero()
         {
@@ -30,15 +17,6 @@
                 .Build();
 
             Assert.Equal(TimeSpan.Zero, sut.Duration);
-        }
-
-        [Fact]
-        public void execute_async_throws_if_context_is_null()
-        {
-            var sut = new SayActionBuilder()
-                .Build();
-
-            Assert.Throws<ArgumentNullException>(() => sut.ExecuteAsync(null));
         }
 
         [Fact]

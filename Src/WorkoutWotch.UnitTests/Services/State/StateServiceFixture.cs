@@ -5,6 +5,7 @@
     using System.Reactive.Linq;
     using Builders;
     using PCLMock;
+    using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.State;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
     using WorkoutWotch.UnitTests.Services.State.Mocks;
@@ -12,27 +13,6 @@
 
     public class StateServiceFixture
     {
-        [Fact]
-        public void ctor_throws_if_blob_cache_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new StateService(null, new LoggerServiceMock()));
-        }
-
-        [Fact]
-        public void ctor_throws_if_logger_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new StateService(new BlobCacheMock(), null));
-        }
-
-        [Fact]
-        public void get_async_throws_if_key_is_null()
-        {
-            var sut = new StateServiceBuilder()
-                .Build();
-
-            Assert.Throws<ArgumentNullException>(() => sut.GetAsync<string>(null));
-        }
-
         [Fact]
         public void get_async_forwards_the_call_onto_the_blob_cache()
         {
@@ -55,15 +35,6 @@
         }
 
         [Fact]
-        public void set_async_throws_if_key_is_null()
-        {
-            var sut = new StateServiceBuilder()
-                .Build();
-
-            Assert.Throws<ArgumentNullException>(() => sut.SetAsync(null, "foo"));
-        }
-
-        [Fact]
         public void set_async_forwards_the_call_onto_the_blob_cache()
         {
             var blobCache = new BlobCacheMock(MockBehavior.Loose);
@@ -82,15 +53,6 @@
             blobCache
                 .Verify(x => x.Insert(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<DateTimeOffset?>()))
                 .WasCalledExactlyOnce();
-        }
-
-        [Fact]
-        public void remove_async_throws_if_key_is_null()
-        {
-            var sut = new StateServiceBuilder()
-                .Build();
-
-            Assert.Throws<ArgumentNullException>(() => sut.RemoveAsync<string>(null));
         }
 
         [Fact]
@@ -184,15 +146,7 @@
                 .WasCalledExactlyOnce();
 
             logger
-                .Verify(x => x.Error(It.IsAny<string>()))
-                .WasNotCalled();
-
-            logger
-                .Verify(x => x.Error(It.IsAny<string>(), It.IsAny<object[]>()))
-                .WasNotCalled();
-
-            logger
-                .Verify(x => x.Error(It.IsAny<Exception>(), It.IsAny<string>(), It.IsAny<object[]>()))
+                .Verify(x => x.Log(LogLevel.Error, It.IsAny<string>()))
                 .WasNotCalled();
         }
 
@@ -205,6 +159,8 @@
 
             sut.SaveAsync();
         }
+
+#if DEBUG
 
         [Fact]
         public void save_async_logs_an_error_if_a_save_callback_fails()
@@ -225,9 +181,11 @@
             sut.SaveAsync();
 
             logger
-                .Verify(x => x.Error(It.IsAny<Exception>(), It.IsAny<string>(), It.IsAny<object[]>()))
+                .Verify(x => x.Log(LogLevel.Error, It.IsAny<string>()))
                 .WasCalledExactlyOnce();
         }
+
+#endif
 
         [Fact]
         public void save_async_completes_even_if_there_are_no_save_callbacks()
@@ -241,15 +199,6 @@
                 .Subscribe(_ => completed = true);
 
             Assert.True(completed);
-        }
-
-        [Fact]
-        public void register_save_callback_throws_if_save_task_factory_is_null()
-        {
-            var sut = new StateServiceBuilder()
-                .Build();
-
-            Assert.Throws<ArgumentNullException>(() => sut.RegisterSaveCallback(null));
         }
 
         [Fact]

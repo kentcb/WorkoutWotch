@@ -4,38 +4,17 @@
     using Builders;
     using PCLMock;
     using WorkoutWotch.Models;
-    using WorkoutWotch.Models.Actions;
     using WorkoutWotch.UnitTests.Services.Audio.Mocks;
     using Xunit;
 
     public class AudioActionFixture
     {
         [Fact]
-        public void ctor_throws_if_audio_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new AudioAction(null, "some_uri"));
-        }
-
-        [Fact]
-        public void ctor_throws_if_audio_resource_uri_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new AudioAction(new AudioServiceMock(), null));
-        }
-
-        [Fact]
         public void duration_returns_zero()
         {
             var sut = new AudioActionBuilder()
                 .Build();
             Assert.Equal(TimeSpan.Zero, sut.Duration);
-        }
-
-        [Fact]
-        public void execute_async_throws_if_context_is_null()
-        {
-            var sut = new AudioActionBuilder()
-                .Build();
-            Assert.Throws<ArgumentNullException>(() => sut.ExecuteAsync(null));
         }
 
         [Fact]

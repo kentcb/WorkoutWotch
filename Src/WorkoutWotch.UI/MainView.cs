@@ -1,14 +1,14 @@
 ﻿namespace WorkoutWotch.UI
 {
     using global::ReactiveUI.XamForms;
-    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Utility;
     using ViewModels;
 
     public sealed class MainView : RoutedViewHost
     {
         public MainView(MainViewModel viewModel)
         {
-            viewModel.AssertNotNull(nameof(viewModel));
+            Ensure.ArgumentNotNull(viewModel, nameof(viewModel));
             this.Router = viewModel.Router;
         }
     }

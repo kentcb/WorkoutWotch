@@ -1,11 +1,11 @@
 ﻿namespace WorkoutWotch.Models.Parsers
 {
     using System.Linq;
-    using Kent.Boogaart.HelperTrinity.Extensions;
     using Services.Contracts.Audio;
     using Services.Contracts.Delay;
     using Services.Contracts.Speech;
     using Sprache;
+    using Utility;
     using WorkoutWotch.Services.Contracts.Logger;
 
     internal static class ExerciseProgramParser
@@ -16,10 +16,10 @@
                 ILoggerService loggerService,
                 ISpeechService speechService)
         {
-            audioService.AssertNotNull(nameof(audioService));
-            delayService.AssertNotNull(nameof(delayService));
-            loggerService.AssertNotNull(nameof(loggerService));
-            speechService.AssertNotNull(nameof(speechService));
+            Ensure.ArgumentNotNull(audioService, nameof(audioService));
+            Ensure.ArgumentNotNull(delayService, nameof(delayService));
+            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
+            Ensure.ArgumentNotNull(speechService, nameof(speechService));
 
             return
                 from name in HeadingParser.GetParser(1)

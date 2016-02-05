@@ -6,7 +6,7 @@
     using System.Linq;
     using System.Reactive;
     using System.Reactive.Linq;
-    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Utility;
     using WorkoutWotch.Services.Contracts.Logger;
 
     public sealed class ExerciseProgram
@@ -18,9 +18,9 @@
 
         public ExerciseProgram(ILoggerService loggerService, string name, IEnumerable<Exercise> exercises)
         {
-            loggerService.AssertNotNull(nameof(loggerService));
-            name.AssertNotNull(nameof(name));
-            exercises.AssertNotNull(nameof(exercises), assertContentsNotNull: true);
+            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
+            Ensure.ArgumentNotNull(name, nameof(name));
+            Ensure.ArgumentNotNull(exercises, nameof(exercises), assertContentsNotNull: true);
 
             this.logger = loggerService.GetLogger(this.GetType());
             this.name = name;
@@ -40,7 +40,7 @@
 
         public IObservable<Unit> ExecuteAsync(ExecutionContext context)
         {
-            context.AssertNotNull(nameof(context));
+            Ensure.ArgumentNotNull(context, nameof(context));
 
             return Observable
                 .Concat(

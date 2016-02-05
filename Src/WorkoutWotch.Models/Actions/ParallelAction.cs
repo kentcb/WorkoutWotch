@@ -6,8 +6,8 @@
     using System.Linq;
     using System.Reactive;
     using System.Reactive.Linq;
-    using Kent.Boogaart.HelperTrinity.Extensions;
     using ReactiveUI;
+    using Utility;
 
     public sealed class ParallelAction : IAction
     {
@@ -16,7 +16,7 @@
 
         public ParallelAction(IEnumerable<IAction> children)
         {
-            children.AssertNotNull(nameof(children), assertContentsNotNull: true);
+            Ensure.ArgumentNotNull(children, nameof(children), assertContentsNotNull: true);
 
             this.children = children.ToImmutableList();
             this.duration = this
@@ -32,7 +32,7 @@
 
         public IObservable<Unit> ExecuteAsync(ExecutionContext context)
         {
-            context.AssertNotNull(nameof(context));
+            Ensure.ArgumentNotNull(context, nameof(context));
 
             var childrenToExecute = this
                 .children

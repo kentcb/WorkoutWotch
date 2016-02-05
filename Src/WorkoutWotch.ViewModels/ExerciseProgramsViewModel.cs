@@ -3,7 +3,6 @@
     using System;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
-    using Kent.Boogaart.HelperTrinity.Extensions;
     using ReactiveUI;
     using Services.Contracts.Audio;
     using Services.Contracts.Delay;
@@ -42,15 +41,15 @@
             IScreen hostScreen,
             ExerciseProgramViewModelFactory exerciseProgramViewModelFactory)
         {
-            audioService.AssertNotNull(nameof(audioService));
-            delayService.AssertNotNull(nameof(delayService));
-            exerciseDocumentService.AssertNotNull(nameof(exerciseDocumentService));
-            loggerService.AssertNotNull(nameof(loggerService));
-            schedulerService.AssertNotNull(nameof(schedulerService));
-            speechService.AssertNotNull(nameof(speechService));
-            stateService.AssertNotNull(nameof(stateService));
-            hostScreen.AssertNotNull(nameof(hostScreen));
-            exerciseProgramViewModelFactory.AssertNotNull(nameof(exerciseProgramViewModelFactory));
+            Ensure.ArgumentNotNull(audioService, nameof(audioService));
+            Ensure.ArgumentNotNull(delayService, nameof(delayService));
+            Ensure.ArgumentNotNull(exerciseDocumentService, nameof(exerciseDocumentService));
+            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
+            Ensure.ArgumentNotNull(schedulerService, nameof(schedulerService));
+            Ensure.ArgumentNotNull(speechService, nameof(speechService));
+            Ensure.ArgumentNotNull(stateService, nameof(stateService));
+            Ensure.ArgumentNotNull(hostScreen, nameof(hostScreen));
+            Ensure.ArgumentNotNull(exerciseProgramViewModelFactory, nameof(exerciseProgramViewModelFactory));
 
             this.exerciseDocumentService = exerciseDocumentService;
             this.stateService = stateService;

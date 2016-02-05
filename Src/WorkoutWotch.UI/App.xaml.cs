@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.UI
 {
     using System;
-    using Kent.Boogaart.HelperTrinity.Extensions;
+    using Utility;
     using WorkoutWotch.ViewModels;
     using Xamarin.Forms;
 
@@ -18,7 +18,7 @@
             }
 
             instance = this;
-            mainViewModel.AssertNotNull(nameof(mainViewModel));
+            Ensure.ArgumentNotNull(mainViewModel, nameof(mainViewModel));
 
             InitializeComponent();
 

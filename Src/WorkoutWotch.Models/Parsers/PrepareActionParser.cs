@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.Models.Parsers
 {
-    using Kent.Boogaart.HelperTrinity.Extensions;
     using Sprache;
+    using Utility;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Services.Contracts.Delay;
     using WorkoutWotch.Services.Contracts.Speech;
@@ -12,8 +12,8 @@
             IDelayService delayService,
             ISpeechService speechService)
         {
-            delayService.AssertNotNull(nameof(delayService));
-            speechService.AssertNotNull(nameof(speechService));
+            Ensure.ArgumentNotNull(delayService, nameof(delayService));
+            Ensure.ArgumentNotNull(speechService, nameof(speechService));
 
             return
                 from _ in Parse.IgnoreCase("prepare")

@@ -1,6 +1,6 @@
 ﻿namespace WorkoutWotch.Models.Events
 {
-    using System;
+    using Utility;
 
     public abstract class NumberedEvent : EventBase
     {
@@ -9,10 +9,7 @@
         protected NumberedEvent(ExecutionContext executionContext, int number)
             : base(executionContext)
         {
-            if (number < 0)
-            {
-                throw new ArgumentException("number must be greater than or equal to zero.", "number");
-            }
+            Ensure.ArgumentCondition(number >= 0, "number must be greater than or equal to zero.", "number");
 
             this.number = number;
         }

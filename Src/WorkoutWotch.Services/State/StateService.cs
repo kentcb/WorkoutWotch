@@ -9,7 +9,6 @@
     using System.Reactive.Linq;
     using System.Threading;
     using Akavache;
-    using Kent.Boogaart.HelperTrinity.Extensions;
     using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.Contracts.State;
     using WorkoutWotch.Utility;
@@ -23,8 +22,8 @@
 
         public StateService(IBlobCache blobCache, ILoggerService loggerService)
         {
-            blobCache.AssertNotNull(nameof(blobCache));
-            loggerService.AssertNotNull(nameof(loggerService));
+            Ensure.ArgumentNotNull(blobCache, nameof(blobCache));
+            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
 
             this.blobCache = blobCache;
             this.logger = loggerService.GetLogger(this.GetType());
@@ -34,7 +33,7 @@
 
         public IObservable<T> GetAsync<T>(string key)
         {
-            key.AssertNotNull(nameof(key));
+            Ensure.ArgumentNotNull(key, nameof(key));
 
             return this
                 .blobCache
@@ -43,7 +42,7 @@
 
         public IObservable<Unit> SetAsync<T>(string key, T value)
         {
-            key.AssertNotNull(nameof(key));
+            Ensure.ArgumentNotNull(key, nameof(key));
 
             return this
                 .blobCache
@@ -52,7 +51,7 @@
 
         public IObservable<Unit> RemoveAsync<T>(string key)
         {
-            key.AssertNotNull(nameof(key));
+            Ensure.ArgumentNotNull(key, nameof(key));
 
             return this
                 .blobCache
@@ -88,7 +87,7 @@
 
         public IDisposable RegisterSaveCallback(SaveCallback saveCallback)
         {
-            saveCallback.AssertNotNull(nameof(saveCallback));
+            Ensure.ArgumentNotNull(saveCallback, nameof(saveCallback));
 
             lock (this.sync)
             {

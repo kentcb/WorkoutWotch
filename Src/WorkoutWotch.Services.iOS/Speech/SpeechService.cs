@@ -5,8 +5,8 @@ namespace WorkoutWotch.Services.iOS.Speech
     using System.Reactive.Linq;
     using System.Threading;
     using AVFoundation;
-    using Kent.Boogaart.HelperTrinity.Extensions;
     using WorkoutWotch.Services.Contracts.Speech;
+    using WorkoutWotch.Utility;
 
     public sealed class SpeechService : ISpeechService
     {
@@ -14,7 +14,7 @@ namespace WorkoutWotch.Services.iOS.Speech
 
         public IObservable<Unit> SpeakAsync(string speechString, CancellationToken cancellationToken = default(CancellationToken))
         {
-            speechString.AssertNotNull(nameof(speechString));
+            Ensure.ArgumentNotNull(speechString, nameof(speechString));
 
             var utterance = new AVSpeechUtterance(speechString)
             {

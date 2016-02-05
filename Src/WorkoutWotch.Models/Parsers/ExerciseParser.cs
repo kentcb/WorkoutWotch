@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reactive;
-    using Kent.Boogaart.HelperTrinity.Extensions;
     using Services.Contracts.Audio;
     using Services.Contracts.Delay;
     using Sprache;
@@ -13,6 +12,7 @@
     using WorkoutWotch.Models.Events;
     using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.Contracts.Speech;
+    using WorkoutWotch.Utility;
 
     internal static class ExerciseParser
     {
@@ -130,10 +130,10 @@
             ILoggerService loggerService,
             ISpeechService speechService)
         {
-            audioService.AssertNotNull(nameof(audioService));
-            delayService.AssertNotNull(nameof(delayService));
-            loggerService.AssertNotNull(nameof(loggerService));
-            speechService.AssertNotNull(nameof(speechService));
+            Ensure.ArgumentNotNull(audioService, nameof(audioService));
+            Ensure.ArgumentNotNull(delayService, nameof(delayService));
+            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
+            Ensure.ArgumentNotNull(speechService, nameof(speechService));
 
             return
                 from name in HeadingParser.GetParser(2)

@@ -7,7 +7,6 @@ namespace WorkoutWotch.ViewModels
     using System.Reactive.Linq;
     using System.Threading;
     using System.Windows.Input;
-    using Kent.Boogaart.HelperTrinity.Extensions;
     using ReactiveUI;
     using WorkoutWotch.Models;
     using WorkoutWotch.Services.Contracts.Logger;
@@ -50,10 +49,10 @@ namespace WorkoutWotch.ViewModels
             IScreen hostScreen,
             ExerciseProgram model)
         {
-            loggerService.AssertNotNull(nameof(loggerService));
-            schedulerService.AssertNotNull(nameof(schedulerService));
-            hostScreen.AssertNotNull(nameof(hostScreen));
-            model.AssertNotNull(nameof(model));
+            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
+            Ensure.ArgumentNotNull(schedulerService, nameof(schedulerService));
+            Ensure.ArgumentNotNull(hostScreen, nameof(hostScreen));
+            Ensure.ArgumentNotNull(model, nameof(model));
 
             this.logger = loggerService.GetLogger(this.GetType());
             this.schedulerService = schedulerService;

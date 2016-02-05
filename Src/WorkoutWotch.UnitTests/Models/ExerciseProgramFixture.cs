@@ -7,35 +7,10 @@
     using PCLMock;
     using WorkoutWotch.Models;
     using WorkoutWotch.UnitTests.Models.Mocks;
-    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
     using Xunit;
 
     public class ExerciseProgramFixture
     {
-        [Fact]
-        public void ctor_throws_if_logger_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgram(null, "name", Enumerable.Empty<Exercise>()));
-        }
-
-        [Fact]
-        public void ctor_throws_if_name_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), null, Enumerable.Empty<Exercise>()));
-        }
-
-        [Fact]
-        public void ctor_throws_if_exercises_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", null));
-        }
-
-        [Fact]
-        public void ctor_throws_if_any_exercise_is_null()
-        {
-            Assert.Throws<ArgumentException>(() => new ExerciseProgram(new LoggerServiceMock(MockBehavior.Loose), "name", new Exercise[] { new ExerciseBuilder(), null }));
-        }
-
         [Theory]
         [InlineData("Name")]
         [InlineData("Some longer name")]
@@ -101,15 +76,6 @@
                 .Build();
 
             Assert.Equal(TimeSpan.FromSeconds(12), sut.Duration);
-        }
-
-        [Fact]
-        public void execute_async_throws_if_the_context_is_null()
-        {
-            var sut = new ExerciseProgramBuilder()
-                .Build();
-
-            Assert.Throws<ArgumentNullException>(() => sut.ExecuteAsync(null));
         }
 
         [Fact]

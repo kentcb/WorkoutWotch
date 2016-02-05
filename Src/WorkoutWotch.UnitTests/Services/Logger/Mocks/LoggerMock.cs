@@ -1,18 +1,24 @@
 ﻿namespace WorkoutWotch.UnitTests.Services.Logger.Mocks
 {
-    using System.Reactive.Disposables;
-    using PCLMock;
-
     public sealed partial class LoggerMock
     {
         partial void ConfigureLooseBehavior()
         {
             this
-                .When(x => x.Perf(It.IsAny<string>()))
-                .Return(Disposable.Empty);
+                .When(x => x.IsDebugEnabled)
+                .Return(true);
             this
-                .When(x => x.Perf(It.IsAny<string>(), It.IsAny<object[]>()))
-                .Return(Disposable.Empty);
+                .When(x => x.IsErrorEnabled)
+                .Return(true);
+            this
+                .When(x => x.IsInfoEnabled)
+                .Return(true);
+            this
+                .When(x => x.IsPerfEnabled)
+                .Return(true);
+            this
+                .When(x => x.IsWarnEnabled)
+                .Return(true);
         }
     }
 }

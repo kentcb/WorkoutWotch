@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.Models.Parsers
 {
-    using Kent.Boogaart.HelperTrinity.Extensions;
     using Sprache;
+    using Utility;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Services.Contracts.Delay;
 
@@ -9,7 +9,7 @@
     {
         public static Parser<WaitAction> GetParser(IDelayService delayService)
         {
-            delayService.AssertNotNull(nameof(delayService));
+            Ensure.ArgumentNotNull(delayService, nameof(delayService));
 
             return
                 from _ in Parse.IgnoreCase("wait")

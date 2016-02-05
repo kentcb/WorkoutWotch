@@ -17,24 +17,6 @@
         private const int msInMinute = 60 * msInSecond;
         private const int msInHour = 60 * msInMinute;
 
-        [Fact]
-        public void get_parser_throws_if_audio_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => MetronomeActionParser.GetParser(null, new DelayServiceMock(), new LoggerServiceMock()));
-        }
-
-        [Fact]
-        public void get_parser_throws_if_delay_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => MetronomeActionParser.GetParser(new AudioServiceMock(), null, new LoggerServiceMock()));
-        }
-
-        [Fact]
-        public void get_parser_throws_if_logger_service_is_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => MetronomeActionParser.GetParser(new AudioServiceMock(), new DelayServiceMock(), null));
-        }
-
         [Theory]
         [InlineData(
             "Metronome at 0s*, 1s, 1s, 2s-",
