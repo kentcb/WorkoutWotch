@@ -6,7 +6,7 @@
     using System.Threading;
     using Builders;
     using global::ReactiveUI;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Events;
     using WorkoutWotch.UnitTests.Models.Mocks;

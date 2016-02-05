@@ -2,7 +2,7 @@
 {
     using System;
     using System.Reactive.Linq;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using WorkoutWotch.Services.Contracts.Logger;
 
     public sealed partial class LoggerServiceMock

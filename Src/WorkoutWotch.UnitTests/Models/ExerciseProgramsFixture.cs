@@ -3,7 +3,7 @@
     using System;
     using System.Linq;
     using Builders;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using Services.Audio.Mocks;
     using Services.Delay.Mocks;
     using Services.Logger.Mocks;

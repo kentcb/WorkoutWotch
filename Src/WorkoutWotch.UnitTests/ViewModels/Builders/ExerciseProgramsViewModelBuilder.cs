@@ -3,7 +3,7 @@
     using System.Reactive;
     using System.Reactive.Linq;
     using global::ReactiveUI;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using ReactiveUI.Mocks;
     using Services.Audio.Mocks;
     using Services.Delay.Mocks;

@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Builders
 {
     using System.Collections.Generic;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Events;
     using WorkoutWotch.Services.Contracts.Logger;

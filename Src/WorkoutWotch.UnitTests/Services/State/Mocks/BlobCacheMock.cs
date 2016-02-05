@@ -5,7 +5,7 @@
     using System.Reactive;
     using System.Reactive.Concurrency;
     using Akavache;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
 
     public sealed class BlobCacheMock : MockBase<IBlobCache>, IBlobCache
     {

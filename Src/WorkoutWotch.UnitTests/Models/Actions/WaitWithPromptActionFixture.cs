@@ -6,7 +6,7 @@
     using System.Reactive.Linq;
     using System.Threading;
     using Builders;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.UnitTests.Services.Delay.Mocks;

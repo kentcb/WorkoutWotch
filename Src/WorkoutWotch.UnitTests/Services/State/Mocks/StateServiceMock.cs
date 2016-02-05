@@ -3,7 +3,7 @@
     using System.Reactive;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using WorkoutWotch.Services.Contracts.State;
 
     public sealed partial class StateServiceMock

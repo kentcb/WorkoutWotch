@@ -14,7 +14,7 @@ this.SetFileExtensionForLanguage(language);
 this.HookAssemblyResolution();
 var solutionPath = this.DTE.Solution.FileName;
 var xmlPath = this.Host.ResolvePath("Mocks.xml");
-var xmlBasedGenerator = Type.GetType("Kent.Boogaart.PCLMock.CodeGeneration.XmlBasedGenerator, Kent.Boogaart.PCLMock.CodeGeneration");
+var xmlBasedGenerator = Type.GetType("PCLMock.CodeGeneration.XmlBasedGenerator, PCLMock.CodeGeneration");
 var generateMethod = xmlBasedGenerator.GetMethod("GenerateMocks", new[] { typeof(string), typeof(string), typeof(string) });
 var result = (string)generateMethod.Invoke(null, new[] { solutionPath, xmlPath, language });
 
@@ -86,15 +86,15 @@ private void HookAssemblyResolution()
 
     this.Debug("packages directory: {0}", packagesDirectory);
 
-    var packageDirectories = Directory.GetDirectories(packagesDirectory, "Kent.Boogaart.PCLMock.CodeGeneration.T4.*");
+    var packageDirectories = Directory.GetDirectories(packagesDirectory, "PCLMock.CodeGeneration.T4.*");
 
     if (packageDirectories.Length == 0)
     {
-        throw new InvalidOperationException("Could not find Kent.Boogaart.PCLMock.CodeGeneration.T4 package in packages directory (" + packagesDirectory + ").");
+        throw new InvalidOperationException("Could not find PCLMock.CodeGeneration.T4 package in packages directory (" + packagesDirectory + ").");
     }
     else if (packageDirectories.Length > 1)
     {
-        throw new InvalidOperationException("More than 1 version of the Kent.Boogaart.PCLMock.CodeGeneration.T4 package was found in the packages directory (" + packagesDirectory + "). You must choose 1 version and remove the others.");
+        throw new InvalidOperationException("More than 1 version of the PCLMock.CodeGeneration.T4 package was found in the packages directory (" + packagesDirectory + "). You must choose 1 version and remove the others.");
     }
 
     var packageDirectory = packageDirectories.First();

@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Parsers
 {
     using System;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using Services.Delay.Mocks;
     using Sprache;
     using WorkoutWotch.Models.Parsers;

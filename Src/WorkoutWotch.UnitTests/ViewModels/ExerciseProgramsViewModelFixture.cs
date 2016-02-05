@@ -7,7 +7,7 @@
     using System.Reactive.Subjects;
     using System.Threading.Tasks;
     using Builders;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using WorkoutWotch.UnitTests.Reactive;
     using WorkoutWotch.UnitTests.Services.ExerciseDocument.Mocks;
     using WorkoutWotch.UnitTests.Services.State.Mocks;

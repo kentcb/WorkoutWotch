@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Parsers
 {
     using System;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using Services.Audio.Mocks;
     using Services.Delay.Mocks;
     using Services.Logger.Mocks;

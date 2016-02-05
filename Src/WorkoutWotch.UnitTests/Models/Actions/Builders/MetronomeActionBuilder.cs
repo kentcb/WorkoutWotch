@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Actions.Builders
 {
     using System.Collections.Generic;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Services.Contracts.Audio;
     using WorkoutWotch.Services.Contracts.Delay;

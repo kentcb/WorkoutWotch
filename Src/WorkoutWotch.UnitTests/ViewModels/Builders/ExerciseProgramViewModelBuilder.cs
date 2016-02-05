@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.UnitTests.ViewModels.Builders
 {
     using global::ReactiveUI;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using Models.Builders;
     using ReactiveUI.Mocks;
     using WorkoutWotch.Models;

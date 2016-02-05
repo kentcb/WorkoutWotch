@@ -4,7 +4,7 @@
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
     using Builders;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using Models.Builders;
     using WorkoutWotch.Models;
     using WorkoutWotch.UnitTests.Models.Mocks;

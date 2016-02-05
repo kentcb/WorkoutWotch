@@ -1,6 +1,6 @@
 ﻿namespace WorkoutWotch.UnitTests.ReactiveUI.Mocks
 {
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using global::ReactiveUI;
 
     public sealed class ScreenMock : MockBase<IScreen>, IScreen

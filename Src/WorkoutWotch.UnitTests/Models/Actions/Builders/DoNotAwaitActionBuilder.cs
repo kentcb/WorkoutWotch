@@ -1,6 +1,6 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Actions.Builders
 {
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Services.Contracts.Logger;

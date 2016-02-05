@@ -8,13 +8,13 @@
 // ------------------------------------------------------------------------
 namespace WorkoutWotch.UnitTests.Services.Analytics.Mocks
 {
-    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "3.1.2.0")]
+    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "4.0.0.0")]
     [System.Runtime.CompilerServices.CompilerGenerated]
-    public partial class AnalyticsServiceMock : global::Kent.Boogaart.PCLMock.MockBase<global::WorkoutWotch.Services.Contracts.Analytics.IAnalyticsService>, global::WorkoutWotch.Services.Contracts.Analytics.IAnalyticsService
+    public partial class AnalyticsServiceMock : global::PCLMock.MockBase<global::WorkoutWotch.Services.Contracts.Analytics.IAnalyticsService>, global::WorkoutWotch.Services.Contracts.Analytics.IAnalyticsService
     {
-        public AnalyticsServiceMock(global::Kent.Boogaart.PCLMock.MockBehavior behavior = global::Kent.Boogaart.PCLMock.MockBehavior.Strict): base (behavior)
+        public AnalyticsServiceMock(global::PCLMock.MockBehavior behavior = global::PCLMock.MockBehavior.Strict): base (behavior)
         {
-            if ((behavior) == (global::Kent.Boogaart.PCLMock.MockBehavior.Loose))
+            if ((behavior) == (global::PCLMock.MockBehavior.Loose))
             {
                 ConfigureLooseBehavior();
             }
@@ -44,13 +44,13 @@ namespace WorkoutWotch.UnitTests.Services.Analytics.Mocks
 }
 namespace WorkoutWotch.UnitTests.Services.Logger.Mocks
 {
-    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "3.1.2.0")]
+    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "4.0.0.0")]
     [System.Runtime.CompilerServices.CompilerGenerated]
-    public partial class LoggerServiceMock : global::Kent.Boogaart.PCLMock.MockBase<global::WorkoutWotch.Services.Contracts.Logger.ILoggerService>, global::WorkoutWotch.Services.Contracts.Logger.ILoggerService
+    public partial class LoggerServiceMock : global::PCLMock.MockBase<global::WorkoutWotch.Services.Contracts.Logger.ILoggerService>, global::WorkoutWotch.Services.Contracts.Logger.ILoggerService
     {
-        public LoggerServiceMock(global::Kent.Boogaart.PCLMock.MockBehavior behavior = global::Kent.Boogaart.PCLMock.MockBehavior.Strict): base (behavior)
+        public LoggerServiceMock(global::PCLMock.MockBehavior behavior = global::PCLMock.MockBehavior.Strict): base (behavior)
         {
-            if ((behavior) == (global::Kent.Boogaart.PCLMock.MockBehavior.Loose))
+            if ((behavior) == (global::PCLMock.MockBehavior.Loose))
             {
                 ConfigureLooseBehavior();
             }
@@ -131,13 +131,13 @@ namespace WorkoutWotch.UnitTests.Services.Logger.Mocks
 }
 namespace WorkoutWotch.UnitTests.Services.Logger.Mocks
 {
-    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "3.1.2.0")]
+    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "4.0.0.0")]
     [System.Runtime.CompilerServices.CompilerGenerated]
-    public partial class LoggerMock : global::Kent.Boogaart.PCLMock.MockBase<global::WorkoutWotch.Services.Contracts.Logger.ILogger>, global::WorkoutWotch.Services.Contracts.Logger.ILogger
+    public partial class LoggerMock : global::PCLMock.MockBase<global::WorkoutWotch.Services.Contracts.Logger.ILogger>, global::WorkoutWotch.Services.Contracts.Logger.ILogger
     {
-        public LoggerMock(global::Kent.Boogaart.PCLMock.MockBehavior behavior = global::Kent.Boogaart.PCLMock.MockBehavior.Strict): base (behavior)
+        public LoggerMock(global::PCLMock.MockBehavior behavior = global::PCLMock.MockBehavior.Strict): base (behavior)
         {
-            if ((behavior) == (global::Kent.Boogaart.PCLMock.MockBehavior.Loose))
+            if ((behavior) == (global::PCLMock.MockBehavior.Loose))
             {
                 ConfigureLooseBehavior();
             }
@@ -265,13 +265,13 @@ namespace WorkoutWotch.UnitTests.Services.Logger.Mocks
 }
 namespace WorkoutWotch.UnitTests.Services.Scheduler.Mocks
 {
-    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "3.1.2.0")]
+    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "4.0.0.0")]
     [System.Runtime.CompilerServices.CompilerGenerated]
-    public partial class SchedulerServiceMock : global::Kent.Boogaart.PCLMock.MockBase<global::WorkoutWotch.Services.Contracts.Scheduler.ISchedulerService>, global::WorkoutWotch.Services.Contracts.Scheduler.ISchedulerService
+    public partial class SchedulerServiceMock : global::PCLMock.MockBase<global::WorkoutWotch.Services.Contracts.Scheduler.ISchedulerService>, global::WorkoutWotch.Services.Contracts.Scheduler.ISchedulerService
     {
-        public SchedulerServiceMock(global::Kent.Boogaart.PCLMock.MockBehavior behavior = global::Kent.Boogaart.PCLMock.MockBehavior.Strict): base (behavior)
+        public SchedulerServiceMock(global::PCLMock.MockBehavior behavior = global::PCLMock.MockBehavior.Strict): base (behavior)
         {
-            if ((behavior) == (global::Kent.Boogaart.PCLMock.MockBehavior.Loose))
+            if ((behavior) == (global::PCLMock.MockBehavior.Loose))
             {
                 ConfigureLooseBehavior();
             }
@@ -321,13 +321,13 @@ namespace WorkoutWotch.UnitTests.Services.Scheduler.Mocks
 }
 namespace WorkoutWotch.UnitTests.Services.State.Mocks
 {
-    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "3.1.2.0")]
+    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "4.0.0.0")]
     [System.Runtime.CompilerServices.CompilerGenerated]
-    public partial class StateServiceMock : global::Kent.Boogaart.PCLMock.MockBase<global::WorkoutWotch.Services.Contracts.State.IStateService>, global::WorkoutWotch.Services.Contracts.State.IStateService
+    public partial class StateServiceMock : global::PCLMock.MockBase<global::WorkoutWotch.Services.Contracts.State.IStateService>, global::WorkoutWotch.Services.Contracts.State.IStateService
     {
-        public StateServiceMock(global::Kent.Boogaart.PCLMock.MockBehavior behavior = global::Kent.Boogaart.PCLMock.MockBehavior.Strict): base (behavior)
+        public StateServiceMock(global::PCLMock.MockBehavior behavior = global::PCLMock.MockBehavior.Strict): base (behavior)
         {
-            if ((behavior) == (global::Kent.Boogaart.PCLMock.MockBehavior.Loose))
+            if ((behavior) == (global::PCLMock.MockBehavior.Loose))
             {
                 ConfigureLooseBehavior();
             }
@@ -362,13 +362,13 @@ namespace WorkoutWotch.UnitTests.Services.State.Mocks
 }
 namespace WorkoutWotch.UnitTests.Services.Delay.Mocks
 {
-    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "3.1.2.0")]
+    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "4.0.0.0")]
     [System.Runtime.CompilerServices.CompilerGenerated]
-    public partial class DelayServiceMock : global::Kent.Boogaart.PCLMock.MockBase<global::WorkoutWotch.Services.Contracts.Delay.IDelayService>, global::WorkoutWotch.Services.Contracts.Delay.IDelayService
+    public partial class DelayServiceMock : global::PCLMock.MockBase<global::WorkoutWotch.Services.Contracts.Delay.IDelayService>, global::WorkoutWotch.Services.Contracts.Delay.IDelayService
     {
-        public DelayServiceMock(global::Kent.Boogaart.PCLMock.MockBehavior behavior = global::Kent.Boogaart.PCLMock.MockBehavior.Strict): base (behavior)
+        public DelayServiceMock(global::PCLMock.MockBehavior behavior = global::PCLMock.MockBehavior.Strict): base (behavior)
         {
-            if ((behavior) == (global::Kent.Boogaart.PCLMock.MockBehavior.Loose))
+            if ((behavior) == (global::PCLMock.MockBehavior.Loose))
             {
                 ConfigureLooseBehavior();
             }
@@ -383,13 +383,13 @@ namespace WorkoutWotch.UnitTests.Services.Delay.Mocks
 }
 namespace WorkoutWotch.UnitTests.Services.ExerciseDocument.Mocks
 {
-    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "3.1.2.0")]
+    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "4.0.0.0")]
     [System.Runtime.CompilerServices.CompilerGenerated]
-    public partial class ExerciseDocumentServiceMock : global::Kent.Boogaart.PCLMock.MockBase<global::WorkoutWotch.Services.Contracts.ExerciseDocument.IExerciseDocumentService>, global::WorkoutWotch.Services.Contracts.ExerciseDocument.IExerciseDocumentService
+    public partial class ExerciseDocumentServiceMock : global::PCLMock.MockBase<global::WorkoutWotch.Services.Contracts.ExerciseDocument.IExerciseDocumentService>, global::WorkoutWotch.Services.Contracts.ExerciseDocument.IExerciseDocumentService
     {
-        public ExerciseDocumentServiceMock(global::Kent.Boogaart.PCLMock.MockBehavior behavior = global::Kent.Boogaart.PCLMock.MockBehavior.Strict): base (behavior)
+        public ExerciseDocumentServiceMock(global::PCLMock.MockBehavior behavior = global::PCLMock.MockBehavior.Strict): base (behavior)
         {
-            if ((behavior) == (global::Kent.Boogaart.PCLMock.MockBehavior.Loose))
+            if ((behavior) == (global::PCLMock.MockBehavior.Loose))
             {
                 ConfigureLooseBehavior();
             }
@@ -407,13 +407,13 @@ namespace WorkoutWotch.UnitTests.Services.ExerciseDocument.Mocks
 }
 namespace WorkoutWotch.UnitTests.Services.Audio.Mocks
 {
-    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "3.1.2.0")]
+    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "4.0.0.0")]
     [System.Runtime.CompilerServices.CompilerGenerated]
-    public partial class AudioServiceMock : global::Kent.Boogaart.PCLMock.MockBase<global::WorkoutWotch.Services.Contracts.Audio.IAudioService>, global::WorkoutWotch.Services.Contracts.Audio.IAudioService
+    public partial class AudioServiceMock : global::PCLMock.MockBase<global::WorkoutWotch.Services.Contracts.Audio.IAudioService>, global::WorkoutWotch.Services.Contracts.Audio.IAudioService
     {
-        public AudioServiceMock(global::Kent.Boogaart.PCLMock.MockBehavior behavior = global::Kent.Boogaart.PCLMock.MockBehavior.Strict): base (behavior)
+        public AudioServiceMock(global::PCLMock.MockBehavior behavior = global::PCLMock.MockBehavior.Strict): base (behavior)
         {
-            if ((behavior) == (global::Kent.Boogaart.PCLMock.MockBehavior.Loose))
+            if ((behavior) == (global::PCLMock.MockBehavior.Loose))
             {
                 ConfigureLooseBehavior();
             }
@@ -428,13 +428,13 @@ namespace WorkoutWotch.UnitTests.Services.Audio.Mocks
 }
 namespace WorkoutWotch.UnitTests.Services.Speech.Mocks
 {
-    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "3.1.2.0")]
+    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "4.0.0.0")]
     [System.Runtime.CompilerServices.CompilerGenerated]
-    public partial class SpeechServiceMock : global::Kent.Boogaart.PCLMock.MockBase<global::WorkoutWotch.Services.Contracts.Speech.ISpeechService>, global::WorkoutWotch.Services.Contracts.Speech.ISpeechService
+    public partial class SpeechServiceMock : global::PCLMock.MockBase<global::WorkoutWotch.Services.Contracts.Speech.ISpeechService>, global::WorkoutWotch.Services.Contracts.Speech.ISpeechService
     {
-        public SpeechServiceMock(global::Kent.Boogaart.PCLMock.MockBehavior behavior = global::Kent.Boogaart.PCLMock.MockBehavior.Strict): base (behavior)
+        public SpeechServiceMock(global::PCLMock.MockBehavior behavior = global::PCLMock.MockBehavior.Strict): base (behavior)
         {
-            if ((behavior) == (global::Kent.Boogaart.PCLMock.MockBehavior.Loose))
+            if ((behavior) == (global::PCLMock.MockBehavior.Loose))
             {
                 ConfigureLooseBehavior();
             }
@@ -449,13 +449,13 @@ namespace WorkoutWotch.UnitTests.Services.Speech.Mocks
 }
 namespace WorkoutWotch.UnitTests.Models.Mocks
 {
-    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "3.1.2.0")]
+    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "4.0.0.0")]
     [System.Runtime.CompilerServices.CompilerGenerated]
-    public partial class ActionMock : global::Kent.Boogaart.PCLMock.MockBase<global::WorkoutWotch.Models.IAction>, global::WorkoutWotch.Models.IAction
+    public partial class ActionMock : global::PCLMock.MockBase<global::WorkoutWotch.Models.IAction>, global::WorkoutWotch.Models.IAction
     {
-        public ActionMock(global::Kent.Boogaart.PCLMock.MockBehavior behavior = global::Kent.Boogaart.PCLMock.MockBehavior.Strict): base (behavior)
+        public ActionMock(global::PCLMock.MockBehavior behavior = global::PCLMock.MockBehavior.Strict): base (behavior)
         {
-            if ((behavior) == (global::Kent.Boogaart.PCLMock.MockBehavior.Loose))
+            if ((behavior) == (global::PCLMock.MockBehavior.Loose))
             {
                 ConfigureLooseBehavior();
             }
@@ -478,13 +478,13 @@ namespace WorkoutWotch.UnitTests.Models.Mocks
 }
 namespace WorkoutWotch.UnitTests.Models.Mocks
 {
-    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "3.1.2.0")]
+    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "4.0.0.0")]
     [System.Runtime.CompilerServices.CompilerGenerated]
-    public partial class EventMock : global::Kent.Boogaart.PCLMock.MockBase<global::WorkoutWotch.Models.IEvent>, global::WorkoutWotch.Models.IEvent
+    public partial class EventMock : global::PCLMock.MockBase<global::WorkoutWotch.Models.IEvent>, global::WorkoutWotch.Models.IEvent
     {
-        public EventMock(global::Kent.Boogaart.PCLMock.MockBehavior behavior = global::Kent.Boogaart.PCLMock.MockBehavior.Strict): base (behavior)
+        public EventMock(global::PCLMock.MockBehavior behavior = global::PCLMock.MockBehavior.Strict): base (behavior)
         {
-            if ((behavior) == (global::Kent.Boogaart.PCLMock.MockBehavior.Loose))
+            if ((behavior) == (global::PCLMock.MockBehavior.Loose))
             {
                 ConfigureLooseBehavior();
             }
@@ -502,13 +502,13 @@ namespace WorkoutWotch.UnitTests.Models.Mocks
 }
 namespace WorkoutWotch.UnitTests.Models.Mocks
 {
-    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "3.1.2.0")]
+    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "4.0.0.0")]
     [System.Runtime.CompilerServices.CompilerGenerated]
-    public partial class EventMatcherMock : global::Kent.Boogaart.PCLMock.MockBase<global::WorkoutWotch.Models.IEventMatcher>, global::WorkoutWotch.Models.IEventMatcher
+    public partial class EventMatcherMock : global::PCLMock.MockBase<global::WorkoutWotch.Models.IEventMatcher>, global::WorkoutWotch.Models.IEventMatcher
     {
-        public EventMatcherMock(global::Kent.Boogaart.PCLMock.MockBehavior behavior = global::Kent.Boogaart.PCLMock.MockBehavior.Strict): base (behavior)
+        public EventMatcherMock(global::PCLMock.MockBehavior behavior = global::PCLMock.MockBehavior.Strict): base (behavior)
         {
-            if ((behavior) == (global::Kent.Boogaart.PCLMock.MockBehavior.Loose))
+            if ((behavior) == (global::PCLMock.MockBehavior.Loose))
             {
                 ConfigureLooseBehavior();
             }

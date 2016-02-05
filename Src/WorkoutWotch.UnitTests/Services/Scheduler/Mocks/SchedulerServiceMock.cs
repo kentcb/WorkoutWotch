@@ -1,6 +1,6 @@
 ﻿namespace WorkoutWotch.UnitTests.Services.Scheduler.Mocks
 {
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
 
     public sealed partial class SchedulerServiceMock
     {

@@ -2,7 +2,7 @@
 {
     using System;
     using System.Reactive.Linq;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using Models.Builders;
     using WorkoutWotch.Models;
     using WorkoutWotch.Services.Contracts.Scheduler;

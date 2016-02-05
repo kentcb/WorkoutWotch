@@ -36,9 +36,9 @@
   <ItemGroup>
     <Compile Include="DebugAttribute.cs" />
     <Compile Include="Mocks.g.cs">
-      <DependentUpon>Mocks.tt</DependentUpon>
-      <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Mocks.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Actions\AudioActionFixture.cs" />
     <Compile Include="Models\Actions\Builders\AudioActionBuilder.cs" />
@@ -145,12 +145,12 @@
       <HintPath>..\packages\Kent.Boogaart.HelperTrinity.2.0.3\lib\portable-win+net403+sl40+wp+xbox40+MonoAndroid+Xamarin.iOS10+MonoTouch\Kent.Boogaart.HelperTrinity.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Kent.Boogaart.PCLMock, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kent.Boogaart.PCLMock.3.1.2\lib\portable-win+net40+sl50+WindowsPhoneApp81+wp80+MonoAndroid+Xamarin.iOS10+MonoTouch\Kent.Boogaart.PCLMock.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PCLMock, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PCLMock.4.0.0\lib\portable-win+net40+sl50+WindowsPhoneApp81+wp80+MonoAndroid+Xamarin.iOS10+MonoTouch\PCLMock.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ReactiveUI">

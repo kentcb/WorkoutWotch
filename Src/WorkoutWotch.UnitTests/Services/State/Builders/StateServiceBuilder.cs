@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.UnitTests.Services.State.Builders
 {
     using Akavache;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.State;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;

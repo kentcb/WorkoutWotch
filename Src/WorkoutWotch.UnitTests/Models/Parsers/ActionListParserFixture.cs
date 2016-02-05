@@ -2,7 +2,7 @@
 {
     using System;
     using System.Linq;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using Services.Audio.Mocks;
     using Services.Delay.Mocks;
     using Services.Logger.Mocks;

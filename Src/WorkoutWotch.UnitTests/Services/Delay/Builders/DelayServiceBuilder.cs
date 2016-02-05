@@ -1,6 +1,6 @@
 ﻿namespace WorkoutWotch.UnitTests.Services.Delay.Builders
 {
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using WorkoutWotch.Services.Contracts.Scheduler;
     using WorkoutWotch.Services.Delay;
     using WorkoutWotch.UnitTests.Services.Scheduler.Mocks;

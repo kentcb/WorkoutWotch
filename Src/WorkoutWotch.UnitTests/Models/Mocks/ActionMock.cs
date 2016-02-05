@@ -2,7 +2,7 @@
 {
     using System.Reactive;
     using System.Reactive.Linq;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using WorkoutWotch.Models;
 
     public sealed partial class ActionMock

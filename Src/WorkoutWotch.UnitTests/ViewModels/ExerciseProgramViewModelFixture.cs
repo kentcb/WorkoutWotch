@@ -6,7 +6,7 @@
     using System.Reactive.Linq;
     using Builders;
     using global::ReactiveUI;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using Models.Actions.Builders;
     using Models.Builders;
     using Services.Delay.Builders;

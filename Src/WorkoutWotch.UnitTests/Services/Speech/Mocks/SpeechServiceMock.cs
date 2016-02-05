@@ -3,7 +3,7 @@
     using System.Reactive;
     using System.Reactive.Linq;
     using System.Threading;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
 
     public sealed partial class SpeechServiceMock
     {

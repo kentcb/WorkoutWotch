@@ -2,7 +2,7 @@
 {
     using System;
     using System.Reactive.Concurrency;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
 
     public sealed class SchedulerMock : MockBase<IScheduler>, IScheduler
     {

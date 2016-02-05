@@ -2,7 +2,7 @@
 {
     using System;
     using Builders;
-    using Kent.Boogaart.PCLMock;
+    using PCLMock;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.UnitTests.Services.Audio.Mocks;

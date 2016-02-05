@@ -74,6 +74,9 @@ All patterns specified in this file are .NET regular expressions.
             <Pattern>WorkoutWotch\.Services\..*</Pattern>
         </Include>
         <Exclude>
+            <Pattern>WorkoutWotch\.Services\.Android\..*</Pattern>
+        </Exclude>
+        <Exclude>
             <Pattern>WorkoutWotch\.Services\.iOS\..*</Pattern>
         </Exclude>
     </Interfaces>
