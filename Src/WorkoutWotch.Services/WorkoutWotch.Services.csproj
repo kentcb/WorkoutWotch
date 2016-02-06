@@ -42,7 +42,6 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Logger\LoggerService.cs" />
-    <Compile Include="Scheduler\SchedulerService.cs" />
     <Compile Include="State\StateService.cs" />
     <Compile Include="Delay\DelayService.cs" />
   </ItemGroup>

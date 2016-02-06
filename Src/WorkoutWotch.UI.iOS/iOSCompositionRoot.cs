@@ -12,7 +12,7 @@
     {
         protected override IAudioService CreateAudioService() =>
             new AudioService(
-                this.schedulerService.Value);
+                this.mainScheduler.Value);
 
         protected override IExerciseDocumentService CreateExerciseDocumentService() =>
             // just used canned data - useful for getting you up and running quickly

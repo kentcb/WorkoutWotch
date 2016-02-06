@@ -198,62 +198,6 @@ namespace WorkoutWotch.UnitTests.Services.Logger.Mocks
         }
     }
 }
-namespace WorkoutWotch.UnitTests.Services.Scheduler.Mocks
-{
-    [System.CodeDom.Compiler.GeneratedCode("PCLMock", "4.0.0.0")]
-    [System.Runtime.CompilerServices.CompilerGenerated]
-    public partial class SchedulerServiceMock : global::PCLMock.MockBase<global::WorkoutWotch.Services.Contracts.Scheduler.ISchedulerService>, global::WorkoutWotch.Services.Contracts.Scheduler.ISchedulerService
-    {
-        public SchedulerServiceMock(global::PCLMock.MockBehavior behavior = global::PCLMock.MockBehavior.Strict): base (behavior)
-        {
-            if ((behavior) == (global::PCLMock.MockBehavior.Loose))
-            {
-                ConfigureLooseBehavior();
-            }
-        }
-
-        partial void ConfigureLooseBehavior();
-        public global::System.Reactive.Concurrency.IScheduler DefaultScheduler
-        {
-            get
-            {
-                return this.Apply(x => x.DefaultScheduler);
-            }
-        }
-
-        public global::System.Reactive.Concurrency.IScheduler CurrentThreadScheduler
-        {
-            get
-            {
-                return this.Apply(x => x.CurrentThreadScheduler);
-            }
-        }
-
-        public global::System.Reactive.Concurrency.IScheduler ImmediateScheduler
-        {
-            get
-            {
-                return this.Apply(x => x.ImmediateScheduler);
-            }
-        }
-
-        public global::System.Reactive.Concurrency.IScheduler MainScheduler
-        {
-            get
-            {
-                return this.Apply(x => x.MainScheduler);
-            }
-        }
-
-        public global::System.Reactive.Concurrency.IScheduler TaskPoolScheduler
-        {
-            get
-            {
-                return this.Apply(x => x.TaskPoolScheduler);
-            }
-        }
-    }
-}
 namespace WorkoutWotch.UnitTests.Services.State.Mocks
 {
     [System.CodeDom.Compiler.GeneratedCode("PCLMock", "4.0.0.0")]

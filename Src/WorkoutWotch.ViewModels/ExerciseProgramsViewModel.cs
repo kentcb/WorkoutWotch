@@ -1,6 +1,7 @@
 ﻿namespace WorkoutWotch.ViewModels
 {
     using System;
+    using System.Reactive.Concurrency;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using ReactiveUI;
@@ -11,7 +12,6 @@
     using WorkoutWotch.Models;
     using WorkoutWotch.Services.Contracts.ExerciseDocument;
     using WorkoutWotch.Services.Contracts.Logger;
-    using WorkoutWotch.Services.Contracts.Scheduler;
     using WorkoutWotch.Services.Contracts.State;
     using WorkoutWotch.Utility;
 
@@ -35,7 +35,8 @@
             IDelayService delayService,
             IExerciseDocumentService exerciseDocumentService,
             ILoggerService loggerService,
-            ISchedulerService schedulerService,
+            IScheduler mainScheduler,
+            IScheduler taskPoolScheduler,
             ISpeechService speechService,
             IStateService stateService,
             IScreen hostScreen,
@@ -45,7 +46,8 @@
             Ensure.ArgumentNotNull(delayService, nameof(delayService));
             Ensure.ArgumentNotNull(exerciseDocumentService, nameof(exerciseDocumentService));
             Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
-            Ensure.ArgumentNotNull(schedulerService, nameof(schedulerService));
+            Ensure.ArgumentNotNull(mainScheduler, nameof(mainScheduler));
+            Ensure.ArgumentNotNull(taskPoolScheduler, nameof(taskPoolScheduler));
             Ensure.ArgumentNotNull(speechService, nameof(speechService));
             Ensure.ArgumentNotNull(stateService, nameof(stateService));
             Ensure.ArgumentNotNull(hostScreen, nameof(hostScreen));
@@ -79,7 +81,7 @@
                 .Catch((Exception ex) => Observable.Empty<DocumentSourceWith<string>>());
 
             var results = documents
-                .ObserveOn(schedulerService.TaskPoolScheduler)
+                .ObserveOn(taskPoolScheduler)
                 .Select(
                     x =>
                     {
@@ -99,26 +101,26 @@
 
             safeResults
                 .Select(x => x.Item.WasSuccessful ? null : x.Item.ToString())
-                .ObserveOn(schedulerService.MainScheduler)
+                .ObserveOn(mainScheduler)
                 .Subscribe(x => this.ParseErrorMessage = x)
                 .AddTo(this.disposables);
 
             results
                 .Select(x => !x.Item.WasSuccessful ? ExerciseProgramsViewModelStatus.ParseFailed : x.Source == DocumentSource.Cache ? ExerciseProgramsViewModelStatus.LoadedFromCache : ExerciseProgramsViewModelStatus.LoadedFromService)
                 .Catch((Exception ex) => Observable.Return(ExerciseProgramsViewModelStatus.LoadFailed))
-                .ObserveOn(schedulerService.MainScheduler)
+                .ObserveOn(mainScheduler)
                 .Subscribe(x => this.Status = x)
                 .AddTo(this.disposables);
 
             safeResults
                 .Select(x => x.Item.WasSuccessful ? x.Item.Value : null)
-                .ObserveOn(schedulerService.MainScheduler)
+                .ObserveOn(mainScheduler)
                 .Subscribe(x => this.Model = x)
                 .AddTo(this.disposables);
 
             this.WhenAnyValue(x => x.Model)
                 .Select(x => x == null ? null : x.Programs.CreateDerivedCollection(y => exerciseProgramViewModelFactory(y)))
-                .ObserveOn(schedulerService.MainScheduler)
+                .ObserveOn(mainScheduler)
                 .Subscribe(x => this.Programs = x)
                 .AddTo(this.disposables);
 

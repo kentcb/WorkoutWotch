@@ -41,7 +41,6 @@
     <Compile Include="Logger\ILogger.cs" />
     <Compile Include="Logger\LogLevel.cs" />
     <Compile Include="Logger\LogEntry.cs" />
-    <Compile Include="Scheduler\ISchedulerService.cs" />
     <Compile Include="State\IStateService.cs" />
     <Compile Include="Delay\IDelayService.cs" />
     <Compile Include="ExerciseDocument\IExerciseDocumentService.cs" />

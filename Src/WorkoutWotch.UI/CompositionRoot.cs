@@ -1,18 +1,18 @@
 ﻿namespace WorkoutWotch.UI
 {
     using System;
+    using System.Reactive.Concurrency;
+    using System.Threading;
     using Akavache;
     using WorkoutWotch.Models;
     using WorkoutWotch.Services.Contracts.Audio;
     using WorkoutWotch.Services.Contracts.Delay;
     using WorkoutWotch.Services.Contracts.ExerciseDocument;
     using WorkoutWotch.Services.Contracts.Logger;
-    using WorkoutWotch.Services.Contracts.Scheduler;
     using WorkoutWotch.Services.Contracts.Speech;
     using WorkoutWotch.Services.Contracts.State;
     using WorkoutWotch.Services.Delay;
     using WorkoutWotch.Services.Logger;
-    using WorkoutWotch.Services.Scheduler;
     using WorkoutWotch.Services.State;
     using WorkoutWotch.ViewModels;
 
@@ -24,7 +24,8 @@
         protected readonly Lazy<IDelayService> delayService;
         protected readonly Lazy<IExerciseDocumentService> exerciseDocumentService;
         protected readonly Lazy<ILoggerService> loggerService;
-        protected readonly Lazy<ISchedulerService> schedulerService;
+        protected readonly Lazy<IScheduler> mainScheduler;
+        protected readonly Lazy<IScheduler> taskPoolScheduler;
         protected readonly Lazy<ISpeechService> speechService;
         protected readonly Lazy<IStateService> stateService;
         protected readonly Lazy<App> app;
@@ -38,9 +39,10 @@
             this.delayService = new Lazy<IDelayService>(this.CreateDelayService);
             this.exerciseDocumentService = new Lazy<IExerciseDocumentService>(this.CreateExerciseDocumentService);
             this.loggerService = new Lazy<ILoggerService>(this.CreateLoggerService);
-            this.schedulerService = new Lazy<ISchedulerService>(this.CreateSchedulerService);
+            this.mainScheduler = new Lazy<IScheduler>(this.CreateMainScheduler);
             this.speechService = new Lazy<ISpeechService>(this.CreateSpeechService);
             this.stateService = new Lazy<IStateService>(this.CreateStateService);
+            this.taskPoolScheduler = new Lazy<IScheduler>(this.CreateTaskPoolScheduler);
             this.app = new Lazy<App>(this.CreateApp);
             this.mainViewModel = new Lazy<MainViewModel>(this.CreateMainViewModel);
             this.exerciseProgramsViewModel = new Lazy<ExerciseProgramsViewModel>(this.CreateExerciseProgramsViewModel);
@@ -65,15 +67,15 @@
 
         private IDelayService CreateDelayService() =>
             new DelayService(
-                this.schedulerService.Value);
+                this.mainScheduler.Value);
 
         protected abstract IExerciseDocumentService CreateExerciseDocumentService();
 
         private ILoggerService CreateLoggerService() =>
             new LoggerService();
 
-        private ISchedulerService CreateSchedulerService() =>
-            new SchedulerService();
+        private IScheduler CreateMainScheduler() =>
+            new SynchronizationContextScheduler(SynchronizationContext.Current);
 
         protected abstract ISpeechService CreateSpeechService();
 
@@ -81,6 +83,9 @@
             new StateService(
                 this.blobCache.Value,
                 this.loggerService.Value);
+
+        private IScheduler CreateTaskPoolScheduler() =>
+            TaskPoolScheduler.Default;
 
         private App CreateApp() =>
             new App(
@@ -96,7 +101,8 @@
                 this.delayService.Value,
                 this.exerciseDocumentService.Value,
                 this.loggerService.Value,
-                this.schedulerService.Value,
+                this.mainScheduler.Value,
+                this.taskPoolScheduler.Value,
                 this.speechService.Value,
                 this.stateService.Value,
                 this.mainViewModel.Value,
@@ -105,7 +111,7 @@
         private ExerciseProgramViewModel ExerciseProgramViewModelFactory(ExerciseProgram model) =>
             new ExerciseProgramViewModel(
                 this.loggerService.Value,
-                this.schedulerService.Value,
+                this.mainScheduler.Value,
                 this.mainViewModel.Value,
                 model);
     }

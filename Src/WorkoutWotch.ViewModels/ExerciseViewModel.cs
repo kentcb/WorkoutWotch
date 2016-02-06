@@ -1,11 +1,11 @@
 namespace WorkoutWotch.ViewModels
 {
     using System;
+    using System.Reactive.Concurrency;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using ReactiveUI;
     using WorkoutWotch.Models;
-    using WorkoutWotch.Services.Contracts.Scheduler;
     using WorkoutWotch.Utility;
 
     public sealed class ExerciseViewModel : DisposableReactiveObject
@@ -17,9 +17,9 @@ namespace WorkoutWotch.ViewModels
         private bool isActive;
         private double progress;
 
-        public ExerciseViewModel(ISchedulerService schedulerService, Exercise model, IObservable<ExecutionContext> executionContext)
+        public ExerciseViewModel(IScheduler scheduler, Exercise model, IObservable<ExecutionContext> executionContext)
         {
-            Ensure.ArgumentNotNull(schedulerService, nameof(schedulerService));
+            Ensure.ArgumentNotNull(scheduler, nameof(scheduler));
             Ensure.ArgumentNotNull(model, nameof(model));
             Ensure.ArgumentNotNull(executionContext, nameof(executionContext));
 
@@ -27,7 +27,7 @@ namespace WorkoutWotch.ViewModels
             this.model = model;
 
             executionContext
-                .ObserveOn(schedulerService.MainScheduler)
+                .ObserveOn(scheduler)
                 .Subscribe(x => this.ExecutionContext = x)
                 .AddTo(this.disposables);
 
@@ -42,7 +42,7 @@ namespace WorkoutWotch.ViewModels
                         .Select(ec => ec == null ? Observable.Never<Exercise>() : ec.WhenAnyValue(x => x.CurrentExercise))
                         .Switch(),
                     (skip, current) => skip == TimeSpan.Zero && current == this.model)
-                .ObserveOn(schedulerService.MainScheduler)
+                .ObserveOn(scheduler)
                 .Subscribe(x => this.IsActive = x)
                 .AddTo(this.disposables);
 
@@ -57,7 +57,7 @@ namespace WorkoutWotch.ViewModels
                                 .Where(_ => ec.CurrentExercise == this.model)
                                 .StartWith(TimeSpan.Zero))
                 .Switch()
-                .ObserveOn(schedulerService.MainScheduler)
+                .ObserveOn(scheduler)
                 .Subscribe(x => this.ProgressTimeSpan = x)
                 .AddTo(this.disposables);
 
@@ -69,7 +69,7 @@ namespace WorkoutWotch.ViewModels
                 .Select(progressRatio => double.IsNaN(progressRatio) || double.IsInfinity(progressRatio) ? 0d : progressRatio)
                 .Select(progressRatio => Math.Min(1d, progressRatio))
                 .Select(progressRatio => Math.Max(0d, progressRatio))
-                .ObserveOn(schedulerService.MainScheduler)
+                .ObserveOn(scheduler)
                 .Subscribe(x => this.Progress = x)
                 .AddTo(this.disposables);
         }

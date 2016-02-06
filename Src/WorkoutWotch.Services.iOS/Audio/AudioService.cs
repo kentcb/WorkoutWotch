@@ -2,23 +2,23 @@ namespace WorkoutWotch.Services.iOS.Audio
 {
     using System;
     using System.Reactive;
+    using System.Reactive.Concurrency;
     using System.Reactive.Linq;
     using System.Threading;
     using AVFoundation;
-    using Contracts.Scheduler;
     using Foundation;
     using WorkoutWotch.Services.Contracts.Audio;
     using WorkoutWotch.Utility;
 
     public sealed class AudioService : IAudioService
     {
-        private readonly ISchedulerService schedulerService;
+        private readonly IScheduler scheduler;
 
-        public AudioService(ISchedulerService schedulerService)
+        public AudioService(IScheduler scheduler)
         {
-            Ensure.ArgumentNotNull(schedulerService, nameof(schedulerService));
+            Ensure.ArgumentNotNull(scheduler, nameof(scheduler));
 
-            this.schedulerService = schedulerService;
+            this.scheduler = scheduler;
         }
 
         public IObservable<Unit> PlayAsync(string name)
@@ -33,7 +33,7 @@ namespace WorkoutWotch.Services.iOS.Audio
                 .Publish();
 
             finishedPlaying
-                .ObserveOn(this.schedulerService.MainScheduler)
+                .ObserveOn(this.scheduler)
                 .Subscribe(_ => audioPlayer.Dispose());
 
             finishedPlaying.Connect();

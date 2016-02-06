@@ -109,14 +109,12 @@
     <Compile Include="Services\Logger\Mocks\LoggerMock.cs" />
     <Compile Include="Services\Logger\Mocks\LoggerServiceMock.cs" />
     <Compile Include="Services\Scheduler\Mocks\SchedulerMock.cs" />
-    <Compile Include="Services\Scheduler\Mocks\SchedulerServiceMock.cs" />
     <Compile Include="Services\Speech\Mocks\SpeechServiceMock.cs" />
     <Compile Include="Services\State\Builders\StateServiceBuilder.cs" />
     <Compile Include="Services\State\Mocks\BlobCacheMock.cs" />
     <Compile Include="Services\State\Mocks\StateServiceMock.cs" />
     <Compile Include="Services\State\StateServiceFixture.cs" />
     <Compile Include="Reactive\TestSchedulerExtensions.cs" />
-    <Compile Include="Reactive\TestSchedulerService.cs" />
     <Compile Include="Reactive\Testing\ColdObservable.cs" />
     <Compile Include="Reactive\Testing\GlobalSuppressions.cs" />
     <Compile Include="Reactive\Testing\HotObservable.cs" />

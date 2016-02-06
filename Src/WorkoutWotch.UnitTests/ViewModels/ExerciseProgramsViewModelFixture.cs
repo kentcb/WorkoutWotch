@@ -6,6 +6,7 @@
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
     using Builders;
+    using Microsoft.Reactive.Testing;
     using PCLMock;
     using WorkoutWotch.UnitTests.Reactive;
     using WorkoutWotch.UnitTests.Services.ExerciseDocument.Mocks;
@@ -32,11 +33,11 @@
 ## First Exercise
 
  whatever!";
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
 
             var sut = new ExerciseProgramsViewModelBuilder()
                 .WithCloudDocument(document)
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             scheduler.AdvanceMinimal();
@@ -55,7 +56,7 @@
             var goodDocument = "# First Program";
             var documents = new Subject<string>();
             var exerciseDocumentService = new ExerciseDocumentServiceMock();
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
 
             exerciseDocumentService
                 .When(x => x.ExerciseDocument)
@@ -63,7 +64,7 @@
 
             var sut = new ExerciseProgramsViewModelBuilder()
                 .WithExerciseDocumentService(exerciseDocumentService)
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             documents.OnNext(badDocument);
@@ -80,11 +81,11 @@
         public void programs_yields_any_successfully_parsed_programs()
         {
             var document = "# First Program";
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
 
             var sut = new ExerciseProgramsViewModelBuilder()
                 .WithCloudDocument(document)
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             scheduler.AdvanceMinimal();
@@ -96,10 +97,10 @@
         [Fact]
         public void programs_is_null_if_both_cache_and_cloud_are_empty()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
 
             var sut = new ExerciseProgramsViewModelBuilder()
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             scheduler.AdvanceMinimal();
@@ -110,10 +111,10 @@
         public void programs_is_populated_from_cache_if_cache_is_populated_and_cloud_is_empty()
         {
             var document = "# First Program";
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
 
             var sut = new ExerciseProgramsViewModelBuilder()
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .WithCachedDocument(document)
                 .Build();
 
@@ -126,11 +127,11 @@
         public void programs_is_populated_from_cloud_if_cache_is_empty_and_cloud_is_populated()
         {
             var document = "# First Program";
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
 
             var sut = new ExerciseProgramsViewModelBuilder()
                 .WithCloudDocument(document)
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             scheduler.AdvanceMinimal();
@@ -143,7 +144,7 @@
         {
             var document = "# First Program";
             var stateService = new StateServiceMock();
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
 
             stateService
                 .When(x => x.GetAsync<string>(It.IsAny<string>()))
@@ -155,7 +156,7 @@
 
             var sut = new ExerciseProgramsViewModelBuilder()
                 .WithCloudDocument(document)
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .WithStateService(stateService)
                 .Build();
 
@@ -171,12 +172,12 @@
             var cloudDocument = @"
 # First Program
 # Second Program";
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
 
             var sut = new ExerciseProgramsViewModelBuilder()
                 .WithCloudDocument(cloudDocument)
                 .WithCachedDocument(cacheDocument)
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             scheduler.AdvanceMinimal();
@@ -191,7 +192,7 @@
             var cloudDocument = @"
 # First Program
 # Second Program";
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
 
             var exerciseDocumentService = new ExerciseDocumentServiceMock(MockBehavior.Loose);
 
@@ -200,12 +201,12 @@
                 .Return(
                     Observable
                         .Return(cloudDocument)
-                        .Delay(TimeSpan.FromSeconds(3), scheduler.TaskPoolScheduler));
+                        .Delay(TimeSpan.FromSeconds(3), scheduler));
 
             var sut = new ExerciseProgramsViewModelBuilder()
                 .WithExerciseDocumentService(exerciseDocumentService)
                 .WithCachedDocument(cacheDocument)
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             scheduler.AdvanceMinimal();
@@ -230,11 +231,11 @@
 ## First Exercise
 
  whatever!";
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
 
             var sut = new ExerciseProgramsViewModelBuilder()
                 .WithCloudDocument(document)
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             scheduler.AdvanceMinimal();
@@ -245,11 +246,11 @@
         public void status_is_loaded_from_cache_if_document_is_successfully_loaded_from_cache()
         {
             var document = "# First Program";
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
 
             var sut = new ExerciseProgramsViewModelBuilder()
                 .WithCachedDocument(document)
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             scheduler.AdvanceMinimal();
@@ -260,11 +261,11 @@
         public void status_is_loaded_from_cloud_if_document_is_successfully_loaded_from_cloud()
         {
             var document = "# First Program";
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
 
             var sut = new ExerciseProgramsViewModelBuilder()
                 .WithCloudDocument(document)
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             scheduler.AdvanceMinimal();
@@ -275,7 +276,7 @@
         public void status_is_load_failed_if_the_document_fails_to_load_altogether()
         {
             var exerciseDocumentService = new ExerciseDocumentServiceMock();
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
 
             exerciseDocumentService
                 .When(x => x.ExerciseDocument)
@@ -283,7 +284,7 @@
 
             var sut = new ExerciseProgramsViewModelBuilder()
                 .WithExerciseDocumentService(exerciseDocumentService)
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             scheduler.AdvanceMinimal();
@@ -294,7 +295,7 @@
         public void document_is_stored_in_cache_if_successfully_loaded_from_cloud()
         {
             var document = "# First Program";
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var stateService = new StateServiceMock();
 
             stateService
@@ -307,7 +308,7 @@
 
             var sut = new ExerciseProgramsViewModelBuilder()
                 .WithCloudDocument(document)
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .WithStateService(stateService)
                 .Build();
 
@@ -323,7 +324,7 @@
         public void document_is_not_stored_in_cache_if_loaded_from_cache()
         {
             var document = "# First Program";
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var stateService = new StateServiceMock();
 
             stateService
@@ -335,7 +336,7 @@
                 .Return(Observable.Return(Unit.Default));
 
             var sut = new ExerciseProgramsViewModelBuilder()
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .WithStateService(stateService)
                 .Build();
 

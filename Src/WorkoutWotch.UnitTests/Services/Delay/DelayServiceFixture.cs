@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading;
+    using Microsoft.Reactive.Testing;
     using WorkoutWotch.UnitTests.Reactive;
     using WorkoutWotch.UnitTests.Services.Delay.Builders;
     using Xunit;
@@ -11,9 +12,9 @@
         [Fact]
         public void delay_async_returns_observable_that_ticks_after_specified_delay()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var sut = new DelayServiceBuilder()
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             var completed = false;
@@ -35,9 +36,9 @@
         [Fact]
         public void delay_async_cancels_the_delay_if_cancellation_token_is_cancelled()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var sut = new DelayServiceBuilder()
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
             var cts = new CancellationTokenSource();
             Exception exception = null;

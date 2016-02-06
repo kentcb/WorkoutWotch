@@ -5,6 +5,7 @@
     using System.Reactive.Linq;
     using Builders;
     using global::ReactiveUI;
+    using Microsoft.Reactive.Testing;
     using Models.Actions.Builders;
     using Models.Builders;
     using PCLMock;
@@ -78,9 +79,9 @@
         [Fact]
         public void is_started_cycles_correctly_if_start_command_is_executed()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var sut = new ExerciseProgramViewModelBuilder()
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
             scheduler.AdvanceMinimal();
 
@@ -100,9 +101,9 @@
         [Fact]
         public void is_start_visible_is_true_by_default()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var sut = new ExerciseProgramViewModelBuilder()
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
             scheduler.AdvanceMinimal();
 
@@ -112,9 +113,9 @@
         [Fact]
         public void is_start_visible_cycles_correctly_if_start_command_is_executed()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var sut = new ExerciseProgramViewModelBuilder()
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
             scheduler.AdvanceMinimal();
 
@@ -145,7 +146,7 @@
         [Fact]
         public void is_paused_cycles_correctly_if_pause_command_is_executed()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(new ExerciseBuilder()
@@ -154,7 +155,7 @@
                                 .WithDelayService(new DelayServiceBuilder().Build())
                                 .WithDelay(TimeSpan.FromMinutes(1))
                                 .Build())))
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             Assert.False(sut.IsPaused);
@@ -180,7 +181,7 @@
         [Fact]
         public void is_pause_visible_cycles_correctly_if_start_command_is_executed()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var action = new ActionMock(MockBehavior.Loose);
             action
                 .When(x => x.Duration)
@@ -192,7 +193,7 @@
                         Observable
                             .Return(Unit.Default)
                             .Do(_ => { })
-                            .Delay(TimeSpan.FromMinutes(1), scheduler.DefaultScheduler)
+                            .Delay(TimeSpan.FromMinutes(1), scheduler)
                             .Do(_ => ec.AddProgress(TimeSpan.FromMinutes(1))));
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(
@@ -200,7 +201,7 @@
                         .WithExercise(
                             new ExerciseBuilder()
                                 .WithBeforeExerciseAction(action)))
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             Assert.False(sut.IsPauseVisible);
@@ -216,7 +217,7 @@
         [Fact]
         public void is_pause_visible_cycles_correctly_if_pause_command_is_executed()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(new ExerciseBuilder()
@@ -225,7 +226,7 @@
                                 .WithDelayService(new DelayServiceBuilder().Build())
                                 .WithDelay(TimeSpan.FromMinutes(1))
                                 .Build())))
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             var isPauseVisible = sut
@@ -258,7 +259,7 @@
         [Fact]
         public void is_resume_visible_cycles_correctly_if_start_command_is_executed_and_execution_is_paused()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(new ExerciseBuilder()
@@ -267,7 +268,7 @@
                                 .WithDelayService(new DelayServiceBuilder().Build())
                                 .WithDelay(TimeSpan.FromMinutes(1))
                                 .Build())))
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             var isResumeVisible = sut
@@ -288,7 +289,7 @@
         [Fact]
         public void progress_time_span_is_updated_throughout_execution()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var action = new ActionMock(MockBehavior.Loose);
 
             action
@@ -308,7 +309,7 @@
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(action)))
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             var progressTimeSpan = sut
@@ -327,7 +328,7 @@
         [Fact]
         public void progress_is_updated_throughout_execution()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var action = new ActionMock(MockBehavior.Loose);
 
             action
@@ -351,7 +352,7 @@
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(action)))
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             var progress = sut
@@ -370,7 +371,7 @@
         [Fact]
         public void skip_backwards_command_is_disabled_if_on_first_exercise()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var action = new ActionMock(MockBehavior.Loose);
 
             action
@@ -386,7 +387,7 @@
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(action)))
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             sut.StartCommand.ExecuteAsync();
@@ -398,7 +399,7 @@
         [Fact]
         public void skip_backwards_command_is_enabled_if_sufficient_progress_has_been_made_through_first_exercise()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var action = new ActionMock(MockBehavior.Loose);
 
             action
@@ -415,7 +416,7 @@
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(action)))
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             // TODO: technically, I should just check CanExecute(null) at the end, but without this subscription the RxCommand does not update CanExecute correctly
@@ -436,7 +437,7 @@
         [Fact]
         public void skip_backwards_command_restarts_the_execution_context_from_the_start_of_the_current_exercise_if_sufficient_progress_has_been_made()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var action = new ActionMock(MockBehavior.Loose);
 
             action
@@ -454,7 +455,7 @@
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(action)))
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             var progress = sut
@@ -476,7 +477,7 @@
         [Fact]
         public void skip_backwards_command_restarts_the_execution_context_from_the_start_of_the_previous_exercise_if_the_current_exercise_if_only_recently_started()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var action = new ActionMock();
 
             action
@@ -508,7 +509,7 @@
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(exercise1)
                     .WithExercise(exercise2))
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             var progress = sut
@@ -533,7 +534,7 @@
         [Fact]
         public void skip_forwards_command_is_disabled_if_on_last_exercise()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var action = new ActionMock();
 
             action
@@ -564,7 +565,7 @@
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(exercise1)
                     .WithExercise(exercise2))
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             var canExecute = sut
@@ -589,7 +590,7 @@
         [Fact]
         public void skip_forwards_command_skips_to_the_next_exercise()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var action = new ActionMock();
 
             action
@@ -620,7 +621,7 @@
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(exercise1)
                     .WithExercise(exercise2))
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             var progress = sut
@@ -641,7 +642,7 @@
         [Fact]
         public void current_exercise_reflects_that_in_the_execution_context()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var action = new ActionMock();
 
             action
@@ -677,7 +678,7 @@
                     .WithExercise(exercise1)
                     .WithExercise(exercise2)
                     .WithExercise(exercise3))
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
 
             sut.StartCommand.ExecuteAsync();
@@ -700,7 +701,7 @@
         [Fact]
         public void execution_context_is_cancelled_if_user_navigates_away()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(new ExerciseBuilder()
@@ -709,7 +710,7 @@
                                 .WithDelayService(new DelayServiceBuilder().Build())
                                 .WithDelay(TimeSpan.FromMinutes(1))
                                 .Build())))
-                .WithSchedulerService(scheduler)
+                .WithScheduler(scheduler)
                 .Build();
             sut
                 .HostScreen

@@ -2,26 +2,26 @@
 {
     using System;
     using System.Reactive;
+    using System.Reactive.Concurrency;
     using System.Reactive.Linq;
     using System.Threading;
-    using Contracts.Scheduler;
     using Utility;
     using WorkoutWotch.Services.Contracts.Delay;
 
     public sealed class DelayService : IDelayService
     {
-        private readonly ISchedulerService schedulerService;
+        private readonly IScheduler scheduler;
 
-        public DelayService(ISchedulerService schedulerService)
+        public DelayService(IScheduler scheduler)
         {
-            Ensure.ArgumentNotNull(schedulerService, nameof(schedulerService));
-            this.schedulerService = schedulerService;
+            Ensure.ArgumentNotNull(scheduler, nameof(scheduler));
+            this.scheduler = scheduler;
         }
 
         public IObservable<Unit> DelayAsync(TimeSpan duration, CancellationToken cancellationToken = default(CancellationToken)) =>
             Observable
                 .Return(Unit.Default)
-                .Delay(duration, schedulerService.TaskPoolScheduler)
+                .Delay(duration, scheduler)
                 .RunAsync(cancellationToken);
     }
 }

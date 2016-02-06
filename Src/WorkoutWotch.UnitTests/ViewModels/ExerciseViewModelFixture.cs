@@ -3,6 +3,7 @@
     using System;
     using System.Reactive.Subjects;
     using Builders;
+    using Microsoft.Reactive.Testing;
     using Models.Builders;
     using PCLMock;
     using WorkoutWotch.Models;
@@ -78,7 +79,7 @@
         [Fact]
         public void progress_time_span_reflects_any_progression_through_the_exercise()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var model = new ExerciseBuilder()
                 .Build();
             var executionContext = new ExecutionContext();
@@ -105,7 +106,7 @@
         [Fact]
         public void progress_time_span_is_not_reset_to_zero_if_another_exercise_is_started()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var model1 = new ExerciseBuilder()
                 .WithName("model 1")
                 .Build();
@@ -137,7 +138,7 @@
         [Fact]
         public void progress_time_span_is_reset_to_zero_if_the_execution_context_changes()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var model = new ExerciseBuilder()
                 .Build();
             var executionContext = new ExecutionContext();
@@ -163,7 +164,7 @@
         [Fact]
         public void progress_time_span_is_reset_to_zero_if_the_execution_context_changes_to_null()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var model = new ExerciseBuilder()
                 .Build();
             var executionContext = new ExecutionContext();
@@ -200,7 +201,7 @@
         [InlineData(10000, 11000, 1d)]
         public void progress_is_calculated_based_on_duration_and_progress_time_span(int durationInMs, int progressInMs, double expectedProgress)
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var action = new ActionMock(MockBehavior.Loose);
 
             action
@@ -229,7 +230,7 @@
         [Fact]
         public void is_active_is_false_if_there_is_no_execution_context()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var sut = new ExerciseViewModelBuilder()
                 .WithSchedulerService(scheduler)
                 .Build();
@@ -241,7 +242,7 @@
         [Fact]
         public void is_active_is_true_if_this_exercise_is_the_current_exercise()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var model = new ExerciseBuilder()
                 .Build();
             var executionContext = new ExecutionContext();
@@ -262,7 +263,7 @@
         [Fact]
         public void is_active_is_false_if_this_exercise_is_not_the_current_exercise()
         {
-            var scheduler = new TestSchedulerService();
+            var scheduler = new TestScheduler();
             var model1 = new ExerciseBuilder()
                 .Build();
             var model2 = new ExerciseBuilder()
