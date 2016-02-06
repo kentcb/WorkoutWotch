@@ -5,7 +5,7 @@
     using WorkoutWotch.Services.Contracts.Audio;
     using WorkoutWotch.UnitTests.Services.Audio.Mocks;
 
-    internal sealed class AudioActionBuilder
+    internal sealed class AudioActionBuilder : IBuilder
     {
         private IAudioService audioService;
         private string audioName;
@@ -16,17 +16,11 @@
             this.audioName = "name";
         }
 
-        public AudioActionBuilder WithAudioService(IAudioService audioService)
-        {
-            this.audioService = audioService;
-            return this;
-        }
+        public AudioActionBuilder WithAudioService(IAudioService audioService) =>
+            this.With(ref this.audioService, audioService);
 
-        public AudioActionBuilder WithAudioName(string audioName)
-        {
-            this.audioName = audioName;
-            return this;
-        }
+        public AudioActionBuilder WithAudioName(string audioName) =>
+            this.With(ref this.audioName, audioName);
 
         public AudioAction Build() =>
             new AudioAction(

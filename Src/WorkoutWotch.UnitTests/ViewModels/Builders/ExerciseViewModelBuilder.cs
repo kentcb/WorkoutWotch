@@ -2,14 +2,14 @@
 {
     using System;
     using System.Reactive.Linq;
-    using PCLMock;
     using Models.Builders;
+    using PCLMock;
     using WorkoutWotch.Models;
     using WorkoutWotch.Services.Contracts.Scheduler;
     using WorkoutWotch.UnitTests.Services.Scheduler.Mocks;
     using WorkoutWotch.ViewModels;
 
-    internal sealed class ExerciseViewModelBuilder
+    internal sealed class ExerciseViewModelBuilder : IBuilder
     {
         private ISchedulerService schedulerService;
         private Exercise model;
@@ -22,29 +22,17 @@
             this.executionContext = Observable.Never<ExecutionContext>();
         }
 
-        public ExerciseViewModelBuilder WithSchedulerService(ISchedulerService schedulerService)
-        {
-            this.schedulerService = schedulerService;
-            return this;
-        }
+        public ExerciseViewModelBuilder WithSchedulerService(ISchedulerService schedulerService) =>
+            this.With(ref this.schedulerService, schedulerService);
 
-        public ExerciseViewModelBuilder WithModel(Exercise model)
-        {
-            this.model = model;
-            return this;
-        }
+        public ExerciseViewModelBuilder WithModel(Exercise model) =>
+            this.With(ref this.model, model);
 
-        public ExerciseViewModelBuilder WithExecutionContext(IObservable<ExecutionContext> executionContext)
-        {
-            this.executionContext = executionContext;
-            return this;
-        }
+        public ExerciseViewModelBuilder WithExecutionContext(IObservable<ExecutionContext> executionContext) =>
+            this.With(ref this.executionContext, executionContext);
 
-        public ExerciseViewModelBuilder WithExecutionContext(ExecutionContext executionContext)
-        {
-            this.executionContext = Observable.Return(executionContext);
-            return this;
-        }
+        public ExerciseViewModelBuilder WithExecutionContext(ExecutionContext executionContext) =>
+            this.WithExecutionContext(Observable.Return(executionContext));
 
         public ExerciseViewModel Build() =>
             new ExerciseViewModel(

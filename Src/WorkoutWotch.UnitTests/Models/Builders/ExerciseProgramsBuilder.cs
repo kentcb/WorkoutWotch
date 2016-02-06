@@ -3,30 +3,20 @@
     using System.Collections.Generic;
     using WorkoutWotch.Models;
 
-    internal sealed class ExerciseProgramsBuilder
+    internal sealed class ExerciseProgramsBuilder : IBuilder
     {
-        private readonly IList<ExerciseProgram> programs;
+        private List<ExerciseProgram> programs;
 
         public ExerciseProgramsBuilder()
         {
             this.programs = new List<ExerciseProgram>();
         }
 
-        public ExerciseProgramsBuilder AddProgram(ExerciseProgram program)
-        {
-            this.programs.Add(program);
-            return this;
-        }
+        public ExerciseProgramsBuilder WithProgram(ExerciseProgram program) =>
+            this.With(ref this.programs, program);
 
-        public ExerciseProgramsBuilder AddPrograms(IEnumerable<ExerciseProgram> programs)
-        {
-            foreach (var program in programs)
-            {
-                this.programs.Add(program);
-            }
-
-            return this;
-        }
+        public ExerciseProgramsBuilder WithPrograms(IEnumerable<ExerciseProgram> programs) =>
+            this.With(ref this.programs, programs);
 
         public ExercisePrograms Build() =>
             new ExercisePrograms(this.programs);

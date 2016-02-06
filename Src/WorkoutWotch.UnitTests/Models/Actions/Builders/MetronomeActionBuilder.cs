@@ -10,12 +10,12 @@
     using WorkoutWotch.UnitTests.Services.Delay.Mocks;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
 
-    internal sealed class MetronomeActionBuilder
+    internal sealed class MetronomeActionBuilder : IBuilder
     {
-        private readonly IList<MetronomeTick> ticks;
         private IAudioService audioService;
         private IDelayService delayService;
         private ILoggerService loggerService;
+        private List<MetronomeTick> ticks;
 
         public MetronomeActionBuilder()
         {
@@ -25,29 +25,20 @@
             this.loggerService = new LoggerServiceMock(MockBehavior.Loose);
         }
 
-        public MetronomeActionBuilder WithAudioService(IAudioService audioService)
-        {
-            this.audioService = audioService;
-            return this;
-        }
+        public MetronomeActionBuilder WithAudioService(IAudioService audioService) =>
+            this.With(ref this.audioService, audioService);
 
-        public MetronomeActionBuilder WithDelayService(IDelayService delayService)
-        {
-            this.delayService = delayService;
-            return this;
-        }
+        public MetronomeActionBuilder WithDelayService(IDelayService delayService) =>
+            this.With(ref this.delayService, delayService);
 
-        public MetronomeActionBuilder WithLoggerService(ILoggerService loggerService)
-        {
-            this.loggerService = loggerService;
-            return this;
-        }
+        public MetronomeActionBuilder WithLoggerService(ILoggerService loggerService) =>
+            this.With(ref this.loggerService, loggerService);
 
-        public MetronomeActionBuilder AddMetronomeTick(MetronomeTick metronomeTick)
-        {
-            this.ticks.Add(metronomeTick);
-            return this;
-        }
+        public MetronomeActionBuilder WithMetronomeTick(MetronomeTick metronomeTick) =>
+            this.With(ref this.ticks, metronomeTick);
+
+        public MetronomeActionBuilder WithMetronomeTicks(IEnumerable<MetronomeTick> metronomeTicks) =>
+            this.With(ref this.ticks, metronomeTicks);
 
         public MetronomeAction Build() =>
             new MetronomeAction(

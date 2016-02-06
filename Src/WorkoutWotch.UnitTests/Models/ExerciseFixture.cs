@@ -97,9 +97,9 @@
             var sut = new ExerciseBuilder()
                 .WithSetCount(2)
                 .WithRepetitionCount(3)
-                .AddMatcherWithAction(new MatcherWithAction(eventMatcher1, action1))
-                .AddMatcherWithAction(new MatcherWithAction(eventMatcher2, action2))
-                .AddMatcherWithAction(new MatcherWithAction(eventMatcher3, action3))
+                .WithMatcherWithAction(new MatcherWithAction(eventMatcher1, action1))
+                .WithMatcherWithAction(new MatcherWithAction(eventMatcher2, action2))
+                .WithMatcherWithAction(new MatcherWithAction(eventMatcher3, action3))
                 .Build();
 
             Assert.Equal(TimeSpan.FromSeconds(30), sut.Duration);
@@ -130,9 +130,9 @@
             var sut = new ExerciseBuilder()
                 .WithSetCount(2)
                 .WithRepetitionCount(3)
-                .AddMatcherWithAction(new MatcherWithAction(eventMatcher1, action1))
-                .AddMatcherWithAction(new MatcherWithAction(eventMatcher2, action2))
-                .AddMatcherWithAction(new MatcherWithAction(eventMatcher3, action3))
+                .WithMatcherWithAction(new MatcherWithAction(eventMatcher1, action1))
+                .WithMatcherWithAction(new MatcherWithAction(eventMatcher2, action2))
+                .WithMatcherWithAction(new MatcherWithAction(eventMatcher3, action3))
                 .Build();
 
             using (var executionContext = new ExecutionContext())
@@ -164,7 +164,7 @@
                 .Return((IEvent @event) => @event is BeforeExerciseEvent);
 
             var sut = new ExerciseBuilder()
-                .AddMatcherWithAction(new MatcherWithAction(eventMatcher, action))
+                .WithMatcherWithAction(new MatcherWithAction(eventMatcher, action))
                 .Build();
 
             using (var executionContext = new ExecutionContext())
@@ -220,9 +220,9 @@
                 .Return((IEvent @event) => @event is BeforeExerciseEvent);
 
             var sut = new ExerciseBuilder()
-                .AddMatcherWithAction(new MatcherWithAction(eventMatcher1, action1))
-                .AddMatcherWithAction(new MatcherWithAction(eventMatcher2, action2))
-                .AddMatcherWithAction(new MatcherWithAction(eventMatcher3, action3))
+                .WithMatcherWithAction(new MatcherWithAction(eventMatcher1, action1))
+                .WithMatcherWithAction(new MatcherWithAction(eventMatcher2, action2))
+                .WithMatcherWithAction(new MatcherWithAction(eventMatcher3, action3))
                 .Build();
 
             using (var executionContext = new ExecutionContext(TimeSpan.FromSeconds(13)))
@@ -278,9 +278,9 @@
                 .Return((IEvent @event) => @event is BeforeExerciseEvent);
 
             var sut = new ExerciseBuilder()
-                .AddMatcherWithAction(new MatcherWithAction(eventMatcher1, action1))
-                .AddMatcherWithAction(new MatcherWithAction(eventMatcher2, action2))
-                .AddMatcherWithAction(new MatcherWithAction(eventMatcher3, action3))
+                .WithMatcherWithAction(new MatcherWithAction(eventMatcher1, action1))
+                .WithMatcherWithAction(new MatcherWithAction(eventMatcher2, action2))
+                .WithMatcherWithAction(new MatcherWithAction(eventMatcher3, action3))
                 .Build();
 
             using (var executionContext = new ExecutionContext(TimeSpan.FromSeconds(13)))

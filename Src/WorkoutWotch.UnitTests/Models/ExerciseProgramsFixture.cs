@@ -24,7 +24,7 @@
                     .Build())
                 .ToList();
             var sut = new ExerciseProgramsBuilder()
-                .AddPrograms(programs)
+                .WithPrograms(programs)
                 .Build();
 
             Assert.Equal(programCount, sut.Programs.Count);

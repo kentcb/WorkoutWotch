@@ -39,7 +39,7 @@
             var duration = TimeSpan.FromMilliseconds(durationInMs);
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
-                    .AddExercise(new ExerciseBuilder()
+                    .WithExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(
                             new WaitActionBuilder()
                                 .WithDelay(duration)
@@ -54,9 +54,9 @@
         {
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
-                    .AddExercise(new ExerciseBuilder()
+                    .WithExercise(new ExerciseBuilder()
                         .WithName("Exercise 1"))
-                    .AddExercise(new ExerciseBuilder()
+                    .WithExercise(new ExerciseBuilder()
                         .WithName("Exercise 2")))
                 .Build();
 
@@ -150,7 +150,7 @@
             var scheduler = new TestSchedulerService();
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
-                    .AddExercise(new ExerciseBuilder()
+                    .WithExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(
                             new WaitActionBuilder()
                                 .WithDelayService(new DelayServiceBuilder().Build())
@@ -199,7 +199,7 @@
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(
                     new ExerciseProgramBuilder()
-                        .AddExercise(
+                        .WithExercise(
                             new ExerciseBuilder()
                                 .WithBeforeExerciseAction(action)))
                 .WithSchedulerService(scheduler)
@@ -221,7 +221,7 @@
             var scheduler = new TestSchedulerService();
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
-                    .AddExercise(new ExerciseBuilder()
+                    .WithExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(
                             new WaitActionBuilder()
                                 .WithDelayService(new DelayServiceBuilder().Build())
@@ -261,7 +261,7 @@
             var scheduler = new TestSchedulerService();
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
-                    .AddExercise(new ExerciseBuilder()
+                    .WithExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(
                             new WaitActionBuilder()
                                 .WithDelayService(new DelayServiceBuilder().Build())
@@ -306,7 +306,7 @@
 
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
-                    .AddExercise(new ExerciseBuilder()
+                    .WithExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(action)))
                 .WithSchedulerService(scheduler)
                 .Build();
@@ -349,7 +349,7 @@
 
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
-                    .AddExercise(new ExerciseBuilder()
+                    .WithExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(action)))
                 .WithSchedulerService(scheduler)
                 .Build();
@@ -384,7 +384,7 @@
 
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
-                    .AddExercise(new ExerciseBuilder()
+                    .WithExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(action)))
                 .WithSchedulerService(scheduler)
                 .Build();
@@ -413,7 +413,7 @@
 
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
-                    .AddExercise(new ExerciseBuilder()
+                    .WithExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(action)))
                 .WithSchedulerService(scheduler)
                 .Build();
@@ -452,7 +452,7 @@
 
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
-                    .AddExercise(new ExerciseBuilder()
+                    .WithExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(action)))
                 .WithSchedulerService(scheduler)
                 .Build();
@@ -506,8 +506,8 @@
 
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
-                    .AddExercise(exercise1)
-                    .AddExercise(exercise2))
+                    .WithExercise(exercise1)
+                    .WithExercise(exercise2))
                 .WithSchedulerService(scheduler)
                 .Build();
 
@@ -562,8 +562,8 @@
 
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
-                    .AddExercise(exercise1)
-                    .AddExercise(exercise2))
+                    .WithExercise(exercise1)
+                    .WithExercise(exercise2))
                 .WithSchedulerService(scheduler)
                 .Build();
 
@@ -618,8 +618,8 @@
 
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
-                    .AddExercise(exercise1)
-                    .AddExercise(exercise2))
+                    .WithExercise(exercise1)
+                    .WithExercise(exercise2))
                 .WithSchedulerService(scheduler)
                 .Build();
 
@@ -674,9 +674,9 @@
 
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
-                    .AddExercise(exercise1)
-                    .AddExercise(exercise2)
-                    .AddExercise(exercise3))
+                    .WithExercise(exercise1)
+                    .WithExercise(exercise2)
+                    .WithExercise(exercise3))
                 .WithSchedulerService(scheduler)
                 .Build();
 
@@ -703,7 +703,7 @@
             var scheduler = new TestSchedulerService();
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
-                    .AddExercise(new ExerciseBuilder()
+                    .WithExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(
                             new WaitActionBuilder()
                                 .WithDelayService(new DelayServiceBuilder().Build())

@@ -6,7 +6,7 @@
     using WorkoutWotch.Services.Contracts.Delay;
     using WorkoutWotch.UnitTests.Services.Delay.Mocks;
 
-    internal sealed class WaitActionBuilder
+    internal sealed class WaitActionBuilder : IBuilder
     {
         private IDelayService delayService;
         private TimeSpan delay;
@@ -16,17 +16,11 @@
             this.delayService = new DelayServiceMock(MockBehavior.Loose);
         }
 
-        public WaitActionBuilder WithDelayService(IDelayService delayService)
-        {
-            this.delayService = delayService;
-            return this;
-        }
+        public WaitActionBuilder WithDelayService(IDelayService delayService) =>
+            this.With(ref this.delayService, delayService);
 
-        public WaitActionBuilder WithDelay(TimeSpan delay)
-        {
-            this.delay = delay;
-            return this;
-        }
+        public WaitActionBuilder WithDelay(TimeSpan delay) =>
+            this.With(ref this.delay, delay);
 
         public WaitAction Build() =>
             new WaitAction(

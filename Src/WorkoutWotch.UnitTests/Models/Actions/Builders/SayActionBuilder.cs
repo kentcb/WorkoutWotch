@@ -5,7 +5,7 @@
     using WorkoutWotch.Services.Contracts.Speech;
     using WorkoutWotch.UnitTests.Services.Speech.Mocks;
 
-    internal sealed class SayActionBuilder
+    internal sealed class SayActionBuilder : IBuilder
     {
         private ISpeechService speechService;
         private string speechText;
@@ -16,17 +16,11 @@
             this.speechText = "speech text";
         }
 
-        public SayActionBuilder WithSpeechService(ISpeechService speechService)
-        {
-            this.speechService = speechService;
-            return this;
-        }
+        public SayActionBuilder WithSpeechService(ISpeechService speechService) =>
+            this.With(ref this.speechService, speechService);
 
-        public SayActionBuilder WithSpeechText(string speechText)
-        {
-            this.speechText = speechText;
-            return this;
-        }
+        public SayActionBuilder WithSpeechText(string speechText) =>
+            this.With(ref this.speechText, speechText);
 
         public SayAction Build() =>
             new SayAction(

@@ -36,7 +36,7 @@
                     .Build())
                 .ToList();
             var sut = new ExerciseProgramBuilder()
-                .AddExercises(exercises)
+                .WithExercises(exercises)
                 .Build();
 
             Assert.Equal(exerciseCount, sut.Exercises.Count);
@@ -67,11 +67,11 @@
                 .Return(TimeSpan.FromSeconds(10));
 
             var sut = new ExerciseProgramBuilder()
-                .AddExercise(new ExerciseBuilder()
+                .WithExercise(new ExerciseBuilder()
                     .WithBeforeExerciseAction(action1))
-                .AddExercise(new ExerciseBuilder()
+                .WithExercise(new ExerciseBuilder()
                     .WithBeforeExerciseAction(action2))
-                .AddExercise(new ExerciseBuilder()
+                .WithExercise(new ExerciseBuilder()
                     .WithBeforeExerciseAction(action1))
                 .Build();
 
@@ -85,9 +85,9 @@
             var action2 = new ActionMock(MockBehavior.Loose);
 
             var sut = new ExerciseProgramBuilder()
-                .AddExercise(new ExerciseBuilder()
+                .WithExercise(new ExerciseBuilder()
                     .WithBeforeExerciseAction(action1))
-                .AddExercise(new ExerciseBuilder()
+                .WithExercise(new ExerciseBuilder()
                     .WithBeforeExerciseAction(action2))
                 .Build();
 
@@ -133,11 +133,11 @@
                 .Throw();
 
             var sut = new ExerciseProgramBuilder()
-                .AddExercise(new ExerciseBuilder()
+                .WithExercise(new ExerciseBuilder()
                     .WithBeforeExerciseAction(action1))
-                .AddExercise(new ExerciseBuilder()
+                .WithExercise(new ExerciseBuilder()
                     .WithBeforeExerciseAction(action2))
-                .AddExercise(new ExerciseBuilder()
+                .WithExercise(new ExerciseBuilder()
                     .WithBeforeExerciseAction(action3))
                 .Build();
 

@@ -7,7 +7,7 @@
     using WorkoutWotch.UnitTests.Models.Mocks;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
 
-    internal sealed class DoNotAwaitActionBuilder
+    internal sealed class DoNotAwaitActionBuilder : IBuilder
     {
         private ILoggerService loggerService;
         private IAction innerAction;
@@ -18,17 +18,11 @@
             this.innerAction = new ActionMock(MockBehavior.Loose);
         }
 
-        public DoNotAwaitActionBuilder WithLoggerService(ILoggerService loggerService)
-        {
-            this.loggerService = loggerService;
-            return this;
-        }
+        public DoNotAwaitActionBuilder WithLoggerService(ILoggerService loggerService) =>
+            this.With(ref this.loggerService, loggerService);
 
-        public DoNotAwaitActionBuilder WithInnerAction(IAction innerAction)
-        {
-            this.innerAction = innerAction;
-            return this;
-        }
+        public DoNotAwaitActionBuilder WithInnerAction(IAction innerAction) =>
+            this.With(ref this.innerAction, innerAction);
 
         public DoNotAwaitAction Build() =>
             new DoNotAwaitAction(

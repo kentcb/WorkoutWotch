@@ -34,7 +34,9 @@
     <DefineConstants>NO_SERIALIZABLE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BuilderExtensions.cs" />
     <Compile Include="DebugAttribute.cs" />
+    <Compile Include="IBuilder.cs" />
     <Compile Include="Mocks.g.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

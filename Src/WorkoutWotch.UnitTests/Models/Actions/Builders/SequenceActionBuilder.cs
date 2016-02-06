@@ -4,30 +4,20 @@
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Actions;
 
-    internal sealed class SequenceActionBuilder
+    internal sealed class SequenceActionBuilder : IBuilder
     {
-        private readonly IList<IAction> children;
+        private List<IAction> children;
 
         public SequenceActionBuilder()
         {
             this.children = new List<IAction>();
         }
 
-        public SequenceActionBuilder AddChild(IAction child)
-        {
-            this.children.Add(child);
-            return this;
-        }
+        public SequenceActionBuilder WithChild(IAction child) =>
+            this.With(ref this.children, child);
 
-        public SequenceActionBuilder AddChildren(IEnumerable<IAction> children)
-        {
-            foreach (var child in children)
-            {
-                this.AddChild(child);
-            }
-
-            return this;
-        }
+        public SequenceActionBuilder WithChildren(IEnumerable<IAction> children) =>
+            this.With(ref this.children, children);
 
         public SequenceAction Build() =>
             new SequenceAction(this.children);

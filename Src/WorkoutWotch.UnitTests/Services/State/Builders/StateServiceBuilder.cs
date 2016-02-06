@@ -7,7 +7,7 @@
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
     using WorkoutWotch.UnitTests.Services.State.Mocks;
 
-    internal sealed class StateServiceBuilder
+    internal sealed class StateServiceBuilder : IBuilder
     {
         private IBlobCache blobCache;
         private ILoggerService loggerService;
@@ -18,17 +18,11 @@
             this.loggerService = new LoggerServiceMock(MockBehavior.Loose);
         }
 
-        public StateServiceBuilder WithBlobCache(IBlobCache blobCache)
-        {
-            this.blobCache = blobCache;
-            return this;
-        }
+        public StateServiceBuilder WithBlobCache(IBlobCache blobCache) =>
+            this.With(ref this.blobCache, blobCache);
 
-        public StateServiceBuilder WithLoggerService(ILoggerService loggerService)
-        {
-            this.loggerService = loggerService;
-            return this;
-        }
+        public StateServiceBuilder WithLoggerService(ILoggerService loggerService) =>
+            this.With(ref this.loggerService, loggerService);
 
         public StateService Build() =>
             new StateService(

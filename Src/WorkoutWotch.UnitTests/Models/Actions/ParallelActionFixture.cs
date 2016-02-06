@@ -45,10 +45,10 @@
                 .Return(TimeSpan.FromMilliseconds(550));
 
             var sut = new ParallelActionBuilder()
-                .AddChild(action1)
-                .AddChild(action2)
-                .AddChild(action3)
-                .AddChild(action4)
+                .WithChild(action1)
+                .WithChild(action2)
+                .WithChild(action3)
+                .WithChild(action4)
                 .Build();
 
             Assert.Equal(TimeSpan.FromSeconds(5), sut.Duration);
@@ -79,10 +79,10 @@
                 .Return(TimeSpan.FromSeconds(4));
 
             var sut = new ParallelActionBuilder()
-                .AddChild(action1)
-                .AddChild(action2)
-                .AddChild(action3)
-                .AddChild(action4)
+                .WithChild(action1)
+                .WithChild(action2)
+                .WithChild(action3)
+                .WithChild(action4)
                 .Build();
 
             using (var context = new ExecutionContext())
@@ -127,9 +127,9 @@
                 .Return(TimeSpan.FromSeconds(71));
 
             var sut = new ParallelActionBuilder()
-                .AddChild(action1)
-                .AddChild(action2)
-                .AddChild(action3)
+                .WithChild(action1)
+                .WithChild(action2)
+                .WithChild(action3)
                 .Build();
 
             using (var context = new ExecutionContext(TimeSpan.FromSeconds(70)))
@@ -170,9 +170,9 @@
                 .Return(TimeSpan.FromSeconds(71));
 
             var sut = new ParallelActionBuilder()
-                .AddChild(action1)
-                .AddChild(action2)
-                .AddChild(action3)
+                .WithChild(action1)
+                .WithChild(action2)
+                .WithChild(action3)
                 .Build();
 
             using (var context = new ExecutionContext(TimeSpan.FromSeconds(70)))
@@ -214,9 +214,9 @@
                 .Return(TimeSpan.FromSeconds(71));
 
             var sut = new ParallelActionBuilder()
-                .AddChild(action1)
-                .AddChild(action2)
-                .AddChild(action3)
+                .WithChild(action1)
+                .WithChild(action2)
+                .WithChild(action3)
                 .Build();
 
             using (var context = new ExecutionContext(TimeSpan.FromMinutes(3)))
@@ -284,10 +284,10 @@
                 .Return(Observable.Return(Unit.Default));
 
             var sut = new ParallelActionBuilder()
-                .AddChild(action1)
-                .AddChild(action2)
-                .AddChild(action3)
-                .AddChild(action4)
+                .WithChild(action1)
+                .WithChild(action2)
+                .WithChild(action3)
+                .WithChild(action4)
                 .Build();
 
             using (var context = new ExecutionContext())
@@ -343,10 +343,10 @@
                 .Return(Observable.Return(Unit.Default));
 
             var sut = new ParallelActionBuilder()
-                .AddChild(action1)
-                .AddChild(action2)
-                .AddChild(action3)
-                .AddChild(action4)
+                .WithChild(action1)
+                .WithChild(action2)
+                .WithChild(action3)
+                .WithChild(action4)
                 .Build();
 
             using (var context = new ExecutionContext(TimeSpan.FromSeconds(5)))
@@ -385,8 +385,8 @@
                 .Return(Observable.Return(Unit.Default));
 
             var sut = new ParallelActionBuilder()
-                .AddChild(action1)
-                .AddChild(action2)
+                .WithChild(action1)
+                .WithChild(action2)
                 .Build();
 
             using (var context = new ExecutionContext())
@@ -418,8 +418,8 @@
                 .Return(Observable.Return(Unit.Default));
 
             var sut = new ParallelActionBuilder()
-                .AddChild(action1)
-                .AddChild(action2)
+                .WithChild(action1)
+                .WithChild(action2)
                 .Build();
 
             using (var context = new ExecutionContext())
@@ -451,8 +451,8 @@
                 .Return(Observable.Return(Unit.Default));
 
             var sut = new ParallelActionBuilder()
-                .AddChild(action1)
-                .AddChild(action2)
+                .WithChild(action1)
+                .WithChild(action2)
                 .Build();
 
             using (var context = new ExecutionContext())
@@ -484,8 +484,8 @@
                 .Return(Observable.Return(Unit.Default));
 
             var sut = new ParallelActionBuilder()
-                .AddChild(action1)
-                .AddChild(action2)
+                .WithChild(action1)
+                .WithChild(action2)
                 .Build();
 
             using (var context = new ExecutionContext())

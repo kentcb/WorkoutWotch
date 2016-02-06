@@ -4,20 +4,20 @@
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Actions;
 
-    internal sealed class ParallelActionBuilder
+    internal sealed class ParallelActionBuilder : IBuilder
     {
-        private readonly IList<IAction> children;
+        private List<IAction> children;
 
         public ParallelActionBuilder()
         {
             this.children = new List<IAction>();
         }
 
-        public ParallelActionBuilder AddChild(IAction child)
-        {
-            this.children.Add(child);
-            return this;
-        }
+        public ParallelActionBuilder WithChild(IAction child) =>
+            this.With(ref this.children, child);
+
+        public ParallelActionBuilder WithChildren(IEnumerable<IAction> children) =>
+            this.With(ref this.children, children);
 
         public ParallelAction Build() =>
             new ParallelAction(this.children);

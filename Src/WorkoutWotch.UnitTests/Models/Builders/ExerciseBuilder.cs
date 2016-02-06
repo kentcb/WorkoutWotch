@@ -10,9 +10,9 @@
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
     using WorkoutWotch.UnitTests.Services.Speech.Mocks;
 
-    internal sealed class ExerciseBuilder
+    internal sealed class ExerciseBuilder : IBuilder
     {
-        private readonly IList<MatcherWithAction> matchersWithActions;
+        private List<MatcherWithAction> matchersWithActions;
         private ILoggerService loggerService;
         private ISpeechService speechService;
         private string name;
@@ -29,47 +29,32 @@
             this.repetitionCount = 1;
         }
 
-        public ExerciseBuilder WithLoggerService(ILoggerService loggerService)
-        {
-            this.loggerService = loggerService;
-            return this;
-        }
+        public ExerciseBuilder WithLoggerService(ILoggerService loggerService) =>
+            this.With(ref this.loggerService, loggerService);
 
-        public ExerciseBuilder WithSpeechService(ISpeechService speechService)
-        {
-            this.speechService = speechService;
-            return this;
-        }
+        public ExerciseBuilder WithSpeechService(ISpeechService speechService) =>
+            this.With(ref this.speechService, speechService);
 
-        public ExerciseBuilder WithName(string name)
-        {
-            this.name = name;
-            return this;
-        }
+        public ExerciseBuilder WithName(string name) =>
+            this.With(ref this.name, name);
 
-        public ExerciseBuilder WithSetCount(int setCount)
-        {
-            this.setCount = setCount;
-            return this;
-        }
+        public ExerciseBuilder WithSetCount(int setCount) =>
+            this.With(ref this.setCount, setCount);
 
-        public ExerciseBuilder WithRepetitionCount(int repetitionCount)
-        {
-            this.repetitionCount = repetitionCount;
-            return this;
-        }
+        public ExerciseBuilder WithRepetitionCount(int repetitionCount) =>
+            this.With(ref this.repetitionCount, repetitionCount);
 
-        public ExerciseBuilder AddMatcherWithAction(MatcherWithAction matcherWithAction)
-        {
-            this.matchersWithActions.Add(matcherWithAction);
-            return this;
-        }
+        public ExerciseBuilder WithMatcherWithAction(MatcherWithAction matcherWithAction) =>
+            this.With(ref this.matchersWithActions, matcherWithAction);
+
+        public ExerciseBuilder WithMatchersWithActions(IEnumerable<MatcherWithAction> matchersWithActions) =>
+            this.With(ref this.matchersWithActions, matchersWithActions);
 
         public ExerciseBuilder WithBeforeExerciseAction(IAction action)
         {
             var matcher = new EventMatcherMock();
             matcher.When(x => x.Matches(It.IsAny<IEvent>())).Return((IEvent @event) => @event is BeforeExerciseEvent);
-            return this.AddMatcherWithAction(new MatcherWithAction(matcher, action));
+            return this.WithMatcherWithAction(new MatcherWithAction(matcher, action));
         }
 
         public Exercise Build() =>

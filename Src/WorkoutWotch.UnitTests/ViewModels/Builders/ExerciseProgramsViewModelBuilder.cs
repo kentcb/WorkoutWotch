@@ -21,7 +21,7 @@
     using WorkoutWotch.UnitTests.Services.State.Mocks;
     using WorkoutWotch.ViewModels;
 
-    internal sealed class ExerciseProgramsViewModelBuilder
+    internal sealed class ExerciseProgramsViewModelBuilder : IBuilder
     {
         private IAudioService audioService;
         private IDelayService delayService;
@@ -52,59 +52,32 @@
             this.WithCachedDocument(null);
         }
 
-        public ExerciseProgramsViewModelBuilder WithAudioService(IAudioService audioService)
-        {
-            this.audioService = audioService;
-            return this;
-        }
+        public ExerciseProgramsViewModelBuilder WithAudioService(IAudioService audioService) =>
+            this.With(ref this.audioService, audioService);
 
-        public ExerciseProgramsViewModelBuilder WithDelayService(IDelayService delayService)
-        {
-            this.delayService = delayService;
-            return this;
-        }
+        public ExerciseProgramsViewModelBuilder WithDelayService(IDelayService delayService) =>
+            this.With(ref this.delayService, delayService);
 
-        public ExerciseProgramsViewModelBuilder WithExerciseDocumentService(IExerciseDocumentService exerciseDocumentService)
-        {
-            this.exerciseDocumentService = exerciseDocumentService;
-            return this;
-        }
+        public ExerciseProgramsViewModelBuilder WithExerciseDocumentService(IExerciseDocumentService exerciseDocumentService) =>
+            this.With(ref this.exerciseDocumentService, exerciseDocumentService);
 
-        public ExerciseProgramsViewModelBuilder WithLoggerService(ILoggerService loggerService)
-        {
-            this.loggerService = loggerService;
-            return this;
-        }
+        public ExerciseProgramsViewModelBuilder WithLoggerService(ILoggerService loggerService) =>
+            this.With(ref this.loggerService, loggerService);
 
-        public ExerciseProgramsViewModelBuilder WithSchedulerService(ISchedulerService schedulerService)
-        {
-            this.schedulerService = schedulerService;
-            return this;
-        }
+        public ExerciseProgramsViewModelBuilder WithSchedulerService(ISchedulerService schedulerService) =>
+            this.With(ref this.schedulerService, schedulerService);
 
-        public ExerciseProgramsViewModelBuilder WithSpeechService(ISpeechService speechService)
-        {
-            this.speechService = speechService;
-            return this;
-        }
+        public ExerciseProgramsViewModelBuilder WithSpeechService(ISpeechService speechService) =>
+            this.With(ref this.speechService, speechService);
 
-        public ExerciseProgramsViewModelBuilder WithStateService(IStateService stateService)
-        {
-            this.stateService = stateService;
-            return this;
-        }
+        public ExerciseProgramsViewModelBuilder WithStateService(IStateService stateService) =>
+            this.With(ref this.stateService, stateService);
 
-        public ExerciseProgramsViewModelBuilder WithHostScreen(IScreen hostScreen)
-        {
-            this.hostScreen = hostScreen;
-            return this;
-        }
+        public ExerciseProgramsViewModelBuilder WithHostScreen(IScreen hostScreen) =>
+            this.With(ref this.hostScreen, hostScreen);
 
-        public ExerciseProgramsViewModelBuilder WithExerciseProgramViewModelFactory(ExerciseProgramViewModelFactory exerciseProgramViewModelFactory)
-        {
-            this.exerciseProgramViewModelFactory = exerciseProgramViewModelFactory;
-            return this;
-        }
+        public ExerciseProgramsViewModelBuilder WithExerciseProgramViewModelFactory(ExerciseProgramViewModelFactory exerciseProgramViewModelFactory) =>
+            this.With(ref this.exerciseProgramViewModelFactory, exerciseProgramViewModelFactory);
 
         public ExerciseProgramsViewModelBuilder WithCloudDocument(string cloudDocument)
         {

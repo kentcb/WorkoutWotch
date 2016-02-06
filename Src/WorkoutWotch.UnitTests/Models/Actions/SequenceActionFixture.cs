@@ -42,9 +42,9 @@
                 .Return(TimeSpan.FromSeconds(7));
 
             var sut = new SequenceActionBuilder()
-                .AddChild(action1)
-                .AddChild(action2)
-                .AddChild(action3)
+                .WithChild(action1)
+                .WithChild(action2)
+                .WithChild(action3)
                 .Build();
 
             Assert.Equal(TimeSpan.FromSeconds(18), sut.Duration);
@@ -57,9 +57,9 @@
             var action2 = new ActionMock(MockBehavior.Loose);
             var action3 = new ActionMock(MockBehavior.Loose);
             var sut = new SequenceActionBuilder()
-                .AddChild(action1)
-                .AddChild(action2)
-                .AddChild(action3)
+                .WithChild(action1)
+                .WithChild(action2)
+                .WithChild(action3)
                 .Build();
 
             using (var context = new ExecutionContext())
@@ -101,7 +101,7 @@
                 .ToList();
             
             var sut = new SequenceActionBuilder()
-                .AddChildren(childActions)
+                .WithChildren(childActions)
                 .Build();
 
             using (var context = new ExecutionContext())
@@ -143,9 +143,9 @@
                 .Return(TimeSpan.FromSeconds(2));
 
             var sut = new SequenceActionBuilder()
-                .AddChild(action1)
-                .AddChild(action2)
-                .AddChild(action3)
+                .WithChild(action1)
+                .WithChild(action2)
+                .WithChild(action3)
                 .Build();
 
             using (var context = new ExecutionContext(TimeSpan.FromSeconds(11)))
@@ -186,9 +186,9 @@
                 .Return(TimeSpan.FromSeconds(2));
 
             var sut = new SequenceActionBuilder()
-                .AddChild(action1)
-                .AddChild(action2)
-                .AddChild(action3)
+                .WithChild(action1)
+                .WithChild(action2)
+                .WithChild(action3)
                 .Build();
 
             using (var context = new ExecutionContext(TimeSpan.FromSeconds(11)))
@@ -209,9 +209,9 @@
             var action2 = new ActionMock(MockBehavior.Loose);
             var action3 = new ActionMock(MockBehavior.Loose);
             var sut = new SequenceActionBuilder()
-                .AddChild(action1)
-                .AddChild(action2)
-                .AddChild(action3)
+                .WithChild(action1)
+                .WithChild(action2)
+                .WithChild(action3)
                 .Build();
 
             using (var context = new ExecutionContext())

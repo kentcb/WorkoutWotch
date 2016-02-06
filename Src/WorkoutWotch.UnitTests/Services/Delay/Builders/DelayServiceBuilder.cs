@@ -5,7 +5,7 @@
     using WorkoutWotch.Services.Delay;
     using WorkoutWotch.UnitTests.Services.Scheduler.Mocks;
 
-    public sealed class DelayServiceBuilder
+    public sealed class DelayServiceBuilder : IBuilder
     {
         private ISchedulerService schedulerService;
 
@@ -14,11 +14,8 @@
             this.schedulerService = new SchedulerServiceMock(MockBehavior.Loose);
         }
 
-        public DelayServiceBuilder WithSchedulerService(ISchedulerService schedulerService)
-        {
-            this.schedulerService = schedulerService;
-            return this;
-        }
+        public DelayServiceBuilder WithSchedulerService(ISchedulerService schedulerService) =>
+            this.With(ref this.schedulerService, schedulerService);
 
         public DelayService Build() =>
             new DelayService(

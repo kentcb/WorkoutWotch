@@ -8,7 +8,7 @@
     using WorkoutWotch.UnitTests.Services.Delay.Mocks;
     using WorkoutWotch.UnitTests.Services.Speech.Mocks;
 
-    internal sealed class WaitWithPromptActionBuilder
+    internal sealed class WaitWithPromptActionBuilder : IBuilder
     {
         private IDelayService delayService;
         private ISpeechService speechService;
@@ -22,29 +22,17 @@
             this.promptSpeechText = "prompt";
         }
 
-        public WaitWithPromptActionBuilder WithDelayService(IDelayService delayService)
-        {
-            this.delayService = delayService;
-            return this;
-        }
+        public WaitWithPromptActionBuilder WithDelayService(IDelayService delayService) =>
+            this.With(ref this.delayService, delayService);
 
-        public WaitWithPromptActionBuilder WithSpeechService(ISpeechService speechService)
-        {
-            this.speechService = speechService;
-            return this;
-        }
+        public WaitWithPromptActionBuilder WithSpeechService(ISpeechService speechService) =>
+            this.With(ref this.speechService, speechService);
 
-        public WaitWithPromptActionBuilder WithDuration(TimeSpan duration)
-        {
-            this.duration = duration;
-            return this;
-        }
+        public WaitWithPromptActionBuilder WithDuration(TimeSpan duration) =>
+            this.With(ref this.duration, duration);
 
-        public WaitWithPromptActionBuilder WithPromptSpeechText(string promptSpeechText)
-        {
-            this.promptSpeechText = promptSpeechText;
-            return this;
-        }
+        public WaitWithPromptActionBuilder WithPromptSpeechText(string promptSpeechText) =>
+            this.With(ref this.promptSpeechText, promptSpeechText);
 
         public WaitWithPromptAction Build() =>
             new WaitWithPromptAction(

@@ -6,9 +6,9 @@
     using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
 
-    internal sealed class ExerciseProgramBuilder
+    internal sealed class ExerciseProgramBuilder : IBuilder
     {
-        private readonly IList<Exercise> exercises;
+        private List<Exercise> exercises;
         private ILoggerService loggerService;
         private string name;
 
@@ -19,33 +19,17 @@
             this.name = "Name";
         }
 
-        public ExerciseProgramBuilder WithLoggerService(ILoggerService loggerService)
-        {
-            this.loggerService = loggerService;
-            return this;
-        }
+        public ExerciseProgramBuilder WithLoggerService(ILoggerService loggerService) =>
+            this.With(ref this.loggerService, loggerService);
 
-        public ExerciseProgramBuilder WithName(string name)
-        {
-            this.name = name;
-            return this;
-        }
+        public ExerciseProgramBuilder WithName(string name) =>
+            this.With(ref this.name, name);
 
-        public ExerciseProgramBuilder AddExercise(Exercise exercise)
-        {
-            this.exercises.Add(exercise);
-            return this;
-        }
+        public ExerciseProgramBuilder WithExercise(Exercise exercise) =>
+            this.With(ref this.exercises, exercise);
 
-        public ExerciseProgramBuilder AddExercises(IEnumerable<Exercise> exercises)
-        {
-            foreach (var exercise in exercises)
-            {
-                this.exercises.Add(exercise);
-            }
-
-            return this;
-        }
+        public ExerciseProgramBuilder WithExercises(IEnumerable<Exercise> exercises) =>
+            this.With(ref this.exercises, exercises);
 
         public ExerciseProgram Build() =>
             new ExerciseProgram(

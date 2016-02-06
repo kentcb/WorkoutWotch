@@ -28,10 +28,10 @@
         public void duration_is_the_sum_of_all_tick_periods()
         {
             var sut = new MetronomeActionBuilder()
-                .AddMetronomeTick(new MetronomeTick(TimeSpan.Zero))
-                .AddMetronomeTick(new MetronomeTick(TimeSpan.FromSeconds(1)))
-                .AddMetronomeTick(new MetronomeTick(TimeSpan.FromSeconds(2)))
-                .AddMetronomeTick(new MetronomeTick(TimeSpan.FromMilliseconds(500)))
+                .WithMetronomeTick(new MetronomeTick(TimeSpan.Zero))
+                .WithMetronomeTick(new MetronomeTick(TimeSpan.FromSeconds(1)))
+                .WithMetronomeTick(new MetronomeTick(TimeSpan.FromSeconds(2)))
+                .WithMetronomeTick(new MetronomeTick(TimeSpan.FromMilliseconds(500)))
                 .Build();
 
             Assert.Equal(TimeSpan.FromSeconds(3.5), sut.Duration);
@@ -57,11 +57,11 @@
             var sut = new MetronomeActionBuilder()
                 .WithAudioService(audioService)
                 .WithDelayService(delayService)
-                .AddMetronomeTick(new MetronomeTick(TimeSpan.Zero, MetronomeTickType.Bell))
-                .AddMetronomeTick(new MetronomeTick(TimeSpan.FromMilliseconds(10)))
-                .AddMetronomeTick(new MetronomeTick(TimeSpan.FromMilliseconds(20)))
-                .AddMetronomeTick(new MetronomeTick(TimeSpan.FromMilliseconds(50), MetronomeTickType.Bell))
-                .AddMetronomeTick(new MetronomeTick(TimeSpan.FromMilliseconds(30), MetronomeTickType.None))
+                .WithMetronomeTick(new MetronomeTick(TimeSpan.Zero, MetronomeTickType.Bell))
+                .WithMetronomeTick(new MetronomeTick(TimeSpan.FromMilliseconds(10)))
+                .WithMetronomeTick(new MetronomeTick(TimeSpan.FromMilliseconds(20)))
+                .WithMetronomeTick(new MetronomeTick(TimeSpan.FromMilliseconds(50), MetronomeTickType.Bell))
+                .WithMetronomeTick(new MetronomeTick(TimeSpan.FromMilliseconds(30), MetronomeTickType.None))
                 .Build();
 
             sut.ExecuteAsync(new ExecutionContext());
