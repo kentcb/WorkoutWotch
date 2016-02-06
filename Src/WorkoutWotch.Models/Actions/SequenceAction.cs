@@ -57,11 +57,11 @@
                                 };
                             })
                         .Where(x => x.Execute)
-                        .SelectMany(x => x.Child.ExecuteAsync(context)))
-                .DefaultIfEmpty(Observable.Return(Unit.Default));
+                        .SelectMany(x => x.Child.ExecuteAsync(context)));
 
             return Observable
                 .Concat(childExecutions)
+                .DefaultIfEmpty()
                 .RunAsync(context.CancellationToken);
         }
     }

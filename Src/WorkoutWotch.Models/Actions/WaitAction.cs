@@ -69,6 +69,7 @@
                                                 .Select(_ => delay))))
                 .Do(delay => context.AddProgress(delay))
                 .Select(_ => Unit.Default)
+                .DefaultIfEmpty()
                 .RunAsync(context.CancellationToken);
 
             remaining.Connect();

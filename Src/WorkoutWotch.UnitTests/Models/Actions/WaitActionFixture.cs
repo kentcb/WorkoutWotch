@@ -28,6 +28,24 @@
             Assert.Equal(TimeSpan.FromMilliseconds(delayInMs), sut.Duration);
         }
 
+        [Fact]
+        public void execute_async_completes_even_if_there_is_no_delay()
+        {
+            var sut = new WaitActionBuilder()
+                .WithDelay(TimeSpan.Zero)
+                .Build();
+
+            using (var executionContext = new ExecutionContext())
+            {
+                var completed = false;
+                sut
+                    .ExecuteAsync(executionContext)
+                    .Subscribe(_ => completed = true);
+
+                Assert.True(completed);
+            }
+        }
+
         [Theory]
         [InlineData(0)]
         [InlineData(100)]

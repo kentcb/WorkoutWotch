@@ -139,7 +139,7 @@
             this
                 .WhenAnyValue(x => x.SelectedProgram)
                 .Where(x => x != null)
-                .Subscribe(x => this.hostScreen.Router.Navigate.Execute(x))
+                .Subscribe(x => this.hostScreen.Router.Navigate.ExecuteAsync(x))
                 .AddTo(this.disposables);
 
             this

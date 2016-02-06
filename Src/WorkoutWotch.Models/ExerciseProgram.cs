@@ -59,6 +59,7 @@
                                 this.logger.Debug("Executing exercise '{0}'.", exercise.Name);
                                 return exercise.ExecuteAsync(context);
                             }))
+                .DefaultIfEmpty()
                 .RunAsync(context.CancellationToken);
         }
     }

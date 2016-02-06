@@ -32,281 +32,189 @@
              <param name="expression"></param>
              <returns></returns>
         </member>
-        <member name="T:ReactiveUI.UserInteraction">
+        <member name="T:ReactiveUI.InteractionContext`2">
             <summary>
-            Represents an interaction with the user.
+            Contains contextual information for an interaction.
             </summary>
             <remarks>
             <para>
-            User interactions are used when view models need the user to answer some question before they can continue their work.
-            For example, prior to deleting a file the user may be required to acquiesce. Naturally, this question needs to be
-            answered in an asynchronous fashion, so that no blocking occurs while the view model waits for an answer.
-            </para>
-            <para>
-            User interactions may be either local or global. Local interactions are typically exposed as properties on a view model.
-            When the view model needs an answer to a question, it creates a new instance of the interaction and assigns it to the
-            property. The corresponding view monitors that property for changes and, when a change is detected, prompts the user for
-            their answer. When the user responds, the answer is pushed to the result of the user interaction, at which point the
-            patiently-waiting view model will pick up its work.
-            </para>
-            <para>
-            Global interactions, on the other hand, can be handled by any handler registered via the <see cref="M:ReactiveUI.UserInteraction.RegisterGlobalHandler``1(System.Func{``0,System.IObservable{System.Reactive.Unit}})"/>
-            methods. Each registered handler is given the opportunity to handle the interaction, but later handlers are given
-            priority over handlers that are registered earlier. This means that it is possible to set up one or more "root" handlers
-            to deal with common situations (such as recovering from errors), and temporary handlers registered by higher-level
-            components can take precedence over the root handlers.
-            </para>
-            <para>
-            It's important to understand that local interactions will not result in any handlers being invoked. Therefore, such
-            interactions can only be handled by those components that have access to the interaction instances. Usually this means that
-            the related view is responsible for handling the interaction. Any views further up the hierarchy are unlikely to hook into
-            properties in a lower-level view model.
-            </para>
-            <para>
-            The advantage of global interactions is that any application component can handle them, and handlers are queried in a
-            logical order. The disadvantage is that they can make application logic harder to follow. Local interactions are therefore
-            recommended wherever possible.
+            Instances of this class are passed into interaction handlers. The <see cref="P:ReactiveUI.InteractionContext`2.Input"/> property exposes
+            the input to the interaction, whilst the <see cref="M:ReactiveUI.InteractionContext`2.SetOutput(`1)"/> method allows a handler to provide the
+            output.
             </para>
             </remarks>
-        </member>
-        <member name="T:ReactiveUI.ReactiveObject">
-            <summary>
-            ReactiveObject is the base object for ViewModel classes, and it
-            implements INotifyPropertyChanged. In addition, ReactiveObject provides
-            Changing and Changed Observables to monitor object changes.
-            </summary>
-        </member>
-        <member name="T:ReactiveUI.IReactiveNotifyPropertyChanged`1">
-            <summary>
-            IReactiveNotifyPropertyChanged represents an extended version of
-            INotifyPropertyChanged that also exposes typed Observables.
-            </summary>
-        </member>
-        <member name="M:ReactiveUI.IReactiveNotifyPropertyChanged`1.SuppressChangeNotifications">
-            <summary>
-            When this method is called, an object will not fire change
-            notifications (neither traditional nor Observable notifications)
-            until the return value is disposed.
-            </summary>
-            <returns>An object that, when disposed, reenables change
-            notifications.</returns>
-        </member>
-        <member name="P:ReactiveUI.IReactiveNotifyPropertyChanged`1.Changing">
-            <summary>
-            Represents an Observable that fires *before* a property is about to
-            be changed. Note that this should not fire duplicate change notifications if a
-            property is set to the same value multiple times.
-            </summary>
-        </member>
-        <member name="P:ReactiveUI.IReactiveNotifyPropertyChanged`1.Changed">
-            <summary>
-            Represents an Observable that fires *after* a property has changed.
-            Note that this should not fire duplicate change notifications if a
-            property is set to the same value multiple times.
-            </summary>
-        </member>
-        <member name="T:ReactiveUI.IHandleObservableErrors">
-             <summary>
-             This interface is implemented by RxUI objects which are given
-             IObservables as input - when the input IObservables OnError, instead of
-             disabling the RxUI object, we catch the IObservable and pipe it into
-             this property.
-            
-             Normally this IObservable is implemented with a ScheduledSubject whose
-             default Observer is RxApp.DefaultExceptionHandler - this means, that if
-             you aren't listening to ThrownExceptions and one appears, the exception
-             will appear on the UI thread and crash the application.
-             </summary>
-        </member>
-        <member name="P:ReactiveUI.IHandleObservableErrors.ThrownExceptions">
-            <summary>
-            Fires whenever an exception would normally terminate ReactiveUI
-            internal state.
-            </summary>
-        </member>
-        <member name="M:ReactiveUI.ReactiveObject.SuppressChangeNotifications">
-             <summary>
-            
-             </summary>
-             <returns></returns>
-        </member>
-        <member name="M:ReactiveUI.ReactiveObject.AreChangeNotificationsEnabled">
-             <summary>
-            
-             </summary>
-             <returns></returns>
-        </member>
-        <member name="P:ReactiveUI.ReactiveObject.Changing">
-            <summary>
-            Represents an Observable that fires *before* a property is about to
-            be changed.
-            </summary>
-        </member>
-        <member name="P:ReactiveUI.ReactiveObject.Changed">
-            <summary>
-            Represents an Observable that fires *after* a property has changed.
-            </summary>
-        </member>
-        <member name="P:ReactiveUI.ReactiveObject.ThrownExceptions">
-             <summary>
-            
-             </summary>
-        </member>
-        <member name="M:ReactiveUI.UserInteraction.RegisterGlobalHandler``1(System.Func{``0,System.IObservable{System.Reactive.Unit}})">
-            <summary>
-            Registers an observable-based asynchronous global handler for the specified interaction type.
-            </summary>
-            <typeparam name="TInteraction">
-            The type of interaction being handled.
+            <typeparam name="TInput">
+            The type of the interaction's input.
             </typeparam>
+            <typeparam name="TOutput">
+            The type of the interaction's output.
+            </typeparam>
+        </member>
+        <member name="P:ReactiveUI.InteractionContext`2.Input">
+            <summary>
+            Gets the input for the interaction.
+            </summary>
+        </member>
+        <member name="P:ReactiveUI.InteractionContext`2.IsHandled">
+            <summary>
+            Gets a value indicating whether the interaction is handled. That is, whether the output has been set.
+            </summary>
+        </member>
+        <member name="M:ReactiveUI.InteractionContext`2.SetOutput(`1)">
+            <summary>
+            Sets the output for the interaction.
+            </summary>
+            <param name="output">
+            The output.
+            </param>
+            <exception cref="T:System.InvalidOperationException">
+            If the output has already been set.
+            </exception>
+        </member>
+        <member name="M:ReactiveUI.InteractionContext`2.GetOutput">
+            <summary>
+            Gets the output of the interaction.
+            </summary>
+            <returns>
+            The output.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">
+            If the output has not been set.
+            </exception>
+        </member>
+        <member name="T:ReactiveUI.Interaction`2">
+            <summary>
+            Represents an interaction between collaborating parties.
+            </summary>
+            <remarks>
+            <para>
+            Interactions allow collaborating components to asynchronously ask questions of each other. Typically,
+            a view model wants to ask the user a question before proceeding with some operation, and it's the view
+            that provides the interface via which users can answer the question.
+            </para>
+            <para>
+            Interactions have both an input and output, both of which are strongly-typed via generic type parameters.
+            The input is passed into the interaction so that handlers have the information they require. The output
+            is provided by a handler.
+            </para>
+            <para>
+            By default, handlers are invoked in reverse order of registration. That is, handlers registered later
+            are given the opportunity to handle interactions before handlers that were registered earlier. This
+            chaining mechanism enables handlers to be registered temporarily in a specific context, such that
+            interactions can be handled in a different manner. Subclasses may modify this behavior by overriding
+            the <see cref="M:ReactiveUI.Interaction`2.Handle(`0)"/> method.
+            </para>
+            <para>
+            Note that handlers are not required to handle an interaction. They can choose to ignore it, leaving it
+            for some other handler to handle. If no handler handles the interaction, the <see cref="M:ReactiveUI.Interaction`2.Handle(`0)"/> method
+            will throw an <see cref="!:UnhandledInteractionException"/>.
+            </para>
+            </remarks>
+            <typeparam name="TInput">
+            The interaction's input type.
+            </typeparam>
+            <typeparam name="TOutput">
+            The interaction's output type.
+            </typeparam>
+        </member>
+        <member name="M:ReactiveUI.Interaction`2.RegisterHandler(System.Action{ReactiveUI.InteractionContext{`0,`1}})">
+            <summary>
+            Registers a synchronous interaction handler.
+            </summary>
+            <remarks>
+            <para>
+            This overload of <c>RegisterHandler</c> is only useful if the handler can handle the interaction
+            immediately. That is, it does not need to wait for a user or some other collaborating component.
+            </para>
+            </remarks>
             <param name="handler">
             The handler.
             </param>
             <returns>
-            A disposable instance that, when disposed, will unregister the global handler.
+            A disposable which, when disposed, will unregister the handler.
             </returns>
         </member>
-        <member name="M:ReactiveUI.UserInteraction.RegisterGlobalHandler``1(System.Func{``0,System.Threading.Tasks.Task})">
+        <member name="M:ReactiveUI.Interaction`2.RegisterHandler(System.Func{ReactiveUI.InteractionContext{`0,`1},System.Threading.Tasks.Task})">
             <summary>
-            Registers a task-based asynchronous global handler for the specified interaction type.
+            Registers a task-based asynchronous interaction handler.
             </summary>
-            <typeparam name="TInteraction">
-            The type of interaction being handled.
-            </typeparam>
+            <remarks>
+            <para>
+            This overload of <c>RegisterHandler</c> is useful if the handler needs to perform some asynchronous
+            operation, such as displaying a dialog and waiting for the user's response.
+            </para>
+            </remarks>
             <param name="handler">
             The handler.
             </param>
             <returns>
-            A disposable instance that, when disposed, will unregister the global handler.
+            A disposable which, when disposed, will unregister the handler.
             </returns>
         </member>
-        <member name="M:ReactiveUI.UserInteraction.RegisterGlobalHandler``1(System.Action{``0})">
+        <member name="M:ReactiveUI.Interaction`2.RegisterHandler(System.Func{ReactiveUI.InteractionContext{`0,`1},System.IObservable{System.Reactive.Unit}})">
             <summary>
-            Registers a synchronous global handler for the specified interaction type.
+            Registers an observable-based asynchronous interaction handler.
             </summary>
             <remarks>
-            Synchronous handlers cannot await user interactions. It is therefore more likely you want to use an asynchronous handler.
+            <para>
+            This overload of <c>RegisterHandler</c> is useful if the handler needs to perform some asynchronous
+            operation, such as displaying a dialog and waiting for the user's response.
+            </para>
             </remarks>
-            <typeparam name="TInteraction">
-            The type of interaction being handled.
-            </typeparam>
             <param name="handler">
             The handler.
             </param>
             <returns>
-            A disposable instance that, when disposed, will unregister the global handler.
+            A disposable which, when disposed, will unregister the handler.
             </returns>
         </member>
-        <member name="M:ReactiveUI.UserInteraction.Raise">
+        <member name="M:ReactiveUI.Interaction`2.Handle(`0)">
             <summary>
-            Raises the interaction locally.
-            </summary>
-            <remarks>
-            The result is untyped. Strong typing is introduced by the <see cref="T:ReactiveUI.UserInteraction`1"/> class.
-            </remarks>
-            <returns>
-            An observable that immediately ticks the result if it is already known, otherwise later when it is.
-            </returns>
-        </member>
-        <member name="M:ReactiveUI.UserInteraction.RaiseGlobal">
-            <summary>
-            Raises the interaction globally.
-            </summary>
-            <remarks>
-            The result is untyped. Strong typing is introduced by the <see cref="T:ReactiveUI.UserInteraction`1"/> class.
-            </remarks>
-            <returns>
-            The result obtained from global interaction handlers.
-            </returns>
-        </member>
-        <member name="M:ReactiveUI.UserInteraction.SetResult(System.Object)">
-            <summary>
-            Sets the result of the interaction.
+            Handles an interaction and asynchronously returns the result.
             </summary>
             <remarks>
             <para>
-            The result is untyped. Strong typing is introduced by the <see cref="T:ReactiveUI.UserInteraction`1"/> class.
-            </para>
-            <para>
-            This method can only be called once. Any subsequent attempt to supply a result will cause an exception to be thrown.
+            This method passes the interaction through to relevant handlers in reverse order of registration,
+            ceasing once any handler handles the interaction. If the interaction remains unhandled after all
+            relevant handlers have executed, an <see cref="!:UnhandledInteractionException"/> is thrown.
             </para>
             </remarks>
-            <param name="result">
-            The result.
+            <param name="input">
+            The input for the interaction.
             </param>
+            <returns>
+            An observable that ticks when the interaction completes, or throws an
+            <see cref="!:UnhandledInteractionException"/> if no handler handles the interaction.
+            </returns>
         </member>
-        <member name="P:ReactiveUI.UserInteraction.IsHandled">
+        <member name="M:ReactiveUI.Interaction`2.GetHandlers">
             <summary>
-            Gets a value indicating whether this user interaction has been handled.
+            Gets all registered handlers in order of their registration.
             </summary>
-            <remarks>
-            This property returns <see langword="true"/> if the user interaction has been handled, or <see langword="false"/> if it
-            hasn't. The definition of "handled" is that a call to <see cref="M:ReactiveUI.UserInteraction.SetResult(System.Object)"/> has been made.
-            </remarks>
+            <returns>
+            All registered handlers.
+            </returns>
         </member>
-        <member name="T:ReactiveUI.UserInteraction`1">
+        <member name="T:ReactiveUI.UnhandledInteractionException`2">
             <summary>
-            Implements a <see cref="T:ReactiveUI.UserInteraction"/> with a specific result type.
+            Indicates that an interaction has gone unhandled.
             </summary>
-            <remarks>
-            <para>
-            This class provides a means of interacting with users and obtaining a strongly-typed result. Typically, you will either
-            use this class directly (e.g. a <c>UserInteraction&lt;bool&gt;</c> will allow you to obtain a yes/no answer from the user)
-            or indirectly (by either subclassing or using an existing subclass).
-            </para>
-            </remarks>
-            <typeparam name="TResult">
-            The type of the interaction's result.
+            <typeparam name="TInput">
+            The type of the interaction's input.
+            </typeparam>
+            <typeparam name="TOutput">
+            The type of the interaction's output.
             </typeparam>
         </member>
-        <member name="M:ReactiveUI.UserInteraction`1.Raise">
+        <member name="P:ReactiveUI.UnhandledInteractionException`2.Interaction">
             <summary>
-            Raises the interaction locally.
+            Gets the interaction that was not handled.
             </summary>
-            <remarks>
-            <para>
-            View models using local interactions would typically await a call to this method after making the interaction available
-            for views to handle. If a global interaction is being used, you'd instead await the <see cref="M:ReactiveUI.UserInteraction`1.RaiseGlobal"/> method.
-            </para>
-            </remarks>
-            <returns>
-            An observable that immediately ticks the interaction result if it is already known, otherwise later when it is.
-            </returns>
         </member>
-        <member name="M:ReactiveUI.UserInteraction`1.RaiseGlobal">
+        <member name="P:ReactiveUI.UnhandledInteractionException`2.Input">
             <summary>
-            Raises the interaction globally.
+            Gets the input for the interaction that was not handled.
             </summary>
-            <remarks>
-            <para>
-            This method passes the interaction through to all registered global handlers in reverse order of their registration.
-            As soon as any handler supplies a result for the interaction, subsequent handlers are not called. That is, handlers 
-            that are registered earlier are given the opportunity to handle the interaction only if handlers registered later
-            have not already done so.
-            </para>
-            <para>
-            If no handler handles the interaction, an <see cref="!:UnhandledUserInteractionException&lt;TResult&gt;"/> is thrown.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:ReactiveUI.UserInteraction`1.SetResult(`0)">
-            <summary>
-            Assigns a result to the user interaction.
-            </summary>
-            <remarks>
-            Handlers (be they for local or global interactions) call this method to assign a result to the interaction.
-            </remarks>
-            <param name="result">
-            The interaction result.
-            </param>
-        </member>
-        <member name="T:ReactiveUI.UserErrorInteraction`1">
-            <summary>
-            An implementation of <see cref="T:ReactiveUI.UserInteraction`1"/> that adds exception information.
-            </summary>
-            <typeparam name="TResult">
-            The interaction result type.
-            </typeparam>
         </member>
         <member name="T:ReactiveUI.ComponentModelTypeConverter">
             <summary>
@@ -315,35 +223,28 @@
             these are pretty gutted on some other platforms like Silverlight.
             </summary>
         </member>
-        <member name="T:ReactiveUI.IBindingTypeConverter">
+        <member name="T:ReactiveUI.ViewContractAttribute">
             <summary>
-            This interface is the extensible implementation of IValueConverters for
-            Bind and OneWayBind. Implement this to teach Bind and OneWayBind how to
-            convert between types.
+            Allows an additional string to make view resolution more specific than
+            just a type. When applied to your <see cref="T:ReactiveUI.IViewFor`1"/> -derived
+            View, you can select between different Views for a single ViewModel
+            instance.
             </summary>
         </member>
-        <member name="M:ReactiveUI.IBindingTypeConverter.GetAffinityForObjects(System.Type,System.Type)">
+        <member name="M:ReactiveUI.ViewContractAttribute.#ctor(System.String)">
             <summary>
-            Returns a positive integer when this class supports
-            TryConvert for this particular Type. If the method isn't supported at
-            all, return a non-positive integer. When multiple implementations
-            return a positive value, the host will use the one which returns
-            the highest value. When in doubt, return '2' or '0'.
+            Constructs the ViewContractAttribute with a specific contract value.
             </summary>
-            <param name="fromType">The source type to convert from</param>
-            <param name="toType">The target type to convert to</param>
-            <returns>A positive integer if TryConvert is supported,
-            zero or a negative value otherwise</returns>
+            <param name="contract">The value of the contract for view
+            resolution.</param>
         </member>
-        <member name="M:ReactiveUI.IBindingTypeConverter.TryConvert(System.Object,System.Type,System.Object,System.Object@)">
+        <member name="T:ReactiveUI.SingleInstanceViewAttribute">
             <summary>
-            Convert a given object to the specified type.
+            Indicates that this View should be constructed _once_ and then used
+            every time its ViewModel View is resolved.
+            Obviously, this is not supported on Views that may be reused multiple
+            times in the Visual Tree.
             </summary>
-            <param name="from">The object to convert.</param>
-            <param name="toType">The type to coerce the object to.</param>
-            <param name="conversionHint">An implementation-defined value,
-            usually to specify things like locale awareness.</param>
-            <returns>An object that is of the type 'to'</returns>
         </member>
         <member name="T:ReactiveUI.ReactiveUserControl`1">
             <summary>
@@ -351,7 +252,7 @@
             </summary>
             <remarks>
             <para>
-            This class is a WPF <see cref="T:System.Windows.Controls.UserControl"/> that is also reactive. That is, it implements <see cref="T:ReactiveUI.IViewFor`1"/>.
+            This class is a <see cref="T:System.Windows.Controls.UserControl"/> that is also reactive. That is, it implements <see cref="T:ReactiveUI.IViewFor`1"/>.
             You can extend this class to get an implementation of <see cref="T:ReactiveUI.IViewFor`1"/> rather than writing one yourself.
             </para>
             <para>
@@ -375,73 +276,6 @@
             The type of the view model backing the view.
             </typeparam>
         </member>
-        <member name="T:ReactiveUI.IViewFor`1">
-            <summary>
-            Implement this interface on your Views to support Routing and Binding.
-            </summary>
-        </member>
-        <!-- Badly formed XML comment ignored for member "T:ReactiveUI.IViewFor" -->
-        <member name="T:ReactiveUI.IActivatable">
-            <summary>
-            Use this Interface when you want to mark a control as recieving View
-            Activation when it doesn't have a backing ViewModel.
-            </summary>
-        </member>
-        <member name="P:ReactiveUI.IViewFor.ViewModel">
-             <summary>
-            
-             </summary>
-        </member>
-        <member name="P:ReactiveUI.IViewFor`1.ViewModel">
-            <summary>
-            The ViewModel corresponding to this specific View. This should be
-            a DependencyProperty if you're using XAML.
-            </summary>
-        </member>
-        <member name="T:ReactiveUI.ICreatesObservableForProperty">
-            <summary>
-            ICreatesObservableForProperty represents an object that knows how to
-            create notifications for a given type of object. Implement this if you
-            are porting RxUI to a new UI toolkit, or generally want to enable WhenAny
-            for another type of object that can be observed in a unique way.
-            </summary>
-        </member>
-        <member name="M:ReactiveUI.ICreatesObservableForProperty.GetAffinityForObject(System.Type,System.String,System.Boolean)">
-            <summary>
-            Returns a positive integer when this class supports
-            GetNotificationForProperty for this particular Type. If the method
-            isn't supported at all, return a non-positive integer. When multiple
-            implementations return a positive value, the host will use the one
-            which returns the highest value. When in doubt, return '2' or '0'
-            </summary>
-            <param name="type">The type to query for.</param>
-            <returns>A positive integer if GNFP is supported, zero or a negative
-            value otherwise</returns>
-        </member>
-        <member name="M:ReactiveUI.ICreatesObservableForProperty.GetNotificationForProperty(System.Object,System.Linq.Expressions.Expression,System.Boolean)">
-            <summary>
-            Subscribe to notifications on the specified property, given an
-            object and a property name.
-            </summary>
-            <param name="sender">The object to observe.</param>
-            <param name="expression">The expression on the object to observe.
-            This will be either a MemberExpression or an IndexExpression
-            dependending on the property.
-            </param>
-            <param name="beforeChanged">If true, signal just before the
-            property value actually changes. If false, signal after the
-            property changes.</param>
-            <returns>An IObservable which is signalled whenever the specified
-            property on the object changes. If this cannot be done for a
-            specified value of beforeChanged, return Observable.Never</returns>
-        </member>
-        <member name="T:ReactiveUI.IActivationForViewFetcher">
-            <summary>
-            Implement this interface to override how ReactiveUI determines when a
-            View is activated or deactivated. This is usually only used when porting
-            ReactiveUI to a new UI framework
-            </summary>
-        </member>
         <member name="T:ReactiveUI.PlatformRegistrations">
             <summary>
             Ignore me. This class is a secret handshake between RxUI and RxUI.Xaml
@@ -456,23 +290,6 @@
             loads the View associated with each ViewModel.
             </summary>
         </member>
-        <member name="T:ReactiveUI.IPropertyBindingHook">
-            <summary>
-            Implement this as a way to intercept bindings at the time that they are
-            created and execute an additional action (or to cancel the binding)
-            </summary>
-        </member>
-        <member name="M:ReactiveUI.IPropertyBindingHook.ExecuteHook(System.Object,System.Object,System.Func{ReactiveUI.IObservedChange{System.Object,System.Object}[]},System.Func{ReactiveUI.IObservedChange{System.Object,System.Object}[]},ReactiveUI.BindingDirection)">
-            <summary>
-            Called when any binding is set up.
-            </summary>
-            <returns>If false, the binding is cancelled</returns>
-            <param name="source">The source ViewModel</param>
-            <param name="target">The target View (not the actual control)</param>
-            <param name="getCurrentViewModelProperties">Get current view model properties.</param>
-            <param name="getCurrentViewProperties">Get current view properties.</param>
-            <param name="direction">The Binding direction.</param>
-        </member>
         <member name="T:ReactiveUI.BooleanToVisibilityTypeConverter">
             <summary>
             This type convert converts between Boolean and XAML Visibility - the 
@@ -484,6 +301,17 @@
             This control hosts the View associated with a Router, and will display
             the View and wire up the ViewModel whenever a new ViewModel is
             navigated to. Put this control as the only control in your Window.
+            </summary>
+        </member>
+        <member name="P:ReactiveUI.RoutedViewHost.Router">
+            <summary>
+            The Router associated with this View Host.
+            </summary>
+        </member>
+        <member name="P:ReactiveUI.RoutedViewHost.DefaultContent">
+            <summary>
+            This content is displayed whenever there is no page currently
+            routed.
             </summary>
         </member>
         <member name="T:ReactiveUI.TransitioningContentControl">
@@ -506,23 +334,6 @@
             Initializes a new instance of the <see cref="T:ReactiveUI.TransitioningContentControl"/> class.
             </summary>
         </member>
-        <member name="M:ReactiveUI.TransitioningContentControl.OnContentChanged(System.Object,System.Object)">
-            <summary>
-            Called when the value of the <see cref="P:System.Windows.Controls.ContentControl.Content"/> property changes.
-            </summary>
-            <param name="oldContent">The old value of the <see cref="P:System.Windows.Controls.ContentControl.Content"/> property.</param>
-            <param name="newContent">The new value of the <see cref="P:System.Windows.Controls.ContentControl.Content"/> property.</param>
-        </member>
-        <member name="M:ReactiveUI.TransitioningContentControl.AbortTransition">
-            <summary>
-            Aborts the transition.
-            </summary>
-        </member>
-        <member name="M:ReactiveUI.TransitioningContentControl.SetTransitionDefaultValues">
-            <summary>
-            Sets default values for certain transition types.
-            </summary>
-        </member>
         <member name="E:ReactiveUI.TransitioningContentControl.TransitionCompleted">
             <summary>
             Occurs when a transition has completed.
@@ -532,18 +343,6 @@
             <summary>
             Occurs when a transition has started.
             </summary>
-        </member>
-        <member name="P:ReactiveUI.TransitioningContentControl.Transition">
-            <summary>
-            Gets or sets the transition.
-            </summary>
-            <value>The transition.</value>
-        </member>
-        <member name="P:ReactiveUI.TransitioningContentControl.TransitionPart">
-            <summary>
-            Gets or sets the transition part.
-            </summary>
-            <value>The transition part.</value>
         </member>
         <member name="T:ReactiveUI.TransitioningContentControl.TransitionType">
             <summary>
@@ -586,15 +385,33 @@
             Transitions in and out.
             </summary>
         </member>
-        <member name="P:ReactiveUI.RoutedViewHost.Router">
+        <member name="P:ReactiveUI.TransitioningContentControl.Transition">
             <summary>
-            The Router associated with this View Host.
+            Gets or sets the transition.
+            </summary>
+            <value>The transition.</value>
+        </member>
+        <member name="P:ReactiveUI.TransitioningContentControl.TransitionPart">
+            <summary>
+            Gets or sets the transition part.
+            </summary>
+            <value>The transition part.</value>
+        </member>
+        <member name="M:ReactiveUI.TransitioningContentControl.OnContentChanged(System.Object,System.Object)">
+            <summary>
+            Called when the value of the <see cref="P:System.Windows.Controls.ContentControl.Content"/> property changes.
+            </summary>
+            <param name="oldContent">The old value of the <see cref="P:System.Windows.Controls.ContentControl.Content"/> property.</param>
+            <param name="newContent">The new value of the <see cref="P:System.Windows.Controls.ContentControl.Content"/> property.</param>
+        </member>
+        <member name="M:ReactiveUI.TransitioningContentControl.AbortTransition">
+            <summary>
+            Aborts the transition.
             </summary>
         </member>
-        <member name="P:ReactiveUI.RoutedViewHost.DefaultContent">
+        <member name="M:ReactiveUI.TransitioningContentControl.SetTransitionDefaultValues">
             <summary>
-            This content is displayed whenever there is no page currently
-            routed.
+            Sets default values for certain transition types.
             </summary>
         </member>
         <member name="T:ReactiveUI.ViewModelViewHost">
@@ -757,7 +574,7 @@
         </member>
         <member name="M:ReactiveUI.ReactiveBinding`3.#ctor(`0,`1,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.IObservable{`2},ReactiveUI.BindingDirection,System.IDisposable)">
             <summary>
-            Initializes a new instance of the <see cref="!:AppliedBindingInfo&lt;TViewModel&gt;"/> class.
+            Initializes a new instance of the <see cref="!:AppliedBindingInfo&lt;TViewModel&gt;" /> class.
             </summary>
             <param name="view">The view.</param>
             <param name="viewModel">The view model.</param>
@@ -765,11 +582,6 @@
             <param name="viewModelPath">The view model path.</param>
             <param name="direction">The direction.</param>
             <param name="bindingDisposable">The binding disposable.</param>
-        </member>
-        <member name="M:ReactiveUI.ReactiveBinding`3.Dispose">
-            <summary>
-            Releases unmanaged and - optionally - managed resources.
-            </summary>
         </member>
         <!-- Badly formed XML comment ignored for member "P:ReactiveUI.ReactiveBinding`3.ViewModel" -->
         <member name="P:ReactiveUI.ReactiveBinding`3.ViewModelExpression">
@@ -816,6 +628,11 @@
             The direction.
             </value>
         </member>
+        <member name="M:ReactiveUI.ReactiveBinding`3.Dispose">
+            <summary>
+            Releases unmanaged and - optionally - managed resources.
+            </summary>
+        </member>
         <member name="M:ReactiveUI.AutoPersistHelper.AutoPersist``1(``0,System.Func{``0,System.IObservable{System.Reactive.Unit}},System.Nullable{System.TimeSpan})">
             <summary>
             AutoPersist allows you to automatically call a method when an object
@@ -848,7 +665,7 @@
             be saved.</param>
             <returns>A Disposable to disable automatic persistence.</returns>
         </member>
-        <member name="M:ReactiveUI.AutoPersistHelper.AutoPersistCollection``1(ReactiveUI.ReactiveList{``0},System.Func{``0,System.IObservable{System.Reactive.Unit}},System.Nullable{System.TimeSpan})">
+        <member name="M:ReactiveUI.AutoPersistHelper.AutoPersistCollection``1(ReactiveUI.IReactiveCollection{``0},System.Func{``0,System.IObservable{System.Reactive.Unit}},System.Nullable{System.TimeSpan})">
             <summary>
             Apply AutoPersistence to all objects in a collection. Items that are
             no longer in the collection won't be persisted anymore.
@@ -860,7 +677,7 @@
             be saved.</param>
             <returns>A Disposable to disable automatic persistence.</returns>
         </member>
-        <member name="M:ReactiveUI.AutoPersistHelper.AutoPersistCollection``2(ReactiveUI.ReactiveList{``0},System.Func{``0,System.IObservable{System.Reactive.Unit}},System.IObservable{``1},System.Nullable{System.TimeSpan})">
+        <member name="M:ReactiveUI.AutoPersistHelper.AutoPersistCollection``2(ReactiveUI.IReactiveCollection{``0},System.Func{``0,System.IObservable{System.Reactive.Unit}},System.IObservable{``1},System.Nullable{System.TimeSpan})">
             <summary>
             Apply AutoPersistence to all objects in a collection. Items that are
             no longer in the collection won't be persisted anymore.
@@ -874,7 +691,7 @@
             be saved.</param>
             <returns>A Disposable to disable automatic persistence.</returns>
         </member>
-        <member name="M:ReactiveUI.AutoPersistHelper.ActOnEveryObject``1(ReactiveUI.ReactiveList{``0},System.Action{``0},System.Action{``0})">
+        <member name="M:ReactiveUI.AutoPersistHelper.ActOnEveryObject``1(ReactiveUI.IReactiveCollection{``0},System.Action{``0},System.Action{``0})">
             <summary>
             Call methods 'onAdd' and 'onRemove' whenever an object is added or
             removed from a collection. This class correctly handles both when
@@ -963,56 +780,6 @@
             This binder is the default binder for connecting to arbitrary events
             </summary>
         </member>
-        <member name="M:ReactiveUI.ICreatesCommandBinding.GetAffinityForObject(System.Type,System.Boolean)">
-            <summary>
-            Returns a positive integer when this class supports
-            BindCommandToObject for this particular Type. If the method
-            isn't supported at all, return a non-positive integer. When multiple
-            implementations return a positive value, the host will use the one
-            which returns the highest value. When in doubt, return '2' or '0'
-            </summary>
-            <param name="type">The type to query for.</param>
-            <param name="hasEventTarget">If true, the host intends to use a custom
-            event target.</param>
-            <returns>A positive integer if BCTO is supported, zero or a negative
-            value otherwise</returns>
-        </member>
-        <member name="M:ReactiveUI.ICreatesCommandBinding.BindCommandToObject(System.Windows.Input.ICommand,System.Object,System.IObservable{System.Object})">
-            <summary>
-            Bind an ICommand to a UI object, in the "default" way. The meaning
-            of this is dependent on the implementation. Implement this if you
-            have a new type of UI control that doesn't have
-            Command/CommandParameter like WPF or has a non-standard event name
-            for "Invoke".
-            </summary>
-            <param name="command">The command to bind</param>
-            <param name="target">The target object, usually a UI control of
-            some kind</param>
-            <param name="commandParameter">An IObservable source whose latest
-            value will be passed as the command parameter to the command. Hosts
-            will always pass a valid IObservable, but this may be
-            Observable.Empty</param>
-            <returns>An IDisposable which will disconnect the binding when
-            disposed.</returns>
-        </member>
-        <member name="M:ReactiveUI.ICreatesCommandBinding.BindCommandToObject``1(System.Windows.Input.ICommand,System.Object,System.IObservable{System.Object},System.String)">
-            <summary>
-            Bind an ICommand to a UI object to a specific event. This event may
-            be a standard .NET event, or it could be an event derived in another
-            manner (i.e. in MonoTouch).
-            </summary>
-            <param name="command">The command to bind</param>
-            <param name="target">The target object, usually a UI control of
-            some kind</param>
-            <param name="commandParameter">An IObservable source whose latest
-            value will be passed as the command parameter to the command. Hosts
-            will always pass a valid IObservable, but this may be
-            Observable.Empty</param>
-            <param name="eventName">The event to bind to.</param>
-            <returns></returns>
-            <returns>An IDisposable which will disconnect the binding when
-            disposed.</returns>
-        </member>
         <member name="M:ReactiveUI.DependencyResolverMixins.InitializeReactiveUI(Splat.IMutableDependencyResolver)">
             <summary>
             This method allows you to initialize resolvers with the default 
@@ -1080,33 +847,24 @@
             
              </summary>
         </member>
-        <member name="P:ReactiveUI.IReactiveCommand.CanExecuteObservable">
-            <summary>
-            Gets a value indicating whether this instance can execute observable.
-            </summary>
-            <value><c>true</c> if this instance can execute observable; otherwise, <c>false</c>.</value>
-        </member>
-        <member name="P:ReactiveUI.IReactiveCommand.IsExecuting">
-            <summary>
-            Gets a value indicating whether this instance is executing. This
-            Observable is guaranteed to always return a value immediately (i.e.
-            it is backed by a BehaviorSubject), meaning it is safe to determine
-            the current state of the command via IsExecuting.First()
-            </summary>
-            <value><c>true</c> if this instance is executing; otherwise, <c>false</c>.</value>
-        </member>
-        <member name="T:ReactiveUI.IReactiveCommand`1">
+        <member name="T:ReactiveUI.IHandleObservableErrors">
              <summary>
-             IReactiveCommand represents an ICommand which also notifies when it is
-             executed (i.e. when Execute is called) via IObservable. Conceptually,
-             this represents an Event, so as a result this IObservable should never
-             OnComplete or OnError.
+             This interface is implemented by RxUI objects which are given
+             IObservables as input - when the input IObservables OnError, instead of
+             disabling the RxUI object, we catch the IObservable and pipe it into
+             this property.
             
-             In previous versions of ReactiveUI, this interface was split into two
-             separate interfaces, one to handle async methods and one for "standard"
-             commands, but these have now been merged - every ReactiveCommand is now
-             a ReactiveAsyncCommand.
+             Normally this IObservable is implemented with a ScheduledSubject whose
+             default Observer is RxApp.DefaultExceptionHandler - this means, that if
+             you aren't listening to ThrownExceptions and one appears, the exception
+             will appear on the UI thread and crash the application.
              </summary>
+        </member>
+        <member name="P:ReactiveUI.IHandleObservableErrors.ThrownExceptions">
+            <summary>
+            Fires whenever an exception would normally terminate ReactiveUI
+            internal state.
+            </summary>
         </member>
         <member name="T:ReactiveUI.IReactivePropertyChangedEventArgs`1">
             <summary>
@@ -1163,6 +921,35 @@
              <summary>
             
              </summary>
+        </member>
+        <member name="T:ReactiveUI.IReactiveNotifyPropertyChanged`1">
+            <summary>
+            IReactiveNotifyPropertyChanged represents an extended version of
+            INotifyPropertyChanged that also exposes typed Observables.
+            </summary>
+        </member>
+        <member name="P:ReactiveUI.IReactiveNotifyPropertyChanged`1.Changing">
+            <summary>
+            Represents an Observable that fires *before* a property is about to
+            be changed. Note that this should not fire duplicate change notifications if a
+            property is set to the same value multiple times.
+            </summary>
+        </member>
+        <member name="P:ReactiveUI.IReactiveNotifyPropertyChanged`1.Changed">
+            <summary>
+            Represents an Observable that fires *after* a property has changed.
+            Note that this should not fire duplicate change notifications if a
+            property is set to the same value multiple times.
+            </summary>
+        </member>
+        <member name="M:ReactiveUI.IReactiveNotifyPropertyChanged`1.SuppressChangeNotifications">
+            <summary>
+            When this method is called, an object will not fire change
+            notifications (neither traditional nor Observable notifications)
+            until the return value is disposed.
+            </summary>
+            <returns>An object that, when disposed, reenables change
+            notifications.</returns>
         </member>
         <member name="T:ReactiveUI.IReactiveNotifyCollectionItemChanged`1">
             <summary>
@@ -1372,93 +1159,10 @@
              is arbitrarily set by the client. 
              </summary>
         </member>
-        <member name="T:ReactiveUI.IMessageBus">
-             <summary>
-             IMessageBus represents an object that can act as a "Message Bus", a
-             simple way for ViewModels and other objects to communicate with each
-             other in a loosely coupled way.
-            
-             Specifying which messages go where is done via a combination of the Type
-             of the message as well as an additional "Contract" parameter; this is a
-             unique string used to distinguish between messages of the same Type, and
-             is arbitrarily set by the client.
-             </summary>
-        </member>
-        <member name="M:ReactiveUI.IMessageBus.RegisterScheduler``1(System.Reactive.Concurrency.IScheduler,System.String)">
+        <member name="P:ReactiveUI.MessageBus.Current">
             <summary>
-            Registers a scheduler for the type, which may be specified at
-            runtime, and the contract.
+            Gets or sets the Current MessageBus.
             </summary>
-            <remarks>If a scheduler is already registered for the specified
-            runtime and contract, this will overrwrite the existing
-            registration.</remarks>
-            <typeparam name="T">The type of the message to listen to.</typeparam>
-            <param name="scheduler">The scheduler on which to post the
-            notifications for the specified type and contract.
-            CurrentThreadScheduler by default.</param>
-            <param name="contract">A unique string to distinguish messages with
-            identical types (i.e. "MyCoolViewModel") - if the message type is
-            only used for one purpose, leave this as null.</param>
-        </member>
-        <member name="M:ReactiveUI.IMessageBus.Listen``1(System.String)">
-            <summary>
-            Listen provides an Observable that will fire whenever a Message is
-            provided for this object via RegisterMessageSource or SendMessage.
-            </summary>
-            <typeparam name="T">The type of the message to listen to.</typeparam>
-            <param name="contract">A unique string to distinguish messages with
-            identical types (i.e. "MyCoolViewModel") - if the message type is
-            only used for one purpose, leave this as null.</param>
-            <returns></returns>
-        </member>
-        <member name="M:ReactiveUI.IMessageBus.ListenIncludeLatest``1(System.String)">
-            <summary>
-            ListenIncludeLatest provides an Observable that will fire whenever a Message is
-            provided for this object via RegisterMessageSource or SendMessage and fire the
-            last provided Message immediately if applicable, or null.
-            </summary>
-            <typeparam name="T">The type of the message to listen to.</typeparam>
-            <param name="contract">A unique string to distinguish messages with
-            identical types (i.e. "MyCoolViewModel") - if the message type is
-            only used for one purpose, leave this as null.</param>
-            <returns>An Observable representing the notifications posted to the
-            message bus.</returns>
-        </member>
-        <member name="M:ReactiveUI.IMessageBus.IsRegistered(System.Type,System.String)">
-            <summary>
-            Determines if a particular message Type is registered.
-            </summary>
-            <param name="type">The type of the message.</param>
-            <param name="contract">A unique string to distinguish messages with
-            identical types (i.e. "MyCoolViewModel") - if the message type is
-            only used for one purpose, leave this as null.</param>
-            <returns>True if messages have been posted for this message Type.</returns>
-        </member>
-        <member name="M:ReactiveUI.IMessageBus.RegisterMessageSource``1(System.IObservable{``0},System.String)">
-            <summary>
-            Registers an Observable representing the stream of messages to send.
-            Another part of the code can then call Listen to retrieve this
-            Observable.
-            </summary>
-            <typeparam name="T">The type of the message to listen to.</typeparam>
-            <param name="source">An Observable that will be subscribed to, and a
-            message sent out for each value provided.</param>
-            <param name="contract">A unique string to distinguish messages with
-            identical types (i.e. "MyCoolViewModel") - if the message type is
-            only used for one purpose, leave this as null.</param>
-        </member>
-        <member name="M:ReactiveUI.IMessageBus.SendMessage``1(``0,System.String)">
-            <summary>
-            Sends a single message using the specified Type and contract.
-            Consider using RegisterMessageSource instead if you will be sending
-            messages in response to other changes such as property changes
-            or events.
-            </summary>
-            <typeparam name="T">The type of the message to send.</typeparam>
-            <param name="message">The actual message to send</param>
-            <param name="contract">A unique string to distinguish messages with
-            identical types (i.e. "MyCoolViewModel") - if the message type is
-            only used for one purpose, leave this as null.</param>
         </member>
         <member name="M:ReactiveUI.MessageBus.RegisterScheduler``1(System.Reactive.Concurrency.IScheduler,System.String)">
             <summary>
@@ -1532,57 +1236,6 @@
             identical types (i.e. "MyCoolViewModel") - if the message type is
             only used for one purpose, leave this as null.</param>
         </member>
-        <member name="P:ReactiveUI.MessageBus.Current">
-            <summary>
-            Gets or sets the Current MessageBus.
-            </summary>
-        </member>
-        <member name="T:ReactiveUI.ISuspensionHost">
-            <summary>
-            ISuspensionHost represents a standardized version of the events that the
-            host operating system publishes. Subscribe to these events in order to
-            handle app suspend / resume.
-            </summary>
-        </member>
-        <member name="P:ReactiveUI.ISuspensionHost.IsLaunchingNew">
-            <summary>
-            Signals when the application is launching new. This can happen when
-            an app has recently crashed, as well as the first time the app has
-            been launched. Apps should create their state from scratch.
-            </summary>
-        </member>
-        <member name="P:ReactiveUI.ISuspensionHost.IsResuming">
-            <summary>
-            Signals when the application is resuming from suspended state (i.e.
-            it was previously running but its process was destroyed).
-            </summary>
-        </member>
-        <member name="P:ReactiveUI.ISuspensionHost.IsUnpausing">
-            <summary>
-            Signals when the application is activated. Note that this may mean
-            that your process was not actively running before this signal.
-            </summary>
-        </member>
-        <member name="P:ReactiveUI.ISuspensionHost.ShouldPersistState">
-            <summary>
-            Signals when the application should persist its state to disk.
-            </summary>
-            <value>Returns an IDisposable that should be disposed once the
-            application finishes persisting its state</value>
-        </member>
-        <member name="P:ReactiveUI.ISuspensionHost.ShouldInvalidateState">
-            <summary>
-            Signals that the saved application state should be deleted, this
-            usually is called after an app has crashed
-            </summary>
-        </member>
-        <member name="P:ReactiveUI.ISuspensionHost.CreateNewAppState">
-            <summary>
-            A method that can be used to create a new application state - usually
-            this method just calls 'new' on an object.
-            </summary>
-        </member>
-        <!-- Badly formed XML comment ignored for member "P:ReactiveUI.ISuspensionHost.AppState" -->
         <member name="P:ReactiveUI.SuspensionHost.CreateNewAppState">
              <summary>
             
@@ -1622,28 +1275,6 @@
             
              </summary>
         </member>
-        <member name="T:ReactiveUI.ISuspensionDriver">
-            <summary>
-            ISuspensionDriver represents a class that can load/save state to persistent
-            storage. Most platforms have a basic implementation of this class, but you
-            probably want to write your own.
-            </summary>
-        </member>
-        <member name="M:ReactiveUI.ISuspensionDriver.LoadState">
-            <summary>
-            Loads the application state from persistent storage
-            </summary>
-        </member>
-        <member name="M:ReactiveUI.ISuspensionDriver.SaveState(System.Object)">
-            <summary>
-            Saves the application state to disk.
-            </summary>
-        </member>
-        <member name="M:ReactiveUI.ISuspensionDriver.InvalidateState">
-            <summary>
-            Invalidates the application state (i.e. deletes it from disk)
-            </summary>
-        </member>
         <member name="T:ReactiveUI.ObservableAsPropertyHelper`1">
             <summary>
             ObservableAsPropertyHelper is a class to help ViewModels implement
@@ -1682,17 +1313,6 @@
             provided on - this should normally be a Dispatcher-based scheduler
             (and is by default)</param>
         </member>
-        <member name="M:ReactiveUI.ObservableAsPropertyHelper`1.Default(`0,System.Reactive.Concurrency.IScheduler)">
-            <summary>
-            Constructs a "default" ObservableAsPropertyHelper object. This is
-            useful for when you will initialize the OAPH later, but don't want
-            bindings to access a null OAPH at startup.
-            </summary>
-            <param name="initialValue">The initial (and only) value of the property.</param>
-            <param name="scheduler">The scheduler that the notifications will be
-            provided on - this should normally be a Dispatcher-based scheduler
-            (and is by default)</param>
-        </member>
         <member name="P:ReactiveUI.ObservableAsPropertyHelper`1.Value">
             <summary>
             The last provided value from the Observable. 
@@ -1703,6 +1323,17 @@
             Fires whenever an exception would normally terminate ReactiveUI 
             internal state.
             </summary>
+        </member>
+        <member name="M:ReactiveUI.ObservableAsPropertyHelper`1.Default(`0,System.Reactive.Concurrency.IScheduler)">
+            <summary>
+            Constructs a "default" ObservableAsPropertyHelper object. This is
+            useful for when you will initialize the OAPH later, but don't want
+            bindings to access a null OAPH at startup.
+            </summary>
+            <param name="initialValue">The initial (and only) value of the property.</param>
+            <param name="scheduler">The scheduler that the notifications will be
+            provided on - this should normally be a Dispatcher-based scheduler
+            (and is by default)</param>
         </member>
         <member name="M:ReactiveUI.OAPHCreationHelperMixin.ToProperty``2(System.IObservable{``1},``0,System.Linq.Expressions.Expression{System.Func{``0,``1}},``1,System.Reactive.Concurrency.IScheduler)">
             <summary>
@@ -1956,7 +1587,7 @@
             </param>
             <param name="viewProperty">
             The property on the view that is to be bound.
-            This can be a chain of properties of the form <code>view =&gt; view.Foo.Bar.Baz</code>
+            This can be a chain of properties of the form <code>view => view.Foo.Bar.Baz</code>
             and the binder will attempt to set the last one each time the view model property is updated.
             </param>
             <param name="conversionHint">
@@ -1990,13 +1621,84 @@
             </param>
             <param name="viewProperty">
             The property on the view that is to be bound.
-            This can be a chain of properties of the form <code>view =&gt; view.Foo.Bar.Baz</code>
+            This can be a chain of properties of the form <code>view => view.Foo.Bar.Baz</code>
             and the binder will attempt to set the last one each time the view model property is updated.
             </param>
             <param name="signalViewUpdate">
             An observable, that when signaled, indicates that the view property 
             has been changed, and that the binding should update the view model
             property accordingly.
+            </param>
+            <returns>
+            An instance of <see cref="T:System.IDisposable"/> that, when disposed,
+            disconnects the binding.
+            </returns>
+        </member>
+        <member name="M:ReactiveUI.BindingMixins.Bind``4(``1,``0,System.Linq.Expressions.Expression{System.Func{``0,``2}},System.Linq.Expressions.Expression{System.Func{``1,``3}},System.Func{``2,``3},System.Func{``3,``2})">
+            <summary>
+            Binds the specified view model property to the given view property.
+            </summary>
+            <typeparam name="TViewModel">The type of the view model being bound.</typeparam>
+            <typeparam name="TView">The type of the view being bound.</typeparam>
+            <typeparam name="TVMProp">The type of the property bound on the view model.</typeparam>
+            <typeparam name="TVProp">The type of the property bound on the view.</typeparam>
+            <param name="view">The instance of the view to bind.</param>
+            <param name="viewModel">The instance of the view model to bind.</param>
+            <param name="vmProperty">
+            An expression indicating the property that is bound on the view model.
+            This can be a chain of properties of the form <code>vm =&gt; vm.Foo.Bar.Baz</code>
+            and the binder will attempt to subscribe to changes on each recursively.
+            </param>
+            <param name="viewProperty">
+            The property on the view that is to be bound.
+            This can be a chain of properties of the form <code>view => view.Foo.Bar.Baz</code>
+            and the binder will attempt to set the last one each time the view model property is updated.
+            </param>
+            <param name="vmToViewConverter">
+            Delegate to convert the value of the view model's property's type to a value of the
+            view's property's type.
+            </param>
+            <param name="viewToVmConverter">
+            Delegate to convert the value of the view's property's type to a value of the
+            view model's property's type.
+            </param>
+            <returns>
+            An instance of <see cref="T:System.IDisposable"/> that, when disposed,
+            disconnects the binding.
+            </returns>
+        </member>
+        <member name="M:ReactiveUI.BindingMixins.Bind``5(``1,``0,System.Linq.Expressions.Expression{System.Func{``0,``2}},System.Linq.Expressions.Expression{System.Func{``1,``3}},System.IObservable{``4},System.Func{``2,``3},System.Func{``3,``2})">
+            <summary>
+            Binds the specified view model property to the given view property.
+            </summary>
+            <typeparam name="TViewModel">The type of the view model being bound.</typeparam>
+            <typeparam name="TView">The type of the view being bound.</typeparam>
+            <typeparam name="TVMProp">The type of the property bound on the view model.</typeparam>
+            <typeparam name="TVProp">The type of the property bound on the view.</typeparam>
+            <param name="view">The instance of the view to bind.</param>
+            <param name="viewModel">The instance of the view model to bind.</param>
+            <param name="vmProperty">
+            An expression indicating the property that is bound on the view model.
+            This can be a chain of properties of the form <code>vm =&gt; vm.Foo.Bar.Baz</code>
+            and the binder will attempt to subscribe to changes on each recursively.
+            </param>
+            <param name="viewProperty">
+            The property on the view that is to be bound.
+            This can be a chain of properties of the form <code>view => view.Foo.Bar.Baz</code>
+            and the binder will attempt to set the last one each time the view model property is updated.
+            </param>
+            <param name="signalViewUpdate">
+            An observable, that when signaled, indicates that the view property 
+            has been changed, and that the binding should update the view model
+            property accordingly.
+            </param>
+            <param name="vmToViewConverter">
+            Delegate to convert the value of the view model's property's type to a value of the
+            view's property's type.
+            </param>
+            <param name="viewToVmConverter">
+            Delegate to convert the value of the view's property's type to a value of the
+            view model's property's type.
             </param>
             <returns>
             An instance of <see cref="T:System.IDisposable"/> that, when disposed,
@@ -2020,12 +1722,12 @@
             It is usually set to the <see cref="P:ReactiveUI.IViewFor.ViewModel"/> property of the <paramref name="view"/>.</param>
             <param name="vmProperty">
             An expression indicating the property that is bound on the view model.
-            This can be a chain of properties of the form <code>vm =&gt; vm.Foo.Bar.Baz</code>
+            This can be a chain of properties of the form <code>vm => vm.Foo.Bar.Baz</code>
             and the binder will attempt to subscribe to changes on each recursively.
             </param>
             <param name="viewProperty">
             The property on the view that is to be bound.
-            This can be a chain of properties of the form <code>view =&gt; view.Foo.Bar.Baz</code>
+            This can be a chain of properties of the form <code>view => view.Foo.Bar.Baz</code>
             and the binder will attempt to set the last one each time the view model property is updated.
             </param>
             <param name="conversionHint">
@@ -2128,6 +1830,53 @@
             <param name="conversionHint">
             An object that can provide a hint for the converter.
             The semantics of this object is defined by the converter used.
+            </param>
+            <returns>
+            An instance of <see cref="T:System.IDisposable"/> that, when disposed,
+            disconnects the binding.
+            </returns>
+        </member>
+        <member name="M:ReactiveUI.IPropertyBinderImplementation.Bind``5(``0,``1,System.Linq.Expressions.Expression{System.Func{``0,``2}},System.Linq.Expressions.Expression{System.Func{``1,``3}},System.IObservable{``4},System.Func{``2,``3},System.Func{``3,``2})">
+            <summary>
+            Creates a two-way binding between a view model and a view.
+            This binding will attempt to convert the values of the 
+            view and view model properties using a <see cref="T:ReactiveUI.IBindingTypeConverter"/>
+            if they are not of the same type.
+            </summary>
+            <typeparam name="TViewModel">The type of the view model that is bound.</typeparam>
+            <typeparam name="TView">The type of the view model that is bound.</typeparam>
+            <typeparam name="TVMProp">The type of the property bound on the view model.</typeparam>
+            <typeparam name="TVProp">The type of the property bound on the view.</typeparam>
+            <typeparam name="TDontCare">
+            A dummy type, only the fact that <paramref name="signalViewUpdate"/> 
+            emits values is considered, not the actual values emitted.
+            </typeparam>
+            <param name="viewModel">The instance of the view model object to be bound.</param>
+            <param name="view">The instance of the view object to be bound.</param>
+            <param name="vmProperty">
+            An expression representing the property to be bound to on the view model.
+            This can be a child property, for example <c>x =&gt; x.Foo.Bar.Baz</c> in which case
+            the binding will attempt to subscribe recursively to updates in order to
+            always get and set the correct property.
+            </param>
+            <param name="viewProperty">
+            An expression representing the property to be bound to on the view.
+            This can be a child property, for example <c>x =&gt; x.Foo.Bar.Baz</c> in which case
+            the binding will attempt to subscribe recursively to updates in order to
+            always get and set the correct property.
+            </param>
+            <param name="signalViewUpdate">
+            An observable, that when signaled, indicates that the view property 
+            has been changed, and that the binding should update the view model
+            property accordingly.
+            </param>
+            <param name="vmToViewConverter">
+            Delegate to convert the value of the view model's property's type to a value of the
+            view's property's type.
+            </param>
+            <param name="viewToVmConverter">
+            Delegate to convert the value of the view's property's type to a value of the
+            view model's property's type.
             </param>
             <returns>
             An instance of <see cref="T:System.IDisposable"/> that, when disposed,
@@ -2257,6 +2006,48 @@
             <param name="conversionHint">
             An object that can provide a hint for the converter.
             The semantics of this object is defined by the converter used.
+            </param>
+            <returns>
+            An instance of <see cref="T:System.IDisposable"/> that, when disposed,
+            disconnects the binding.
+            </returns>
+        </member>
+        <member name="M:ReactiveUI.PropertyBinderImplementation.Bind``5(``0,``1,System.Linq.Expressions.Expression{System.Func{``0,``2}},System.Linq.Expressions.Expression{System.Func{``1,``3}},System.IObservable{``4},System.Func{``2,``3},System.Func{``3,``2})">
+            <summary>
+            Binds the specified view model property to the given view property.
+            </summary>
+            <typeparam name="TViewModel">The type of the view model being bound.</typeparam>
+            <typeparam name="TView">The type of the view being bound.</typeparam>
+            <typeparam name="TVMProp">The type of the property bound on the view model.</typeparam>
+            <typeparam name="TVProp">The type of the property bound on the view.</typeparam>
+            <typeparam name="TDontCare">
+            A dummy type, only the fact that <paramref name="signalViewUpdate"/> 
+            emits values is considered, not the actual values emitted.
+            </typeparam>
+            <param name="view">The instance of the view to bind.</param>
+            <param name="viewModel">The instance of the view model to bind.</param>
+            <param name="vmProperty">
+            An expression indicating the property that is bound on the view model.
+            This can be a chain of properties of the form <code>vm =&gt; vm.Foo.Bar.Baz</code>
+            and the binder will attempt to subscribe to changes on each recursively.
+            </param>
+            <param name="viewProperty">
+            The property on the view that is to be bound.
+            This can be a chain of properties of the form <code>view => view.Foo.Bar.Baz</code>
+            and the binder will attempt to set the last one each time the view model property is updated.
+            </param>
+            <param name="signalViewUpdate">
+            An observable, that when signaled, indicates that the view property 
+            has been changed, and that the binding should update the view model
+            property accordingly.
+            </param>
+            <param name="vmToViewConverter">
+            Delegate to convert the value of the view model's property's type to a value of the
+            view's property's type.
+            </param>
+            <param name="viewToVmConverter">
+            Delegate to convert the value of the view's property's type to a value of the
+            view model's property's type.
             </param>
             <returns>
             An instance of <see cref="T:System.IDisposable"/> that, when disposed,
@@ -2411,6 +2202,12 @@
             Increases (or decreases) all source indices within the range (lower inclusive, upper exclusive). 
             </summary>
         </member>
+        <member name="T:ReactiveUI.ReactiveDerivedCollection`2.ReferenceEqualityComparer`1">
+            <summary>
+            Internal equality comparer used for looking up the source object of a property change notification in
+            the source list.
+            </summary>
+        </member>
         <member name="M:ReactiveUI.ReactiveDerivedCollection`2.newPositionForExistingItem(System.Int32,System.Int32,`1)">
             <summary>
             Calculates a new destination for an updated item that's already in the list.
@@ -2421,19 +2218,26 @@
             Calculates a new destination for an updated item that's already in the list.
             </summary>
         </member>
-        <member name="T:ReactiveUI.ReactiveDerivedCollection`2.ReferenceEqualityComparer`1">
+        <member name="M:ReactiveUI.ReactiveCollectionMixins.CreateCollection``1(System.IObservable{``0},System.Reactive.Concurrency.IScheduler)">
             <summary>
-            Internal equality comparer used for looking up the source object of a property change notification in
-            the source list.
+            Creates a collection based on an an Observable by adding items
+            provided until the Observable completes. This method guarantees that
+            items are always added in the context of the provided scheduler.
             </summary>
+            <param name="fromObservable">The Observable whose items will be put
+            into the new collection.</param>
+            <param name="scheduler">Optionally specifies the scheduler on which
+            the collection will be populated. Defaults to the main scheduler.</param>
+            <returns>A new collection which will be populated with the
+            Observable.</returns>
         </member>
-        <member name="M:ReactiveUI.ReactiveCollectionMixins.CreateCollection``1(System.IObservable{``0},System.Nullable{System.TimeSpan},System.Action{System.Exception})">
+        <member name="M:ReactiveUI.ReactiveCollectionMixins.CreateCollection``1(System.IObservable{``0},System.Nullable{System.TimeSpan},System.Action{System.Exception},System.Reactive.Concurrency.IScheduler)">
             <summary>
             Creates a collection based on an an Observable by adding items
             provided until the Observable completes, optionally ensuring a
             delay. Note that if the Observable never completes and withDelay is
             set, this method will leak a Timer. This method also guarantees that
-            items are always added via the UI thread.
+            items are always added in the context of the provided scheduler.
             </summary>
             <param name="fromObservable">The Observable whose items will be put
             into the new collection.</param>
@@ -2441,23 +2245,8 @@
             not specified, an error will go to DefaultExceptionHandler.</param>
             <param name="withDelay">If set, items will be populated in the
             collection no faster than the delay provided.</param>
-            <returns>A new collection which will be populated with the
-            Observable.</returns>
-        </member>
-        <member name="M:ReactiveUI.ReactiveCollectionMixins.CreateCollection``2(System.IObservable{``0},System.Func{``0,``1},System.Nullable{System.TimeSpan})">
-            <summary>
-            Creates a collection based on an an Observable by adding items
-            provided until the Observable completes, optionally ensuring a
-            delay. Note that if the Observable never completes and withDelay is
-            set, this method will leak a Timer. This method also guarantees that
-            items are always added via the UI thread.
-            </summary>
-            <param name="fromObservable">The Observable whose items will be put
-            into the new collection.</param>
-            <param name="selector">A Select function that will be run on each
-            item.</param>
-            <param name="withDelay">If set, items will be populated in the
-            collection no faster than the delay provided.</param>
+            <param name="scheduler">Optionally specifies the scheduler on which
+            the collection will be populated. Defaults to the main scheduler.</param>
             <returns>A new collection which will be populated with the
             Observable.</returns>
         </member>
@@ -2561,276 +2350,447 @@
             Collection.Select().Where().OrderBy() and will mirror changes 
             in the initial collection.</returns>
         </member>
-        <member name="M:ReactiveUI.ReactiveCommand.Create(System.IObservable{System.Boolean},System.Reactive.Concurrency.IScheduler)">
+        <member name="T:ReactiveUI.ReactiveCommand">
             <summary>
-            Creates a default ReactiveCommand that has no background action. This
-            is probably what you want if you were calling the constructor in
-            previous versions of ReactiveUI
+            Encapsulates a user interaction behind a reactive interface.
             </summary>
-            <param name="canExecute">An Observable that determines when the
-            Command can Execute. WhenAny is a great way to create this!</param>
-            <param name="scheduler">The scheduler to deliver events on.
-            Defaults to RxApp.MainThreadScheduler.</param>
-            <returns>A ReactiveCommand whose ExecuteAsync just returns the
-            CommandParameter immediately. Which you should ignore!</returns>
+            <remarks>
+            <para>
+            This non-generic base class defines the base behavior for all reactive commands.
+            </para>
+            <para>
+            Reactive commands encapsulate the behavior of running some execution logic and then surfacing the results on the UI
+            thread. Importantly, no scheduling is performed against input observables (the <c>canExecute</c> and execution pipelines).
+            </para>
+            <para>
+            To create an instance of <c>ReactiveCommand</c>, call one of the static creation methods defined by this class.
+            <see cref="M:ReactiveUI.ReactiveCommand.Create(System.Action,System.IObservable{System.Boolean},System.Reactive.Concurrency.IScheduler)"/> can be used when your execution logic is synchronous. <see cref="M:ReactiveUI.ReactiveCommand.CreateFromObservable``1(System.Func{System.IObservable{``0}},System.IObservable{System.Boolean},System.Reactive.Concurrency.IScheduler)"/> and
+            <see cref="M:ReactiveUI.ReactiveCommand.CreateFromTask(System.Func{System.Threading.Tasks.Task},System.IObservable{System.Boolean},System.Reactive.Concurrency.IScheduler)"/> can be used for asynchronous execution logic. Optionally, you can provide an observable that
+            governs the availability of the command for execution, as well as a scheduler to which events will be delivered.
+            </para>
+            <para>
+            The <see cref="P:ReactiveUI.ReactiveCommand.CanExecute"/> property provides an observable that can be used to determine whether the command is
+            eligible for execution. The value of this observable is determined by both the <c>canExecute</c> observable provided
+            during command creation, and the current execution status of the command. A command that is already executing will
+            yield <c>false</c> from its <see cref="P:ReactiveUI.ReactiveCommand.CanExecute"/> observable regardless of the <c>canExecute</c> observable provided
+            during command creation.
+            </para>
+            <para>
+            The <see cref="P:ReactiveUI.ReactiveCommand.IsExecuting"/> property provides an observable whose value indicates whether the command is currently
+            executing. This can be a useful means of triggering UI, such as displaying an activity indicator whilst a command is
+            executing.
+            </para>
+            <para>
+            As discussed above, you are under no obligation to somehow incorporate this into your <c>canExecute</c> observable
+            because that is taken care of for you. That is, if the value of <c>IsExecuting</c> is <c>true</c>, the value of
+            <c>CanExecute</c> will be <c>false</c>. However, if the value of <c>CanExecute</c> is <c>false</c>, that does not imply
+            the value of <c>IsExecuting</c> is <c>true</c>.
+            </para>
+            <para>
+            Any errors in your command's execution logic (including any <c>canExecute</c> observable you choose to provide) will be
+            surfaced via the <see cref="P:ReactiveUI.ReactiveCommand.ThrownExceptions"/> observable. This gives you the opportunity to handle the error before
+            it triggers a default handler that tears down the application. For example, you might use this as a means of alerting
+            the user that something has gone wrong executing the command.
+            </para>
+            <para>
+            For the sake of convenience, all <c>ReactiveCommand</c> instances are also implementations of <see cref="T:System.Windows.Input.ICommand"/>.
+            This allows you to easily integrate instances of <c>ReactiveCommand</c> into platforms that understands <c>ICommand</c>
+            natively (such as WPF and UWP).
+            </para>
+            </remarks>
         </member>
-        <member name="M:ReactiveUI.ReactiveCommand.CreateAsyncObservable``1(System.IObservable{System.Boolean},System.Func{System.Object,System.IObservable{``0}},System.Reactive.Concurrency.IScheduler)">
+        <member name="M:ReactiveUI.ReactiveCommand.Create(System.Action,System.IObservable{System.Boolean},System.Reactive.Concurrency.IScheduler)">
             <summary>
-            Creates a ReactiveCommand typed to the given executeAsync Observable
-            method. Use this method if your background method returns IObservable.
+            Creates a parameterless <see cref="T:ReactiveUI.ReactiveCommand`2"/> with synchronous execution logic.
             </summary>
-            <param name="canExecute">An Observable that determines when the
-            Command can Execute. WhenAny is a great way to create this!</param>
-            <param name="executeAsync">Method to call that creates an Observable
-            representing an operation to execute in the background. The Command's
-            CanExecute will be false until this Observable completes. If this
-            Observable terminates with OnError, the Exception is marshaled to
-            ThrownExceptions.</param>
-            <param name="scheduler">The scheduler to deliver events on.
-            Defaults to RxApp.MainThreadScheduler.</param>
-            <returns>A ReactiveCommand which returns all items that are created via
-            calling executeAsync as a single stream.</returns>
+            <param name="execute">
+            The action to execute whenever the command is executed.
+            </param>
+            <param name="canExecute">
+            An optional observable that dictates the availability of the command for execution.
+            </param>
+            <param name="outputScheduler">
+            An optional scheduler that is used to surface events. Defaults to <c>RxApp.MainThreadScheduler</c>.
+            </param>
+            <returns>
+            The <c>ReactiveCommand</c> instance.
+            </returns>
         </member>
-        <member name="M:ReactiveUI.ReactiveCommand.CreateAsyncObservable``1(System.Func{System.Object,System.IObservable{``0}},System.Reactive.Concurrency.IScheduler)">
+        <member name="M:ReactiveUI.ReactiveCommand.Create``1(System.Func{``0},System.IObservable{System.Boolean},System.Reactive.Concurrency.IScheduler)">
             <summary>
-            Creates a ReactiveCommand typed to the given executeAsync Observable
-            method. Use this method if your background method returns IObservable.
+            Creates a parameterless <see cref="T:ReactiveUI.ReactiveCommand`2"/> with synchronous execution logic that returns a value
+            of type <typeparamref name="TResult"/>.
             </summary>
-            <param name="executeAsync">Method to call that creates an Observable
-            representing an operation to execute in the background. The Command's
-            CanExecute will be false until this Observable completes. If this
-            Observable terminates with OnError, the Exception is marshaled to
-            ThrownExceptions.</param>
-            <param name="scheduler">The scheduler to deliver events on.
-            Defaults to RxApp.MainThreadScheduler.</param>
-            <returns>A ReactiveCommand which returns all items that are created via
-            calling executeAsync as a single stream.</returns>
+            <param name="execute">
+            The function to execute whenever the command is executed.
+            </param>
+            <param name="canExecute">
+            An optional observable that dictates the availability of the command for execution.
+            </param>
+            <param name="outputScheduler">
+            An optional scheduler that is used to surface events. Defaults to <c>RxApp.MainThreadScheduler</c>.
+            </param>
+            <returns>
+            The <c>ReactiveCommand</c> instance.
+            </returns>
+            <typeparam name="TResult">
+            The type of value returned by command executions.
+            </typeparam>
         </member>
-        <member name="M:ReactiveUI.ReactiveCommand.CreateAsyncTask``1(System.IObservable{System.Boolean},System.Func{System.Object,System.Threading.Tasks.Task{``0}},System.Reactive.Concurrency.IScheduler)">
+        <member name="M:ReactiveUI.ReactiveCommand.Create``1(System.Action{``0},System.IObservable{System.Boolean},System.Reactive.Concurrency.IScheduler)">
             <summary>
-            Creates a ReactiveCommand typed to the given executeAsync Task-based
-            method. Use this method if your background method returns Task or uses
-            async/await.
+            Creates a <see cref="T:ReactiveUI.ReactiveCommand`2"/> with synchronous execution logic that takes a parameter of type <typeparamref name="TParam"/>.
             </summary>
-            <param name="canExecute">An Observable that determines when the
-            Command can Execute. WhenAny is a great way to create this!</param>
-            <param name="executeAsync">Method to call that creates a Task
-            representing an operation to execute in the background. The Command's
-            CanExecute will be false until this Task completes. If this
-            Task terminates with an Exception, the Exception is marshaled to
-            ThrownExceptions.</param>
-            <param name="scheduler">The scheduler to deliver events on.
-            Defaults to RxApp.MainThreadScheduler.</param>
-            <returns>A ReactiveCommand which returns all items that are created via
-            calling executeAsync as a single stream.</returns>
+            <param name="execute">
+            The action to execute whenever the command is executed.
+            </param>
+            <param name="canExecute">
+            An optional observable that dictates the availability of the command for execution.
+            </param>
+            <param name="outputScheduler">
+            An optional scheduler that is used to surface events. Defaults to <c>RxApp.MainThreadScheduler</c>.
+            </param>
+            <returns>
+            The <c>ReactiveCommand</c> instance.
+            </returns>
+            <typeparam name="TParam">
+            The type of the parameter passed through to command execution.
+            </typeparam>
         </member>
-        <member name="M:ReactiveUI.ReactiveCommand.CreateAsyncTask``1(System.Func{System.Object,System.Threading.Tasks.Task{``0}},System.Reactive.Concurrency.IScheduler)">
+        <member name="M:ReactiveUI.ReactiveCommand.Create``2(System.Func{``0,``1},System.IObservable{System.Boolean},System.Reactive.Concurrency.IScheduler)">
             <summary>
-            Creates a ReactiveCommand typed to the given executeAsync Task-based
-            method. Use this method if your background method returns Task or uses
-            async/await.
+            Creates a <see cref="T:ReactiveUI.ReactiveCommand`2"/> with synchronous execution logic that takes a parameter of type <typeparamref name="TParam"/>
+            and returns a value of type <typeparamref name="TResult"/>.
             </summary>
-            <param name="executeAsync">Method to call that creates a Task
-            representing an operation to execute in the background. The Command's
-            CanExecute will be false until this Task completes. If this
-            Task terminates with an Exception, the Exception is marshaled to
-            ThrownExceptions.</param>
-            <param name="scheduler">The scheduler to deliver events on.
-            Defaults to RxApp.MainThreadScheduler.</param>
-            <returns>A ReactiveCommand which returns all items that are created via
-            calling executeAsync as a single stream.</returns>
+            <param name="execute">
+            The function to execute whenever the command is executed.
+            </param>
+            <param name="canExecute">
+            An optional observable that dictates the availability of the command for execution.
+            </param>
+            <param name="outputScheduler">
+            An optional scheduler that is used to surface events. Defaults to <c>RxApp.MainThreadScheduler</c>.
+            </param>
+            <returns>
+            The <c>ReactiveCommand</c> instance.
+            </returns>
+            <typeparam name="TParam">
+            The type of the parameter passed through to command execution.
+            </typeparam>
+            <typeparam name="TResult">
+            The type of value returned by command executions.
+            </typeparam>
         </member>
-        <member name="M:ReactiveUI.ReactiveCommand.CreateAsyncTask(System.Func{System.Object,System.Threading.Tasks.Task},System.Reactive.Concurrency.IScheduler)">
+        <member name="M:ReactiveUI.ReactiveCommand.CreateFromObservable``1(System.Func{System.IObservable{``0}},System.IObservable{System.Boolean},System.Reactive.Concurrency.IScheduler)">
             <summary>
-            Creates a ReactiveCommand typed to the given executeAsync Task-based
-            method. Use this method if your background method returns Task or uses
-            async/await.
+            Creates a parameterless <see cref="T:ReactiveUI.ReactiveCommand`2"/> with asynchronous execution logic.
             </summary>
-            <param name="executeAsync">Method to call that creates a Task
-            representing an operation to execute in the background. The Command's
-            CanExecute will be false until this Task completes. If this
-            Task terminates with an Exception, the Exception is marshaled to
-            ThrownExceptions.</param>
-            <param name="scheduler">The scheduler to deliver events on.
-            Defaults to RxApp.MainThreadScheduler.</param>
-            <returns>A ReactiveCommand which returns all items that are created via
-            calling executeAsync as a single stream.</returns>
+            <param name="executeAsync">
+            Provides an observable representing the command's asynchronous execution logic.
+            </param>
+            <param name="canExecute">
+            An optional observable that dictates the availability of the command for execution.
+            </param>
+            <param name="outputScheduler">
+            An optional scheduler that is used to surface events. Defaults to <c>RxApp.MainThreadScheduler</c>.
+            </param>
+            <returns>
+            The <c>ReactiveCommand</c> instance.
+            </returns>
+            <typeparam name="TResult">
+            The type of the command's result.
+            </typeparam>
         </member>
-        <member name="M:ReactiveUI.ReactiveCommand.CreateAsyncTask(System.IObservable{System.Boolean},System.Func{System.Object,System.Threading.Tasks.Task},System.Reactive.Concurrency.IScheduler)">
+        <member name="M:ReactiveUI.ReactiveCommand.CreateFromTask``1(System.Func{System.Threading.Tasks.Task{``0}},System.IObservable{System.Boolean},System.Reactive.Concurrency.IScheduler)">
             <summary>
-            Creates a ReactiveCommand typed to the given executeAsync Task-based
-            method. Use this method if your background method returns Task or uses
-            async/await.
+            Creates a parameterless <see cref="T:ReactiveUI.ReactiveCommand`2"/> with asynchronous execution logic.
             </summary>
-            <param name="canExecute">An Observable that determines when the
-            Command can Execute. WhenAny is a great way to create this!</param>
-            <param name="executeAsync">Method to call that creates a Task
-            representing an operation to execute in the background. The Command's
-            CanExecute will be false until this Task completes. If this
-            Task terminates with an Exception, the Exception is marshaled to
-            ThrownExceptions.</param>
-            <param name="scheduler">The scheduler to deliver events on.
-            Defaults to RxApp.MainThreadScheduler.</param>
-            <returns>A ReactiveCommand which returns all items that are created via
-            calling executeAsync as a single stream.</returns>
+            <param name="executeAsync">
+            Provides a <see cref="T:System.Threading.Tasks.Task"/> representing the command's asynchronous execution logic.
+            </param>
+            <param name="canExecute">
+            An optional observable that dictates the availability of the command for execution.
+            </param>
+            <param name="outputScheduler">
+            An optional scheduler that is used to surface events. Defaults to <c>RxApp.MainThreadScheduler</c>.
+            </param>
+            <returns>
+            The <c>ReactiveCommand</c> instance.
+            </returns>
+            <typeparam name="TResult">
+            The type of the command's result.
+            </typeparam>
         </member>
-        <member name="M:ReactiveUI.ReactiveCommand.CreateAsyncTask``1(System.IObservable{System.Boolean},System.Func{System.Object,System.Threading.CancellationToken,System.Threading.Tasks.Task{``0}},System.Reactive.Concurrency.IScheduler)">
+        <member name="M:ReactiveUI.ReactiveCommand.CreateFromTask(System.Func{System.Threading.Tasks.Task},System.IObservable{System.Boolean},System.Reactive.Concurrency.IScheduler)">
             <summary>
-            Creates a ReactiveCommand typed to the given executeAsync Task-based
-            method that supports cancellation. Use this method if your background
-            method returns Task or uses async/await.
+            Creates a parameterless <see cref="T:ReactiveUI.ReactiveCommand`2"/> with asynchronous execution logic.
             </summary>
-            <param name="canExecute">An Observable that determines when the
-            Command can Execute. WhenAny is a great way to create this!</param>
-            <param name="executeAsync">Method to call that creates a Task
-            representing an operation to execute in the background. The Command's
-            CanExecute will be false until this Task completes. If this
-            Task terminates with an Exception, the Exception is marshaled to
-            ThrownExceptions.</param>
-            <param name="scheduler">The scheduler to deliver events on.
-            Defaults to RxApp.MainThreadScheduler.</param>
-            <returns>A ReactiveCommand which returns all items that are created via
-            calling executeAsync as a single stream.</returns>
+            <param name="executeAsync">
+            Provides a <see cref="T:System.Threading.Tasks.Task"/> representing the command's asynchronous execution logic.
+            </param>
+            <param name="canExecute">
+            An optional observable that dictates the availability of the command for execution.
+            </param>
+            <param name="outputScheduler">
+            An optional scheduler that is used to surface events. Defaults to <c>RxApp.MainThreadScheduler</c>.
+            </param>
+            <returns>
+            The <c>ReactiveCommand</c> instance.
+            </returns>
         </member>
-        <member name="M:ReactiveUI.ReactiveCommand.CreateAsyncTask``1(System.Func{System.Object,System.Threading.CancellationToken,System.Threading.Tasks.Task{``0}},System.Reactive.Concurrency.IScheduler)">
+        <member name="M:ReactiveUI.ReactiveCommand.CreateFromObservable``2(System.Func{``0,System.IObservable{``1}},System.IObservable{System.Boolean},System.Reactive.Concurrency.IScheduler)">
             <summary>
-            Creates a ReactiveCommand typed to the given executeAsync Task-based
-            method that supports cancellation. Use this method if your background
-            method returns Task or uses async/await.
+            Creates a <see cref="T:ReactiveUI.ReactiveCommand`2"/> with asynchronous execution logic that takes a parameter of type <typeparamref name="TParam"/>.
             </summary>
-            <param name="executeAsync">Method to call that creates a Task
-            representing an operation to execute in the background. The Command's
-            CanExecute will be false until this Task completes. If this
-            Task terminates with an Exception, the Exception is marshaled to
-            ThrownExceptions.</param>
-            <param name="scheduler">The scheduler to deliver events on.
-            Defaults to RxApp.MainThreadScheduler.</param>
-            <returns>A ReactiveCommand which returns all items that are created via
-            calling executeAsync as a single stream.</returns>
+            <param name="executeAsync">
+            Provides an observable representing the command's asynchronous execution logic.
+            </param>
+            <param name="canExecute">
+            An optional observable that dictates the availability of the command for execution.
+            </param>
+            <param name="outputScheduler">
+            An optional scheduler that is used to surface events. Defaults to <c>RxApp.MainThreadScheduler</c>.
+            </param>
+            <returns>
+            The <c>ReactiveCommand</c> instance.
+            </returns>
+            <typeparam name="TParam">
+            The type of the parameter passed through to command execution.
+            </typeparam>
+            <typeparam name="TResult">
+            The type of the command's result.
+            </typeparam>
         </member>
-        <member name="M:ReactiveUI.ReactiveCommand.CreateAsyncTask(System.Func{System.Object,System.Threading.CancellationToken,System.Threading.Tasks.Task},System.Reactive.Concurrency.IScheduler)">
+        <member name="M:ReactiveUI.ReactiveCommand.CreateFromTask``2(System.Func{``0,System.Threading.Tasks.Task{``1}},System.IObservable{System.Boolean},System.Reactive.Concurrency.IScheduler)">
             <summary>
-            Creates a ReactiveCommand typed to the given executeAsync Task-based
-            method that supports cancellation. Use this method if your background
-            method returns Task or uses async/await.
+            Creates a <see cref="T:ReactiveUI.ReactiveCommand`2"/> with asynchronous execution logic that takes a parameter of type <typeparamref name="TParam"/>.
             </summary>
-            <param name="canExecute">An Observable that determines when the
-            Command can Execute. WhenAny is a great way to create this!</param>
-            <param name="executeAsync">Method to call that creates a Task
-            representing an operation to execute in the background. The Command's
-            CanExecute will be false until this Task completes. If this
-            Task terminates with an Exception, the Exception is marshaled to
-            ThrownExceptions.</param>
-            <param name="scheduler">The scheduler to deliver events on.
-            Defaults to RxApp.MainThreadScheduler.</param>
-            <returns>A ReactiveCommand which returns all items that are created via
-            calling executeAsync as a single stream.</returns>
+            <param name="executeAsync">
+            Provides a <see cref="T:System.Threading.Tasks.Task"/> representing the command's asynchronous execution logic.
+            </param>
+            <param name="canExecute">
+            An optional observable that dictates the availability of the command for execution.
+            </param>
+            <param name="outputScheduler">
+            An optional scheduler that is used to surface events. Defaults to <c>RxApp.MainThreadScheduler</c>.
+            </param>
+            <returns>
+            The <c>ReactiveCommand</c> instance.
+            </returns>
+            <typeparam name="TParam">
+            The type of the parameter passed through to command execution.
+            </typeparam>
+            <typeparam name="TResult">
+            The type of the command's result.
+            </typeparam>
         </member>
-        <member name="M:ReactiveUI.ReactiveCommand.CreateAsyncTask(System.IObservable{System.Boolean},System.Func{System.Object,System.Threading.CancellationToken,System.Threading.Tasks.Task},System.Reactive.Concurrency.IScheduler)">
+        <member name="M:ReactiveUI.ReactiveCommand.CreateFromTask``1(System.Func{``0,System.Threading.Tasks.Task},System.IObservable{System.Boolean},System.Reactive.Concurrency.IScheduler)">
             <summary>
-            Creates a ReactiveCommand typed to the given executeAsync Task-based
-            method that supports cancellation. Use this method if your background
-            method returns Task or uses async/await.
+            Creates a <see cref="T:ReactiveUI.ReactiveCommand`2"/> with asynchronous execution logic that takes a parameter of type <typeparamref name="TParam"/>.
             </summary>
-            <param name="executeAsync">Method to call that creates a Task
-            representing an operation to execute in the background. The Command's
-            CanExecute will be false until this Task completes. If this
-            Task terminates with an Exception, the Exception is marshaled to
-            ThrownExceptions.</param>
-            <param name="scheduler">The scheduler to deliver events on.
-            Defaults to RxApp.MainThreadScheduler.</param>
-            <returns>A ReactiveCommand which returns all items that are created via
-            calling executeAsync as a single stream.</returns>
+            <param name="executeAsync">
+            Provides a <see cref="T:System.Threading.Tasks.Task"/> representing the command's asynchronous execution logic.
+            </param>
+            <param name="canExecute">
+            An optional observable that dictates the availability of the command for execution.
+            </param>
+            <param name="outputScheduler">
+            An optional scheduler that is used to surface events. Defaults to <c>RxApp.MainThreadScheduler</c>.
+            </param>
+            <returns>
+            The <c>ReactiveCommand</c> instance.
+            </returns>
+            <typeparam name="TParam">
+            The type of the parameter passed through to command execution.
+            </typeparam>
         </member>
-        <member name="M:ReactiveUI.ReactiveCommand.CreateCombined(System.IObservable{System.Boolean},ReactiveUI.IReactiveCommand[])">
+        <member name="M:ReactiveUI.ReactiveCommand.CreateCombined``2(System.Collections.Generic.IEnumerable{ReactiveUI.ReactiveCommandBase{``0,``1}},System.IObservable{System.Boolean},System.Reactive.Concurrency.IScheduler)">
             <summary>
-            This creates a ReactiveCommand that calls several child
-            ReactiveCommands when invoked. Its CanExecute will match the
-            combined result of the child CanExecutes (i.e. if any child
-            commands cannot execute, neither can the parent)
+            Creates a <see cref="T:ReactiveUI.CombinedReactiveCommand`2"/> that composes all the provided child commands.
             </summary>
-            <param name="canExecute">An Observable that determines whether the
-            parent command can execute</param>
-            <param name="commands">The commands to combine.</param>
+            <param name="childCommands">
+            The child commands that the combined command will compose.
+            </param>
+            <param name="canExecute">
+            An optional observable that dictates the availability of the command for execution (in addition to the availability specified
+            by each individual child command).
+            </param>
+            <param name="outputScheduler">
+            An optional scheduler that is used to surface events. Defaults to <c>RxApp.MainThreadScheduler</c>.
+            </param>
+            <returns>
+            The <c>CombinedReactiveCommand</c> instance.
+            </returns>
+            <typeparam name="TParam">
+            The type of the parameter passed through to command execution.
+            </typeparam>
+            <typeparam name="TResult">
+            The type of the command's result.
+            </typeparam>
         </member>
-        <member name="M:ReactiveUI.ReactiveCommand.CreateCombined(ReactiveUI.IReactiveCommand[])">
+        <member name="P:ReactiveUI.ReactiveCommand.CanExecute">
             <summary>
-            This creates a ReactiveCommand that calls several child
-            ReactiveCommands when invoked. Its CanExecute will match the
-            combined result of the child CanExecutes (i.e. if any child
-            commands cannot execute, neither can the parent)
+            An observable whose value indicates whether the command can currently execute.
             </summary>
-            <param name="commands">The commands to combine.</param>
+            <remarks>
+            The value provided by this observable is governed both by any <c>canExecute</c> observable provided during
+            command creation, as well as the current execution status of the command. A command that is currently executing
+            will always yield <c>false</c> from this observable, even if the <c>canExecute</c> pipeline is currently <c>true</c>.
+            </remarks>
         </member>
-        <member name="T:ReactiveUI.ReactiveCommand`1">
+        <member name="P:ReactiveUI.ReactiveCommand.IsExecuting">
             <summary>
-            This class represents a Command that can optionally do a background task.
-            The results of the background task (or a signal that the Command has been
-            invoked) are delivered by Subscribing to the command itself, since
-            ReactiveCommand is itself an Observable. The results of individual
-            invocations can be retrieved via the ExecuteAsync method.
+            An observable whose value indicates whether the command is currently executing.
             </summary>
+            <remarks>
+            This observable can be particularly useful for updating UI, such as showing an activity indicator whilst a command
+            is executing.
+            </remarks>
         </member>
-        <member name="M:ReactiveUI.ReactiveCommand`1.#ctor(System.IObservable{System.Boolean},System.Func{System.Object,System.IObservable{`0}},System.Reactive.Concurrency.IScheduler)">
+        <member name="P:ReactiveUI.ReactiveCommand.ThrownExceptions">
             <summary>
-            Don't use this, use ReactiveCommand.CreateXYZ instead
+            An observable that ticks any exceptions in command execution logic.
             </summary>
+            <remarks>
+            Any exceptions that are not observed via this observable will propagate out and cause the application to be torn
+            down. Therefore, you will always want to subscribe to this observable if you expect errors could occur (e.g. if
+            your command execution includes network activity).
+            </remarks>
         </member>
-        <member name="M:ReactiveUI.ReactiveCommand`1.ExecuteAsync(System.Object)">
-             <summary>
-             Executes a Command and returns the result asynchronously. This method
-             makes it *much* easier to test ReactiveCommand, as well as create
-             ReactiveCommands who invoke inferior commands and wait on their results.
-            
-             Note that you **must** Subscribe to the Observable returned by
-             ExecuteAsync or else nothing will happen (i.e. ExecuteAsync is lazy)
-            
-             Note also that the command will be executed, irrespective of the current value
-             of the command's canExecute observable.
-             </summary>
-             <returns>An Observable representing a single invocation of the Command.</returns>
-             <param name="parameter">Don't use this.</param>
-        </member>
-        <member name="M:ReactiveUI.ReactiveCommand`1.ExecuteAsyncTask(System.Object,System.Threading.CancellationToken)">
+        <member name="M:ReactiveUI.ReactiveCommand.Dispose">
             <summary>
-            Executes a Command and returns the result as a Task. This method
-            makes it *much* easier to test ReactiveCommand, as well as create
-            ReactiveCommands who invoke inferior commands and wait on their results.
-            </summary>
-            <returns>A Task representing a single invocation of the Command.</returns>
-            <param name="parameter">Don't use this.</param>
-            <param name="ct">An optional token that can cancel the operation, if
-            the operation supports it.</param>
-        </member>
-        <member name="M:ReactiveUI.ReactiveCommand`1.Execute(System.Object)">
-            <summary>
-            Executes a Command. Note that the command will be executed, irrespective of the current value
-            of the command's canExecute observable.
+            Disposes of this <c>ReactiveCommand</c>.
             </summary>
         </member>
-        <member name="P:ReactiveUI.ReactiveCommand`1.ThrownExceptions">
+        <member name="T:ReactiveUI.ReactiveCommandBase`2">
             <summary>
-            Fires whenever an exception would normally terminate ReactiveUI
-            internal state.
+            A base class for generic reactive commands.
             </summary>
-            <value>The thrown exceptions.</value>
+            <remarks>
+            <para>
+            This class extends <see cref="T:ReactiveUI.ReactiveCommand"/> and adds generic type parameters for the parameter values passed
+            into command execution, and the return values of command execution.
+            </para>
+            <para>
+            Because the result type is known by this class, it can implement <see cref="T:System.IObservable`1"/>. However, the implementation
+            is defined as abstract, so subclasses must provide it.
+            </para>
+            </remarks>
+            <typeparam name="TParam">
+            The type of parameter values passed in during command execution.
+            </typeparam>
+            <typeparam name="TResult">
+            The type of the values that are the result of command execution.
+            </typeparam>
         </member>
-        <member name="P:ReactiveUI.ReactiveCommand`1.CanExecuteObservable">
+        <member name="M:ReactiveUI.ReactiveCommandBase`2.Subscribe(System.IObserver{`1})">
             <summary>
-            Returns a BehaviorSubject (i.e. an Observable which is guaranteed to
-            return at least one value immediately) representing the CanExecute
-            state.
+            Subscribes to execution results from this command.
             </summary>
+            <param name="observer">
+            The observer.
+            </param>
+            <returns>
+            An <see cref="T:System.IDisposable"/> that, when disposed, will unsubscribe the observer.
+            </returns>
         </member>
-        <member name="M:ReactiveUI.ReactiveCommandMixins.ToCommand(System.IObservable{System.Boolean},System.Reactive.Concurrency.IScheduler)">
+        <member name="M:ReactiveUI.ReactiveCommandBase`2.ExecuteAsync(`0)">
             <summary>
-            ToCommand is a convenience method for returning a new
-            ReactiveCommand based on an existing Observable chain.
+            Asynchronously executes this command.
             </summary>
-            <param name="scheduler">The scheduler to publish events on - default
-            is RxApp.MainThreadScheduler.</param>
-            <returns>A new ReactiveCommand whose CanExecute Observable is the
-            current object.</returns>
+            <remarks>
+            <para>
+            Invoking this method will execute the logic encapsulated by the command. If no parameter value is provided,
+            a default value of type <typeparamref name="TParam"/> will be passed into the execution logic.
+            </para>
+            <para>
+            There is no requirement to subscribe to the returned observable in order to kick start the execution. And
+            late subscribers are guaranteed to still receive the execution result value if there is one. In those cases
+            where execution fails, there will be no result value. Instead, the failure will tick through the
+            <see cref="!:ThrownExceptions"/> observable.
+            </para>
+            </remarks>
+            <param name="parameter">
+            The parameter to pass into command execution.
+            </param>
+            <returns>
+            An observable that will tick the single result value if and when it becomes available.
+            </returns>
+        </member>
+        <member name="T:ReactiveUI.ReactiveCommand`2">
+            <summary>
+            Encapsulates a user interaction behind a reactive interface.
+            </summary>
+            <remarks>
+            <para>
+            This class provides the bulk of the actual implementation for reactive commands. You should not create instances
+            of this class directly, but rather via the static creation methods on the non-generic <see cref="T:ReactiveUI.ReactiveCommand"/>
+            class.
+            </para>
+            </remarks>
+            <typeparam name="TParam">
+            The type of parameter values passed in during command execution.
+            </typeparam>
+            <typeparam name="TResult">
+            The type of the values that are the result of command execution.
+            </typeparam>
+        </member>
+        <member name="P:ReactiveUI.ReactiveCommand`2.CanExecute">
+            <inheritdoc/>
+        </member>
+        <member name="P:ReactiveUI.ReactiveCommand`2.IsExecuting">
+            <inheritdoc/>
+        </member>
+        <member name="P:ReactiveUI.ReactiveCommand`2.ThrownExceptions">
+            <inheritdoc/>
+        </member>
+        <member name="M:ReactiveUI.ReactiveCommand`2.Subscribe(System.IObserver{`1})">
+            <inheritdoc/>
+        </member>
+        <member name="M:ReactiveUI.ReactiveCommand`2.ExecuteAsync(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="T:ReactiveUI.CombinedReactiveCommand`2">
+            <summary>
+            Encapsulates a composite user interaction.
+            </summary>
+            <remarks>
+            <para>
+            This class provides the bulk of the actual implementation for combined reactive commands. You should not
+            create instances of this class directly, but rather via the static creation methods on the non-generic
+            <see cref="T:ReactiveUI.ReactiveCommand"/> class.
+            </para>
+            <para>
+            A <c>CombinedReactiveCommand</c> combines multiple reactive commands into a single command. Executing
+            the combined command executes all child commands. Since all child commands will receive the same execution
+            parameter, all child commands must accept a parameter of the same type.
+            </para>
+            <para>
+            In order for the combined command to be executable, all child commands must themselves be executable.
+            In addition, any <c>canExecute</c> observable passed in during construction must also yield <c>true</c>.
+            </para>
+            </remarks>
+            <typeparam name="TParam">
+            The type of parameter values passed in during command execution.
+            </typeparam>
+            <typeparam name="TResult">
+            The type of the values that are the result of command execution.
+            </typeparam>
+        </member>
+        <member name="P:ReactiveUI.CombinedReactiveCommand`2.CanExecute">
+            <inheritdoc/>
+        </member>
+        <member name="P:ReactiveUI.CombinedReactiveCommand`2.IsExecuting">
+            <inheritdoc/>
+        </member>
+        <member name="P:ReactiveUI.CombinedReactiveCommand`2.ThrownExceptions">
+            <inheritdoc/>
+        </member>
+        <member name="M:ReactiveUI.CombinedReactiveCommand`2.Subscribe(System.IObserver{System.Collections.Generic.IList{`1}})">
+            <inheritdoc/>
+        </member>
+        <member name="M:ReactiveUI.CombinedReactiveCommand`2.ExecuteAsync(`0)">
+            <inheritdoc/>
         </member>
         <member name="M:ReactiveUI.ReactiveCommandMixins.InvokeCommand``1(System.IObservable{``0},System.Windows.Input.ICommand)">
             <summary>
@@ -2842,7 +2802,7 @@
             <returns>An object that when disposes, disconnects the Observable
             from the command.</returns>
         </member>
-        <member name="M:ReactiveUI.ReactiveCommandMixins.InvokeCommand``2(System.IObservable{``0},ReactiveUI.IReactiveCommand{``1})">
+        <member name="M:ReactiveUI.ReactiveCommandMixins.InvokeCommand``2(System.IObservable{``0},ReactiveUI.ReactiveCommand{``0,``1})">
             <summary>
             A utility method that will pipe an Observable to an ICommand (i.e.
             it will first call its CanExecute with the provided value, then if
@@ -2863,7 +2823,7 @@
             <returns>An object that when disposes, disconnects the Observable
             from the command.</returns>
         </member>
-        <member name="M:ReactiveUI.ReactiveCommandMixins.InvokeCommand``3(System.IObservable{``0},``2,System.Linq.Expressions.Expression{System.Func{``2,ReactiveUI.IReactiveCommand{``1}}})">
+        <member name="M:ReactiveUI.ReactiveCommandMixins.InvokeCommand``3(System.IObservable{``0},``2,System.Linq.Expressions.Expression{System.Func{``2,ReactiveUI.ReactiveCommand{``0,``1}}})">
             <summary>
             A utility method that will pipe an Observable to an ICommand (i.e.
             it will first call its CanExecute with the provided value, then if
@@ -2873,13 +2833,6 @@
             <param name="commandProperty">The expression to reference the Command.</param>
             <returns>An object that when disposes, disconnects the Observable
             from the command.</returns>
-        </member>
-        <member name="M:ReactiveUI.ReactiveCommandMixins.OnExecuteCompleted``1(ReactiveUI.ReactiveCommand{``0},System.Action{``0},System.Action{System.Exception})">
-            <summary>
-            A convenience method for subscribing and creating ReactiveCommands
-            in the same call. Equivalent to Subscribing to the command, except
-            there's no way to release your Subscription but that's probably fine.
-            </summary>
         </member>
         <member name="M:ReactiveUI.ReactiveNotifyPropertyChangedMixin.ObservableForProperty``2(``0,System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Boolean,System.Boolean)">
             <summary>
@@ -2912,6 +2865,236 @@
             <returns>An Observable representing the property change
             notifications for the given property.</returns>
         </member>
+        <member name="T:ReactiveUI.ReactiveObject">
+            <summary>
+            ReactiveObject is the base object for ViewModel classes, and it
+            implements INotifyPropertyChanged. In addition, ReactiveObject provides
+            Changing and Changed Observables to monitor object changes.
+            </summary>
+        </member>
+        <member name="P:ReactiveUI.ReactiveObject.Changing">
+            <summary>
+            Represents an Observable that fires *before* a property is about to
+            be changed.
+            </summary>
+        </member>
+        <member name="P:ReactiveUI.ReactiveObject.Changed">
+            <summary>
+            Represents an Observable that fires *after* a property has changed.
+            </summary>
+        </member>
+        <member name="P:ReactiveUI.ReactiveObject.ThrownExceptions">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:ReactiveUI.ReactiveObject.SuppressChangeNotifications">
+             <summary>
+            
+             </summary>
+             <returns></returns>
+        </member>
+        <member name="M:ReactiveUI.ReactiveObject.AreChangeNotificationsEnabled">
+             <summary>
+            
+             </summary>
+             <returns></returns>
+        </member>
+        <member name="T:ReactiveUI.IMessageBus">
+             <summary>
+             IMessageBus represents an object that can act as a "Message Bus", a
+             simple way for ViewModels and other objects to communicate with each
+             other in a loosely coupled way.
+            
+             Specifying which messages go where is done via a combination of the Type
+             of the message as well as an additional "Contract" parameter; this is a
+             unique string used to distinguish between messages of the same Type, and
+             is arbitrarily set by the client.
+             </summary>
+        </member>
+        <member name="M:ReactiveUI.IMessageBus.RegisterScheduler``1(System.Reactive.Concurrency.IScheduler,System.String)">
+            <summary>
+            Registers a scheduler for the type, which may be specified at
+            runtime, and the contract.
+            </summary>
+            <remarks>If a scheduler is already registered for the specified
+            runtime and contract, this will overrwrite the existing
+            registration.</remarks>
+            <typeparam name="T">The type of the message to listen to.</typeparam>
+            <param name="scheduler">The scheduler on which to post the
+            notifications for the specified type and contract.
+            CurrentThreadScheduler by default.</param>
+            <param name="contract">A unique string to distinguish messages with
+            identical types (i.e. "MyCoolViewModel") - if the message type is
+            only used for one purpose, leave this as null.</param>
+        </member>
+        <member name="M:ReactiveUI.IMessageBus.Listen``1(System.String)">
+            <summary>
+            Listen provides an Observable that will fire whenever a Message is
+            provided for this object via RegisterMessageSource or SendMessage.
+            </summary>
+            <typeparam name="T">The type of the message to listen to.</typeparam>
+            <param name="contract">A unique string to distinguish messages with
+            identical types (i.e. "MyCoolViewModel") - if the message type is
+            only used for one purpose, leave this as null.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ReactiveUI.IMessageBus.ListenIncludeLatest``1(System.String)">
+            <summary>
+            ListenIncludeLatest provides an Observable that will fire whenever a Message is
+            provided for this object via RegisterMessageSource or SendMessage and fire the
+            last provided Message immediately if applicable, or null.
+            </summary>
+            <typeparam name="T">The type of the message to listen to.</typeparam>
+            <param name="contract">A unique string to distinguish messages with
+            identical types (i.e. "MyCoolViewModel") - if the message type is
+            only used for one purpose, leave this as null.</param>
+            <returns>An Observable representing the notifications posted to the
+            message bus.</returns>
+        </member>
+        <member name="M:ReactiveUI.IMessageBus.IsRegistered(System.Type,System.String)">
+            <summary>
+            Determines if a particular message Type is registered.
+            </summary>
+            <param name="type">The type of the message.</param>
+            <param name="contract">A unique string to distinguish messages with
+            identical types (i.e. "MyCoolViewModel") - if the message type is
+            only used for one purpose, leave this as null.</param>
+            <returns>True if messages have been posted for this message Type.</returns>
+        </member>
+        <member name="M:ReactiveUI.IMessageBus.RegisterMessageSource``1(System.IObservable{``0},System.String)">
+            <summary>
+            Registers an Observable representing the stream of messages to send.
+            Another part of the code can then call Listen to retrieve this
+            Observable.
+            </summary>
+            <typeparam name="T">The type of the message to listen to.</typeparam>
+            <param name="source">An Observable that will be subscribed to, and a
+            message sent out for each value provided.</param>
+            <param name="contract">A unique string to distinguish messages with
+            identical types (i.e. "MyCoolViewModel") - if the message type is
+            only used for one purpose, leave this as null.</param>
+        </member>
+        <member name="M:ReactiveUI.IMessageBus.SendMessage``1(``0,System.String)">
+            <summary>
+            Sends a single message using the specified Type and contract.
+            Consider using RegisterMessageSource instead if you will be sending
+            messages in response to other changes such as property changes
+            or events.
+            </summary>
+            <typeparam name="T">The type of the message to send.</typeparam>
+            <param name="message">The actual message to send</param>
+            <param name="contract">A unique string to distinguish messages with
+            identical types (i.e. "MyCoolViewModel") - if the message type is
+            only used for one purpose, leave this as null.</param>
+        </member>
+        <member name="T:ReactiveUI.ICreatesObservableForProperty">
+            <summary>
+            ICreatesObservableForProperty represents an object that knows how to
+            create notifications for a given type of object. Implement this if you
+            are porting RxUI to a new UI toolkit, or generally want to enable WhenAny
+            for another type of object that can be observed in a unique way.
+            </summary>
+        </member>
+        <member name="M:ReactiveUI.ICreatesObservableForProperty.GetAffinityForObject(System.Type,System.String,System.Boolean)">
+            <summary>
+            Returns a positive integer when this class supports
+            GetNotificationForProperty for this particular Type. If the method
+            isn't supported at all, return a non-positive integer. When multiple
+            implementations return a positive value, the host will use the one
+            which returns the highest value. When in doubt, return '2' or '0'
+            </summary>
+            <param name="type">The type to query for.</param>
+            <returns>A positive integer if GNFP is supported, zero or a negative
+            value otherwise</returns>
+        </member>
+        <member name="M:ReactiveUI.ICreatesObservableForProperty.GetNotificationForProperty(System.Object,System.Linq.Expressions.Expression,System.Boolean)">
+            <summary>
+            Subscribe to notifications on the specified property, given an
+            object and a property name.
+            </summary>
+            <param name="sender">The object to observe.</param>
+            <param name="expression">The expression on the object to observe.
+            This will be either a MemberExpression or an IndexExpression
+            dependending on the property.
+            </param>
+            <param name="beforeChanged">If true, signal just before the
+            property value actually changes. If false, signal after the
+            property changes.</param>
+            <returns>An IObservable which is signalled whenever the specified
+            property on the object changes. If this cannot be done for a
+            specified value of beforeChanged, return Observable.Never</returns>
+        </member>
+        <member name="T:ReactiveUI.IBindingTypeConverter">
+            <summary>
+            This interface is the extensible implementation of IValueConverters for
+            Bind and OneWayBind. Implement this to teach Bind and OneWayBind how to
+            convert between types.
+            </summary>
+        </member>
+        <member name="M:ReactiveUI.IBindingTypeConverter.GetAffinityForObjects(System.Type,System.Type)">
+            <summary>
+            Returns a positive integer when this class supports
+            TryConvert for this particular Type. If the method isn't supported at
+            all, return a non-positive integer. When multiple implementations
+            return a positive value, the host will use the one which returns
+            the highest value. When in doubt, return '2' or '0'.
+            </summary>
+            <param name="fromType">The source type to convert from</param>
+            <param name="toType">The target type to convert to</param>
+            <returns>A positive integer if TryConvert is supported,
+            zero or a negative value otherwise</returns>
+        </member>
+        <member name="M:ReactiveUI.IBindingTypeConverter.TryConvert(System.Object,System.Type,System.Object,System.Object@)">
+            <summary>
+            Convert a given object to the specified type.
+            </summary>
+            <param name="from">The object to convert.</param>
+            <param name="toType">The type to coerce the object to.</param>
+            <param name="conversionHint">An implementation-defined value,
+            usually to specify things like locale awareness.</param>
+            <returns>An object that is of the type 'to'</returns>
+        </member>
+        <member name="T:ReactiveUI.IPropertyBindingHook">
+            <summary>
+            Implement this as a way to intercept bindings at the time that they are
+            created and execute an additional action (or to cancel the binding)
+            </summary>
+        </member>
+        <member name="M:ReactiveUI.IPropertyBindingHook.ExecuteHook(System.Object,System.Object,System.Func{ReactiveUI.IObservedChange{System.Object,System.Object}[]},System.Func{ReactiveUI.IObservedChange{System.Object,System.Object}[]},ReactiveUI.BindingDirection)">
+            <summary>
+            Called when any binding is set up.
+            </summary>
+            <returns>If false, the binding is cancelled</returns>
+            <param name="source">The source ViewModel</param>
+            <param name="target">The target View (not the actual control)</param>
+            <param name="getCurrentViewModelProperties">Get current view model properties.</param>
+            <param name="getCurrentViewProperties">Get current view properties.</param>
+            <param name="direction">The Binding direction.</param>
+        </member>
+        <member name="T:ReactiveUI.IActivatable">
+            <summary>
+            Use this Interface when you want to mark a control as recieving View
+            Activation when it doesn't have a backing ViewModel.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:ReactiveUI.IViewFor" -->
+        <member name="P:ReactiveUI.IViewFor.ViewModel">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:ReactiveUI.IViewFor`1">
+            <summary>
+            Implement this interface on your Views to support Routing and Binding.
+            </summary>
+        </member>
+        <member name="P:ReactiveUI.IViewFor`1.ViewModel">
+            <summary>
+            The ViewModel corresponding to this specific View. This should be
+            a DependencyProperty if you're using XAML.
+            </summary>
+        </member>
         <member name="T:ReactiveUI.IScreen">
             <summary>
             IScreen represents any object that is hosting its own routing -
@@ -2922,6 +3105,56 @@
             <summary>
             The Router associated with this Screen.
             </summary>
+        </member>
+        <member name="M:ReactiveUI.ICreatesCommandBinding.GetAffinityForObject(System.Type,System.Boolean)">
+            <summary>
+            Returns a positive integer when this class supports
+            BindCommandToObject for this particular Type. If the method
+            isn't supported at all, return a non-positive integer. When multiple
+            implementations return a positive value, the host will use the one
+            which returns the highest value. When in doubt, return '2' or '0'
+            </summary>
+            <param name="type">The type to query for.</param>
+            <param name="hasEventTarget">If true, the host intends to use a custom
+            event target.</param>
+            <returns>A positive integer if BCTO is supported, zero or a negative
+            value otherwise</returns>
+        </member>
+        <member name="M:ReactiveUI.ICreatesCommandBinding.BindCommandToObject(System.Windows.Input.ICommand,System.Object,System.IObservable{System.Object})">
+            <summary>
+            Bind an ICommand to a UI object, in the "default" way. The meaning
+            of this is dependent on the implementation. Implement this if you
+            have a new type of UI control that doesn't have
+            Command/CommandParameter like WPF or has a non-standard event name
+            for "Invoke".
+            </summary>
+            <param name="command">The command to bind</param>
+            <param name="target">The target object, usually a UI control of
+            some kind</param>
+            <param name="commandParameter">An IObservable source whose latest
+            value will be passed as the command parameter to the command. Hosts
+            will always pass a valid IObservable, but this may be
+            Observable.Empty</param>
+            <returns>An IDisposable which will disconnect the binding when
+            disposed.</returns>
+        </member>
+        <member name="M:ReactiveUI.ICreatesCommandBinding.BindCommandToObject``1(System.Windows.Input.ICommand,System.Object,System.IObservable{System.Object},System.String)">
+            <summary>
+            Bind an ICommand to a UI object to a specific event. This event may
+            be a standard .NET event, or it could be an event derived in another
+            manner (i.e. in MonoTouch).
+            </summary>
+            <param name="command">The command to bind</param>
+            <param name="target">The target object, usually a UI control of
+            some kind</param>
+            <param name="commandParameter">An IObservable source whose latest
+            value will be passed as the command parameter to the command. Hosts
+            will always pass a valid IObservable, but this may be
+            Observable.Empty</param>
+            <param name="eventName">The event to bind to.</param>
+            <returns></returns>
+            <returns>An IDisposable which will disconnect the binding when
+            disposed.</returns>
         </member>
         <member name="T:ReactiveUI.IViewLocator">
             <summary>
@@ -2938,6 +3171,81 @@
             <param name="viewModel">View model.</param>
             <param name="contract">Contract.</param>
         </member>
+        <member name="T:ReactiveUI.IActivationForViewFetcher">
+            <summary>
+            Implement this interface to override how ReactiveUI determines when a
+            View is activated or deactivated. This is usually only used when porting
+            ReactiveUI to a new UI framework
+            </summary>
+        </member>
+        <member name="T:ReactiveUI.ISuspensionHost">
+            <summary>
+            ISuspensionHost represents a standardized version of the events that the
+            host operating system publishes. Subscribe to these events in order to
+            handle app suspend / resume.
+            </summary>
+        </member>
+        <member name="P:ReactiveUI.ISuspensionHost.IsLaunchingNew">
+            <summary>
+            Signals when the application is launching new. This can happen when
+            an app has recently crashed, as well as the first time the app has
+            been launched. Apps should create their state from scratch.
+            </summary>
+        </member>
+        <member name="P:ReactiveUI.ISuspensionHost.IsResuming">
+            <summary>
+            Signals when the application is resuming from suspended state (i.e.
+            it was previously running but its process was destroyed).
+            </summary>
+        </member>
+        <member name="P:ReactiveUI.ISuspensionHost.IsUnpausing">
+            <summary>
+            Signals when the application is activated. Note that this may mean
+            that your process was not actively running before this signal.
+            </summary>
+        </member>
+        <member name="P:ReactiveUI.ISuspensionHost.ShouldPersistState">
+            <summary>
+            Signals when the application should persist its state to disk.
+            </summary>
+            <value>Returns an IDisposable that should be disposed once the
+            application finishes persisting its state</value>
+        </member>
+        <member name="P:ReactiveUI.ISuspensionHost.ShouldInvalidateState">
+            <summary>
+            Signals that the saved application state should be deleted, this
+            usually is called after an app has crashed
+            </summary>
+        </member>
+        <member name="P:ReactiveUI.ISuspensionHost.CreateNewAppState">
+            <summary>
+            A method that can be used to create a new application state - usually
+            this method just calls 'new' on an object.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:ReactiveUI.ISuspensionHost.AppState" -->
+        <member name="T:ReactiveUI.ISuspensionDriver">
+            <summary>
+            ISuspensionDriver represents a class that can load/save state to persistent
+            storage. Most platforms have a basic implementation of this class, but you
+            probably want to write your own.
+            </summary>
+        </member>
+        <member name="M:ReactiveUI.ISuspensionDriver.LoadState">
+            <summary>
+            Loads the application state from persistent storage
+            </summary>
+        </member>
+        <member name="M:ReactiveUI.ISuspensionDriver.SaveState(System.Object)">
+            <summary>
+            Saves the application state to disk.
+            </summary>
+        </member>
+        <member name="M:ReactiveUI.ISuspensionDriver.InvalidateState">
+            <summary>
+            Invalidates the application state (i.e. deletes it from disk)
+            </summary>
+        </member>
         <member name="M:ReactiveUI.RoutableViewModelMixin.WhenNavigatedTo(ReactiveUI.IRoutableViewModel,System.Func{System.IDisposable})">
             <summary>
             This method allows you to set up connections that only operate
@@ -2949,6 +3257,39 @@
             configured in the method.</param>
             <returns>An IDisposable that lets you disconnect the entire process
             earlier than normal.</returns>
+        </member>
+        <member name="M:ReactiveUI.RoutableViewModelMixin.WhenNavigatedToObservable(ReactiveUI.IRoutableViewModel)">
+            <summary>
+            This method will return an observable that fires events every time
+            the topmost ViewModel in the navigation stack is this ViewModel.
+            This allows you to set up connections that only operate while the
+            ViewModel has focus.
+            
+            The observable will complete when the ViewModel is removed completely
+            from the navigation stack. If your ViewModel can be _removed_ from
+            the navigation stack and then reused later, you must call this method
+            and resubscribe each time it is reused.
+            </summary>
+            <returns>An IObservable{Unit} that signals when the ViewModel has
+            been added or brought to the top of the navigation stack. The
+            observable completes when the ViewModel is no longer a part of the
+            navigation stack.</returns>
+        </member>
+        <member name="M:ReactiveUI.RoutableViewModelMixin.WhenNavigatingFromObservable(ReactiveUI.IRoutableViewModel)">
+            <summary>
+            This method will return an observable that fires events _just before_
+            the ViewModel is no longer the topmost ViewModel in the navigation
+            stack. This allows you to clean up anything before losing focus.
+            
+            The observable will complete when the ViewModel is removed completely
+            from the navigation stack. If your ViewModel can be _removed_ from
+            the navigation stack and then reused later, you must call this method
+            and resubscribe each time it is reused.
+            </summary>
+            <returns>An IObservable{Unit} that signals when the ViewModel is no
+            longer the topmost ViewModel in the navigation stack. The observable
+            completes when the ViewModel is no longer a part of the navigation
+            stack.</returns>
         </member>
         <member name="T:ReactiveUI.RoutingState">
             <summary>
@@ -2990,13 +3331,6 @@
         <member name="M:ReactiveUI.RoutingStateMixins.GetCurrentViewModel(ReactiveUI.RoutingState)">
             <summary>
             Returns the currently visible ViewModel
-            </summary>
-        </member>
-        <member name="M:ReactiveUI.RoutingStateMixins.NavigateCommandFor``1(ReactiveUI.RoutingState)">
-            <summary>
-            Creates a ReactiveCommand which will, when invoked, navigate to the 
-            type specified by the type parameter via looking it up in the
-            Dependency Resolver.
             </summary>
         </member>
         <member name="P:ReactiveUI.RxApp.MainThreadScheduler">
@@ -3579,53 +3913,296 @@
             </summary>
             <param name="source">The source.</param>
         </member>
-        <member name="T:ReactiveUI.Legacy.ReactiveCommand">
+        <member name="P:ReactiveUI.Legacy.IReactiveCommand.CanExecuteObservable">
             <summary>
-            ReactiveCommand is the default Command implementation in ReactiveUI, which
-            conforms to the spec described in IReactiveCommand. 
+            Gets a value indicating whether this instance can execute observable.
             </summary>
+            <value><c>true</c> if this instance can execute observable; otherwise, <c>false</c>.</value>
         </member>
-        <member name="M:ReactiveUI.Legacy.ReactiveCommand.CreateCombined(System.IObservable{System.Boolean},ReactiveUI.Legacy.ReactiveCommand[])">
+        <member name="P:ReactiveUI.Legacy.IReactiveCommand.IsExecuting">
             <summary>
-            This creates a ReactiveCommand that calls several child 
-            ReactiveCommands when invoked. Its CanExecute will match the
-            combined result of the child CanExecutes (i.e. if any child
-            commands cannot execute, neither can the parent)
-            </summary>
-            <param name="canExecute">An Observable that determines whether the 
-            parent command can execute</param>
-            <param name="commands">The commands to combine.</param>
-        </member>
-        <member name="M:ReactiveUI.Legacy.ReactiveCommand.RegisterAsync``1(System.Func{System.Object,System.IObservable{``0}})">
-            <summary>
-            Registers an asynchronous method to be called whenever the command
-            is Executed. This method returns an IObservable representing the
-            asynchronous operation, and is allowed to OnError / should OnComplete.
-            </summary>
-            <returns>A filtered version of the Observable which is marshaled 
-            to the UI thread. This Observable should only report successes and
-            instead send OnError messages to the ThrownExceptions property.</returns>
-            <param name="asyncBlock">The asynchronous method to call.</param>
-            <typeparam name="T">The 1st type parameter.</typeparam>
-        </member>
-        <member name="P:ReactiveUI.Legacy.ReactiveCommand.IsExecuting">
-            <summary>
-            Gets a value indicating whether this instance is executing. This 
+            Gets a value indicating whether this instance is executing. This
             Observable is guaranteed to always return a value immediately (i.e.
             it is backed by a BehaviorSubject), meaning it is safe to determine
             the current state of the command via IsExecuting.First()
             </summary>
-            <value>true</value>
-            <c>false</c>
+            <value><c>true</c> if this instance is executing; otherwise, <c>false</c>.</value>
         </member>
-        <member name="P:ReactiveUI.Legacy.ReactiveCommand.ThrownExceptions">
+        <member name="T:ReactiveUI.Legacy.IReactiveCommand`1">
+             <summary>
+             IReactiveCommand represents an ICommand which also notifies when it is
+             executed (i.e. when Execute is called) via IObservable. Conceptually,
+             this represents an Event, so as a result this IObservable should never
+             OnComplete or OnError.
+            
+             In previous versions of ReactiveUI, this interface was split into two
+             separate interfaces, one to handle async methods and one for "standard"
+             commands, but these have now been merged - every ReactiveCommand is now
+             a ReactiveAsyncCommand.
+             </summary>
+        </member>
+        <member name="M:ReactiveUI.Legacy.ReactiveCommand.Create(System.IObservable{System.Boolean},System.Reactive.Concurrency.IScheduler)">
             <summary>
-            Fires whenever an exception would normally terminate ReactiveUI 
+            Creates a default ReactiveCommand that has no background action. This
+            is probably what you want if you were calling the constructor in
+            previous versions of ReactiveUI
+            </summary>
+            <param name="canExecute">An Observable that determines when the
+            Command can Execute. WhenAny is a great way to create this!</param>
+            <param name="scheduler">The scheduler to deliver events on.
+            Defaults to RxApp.MainThreadScheduler.</param>
+            <returns>A ReactiveCommand whose ExecuteAsync just returns the
+            CommandParameter immediately. Which you should ignore!</returns>
+        </member>
+        <member name="M:ReactiveUI.Legacy.ReactiveCommand.CreateAsyncObservable``1(System.IObservable{System.Boolean},System.Func{System.Object,System.IObservable{``0}},System.Reactive.Concurrency.IScheduler)">
+            <summary>
+            Creates a ReactiveCommand typed to the given executeAsync Observable
+            method. Use this method if your background method returns IObservable.
+            </summary>
+            <param name="canExecute">An Observable that determines when the
+            Command can Execute. WhenAny is a great way to create this!</param>
+            <param name="executeAsync">Method to call that creates an Observable
+            representing an operation to execute in the background. The Command's
+            CanExecute will be false until this Observable completes. If this
+            Observable terminates with OnError, the Exception is marshaled to
+            ThrownExceptions.</param>
+            <param name="scheduler">The scheduler to deliver events on.
+            Defaults to RxApp.MainThreadScheduler.</param>
+            <returns>A ReactiveCommand which returns all items that are created via
+            calling executeAsync as a single stream.</returns>
+        </member>
+        <member name="M:ReactiveUI.Legacy.ReactiveCommand.CreateAsyncObservable``1(System.Func{System.Object,System.IObservable{``0}},System.Reactive.Concurrency.IScheduler)">
+            <summary>
+            Creates a ReactiveCommand typed to the given executeAsync Observable
+            method. Use this method if your background method returns IObservable.
+            </summary>
+            <param name="executeAsync">Method to call that creates an Observable
+            representing an operation to execute in the background. The Command's
+            CanExecute will be false until this Observable completes. If this
+            Observable terminates with OnError, the Exception is marshaled to
+            ThrownExceptions.</param>
+            <param name="scheduler">The scheduler to deliver events on.
+            Defaults to RxApp.MainThreadScheduler.</param>
+            <returns>A ReactiveCommand which returns all items that are created via
+            calling executeAsync as a single stream.</returns>
+        </member>
+        <member name="M:ReactiveUI.Legacy.ReactiveCommand.CreateAsyncTask``1(System.IObservable{System.Boolean},System.Func{System.Object,System.Threading.Tasks.Task{``0}},System.Reactive.Concurrency.IScheduler)">
+            <summary>
+            Creates a ReactiveCommand typed to the given executeAsync Task-based
+            method. Use this method if your background method returns Task or uses
+            async/await.
+            </summary>
+            <param name="canExecute">An Observable that determines when the
+            Command can Execute. WhenAny is a great way to create this!</param>
+            <param name="executeAsync">Method to call that creates a Task
+            representing an operation to execute in the background. The Command's
+            CanExecute will be false until this Task completes. If this
+            Task terminates with an Exception, the Exception is marshaled to
+            ThrownExceptions.</param>
+            <param name="scheduler">The scheduler to deliver events on.
+            Defaults to RxApp.MainThreadScheduler.</param>
+            <returns>A ReactiveCommand which returns all items that are created via
+            calling executeAsync as a single stream.</returns>
+        </member>
+        <member name="M:ReactiveUI.Legacy.ReactiveCommand.CreateAsyncTask``1(System.Func{System.Object,System.Threading.Tasks.Task{``0}},System.Reactive.Concurrency.IScheduler)">
+            <summary>
+            Creates a ReactiveCommand typed to the given executeAsync Task-based
+            method. Use this method if your background method returns Task or uses
+            async/await.
+            </summary>
+            <param name="executeAsync">Method to call that creates a Task
+            representing an operation to execute in the background. The Command's
+            CanExecute will be false until this Task completes. If this
+            Task terminates with an Exception, the Exception is marshaled to
+            ThrownExceptions.</param>
+            <param name="scheduler">The scheduler to deliver events on.
+            Defaults to RxApp.MainThreadScheduler.</param>
+            <returns>A ReactiveCommand which returns all items that are created via
+            calling executeAsync as a single stream.</returns>
+        </member>
+        <member name="M:ReactiveUI.Legacy.ReactiveCommand.CreateAsyncTask(System.Func{System.Object,System.Threading.Tasks.Task},System.Reactive.Concurrency.IScheduler)">
+            <summary>
+            Creates a ReactiveCommand typed to the given executeAsync Task-based
+            method. Use this method if your background method returns Task or uses
+            async/await.
+            </summary>
+            <param name="executeAsync">Method to call that creates a Task
+            representing an operation to execute in the background. The Command's
+            CanExecute will be false until this Task completes. If this
+            Task terminates with an Exception, the Exception is marshaled to
+            ThrownExceptions.</param>
+            <param name="scheduler">The scheduler to deliver events on.
+            Defaults to RxApp.MainThreadScheduler.</param>
+            <returns>A ReactiveCommand which returns all items that are created via
+            calling executeAsync as a single stream.</returns>
+        </member>
+        <member name="M:ReactiveUI.Legacy.ReactiveCommand.CreateAsyncTask(System.IObservable{System.Boolean},System.Func{System.Object,System.Threading.Tasks.Task},System.Reactive.Concurrency.IScheduler)">
+            <summary>
+            Creates a ReactiveCommand typed to the given executeAsync Task-based
+            method. Use this method if your background method returns Task or uses
+            async/await.
+            </summary>
+            <param name="canExecute">An Observable that determines when the
+            Command can Execute. WhenAny is a great way to create this!</param>
+            <param name="executeAsync">Method to call that creates a Task
+            representing an operation to execute in the background. The Command's
+            CanExecute will be false until this Task completes. If this
+            Task terminates with an Exception, the Exception is marshaled to
+            ThrownExceptions.</param>
+            <param name="scheduler">The scheduler to deliver events on.
+            Defaults to RxApp.MainThreadScheduler.</param>
+            <returns>A ReactiveCommand which returns all items that are created via
+            calling executeAsync as a single stream.</returns>
+        </member>
+        <member name="M:ReactiveUI.Legacy.ReactiveCommand.CreateAsyncTask``1(System.IObservable{System.Boolean},System.Func{System.Object,System.Threading.CancellationToken,System.Threading.Tasks.Task{``0}},System.Reactive.Concurrency.IScheduler)">
+            <summary>
+            Creates a ReactiveCommand typed to the given executeAsync Task-based
+            method that supports cancellation. Use this method if your background
+            method returns Task or uses async/await.
+            </summary>
+            <param name="canExecute">An Observable that determines when the
+            Command can Execute. WhenAny is a great way to create this!</param>
+            <param name="executeAsync">Method to call that creates a Task
+            representing an operation to execute in the background. The Command's
+            CanExecute will be false until this Task completes. If this
+            Task terminates with an Exception, the Exception is marshaled to
+            ThrownExceptions.</param>
+            <param name="scheduler">The scheduler to deliver events on.
+            Defaults to RxApp.MainThreadScheduler.</param>
+            <returns>A ReactiveCommand which returns all items that are created via
+            calling executeAsync as a single stream.</returns>
+        </member>
+        <member name="M:ReactiveUI.Legacy.ReactiveCommand.CreateAsyncTask``1(System.Func{System.Object,System.Threading.CancellationToken,System.Threading.Tasks.Task{``0}},System.Reactive.Concurrency.IScheduler)">
+            <summary>
+            Creates a ReactiveCommand typed to the given executeAsync Task-based
+            method that supports cancellation. Use this method if your background
+            method returns Task or uses async/await.
+            </summary>
+            <param name="executeAsync">Method to call that creates a Task
+            representing an operation to execute in the background. The Command's
+            CanExecute will be false until this Task completes. If this
+            Task terminates with an Exception, the Exception is marshaled to
+            ThrownExceptions.</param>
+            <param name="scheduler">The scheduler to deliver events on.
+            Defaults to RxApp.MainThreadScheduler.</param>
+            <returns>A ReactiveCommand which returns all items that are created via
+            calling executeAsync as a single stream.</returns>
+        </member>
+        <member name="M:ReactiveUI.Legacy.ReactiveCommand.CreateAsyncTask(System.Func{System.Object,System.Threading.CancellationToken,System.Threading.Tasks.Task},System.Reactive.Concurrency.IScheduler)">
+            <summary>
+            Creates a ReactiveCommand typed to the given executeAsync Task-based
+            method that supports cancellation. Use this method if your background
+            method returns Task or uses async/await.
+            </summary>
+            <param name="canExecute">An Observable that determines when the
+            Command can Execute. WhenAny is a great way to create this!</param>
+            <param name="executeAsync">Method to call that creates a Task
+            representing an operation to execute in the background. The Command's
+            CanExecute will be false until this Task completes. If this
+            Task terminates with an Exception, the Exception is marshaled to
+            ThrownExceptions.</param>
+            <param name="scheduler">The scheduler to deliver events on.
+            Defaults to RxApp.MainThreadScheduler.</param>
+            <returns>A ReactiveCommand which returns all items that are created via
+            calling executeAsync as a single stream.</returns>
+        </member>
+        <member name="M:ReactiveUI.Legacy.ReactiveCommand.CreateAsyncTask(System.IObservable{System.Boolean},System.Func{System.Object,System.Threading.CancellationToken,System.Threading.Tasks.Task},System.Reactive.Concurrency.IScheduler)">
+            <summary>
+            Creates a ReactiveCommand typed to the given executeAsync Task-based
+            method that supports cancellation. Use this method if your background
+            method returns Task or uses async/await.
+            </summary>
+            <param name="executeAsync">Method to call that creates a Task
+            representing an operation to execute in the background. The Command's
+            CanExecute will be false until this Task completes. If this
+            Task terminates with an Exception, the Exception is marshaled to
+            ThrownExceptions.</param>
+            <param name="scheduler">The scheduler to deliver events on.
+            Defaults to RxApp.MainThreadScheduler.</param>
+            <returns>A ReactiveCommand which returns all items that are created via
+            calling executeAsync as a single stream.</returns>
+        </member>
+        <member name="M:ReactiveUI.Legacy.ReactiveCommand.CreateCombined(System.IObservable{System.Boolean},ReactiveUI.Legacy.IReactiveCommand[])">
+            <summary>
+            This creates a ReactiveCommand that calls several child
+            ReactiveCommands when invoked. Its CanExecute will match the
+            combined result of the child CanExecutes (i.e. if any child
+            commands cannot execute, neither can the parent)
+            </summary>
+            <param name="canExecute">An Observable that determines whether the
+            parent command can execute</param>
+            <param name="commands">The commands to combine.</param>
+        </member>
+        <member name="M:ReactiveUI.Legacy.ReactiveCommand.CreateCombined(ReactiveUI.Legacy.IReactiveCommand[])">
+            <summary>
+            This creates a ReactiveCommand that calls several child
+            ReactiveCommands when invoked. Its CanExecute will match the
+            combined result of the child CanExecutes (i.e. if any child
+            commands cannot execute, neither can the parent)
+            </summary>
+            <param name="commands">The commands to combine.</param>
+        </member>
+        <member name="T:ReactiveUI.Legacy.ReactiveCommand`1">
+            <summary>
+            This class represents a Command that can optionally do a background task.
+            The results of the background task (or a signal that the Command has been
+            invoked) are delivered by Subscribing to the command itself, since
+            ReactiveCommand is itself an Observable. The results of individual
+            invocations can be retrieved via the ExecuteAsync method.
+            </summary>
+        </member>
+        <member name="M:ReactiveUI.Legacy.ReactiveCommand`1.#ctor(System.IObservable{System.Boolean},System.Func{System.Object,System.IObservable{`0}},System.Reactive.Concurrency.IScheduler)">
+            <summary>
+            Don't use this, use ReactiveCommand.CreateXYZ instead
+            </summary>
+        </member>
+        <member name="M:ReactiveUI.Legacy.ReactiveCommand`1.ExecuteAsync(System.Object)">
+             <summary>
+             Executes a Command and returns the result asynchronously. This method
+             makes it *much* easier to test ReactiveCommand, as well as create
+             ReactiveCommands who invoke inferior commands and wait on their results.
+            
+             Note that you **must** Subscribe to the Observable returned by
+             ExecuteAsync or else nothing will happen (i.e. ExecuteAsync is lazy)
+            
+             Note also that the command will be executed, irrespective of the current value
+             of the command's canExecute observable.
+             </summary>
+             <returns>An Observable representing a single invocation of the Command.</returns>
+             <param name="parameter">Don't use this.</param>
+        </member>
+        <member name="M:ReactiveUI.Legacy.ReactiveCommand`1.ExecuteAsyncTask(System.Object,System.Threading.CancellationToken)">
+            <summary>
+            Executes a Command and returns the result as a Task. This method
+            makes it *much* easier to test ReactiveCommand, as well as create
+            ReactiveCommands who invoke inferior commands and wait on their results.
+            </summary>
+            <returns>A Task representing a single invocation of the Command.</returns>
+            <param name="parameter">Don't use this.</param>
+            <param name="ct">An optional token that can cancel the operation, if
+            the operation supports it.</param>
+        </member>
+        <member name="P:ReactiveUI.Legacy.ReactiveCommand`1.ThrownExceptions">
+            <summary>
+            Fires whenever an exception would normally terminate ReactiveUI
             internal state.
             </summary>
             <value>The thrown exceptions.</value>
         </member>
-        <member name="M:ReactiveUI.Legacy.ReactiveCommandMixins.ToCommand(System.IObservable{System.Boolean},System.Boolean,System.Reactive.Concurrency.IScheduler)">
+        <member name="P:ReactiveUI.Legacy.ReactiveCommand`1.CanExecuteObservable">
+            <summary>
+            Returns a BehaviorSubject (i.e. an Observable which is guaranteed to
+            return at least one value immediately) representing the CanExecute
+            state.
+            </summary>
+        </member>
+        <member name="M:ReactiveUI.Legacy.ReactiveCommand`1.Execute(System.Object)">
+            <summary>
+            Executes a Command. Note that the command will be executed, irrespective of the current value
+            of the command's canExecute observable.
+            </summary>
+        </member>
+        <member name="M:ReactiveUI.Legacy.ReactiveCommandMixins.ToCommand(System.IObservable{System.Boolean},System.Reactive.Concurrency.IScheduler)">
             <summary>
             ToCommand is a convenience method for returning a new
             ReactiveCommand based on an existing Observable chain.
@@ -3636,6 +4213,16 @@
             current object.</returns>
         </member>
         <member name="M:ReactiveUI.Legacy.ReactiveCommandMixins.InvokeCommand``1(System.IObservable{``0},System.Windows.Input.ICommand)">
+            <summary>
+            A utility method that will pipe an Observable to an ICommand (i.e.
+            it will first call its CanExecute with the provided value, then if
+            the command can be executed, Execute() will be called)
+            </summary>
+            <param name="command">The command to be executed.</param>
+            <returns>An object that when disposes, disconnects the Observable
+            from the command.</returns>
+        </member>
+        <member name="M:ReactiveUI.Legacy.ReactiveCommandMixins.InvokeCommand``2(System.IObservable{``0},ReactiveUI.Legacy.IReactiveCommand{``1})">
             <summary>
             A utility method that will pipe an Observable to an ICommand (i.e.
             it will first call its CanExecute with the provided value, then if
@@ -3656,45 +4243,23 @@
             <returns>An object that when disposes, disconnects the Observable
             from the command.</returns>
         </member>
-        <member name="M:ReactiveUI.Legacy.ReactiveCommandMixins.RegisterAsyncFunction``1(ReactiveUI.Legacy.ReactiveCommand,System.Func{System.Object,``0},System.Reactive.Concurrency.IScheduler)">
+        <member name="M:ReactiveUI.Legacy.ReactiveCommandMixins.InvokeCommand``3(System.IObservable{``0},``2,System.Linq.Expressions.Expression{System.Func{``2,ReactiveUI.Legacy.IReactiveCommand{``1}}})">
             <summary>
-            RegisterAsyncFunction registers an asynchronous method that returns a result
-            to be called whenever the Command's Execute method is called.
+            A utility method that will pipe an Observable to an ICommand (i.e.
+            it will first call its CanExecute with the provided value, then if
+            the command can be executed, Execute() will be called)
             </summary>
-            <param name="calculationFunc">The function to be run in the
-            background.</param>
-            <param name="scheduler"></param>
-            <returns>An Observable that will fire on the UI thread once per
-            invoecation of Execute, once the async method completes. Subscribe to
-            this to retrieve the result of the calculationFunc.</returns>
+            <param name="target">The root object which has the Command.</param>
+            <param name="commandProperty">The expression to reference the Command.</param>
+            <returns>An object that when disposes, disconnects the Observable
+            from the command.</returns>
         </member>
-        <member name="M:ReactiveUI.Legacy.ReactiveCommandMixins.RegisterAsyncAction(ReactiveUI.Legacy.ReactiveCommand,System.Action{System.Object},System.Reactive.Concurrency.IScheduler)">
+        <member name="M:ReactiveUI.Legacy.ReactiveCommandMixins.OnExecuteCompleted``1(ReactiveUI.Legacy.ReactiveCommand{``0},System.Action{``0},System.Action{System.Exception})">
             <summary>
-            RegisterAsyncAction registers an asynchronous method that runs
-            whenever the Command's Execute method is called and doesn't return a
-            result.
+            A convenience method for subscribing and creating ReactiveCommands
+            in the same call. Equivalent to Subscribing to the command, except
+            there's no way to release your Subscription but that's probably fine.
             </summary>
-            <param name="calculationFunc">The function to be run in the
-            background.</param>
-        </member>
-        <member name="M:ReactiveUI.Legacy.ReactiveCommandMixins.RegisterAsyncTask``1(ReactiveUI.Legacy.ReactiveCommand,System.Func{System.Object,System.Threading.Tasks.Task{``0}})">
-            <summary>
-            RegisterAsyncTask registers an TPL/Async method that runs when a 
-            Command gets executed and returns the result
-            </summary>
-            <returns>An Observable that will fire on the UI thread once per
-            invoecation of Execute, once the async method completes. Subscribe to
-            this to retrieve the result of the calculationFunc.</returns>
-        </member>
-        <member name="M:ReactiveUI.Legacy.ReactiveCommandMixins.RegisterAsyncTask(ReactiveUI.Legacy.ReactiveCommand,System.Func{System.Object,System.Threading.Tasks.Task})">
-            <summary>
-            RegisterAsyncTask registers an TPL/Async method that runs when a 
-            Command gets executed and returns no result. 
-            </summary>
-            <param name="calculationFunc">The function to be run in the
-            background.</param>
-            <returns>An Observable that signals when the Task completes, on
-            the UI thread.</returns>
         </member>
         <member name="T:ReactiveUI.Legacy.StockUserErrorIcon">
             <summary>
@@ -3754,6 +4319,45 @@
              example an "Out of Disk Space" error might have an "Open Explorer"
              recovery option.
              </summary>
+        </member>
+        <member name="P:ReactiveUI.Legacy.UserError.ContextInfo">
+            <summary>
+            A Dictionary that allows UserErrors to contain arbitrary
+            application data.
+            </summary>
+        </member>
+        <member name="P:ReactiveUI.Legacy.UserError.RecoveryOptions">
+            <summary>
+            The list of available Recovery Options that will be presented to
+            the user to resolve the issue - these usually correspond to
+            buttons in the dialog.
+            </summary>
+        </member>
+        <member name="P:ReactiveUI.Legacy.UserError.ErrorMessage">
+            <summary>
+            The "Newspaper Headline" of the message being conveyed to the
+            user. This should be one line, short, and informative.
+            </summary>
+        </member>
+        <member name="P:ReactiveUI.Legacy.UserError.ErrorCauseOrResolution">
+            <summary>
+            Additional optional information to describe what is happening, or
+            the resolution to an information-only error (i.e. a dialog to tell
+            the user that something has happened)
+            </summary>
+        </member>
+        <member name="P:ReactiveUI.Legacy.UserError.UserErrorIcon">
+            <summary>
+            This object is either a custom icon (usually an ImageSource), or
+            it can also be a StockUserErrorIcon. It can also be an
+            application-defined type that the handlers know to interpret.
+            </summary>
+        </member>
+        <member name="P:ReactiveUI.Legacy.UserError.InnerException">
+            <summary>
+            Optionally, The actual Exception that warranted throwing the
+            UserError.
+            </summary>
         </member>
         <member name="M:ReactiveUI.Legacy.UserError.Throw(System.String,System.Exception)">
             <summary>
@@ -3865,45 +4469,6 @@
             </summary>
             <param name="errorHandler">The replacement UserError handler.</param>
             <returns>An IDisposable which will unregister the test handler.</returns>
-        </member>
-        <member name="P:ReactiveUI.Legacy.UserError.ContextInfo">
-            <summary>
-            A Dictionary that allows UserErrors to contain arbitrary
-            application data.
-            </summary>
-        </member>
-        <member name="P:ReactiveUI.Legacy.UserError.RecoveryOptions">
-            <summary>
-            The list of available Recovery Options that will be presented to
-            the user to resolve the issue - these usually correspond to
-            buttons in the dialog.
-            </summary>
-        </member>
-        <member name="P:ReactiveUI.Legacy.UserError.ErrorMessage">
-            <summary>
-            The "Newspaper Headline" of the message being conveyed to the
-            user. This should be one line, short, and informative.
-            </summary>
-        </member>
-        <member name="P:ReactiveUI.Legacy.UserError.ErrorCauseOrResolution">
-            <summary>
-            Additional optional information to describe what is happening, or
-            the resolution to an information-only error (i.e. a dialog to tell
-            the user that something has happened)
-            </summary>
-        </member>
-        <member name="P:ReactiveUI.Legacy.UserError.UserErrorIcon">
-            <summary>
-            This object is either a custom icon (usually an ImageSource), or
-            it can also be a StockUserErrorIcon. It can also be an
-            application-defined type that the handlers know to interpret.
-            </summary>
-        </member>
-        <member name="P:ReactiveUI.Legacy.UserError.InnerException">
-            <summary>
-            Optionally, The actual Exception that warranted throwing the
-            UserError.
-            </summary>
         </member>
         <member name="T:ReactiveUI.Legacy.UnhandledUserErrorException">
             <summary>

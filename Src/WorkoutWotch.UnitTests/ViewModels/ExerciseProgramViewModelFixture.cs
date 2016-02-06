@@ -88,7 +88,7 @@
                 .WhenAnyValue(x => x.IsStarted)
                 .CreateCollection();
 
-            sut.StartCommand.Execute(null);
+            sut.StartCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
 
             Assert.Equal(3, isStarted.Count);
@@ -122,11 +122,9 @@
                 .WhenAnyValue(x => x.IsStartVisible)
                 .CreateCollection();
 
-            sut.StartCommand.Execute(null);
+            sut.StartCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
 
-            // TODO: the extra 2 values here appears to be due to ReactiveCommand's CanExecuteObservable implementation
-            //       try this again once ReactiveCommand is re-written
             Assert.Equal(5, isStartVisible.Count);
             Assert.True(isStartVisible[0]);
             Assert.False(isStartVisible[1]);
@@ -161,11 +159,11 @@
 
             Assert.False(sut.IsPaused);
 
-            sut.StartCommand.Execute(null);
+            sut.StartCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
             Assert.False(sut.IsPaused);
 
-            sut.PauseCommand.Execute(null);
+            sut.PauseCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
             Assert.True(sut.IsPaused);
         }
@@ -207,7 +205,7 @@
 
             Assert.False(sut.IsPauseVisible);
 
-            sut.StartCommand.Execute(null);
+            sut.StartCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
             Assert.True(sut.IsPauseVisible);
 
@@ -234,16 +232,18 @@
                 .WhenAnyValue(x => x.IsPauseVisible)
                 .CreateCollection();
 
-            sut.StartCommand.Execute(null);
+            sut.StartCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
 
-            sut.PauseCommand.Execute(null);
+            sut.PauseCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
 
-            Assert.Equal(3, isPauseVisible.Count);
+            Assert.Equal(5, isPauseVisible.Count);
             Assert.False(isPauseVisible[0]);
             Assert.True(isPauseVisible[1]);
             Assert.False(isPauseVisible[2]);
+            Assert.True(isPauseVisible[3]);
+            Assert.False(isPauseVisible[4]);
         }
 
         [Fact]
@@ -274,10 +274,10 @@
                 .WhenAnyValue(x => x.IsResumeVisible)
                 .CreateCollection();
 
-            sut.StartCommand.Execute(null);
+            sut.StartCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
 
-            sut.PauseCommand.Execute(null);
+            sut.PauseCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
 
             Assert.Equal(2, isResumeVisible.Count);
@@ -315,7 +315,7 @@
                 .WhenAnyValue(x => x.ProgressTimeSpan)
                 .CreateCollection();
 
-            sut.StartCommand.Execute(null);
+            sut.StartCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
 
             Assert.Equal(3, progressTimeSpan.Count);
@@ -358,7 +358,7 @@
                 .WhenAnyValue(x => x.Progress)
                 .CreateCollection();
 
-            sut.StartCommand.Execute(null);
+            sut.StartCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
 
             Assert.Equal(3, progress.Count);
@@ -389,10 +389,10 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            sut.StartCommand.Execute(null);
+            sut.StartCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
 
-            Assert.False(sut.SkipBackwardsCommand.CanExecute(null));
+            Assert.False(sut.SkipBackwardsCommand.CanExecute.FirstAsync().Wait());
         }
 
         [Fact]
@@ -422,10 +422,10 @@
             //       try changing this once I'm using new RxCommand
             var canExecute = sut
                 .SkipBackwardsCommand
-                .CanExecuteObservable
+                .CanExecute
                 .CreateCollection();
 
-            sut.StartCommand.Execute(null);
+            sut.StartCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
 
             Assert.Equal(2, canExecute.Count);
@@ -461,10 +461,10 @@
                 .WhenAnyValue(x => x.ProgressTimeSpan)
                 .CreateCollection();
 
-            sut.StartCommand.Execute(null);
+            sut.StartCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
 
-            sut.SkipBackwardsCommand.Execute(null);
+            sut.SkipBackwardsCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
 
             Assert.Equal(3, progress.Count);
@@ -516,10 +516,10 @@
                 .CreateCollection();
 
             // start from the second exercise
-            sut.StartCommand.Execute(exercise1.Duration);
+            sut.StartCommand.ExecuteAsync(exercise1.Duration);
             scheduler.AdvanceMinimal();
 
-            sut.SkipBackwardsCommand.Execute(null);
+            sut.SkipBackwardsCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
 
             Assert.Equal(5, progress.Count);
@@ -569,13 +569,13 @@
 
             var canExecute = sut
                 .SkipForwardsCommand
-                .CanExecuteObservable
+                .CanExecute
                 .CreateCollection();
 
-            sut.StartCommand.Execute(null);
+            sut.StartCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
 
-            sut.SkipForwardsCommand.Execute(null);
+            sut.SkipForwardsCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
 
             Assert.Equal(5, canExecute.Count);
@@ -627,10 +627,10 @@
                 .WhenAnyValue(x => x.ProgressTimeSpan)
                 .CreateCollection();
 
-            sut.StartCommand.Execute(null);
+            sut.StartCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
 
-            sut.SkipForwardsCommand.Execute(null);
+            sut.SkipForwardsCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
 
             Assert.Equal(2, progress.Count);
@@ -680,19 +680,19 @@
                 .WithSchedulerService(scheduler)
                 .Build();
 
-            sut.StartCommand.Execute(null);
+            sut.StartCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
             Assert.Equal("Exercise 1", sut.CurrentExercise?.Name);
 
-            sut.SkipForwardsCommand.Execute(null);
+            sut.SkipForwardsCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
             Assert.Equal("Exercise 2", sut.CurrentExercise?.Name);
 
-            sut.SkipForwardsCommand.Execute(null);
+            sut.SkipForwardsCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
             Assert.Equal("Exercise 3", sut.CurrentExercise?.Name);
 
-            sut.SkipBackwardsCommand.Execute(null);
+            sut.SkipBackwardsCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
             Assert.Equal("Exercise 2", sut.CurrentExercise?.Name);
         }
@@ -717,7 +717,7 @@
                 .NavigationStack
                 .Add(sut);
 
-            sut.StartCommand.Execute(null);
+            sut.StartCommand.ExecuteAsync();
             scheduler.AdvanceMinimal();
 
             Assert.True(sut.IsStarted);
@@ -726,7 +726,7 @@
                 .HostScreen
                 .Router
                 .NavigateBack
-                .Execute(null);
+                .ExecuteAsync();
             scheduler.AdvanceMinimal();
 
             Assert.False(sut.IsStarted);

@@ -106,6 +106,23 @@
         }
 
         [Fact]
+        public void execute_async_completes_even_if_there_are_no_actions()
+        {
+            var sut = new ExerciseBuilder()
+                .Build();
+
+            using (var executionContext = new ExecutionContext())
+            {
+                var completed = false;
+                sut
+                    .ExecuteAsync(executionContext)
+                    .Subscribe(_ => completed = true);
+
+                Assert.True(completed);
+            }
+        }
+
+        [Fact]
         public void execute_async_executes_all_appropriate_actions()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
