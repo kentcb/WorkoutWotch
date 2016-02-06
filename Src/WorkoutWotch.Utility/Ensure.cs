@@ -36,9 +36,9 @@
         [DebuggerHidden]
         public static void GenericArgumentNotNull<T>(T arg, string argName)
         {
-            Type type = typeof(T);
+            var typeInfo = typeof(T).GetTypeInfo();
 
-            if (!type.GetTypeInfo().IsValueType || (type.GetTypeInfo().IsGenericType && (type.GetGenericTypeDefinition() == typeof(Nullable<>))))
+            if (!typeInfo.IsValueType || (typeInfo.IsGenericType && (typeInfo.GetGenericTypeDefinition() == typeof(Nullable<>))))
             {
                 ArgumentNotNull((object)arg, argName);
             }
