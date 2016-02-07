@@ -147,11 +147,11 @@
             var scheduler = new TestScheduler();
 
             stateService
-                .When(x => x.GetAsync<string>(It.IsAny<string>()))
+                .When(x => x.Get<string>(It.IsAny<string>()))
                 .Return(Observable.Throw<string>(new InvalidOperationException()));
 
             stateService
-                .When(x => x.SetAsync<string>(It.IsAny<string>(), It.IsAny<string>()))
+                .When(x => x.Set<string>(It.IsAny<string>(), It.IsAny<string>()))
                 .Return(Observable.Return(Unit.Default));
 
             var sut = new ExerciseProgramsViewModelBuilder()
@@ -299,11 +299,11 @@
             var stateService = new StateServiceMock();
 
             stateService
-                .When(x => x.GetAsync<string>(It.IsAny<string>()))
+                .When(x => x.Get<string>(It.IsAny<string>()))
                 .Return(Observable.Return<string>(null));
 
             stateService
-                .When(x => x.SetAsync<string>(It.IsAny<string>(), It.IsAny<string>()))
+                .When(x => x.Set<string>(It.IsAny<string>(), It.IsAny<string>()))
                 .Return(Observable.Return(Unit.Default));
 
             var sut = new ExerciseProgramsViewModelBuilder()
@@ -316,7 +316,7 @@
             Assert.Equal(ExerciseProgramsViewModelStatus.LoadedFromService, sut.Status);
 
             stateService
-                .Verify(x => x.SetAsync<string>("ExerciseProgramsDocument", document))
+                .Verify(x => x.Set<string>("ExerciseProgramsDocument", document))
                 .WasCalledExactlyOnce();
         }
 
@@ -328,11 +328,11 @@
             var stateService = new StateServiceMock();
 
             stateService
-                .When(x => x.GetAsync<string>(It.IsAny<string>()))
+                .When(x => x.Get<string>(It.IsAny<string>()))
                 .Return(Observable.Return(document));
 
             stateService
-                .When(x => x.SetAsync<string>(It.IsAny<string>(), It.IsAny<string>()))
+                .When(x => x.Set<string>(It.IsAny<string>(), It.IsAny<string>()))
                 .Return(Observable.Return(Unit.Default));
 
             var sut = new ExerciseProgramsViewModelBuilder()
@@ -344,7 +344,7 @@
             Assert.Equal(ExerciseProgramsViewModelStatus.LoadedFromCache, sut.Status);
 
             stateService
-                .Verify(x => x.SetAsync<string>("ExerciseProgramsDocument", document))
+                .Verify(x => x.Set<string>("ExerciseProgramsDocument", document))
                 .WasNotCalled();
         }
 

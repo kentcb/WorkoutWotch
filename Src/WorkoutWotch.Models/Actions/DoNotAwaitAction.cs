@@ -24,13 +24,13 @@
 
         public IAction InnerAction => this.innerAction;
 
-        public IObservable<Unit> ExecuteAsync(ExecutionContext context)
+        public IObservable<Unit> Execute(ExecutionContext context)
         {
             Ensure.ArgumentNotNull(context, nameof(context));
 
             this
                 .innerAction
-                .ExecuteAsync(context)
+                .Execute(context)
                 .Subscribe(
                     _ => { },
                     ex => this.logger.Error("Failed to execute inner action: " + ex));

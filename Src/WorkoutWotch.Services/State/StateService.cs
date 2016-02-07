@@ -7,7 +7,6 @@
     using System.Linq;
     using System.Reactive;
     using System.Reactive.Linq;
-    using System.Threading;
     using Akavache;
     using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.Contracts.State;
@@ -31,7 +30,7 @@
             this.sync = new object();
         }
 
-        public IObservable<T> GetAsync<T>(string key)
+        public IObservable<T> Get<T>(string key)
         {
             Ensure.ArgumentNotNull(key, nameof(key));
 
@@ -40,7 +39,7 @@
                 .GetObject<T>(key);
         }
 
-        public IObservable<Unit> SetAsync<T>(string key, T value)
+        public IObservable<Unit> Set<T>(string key, T value)
         {
             Ensure.ArgumentNotNull(key, nameof(key));
 
@@ -49,7 +48,7 @@
                 .InsertObject<T>(key, value);
         }
 
-        public IObservable<Unit> RemoveAsync<T>(string key)
+        public IObservable<Unit> Remove<T>(string key)
         {
             Ensure.ArgumentNotNull(key, nameof(key));
 
@@ -58,7 +57,7 @@
                 .InvalidateObject<T>(key);
         }
 
-        public IObservable<Unit> SaveAsync()
+        public IObservable<Unit> Save()
         {
             IObservable<IList<Unit>> saves;
 
@@ -81,8 +80,7 @@
                     {
                         this.logger.Error(ex, "Failed to save.");
                         return Observable.Return(Unit.Default);
-                    })
-                .RunAsync(CancellationToken.None);
+                    });
         }
 
         public IDisposable RegisterSaveCallback(SaveCallback saveCallback)

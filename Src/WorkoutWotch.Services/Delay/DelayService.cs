@@ -4,7 +4,6 @@
     using System.Reactive;
     using System.Reactive.Concurrency;
     using System.Reactive.Linq;
-    using System.Threading;
     using Utility;
     using WorkoutWotch.Services.Contracts.Delay;
 
@@ -18,10 +17,9 @@
             this.scheduler = scheduler;
         }
 
-        public IObservable<Unit> DelayAsync(TimeSpan duration, CancellationToken cancellationToken = default(CancellationToken)) =>
+        public IObservable<Unit> Delay(TimeSpan duration) =>
             Observable
                 .Return(Unit.Default)
-                .Delay(duration, scheduler)
-                .RunAsync(cancellationToken);
+                .Delay(duration, scheduler);
     }
 }

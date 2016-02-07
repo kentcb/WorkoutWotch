@@ -106,7 +106,7 @@ namespace WorkoutWotch.ViewModels
                 .Select(x => !x);
 
             this.startCommand = ReactiveCommand
-                .CreateFromObservable<TimeSpan?, Unit>(this.OnStartAsync, canStart, scheduler)
+                .CreateFromObservable<TimeSpan?, Unit>(this.OnStart, canStart, scheduler)
                 .AddTo(this.disposables);
 
             var canPause = this
@@ -115,7 +115,7 @@ namespace WorkoutWotch.ViewModels
                 .ObserveOn(scheduler);
 
             this.pauseCommand = ReactiveCommand
-                .CreateFromObservable(this.OnPauseAsync, canPause, scheduler)
+                .CreateFromObservable(this.OnPause, canPause, scheduler)
                 .AddTo(this.disposables);
 
             var canResume = this
@@ -124,7 +124,7 @@ namespace WorkoutWotch.ViewModels
                 .ObserveOn(scheduler);
 
             this.resumeCommand = ReactiveCommand
-                .CreateFromObservable(this.OnResumeAsync, canResume, scheduler)
+                .CreateFromObservable(this.OnResume, canResume, scheduler)
                 .AddTo(this.disposables);
 
             var canSkipBackwards = this
@@ -136,7 +136,7 @@ namespace WorkoutWotch.ViewModels
                 .ObserveOn(scheduler);
 
             this.skipBackwardsCommand = ReactiveCommand
-                .CreateFromObservable(this.OnSkipBackwardsAsync, canSkipBackwards, scheduler)
+                .CreateFromObservable(this.OnSkipBackwards, canSkipBackwards, scheduler)
                 .AddTo(this.disposables);
 
             var canSkipForwards = this
@@ -148,7 +148,7 @@ namespace WorkoutWotch.ViewModels
                 .ObserveOn(scheduler);
 
             this.skipForwardsCommand = ReactiveCommand
-                .CreateFromObservable(this.OnSkipForwardsAsync, canSkipForwards, scheduler)
+                .CreateFromObservable(this.OnSkipForwards, canSkipForwards, scheduler)
                 .AddTo(this.disposables);
 
             this.startCommand
@@ -203,7 +203,7 @@ namespace WorkoutWotch.ViewModels
                 .NavigationStack
                 .ItemsRemoved
                 .OfType<ExerciseProgramViewModel>()
-                .SelectMany(x => x.StopAsync())
+                .SelectMany(x => x.Stop())
                 .Subscribe()
                 .AddTo(this.disposables);
         }
@@ -298,26 +298,26 @@ namespace WorkoutWotch.ViewModels
             }
         }
 
-        private IObservable<Unit> OnStartAsync(TimeSpan? skipAhead) =>
-            this.StartAsync(skipAhead.GetValueOrDefault(TimeSpan.Zero));
+        private IObservable<Unit> OnStart(TimeSpan? skipAhead) =>
+            this.Start(skipAhead.GetValueOrDefault(TimeSpan.Zero));
 
-        private IObservable<Unit> OnPauseAsync() =>
+        private IObservable<Unit> OnPause() =>
             Observable
                 .Start(() => this.ExecutionContext.IsPaused = true, this.scheduler)
                 .Select(__ => Unit.Default);
 
-        private IObservable<Unit> OnResumeAsync() =>
+        private IObservable<Unit> OnResume() =>
             Observable
                 .Start(() => this.ExecutionContext.IsPaused = false, this.scheduler)
                 .Select(__ => Unit.Default);
 
-        private IObservable<Unit> OnSkipBackwardsAsync() =>
-            this.SkipBackwardsAsync();
+        private IObservable<Unit> OnSkipBackwards() =>
+            this.SkipBackwards();
 
-        private IObservable<Unit> OnSkipForwardsAsync() =>
-            this.SkipForwardsAsync();
+        private IObservable<Unit> OnSkipForwards() =>
+            this.SkipForwards();
 
-        private IObservable<Unit> StartAsync(TimeSpan skipTo = default(TimeSpan), bool isPaused = false)
+        private IObservable<Unit> Start(TimeSpan skipTo = default(TimeSpan), bool isPaused = false)
         {
             this.logger.Debug("Starting {0} from {1}.", isPaused ? "paused" : "unpaused", skipTo);
 
@@ -336,11 +336,11 @@ namespace WorkoutWotch.ViewModels
                     _ =>
                         Observable
                             .Start(() => this.ExecutionContext = executionContext, this.scheduler)
-                            .SelectMany(__ => this.model.ExecuteAsync(executionContext)))
+                            .SelectMany(__ => this.model.Execute(executionContext)))
                 .Catch<Unit, OperationCanceledException>(_ => Observable.Return(Unit.Default));
         }
 
-        public IObservable<Unit> StopAsync()
+        public IObservable<Unit> Stop()
         {
             this.logger.Debug("Stopping.");
 
@@ -362,7 +362,7 @@ namespace WorkoutWotch.ViewModels
                 .FirstAsync();
         }
 
-        private IObservable<Unit> SkipBackwardsAsync()
+        private IObservable<Unit> SkipBackwards()
         {
             this.logger.Debug("Skipping backwards.");
 
@@ -391,7 +391,7 @@ namespace WorkoutWotch.ViewModels
             }
 
             return this
-                .StopAsync()
+                .Stop()
                 .Do(
                     _ =>
                     {
@@ -399,13 +399,13 @@ namespace WorkoutWotch.ViewModels
                             currentExerciseProgress -
                             (currentExerciseProgress < skipBackwardsThreshold && priorExercise != null ? priorExercise.Duration : TimeSpan.Zero);
 
-                        this.StartAsync(skipTo, isPaused).Subscribe();
+                        this.Start(skipTo, isPaused).Subscribe();
                         this.logger.Debug("Skip backwards completed.");
                     })
                 .FirstAsync();
         }
 
-        private IObservable<Unit> SkipForwardsAsync()
+        private IObservable<Unit> SkipForwards()
         {
             this.logger.Debug("Skipping forwards.");
 
@@ -423,11 +423,11 @@ namespace WorkoutWotch.ViewModels
             var isPaused = executionContext.IsPaused;
 
             return this
-                .StopAsync()
+                .Stop()
                 .Do(
                     _ =>
                     {
-                        this.StartAsync(totalProgress - currentExerciseProgress + currentExercise.Duration, isPaused).Subscribe();
+                        this.Start(totalProgress - currentExerciseProgress + currentExercise.Duration, isPaused).Subscribe();
                         this.logger.Debug("Skip forwards completed.");
                     })
                 .FirstAsync();

@@ -4,7 +4,6 @@ namespace WorkoutWotch.Services.iOS.Audio
     using System.Reactive;
     using System.Reactive.Concurrency;
     using System.Reactive.Linq;
-    using System.Threading;
     using AVFoundation;
     using Foundation;
     using WorkoutWotch.Services.Contracts.Audio;
@@ -21,7 +20,7 @@ namespace WorkoutWotch.Services.iOS.Audio
             this.scheduler = scheduler;
         }
 
-        public IObservable<Unit> PlayAsync(string name)
+        public IObservable<Unit> Play(string name)
         {
             Ensure.ArgumentNotNull(name, nameof(name));
 
@@ -40,8 +39,7 @@ namespace WorkoutWotch.Services.iOS.Audio
             audioPlayer.Play();
 
             return finishedPlaying
-                .FirstAsync()
-                .RunAsync(CancellationToken.None);
+                .FirstAsync();
         }
     }
 }

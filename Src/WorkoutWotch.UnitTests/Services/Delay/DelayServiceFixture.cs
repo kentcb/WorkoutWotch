@@ -1,7 +1,6 @@
 ﻿namespace WorkoutWotch.UnitTests.Services.Delay
 {
     using System;
-    using System.Threading;
     using Microsoft.Reactive.Testing;
     using WorkoutWotch.UnitTests.Reactive;
     using WorkoutWotch.UnitTests.Services.Delay.Builders;
@@ -10,7 +9,7 @@
     public sealed class DelayServiceFixture
     {
         [Fact]
-        public void delay_async_returns_observable_that_ticks_after_specified_delay()
+        public void delay_returns_observable_that_ticks_after_specified_delay()
         {
             var scheduler = new TestScheduler();
             var sut = new DelayServiceBuilder()
@@ -19,7 +18,7 @@
 
             var completed = false;
             sut
-                .DelayAsync(TimeSpan.FromSeconds(5))
+                .Delay(TimeSpan.FromSeconds(5))
                 .Subscribe(_ => completed = true);
             Assert.False(completed);
 
@@ -34,26 +33,23 @@
         }
 
         [Fact]
-        public void delay_async_cancels_the_delay_if_cancellation_token_is_cancelled()
+        public void delay_cancels_the_delay_if_subscription_is_disposed()
         {
             var scheduler = new TestScheduler();
             var sut = new DelayServiceBuilder()
                 .WithScheduler(scheduler)
                 .Build();
-            var cts = new CancellationTokenSource();
-            Exception exception = null;
+            var executed = false;
             var delayResult = sut
-                .DelayAsync(TimeSpan.FromSeconds(5), cts.Token)
-                .Subscribe(
-                    _ => { },
-                    ex => exception = ex);
+                .Delay(TimeSpan.FromSeconds(5))
+                .Subscribe(_ => executed = true);
 
             scheduler.AdvanceBy(TimeSpan.FromSeconds(1));
-            Assert.Null(exception);
+            Assert.False(executed);
 
-            cts.Cancel();
+            delayResult.Dispose();
             scheduler.AdvanceBy(TimeSpan.FromSeconds(5));
-            Assert.IsType<OperationCanceledException>(exception);
+            Assert.False(executed);
         }
     }
 }

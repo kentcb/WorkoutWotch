@@ -213,24 +213,24 @@ namespace WorkoutWotch.UnitTests.Services.State.Mocks
         }
 
         partial void ConfigureLooseBehavior();
-        public global::System.IObservable<T> GetAsync<T>(System.String key)
+        public global::System.IObservable<T> Get<T>(System.String key)
         {
-            return this.Apply(x => x.GetAsync<T>(key));
+            return this.Apply(x => x.Get<T>(key));
         }
 
-        public global::System.IObservable<global::System.Reactive.Unit> SetAsync<T>(System.String key, T value)
+        public global::System.IObservable<global::System.Reactive.Unit> Set<T>(System.String key, T value)
         {
-            return this.Apply(x => x.SetAsync<T>(key, value));
+            return this.Apply(x => x.Set<T>(key, value));
         }
 
-        public global::System.IObservable<global::System.Reactive.Unit> RemoveAsync<T>(System.String key)
+        public global::System.IObservable<global::System.Reactive.Unit> Remove<T>(System.String key)
         {
-            return this.Apply(x => x.RemoveAsync<T>(key));
+            return this.Apply(x => x.Remove<T>(key));
         }
 
-        public global::System.IObservable<global::System.Reactive.Unit> SaveAsync()
+        public global::System.IObservable<global::System.Reactive.Unit> Save()
         {
-            return this.Apply(x => x.SaveAsync());
+            return this.Apply(x => x.Save());
         }
 
         public global::System.IDisposable RegisterSaveCallback(global::WorkoutWotch.Services.Contracts.State.SaveCallback saveCallback)
@@ -254,9 +254,9 @@ namespace WorkoutWotch.UnitTests.Services.Delay.Mocks
         }
 
         partial void ConfigureLooseBehavior();
-        public global::System.IObservable<global::System.Reactive.Unit> DelayAsync(global::System.TimeSpan duration, global::System.Threading.CancellationToken cancellationToken)
+        public global::System.IObservable<global::System.Reactive.Unit> Delay(global::System.TimeSpan duration)
         {
-            return this.Apply(x => x.DelayAsync(duration, cancellationToken));
+            return this.Apply(x => x.Delay(duration));
         }
     }
 }
@@ -299,9 +299,9 @@ namespace WorkoutWotch.UnitTests.Services.Audio.Mocks
         }
 
         partial void ConfigureLooseBehavior();
-        public global::System.IObservable<global::System.Reactive.Unit> PlayAsync(System.String name)
+        public global::System.IObservable<global::System.Reactive.Unit> Play(System.String name)
         {
-            return this.Apply(x => x.PlayAsync(name));
+            return this.Apply(x => x.Play(name));
         }
     }
 }
@@ -320,9 +320,9 @@ namespace WorkoutWotch.UnitTests.Services.Speech.Mocks
         }
 
         partial void ConfigureLooseBehavior();
-        public global::System.IObservable<global::System.Reactive.Unit> SpeakAsync(System.String speechString, global::System.Threading.CancellationToken cancellationToken)
+        public global::System.IObservable<global::System.Reactive.Unit> Speak(System.String speechString)
         {
-            return this.Apply(x => x.SpeakAsync(speechString, cancellationToken));
+            return this.Apply(x => x.Speak(speechString));
         }
     }
 }
@@ -349,9 +349,9 @@ namespace WorkoutWotch.UnitTests.Models.Mocks
             }
         }
 
-        public global::System.IObservable<global::System.Reactive.Unit> ExecuteAsync(global::WorkoutWotch.Models.ExecutionContext context)
+        public global::System.IObservable<global::System.Reactive.Unit> Execute(global::WorkoutWotch.Models.ExecutionContext context)
         {
-            return this.Apply(x => x.ExecuteAsync(context));
+            return this.Apply(x => x.Execute(context));
         }
     }
 }

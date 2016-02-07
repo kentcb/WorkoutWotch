@@ -1,7 +1,6 @@
 ﻿namespace WorkoutWotch.UnitTests.Models
 {
     using System;
-    using System.Reactive;
     using System.Reactive.Linq;
     using Builders;
     using global::ReactiveUI;
@@ -10,19 +9,6 @@
 
     public class ExecutionContextFixture
     {
-        [Fact]
-        public void cancel_cancels_the_cancellation_token()
-        {
-            var sut = new ExecutionContext();
-            var token = sut.CancellationToken;
-            Assert.False(sut.IsCancelled);
-            Assert.False(token.IsCancellationRequested);
-
-            sut.Cancel();
-            Assert.True(sut.IsCancelled);
-            Assert.True(token.IsCancellationRequested);
-        }
-
         [Fact]
         public void cancel_raises_property_changed_for_is_cancelled()
         {
@@ -37,25 +23,25 @@
         }
 
         [Fact]
-        public void wait_while_paused_async_completes_immediately_if_not_paused()
+        public void wait_while_paused_completes_immediately_if_not_paused()
         {
             var sut = new ExecutionContext();
             var completed = false;
             sut
-                .WaitWhilePausedAsync()
+                .WaitWhilePaused()
                 .Subscribe(_ => completed = true);
             Assert.True(completed);
         }
 
         [Fact]
-        public void wait_while_paused_async_waits_until_unpaused()
+        public void wait_while_paused_waits_until_unpaused()
         {
             var sut = new ExecutionContext();
             sut.IsPaused = true;
 
             var executed = false;
             sut
-                .WaitWhilePausedAsync()
+                .WaitWhilePaused()
                 .Subscribe(_ => executed = true);
 
             Assert.False(executed);
@@ -66,27 +52,18 @@
         }
 
         [Fact]
-        public void wait_while_paused_async_cancels_if_the_context_is_cancelled()
+        public void wait_while_paused_does_not_complete_if_the_context_is_cancelled()
         {
             var sut = new ExecutionContext();
             sut.IsPaused = true;
 
-            var cancelled = false;
+            var executed = false;
             sut
-                .WaitWhilePausedAsync()
-                .Catch<Unit, OperationCanceledException>(
-                    _ =>
-                    {
-                        cancelled = true;
-                        return Observable.Return(Unit.Default);
-                    })
-                .Subscribe();
-
-            Assert.False(cancelled);
+                .WaitWhilePaused()
+                .Subscribe(_ => executed = true);
 
             sut.Cancel();
-
-            Assert.True(cancelled);
+            Assert.False(executed);
         }
 
         [Fact]

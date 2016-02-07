@@ -18,21 +18,7 @@
         }
 
         [Fact]
-        public void execute_async_cancels_if_context_is_cancelled()
-        {
-            var sut = new AudioActionBuilder()
-                .Build();
-
-            using (var context = new ExecutionContext())
-            {
-                context.Cancel();
-
-                Assert.Throws<OperationCanceledException>(() => sut.ExecuteAsync(context));
-            }
-        }
-
-        [Fact]
-        public void execute_async_pauses_if_context_is_paused()
+        public void execute_pauses_if_context_is_paused()
         {
             var audioService = new AudioServiceMock(MockBehavior.Loose);
             var sut = new AudioActionBuilder()
@@ -43,10 +29,10 @@
             {
                 context.IsPaused = true;
 
-                sut.ExecuteAsync(context);
+                sut.Execute(context).Subscribe();
 
                 audioService
-                    .Verify(x => x.PlayAsync(It.IsAny<string>()))
+                    .Verify(x => x.Play(It.IsAny<string>()))
                     .WasNotCalled();
             }
         }
@@ -55,7 +41,7 @@
         [InlineData("name")]
         [InlineData("some_name")]
         [InlineData("some_other_name")]
-        public void execute_async_passes_the_audio_name_onto_the_audio_service(string audioName)
+        public void execute_passes_the_audio_name_onto_the_audio_service(string audioName)
         {
             var audioService = new AudioServiceMock(MockBehavior.Loose);
             var sut = new AudioActionBuilder()
@@ -63,10 +49,10 @@
                 .WithAudioName(audioName)
                 .Build();
 
-            sut.ExecuteAsync(new ExecutionContext());
+            sut.Execute(new ExecutionContext()).Subscribe();
 
             audioService
-                .Verify(x => x.PlayAsync(audioName))
+                .Verify(x => x.Play(audioName))
                 .WasCalledExactlyOnce();
         }
     }

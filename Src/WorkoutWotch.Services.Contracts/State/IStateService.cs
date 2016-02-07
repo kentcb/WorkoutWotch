@@ -7,13 +7,13 @@
 
     public interface IStateService
     {
-        IObservable<T> GetAsync<T>(string key);
+        IObservable<T> Get<T>(string key);
 
-        IObservable<Unit> SetAsync<T>(string key, T value);
+        IObservable<Unit> Set<T>(string key, T value);
 
-        IObservable<Unit> RemoveAsync<T>(string key);
+        IObservable<Unit> Remove<T>(string key);
 
-        IObservable<Unit> SaveAsync();
+        IObservable<Unit> Save();
 
         IDisposable RegisterSaveCallback(SaveCallback saveCallback);
     }

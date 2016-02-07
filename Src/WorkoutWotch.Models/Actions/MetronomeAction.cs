@@ -29,13 +29,13 @@
 
         public IImmutableList<MetronomeTick> Ticks => this.ticks;
 
-        public IObservable<Unit> ExecuteAsync(ExecutionContext context)
+        public IObservable<Unit> Execute(ExecutionContext context)
         {
             Ensure.ArgumentNotNull(context, nameof(context));
 
             return this
                 .innerAction
-                .ExecuteAsync(context);
+                .Execute(context);
         }
 
         private static IEnumerable<IAction> GetInnerActions(IAudioService audioService, IDelayService delayService, ILoggerService loggerService, IEnumerable<MetronomeTick> ticks)

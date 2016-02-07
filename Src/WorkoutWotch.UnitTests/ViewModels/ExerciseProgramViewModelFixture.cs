@@ -187,7 +187,7 @@
                 .When(x => x.Duration)
                 .Return(TimeSpan.FromMinutes(1));
             action
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
                         Observable
@@ -293,7 +293,7 @@
             var action = new ActionMock(MockBehavior.Loose);
 
             action
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
                     {
@@ -302,7 +302,7 @@
 
                         ec.IsPaused = true;
 
-                        return ec.WaitWhilePausedAsync();
+                        return ec.WaitWhilePaused();
                     });
 
             var sut = new ExerciseProgramViewModelBuilder()
@@ -336,7 +336,7 @@
                 .Return(TimeSpan.FromMinutes(1));
 
             action
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
                     {
@@ -345,7 +345,7 @@
 
                         ec.IsPaused = true;
 
-                        return ec.WaitWhilePausedAsync();
+                        return ec.WaitWhilePaused();
                     });
 
             var sut = new ExerciseProgramViewModelBuilder()
@@ -375,12 +375,12 @@
             var action = new ActionMock(MockBehavior.Loose);
 
             action
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
                     {
                         ec.IsPaused = true;
-                        return ec.WaitWhilePausedAsync();
+                        return ec.WaitWhilePaused();
                     });
 
             var sut = new ExerciseProgramViewModelBuilder()
@@ -403,13 +403,13 @@
             var action = new ActionMock(MockBehavior.Loose);
 
             action
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
                     {
                         ec.AddProgress(TimeSpan.FromSeconds(1));
                         ec.IsPaused = true;
-                        return ec.WaitWhilePausedAsync();
+                        return ec.WaitWhilePaused();
                     });
 
             var sut = new ExerciseProgramViewModelBuilder()
@@ -441,14 +441,14 @@
             var action = new ActionMock(MockBehavior.Loose);
 
             action
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
                     {
                         ec.AddProgress(TimeSpan.FromSeconds(4));
                         ec.IsPaused = true;
 
-                        return ec.WaitWhilePausedAsync();
+                        return ec.WaitWhilePaused();
                     });
 
             var sut = new ExerciseProgramViewModelBuilder()
@@ -485,14 +485,14 @@
                 .Return(TimeSpan.FromSeconds(10));
 
             action
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
                     {
                         ec.AddProgress(TimeSpan.FromSeconds(0.5));
                         ec.IsPaused = true;
 
-                        return ec.WaitWhilePausedAsync();
+                        return ec.WaitWhilePaused();
                     });
 
             var exercise1 = new ExerciseBuilder()
@@ -542,13 +542,13 @@
                 .Return(TimeSpan.FromSeconds(10));
 
             action
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
                     {
                         ec.IsPaused = true;
 
-                        return ec.WaitWhilePausedAsync();
+                        return ec.WaitWhilePaused();
                     });
 
             var exercise1 = new ExerciseBuilder()
@@ -598,13 +598,13 @@
                 .Return(TimeSpan.FromSeconds(10));
 
             action
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
                     {
                         ec.IsPaused = true;
 
-                        return ec.WaitWhilePausedAsync();
+                        return ec.WaitWhilePaused();
                     });
 
             var exercise1 = new ExerciseBuilder()
@@ -650,12 +650,12 @@
                 .Return(TimeSpan.FromSeconds(10));
 
             action
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
                     {
                         ec.IsPaused = true;
-                        return ec.WaitWhilePausedAsync();
+                        return ec.WaitWhilePaused();
                     });
 
             var exercise1 = new ExerciseBuilder()
@@ -731,6 +731,19 @@
             scheduler.AdvanceMinimal();
 
             Assert.False(sut.IsStarted);
+        }
+
+        [Fact]
+        public void foo()
+        {
+            var s = new System.Reactive.Subjects.BehaviorSubject<bool>(true);
+
+            Observable
+                .Return(3)
+                .TakeUntil(s)
+                .Subscribe(
+                    _ => System.Diagnostics.Debug.WriteLine("GOT VALUE"),
+                    () => System.Diagnostics.Debug.WriteLine("DONE"));
         }
     }
 }

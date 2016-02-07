@@ -38,20 +38,20 @@
         }
 
         [Fact]
-        public void execute_async_composes_the_appropriate_actions()
+        public void execute_composes_the_appropriate_actions()
         {
             var audioService = new AudioServiceMock();
             var delayService = new DelayServiceMock();
             var actionsPerformed = new List<string>();
 
             audioService
-                .When(x => x.PlayAsync(It.IsAny<string>()))
+                .When(x => x.Play(It.IsAny<string>()))
                 .Do<string>((resource) => actionsPerformed.Add("Played audio resource " + resource))
                 .Return(Observable.Return(Unit.Default));
 
             delayService
-                .When(x => x.DelayAsync(It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()))
-                .Do<TimeSpan, CancellationToken>((period, ct) => actionsPerformed.Add("Delayed for " + period))
+                .When(x => x.Delay(It.IsAny<TimeSpan>()))
+                .Do<TimeSpan>(period => actionsPerformed.Add("Delayed for " + period))
                 .Return(Observable.Return(Unit.Default));
 
             var sut = new MetronomeActionBuilder()
@@ -64,7 +64,9 @@
                 .WithMetronomeTick(new MetronomeTick(TimeSpan.FromMilliseconds(30), MetronomeTickType.None))
                 .Build();
 
-            sut.ExecuteAsync(new ExecutionContext());
+            sut
+                .Execute(new ExecutionContext())
+                .Subscribe();
 
             Assert.Equal(8, actionsPerformed.Count);
             Assert.Equal("Played audio resource MetronomeBell", actionsPerformed[0]);

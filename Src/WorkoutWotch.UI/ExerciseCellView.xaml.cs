@@ -42,32 +42,24 @@
 
                         this
                             .WhenAnyValue(x => x.ViewModel.IsActive)
-                            .Select(isActive => Observable.Defer(() => this.AnimateAsync(isActive)))
+                            .Select(isActive => Observable.Defer(() => this.Animate(isActive)))
                             .Concat()
                             .Subscribe()
                             .AddTo(disposables);
                     });
         }
 
-        private IObservable<Unit> AnimateAsync(bool isActive) =>
-            Observable
-                .Create<Unit>(
-                    async observer =>
-                    {
-                        var easing = isActive ? Easing.CubicOut : Easing.CubicIn;
+        private IObservable<Unit> Animate(bool isActive)
+        {
+            var easing = isActive ? Easing.CubicOut : Easing.CubicIn;
 
-                        await Observable
-                            .Merge(
-                                this.AnimateOpacityAsync(isActive),
-                                this.AnimateScaleAsync(isActive)
-                            );
+            return Observable
+                .Merge(
+                    this.AnimateOpacity(isActive),
+                    this.AnimateScale(isActive));
+        }
 
-                        observer.OnNext(Unit.Default);
-                        observer.OnCompleted();
-                    })
-                .RunAsync(CancellationToken.None);
-
-        private IObservable<Unit> AnimateOpacityAsync(bool isActive)
+        private IObservable<Unit> AnimateOpacity(bool isActive)
         {
             var easing = isActive ? Easing.CubicOut : Easing.CubicIn;
 
@@ -84,7 +76,7 @@
                 .Select(_ => Unit.Default);
         }
 
-        private IObservable<Unit> AnimateScaleAsync(bool isActive)
+        private IObservable<Unit> AnimateScale(bool isActive)
         {
             if (!isActive)
             {

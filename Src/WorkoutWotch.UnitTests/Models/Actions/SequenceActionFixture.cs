@@ -51,7 +51,7 @@
         }
 
         [Fact]
-        public void execute_async_executes_each_child_action()
+        public void execute_executes_each_child_action()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
             var action2 = new ActionMock(MockBehavior.Loose);
@@ -64,24 +64,24 @@
 
             using (var context = new ExecutionContext())
             {
-                sut.ExecuteAsync(context);
+                sut.Execute(context).Subscribe();
 
                 action1
-                    .Verify(x => x.ExecuteAsync(context))
+                    .Verify(x => x.Execute(context))
                     .WasCalledExactlyOnce();
 
                 action2
-                    .Verify(x => x.ExecuteAsync(context))
+                    .Verify(x => x.Execute(context))
                     .WasCalledExactlyOnce();
 
                 action3
-                    .Verify(x => x.ExecuteAsync(context))
+                    .Verify(x => x.Execute(context))
                     .WasCalledExactlyOnce();
             }
         }
 
         [Fact]
-        public void execute_async_executes_each_child_action_in_order()
+        public void execute_executes_each_child_action_in_order()
         {
             var childCount = 10;
             var childExecutionOrder = new int[childCount];
@@ -93,7 +93,7 @@
                     {
                         var childAction = new ActionMock(MockBehavior.Loose);
                         childAction
-                            .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                            .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                             .Do(() => childExecutionOrder[i] = Interlocked.Increment(ref executionOrder))
                             .Return(Observable.Return(Unit.Default));
                         return childAction;
@@ -106,7 +106,7 @@
 
             using (var context = new ExecutionContext())
             {
-                sut.ExecuteAsync(context);
+                sut.Execute(context).Subscribe();
 
                 for (var i = 0; i < childExecutionOrder.Length; ++i)
                 {
@@ -116,18 +116,18 @@
         }
 
         [Fact]
-        public void execute_async_skips_child_actions_that_are_shorter_than_the_skip_ahead()
+        public void execute_skips_child_actions_that_are_shorter_than_the_skip_ahead()
         {
             var action1 = new ActionMock();
             var action2 = new ActionMock();
             var action3 = new ActionMock(MockBehavior.Loose);
 
             action1
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Throw();
 
             action2
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Throw();
 
             action1
@@ -150,27 +150,27 @@
 
             using (var context = new ExecutionContext(TimeSpan.FromSeconds(11)))
             {
-                sut.ExecuteAsync(context);
+                sut.Execute(context).Subscribe();
 
                 action3
-                    .Verify(x => x.ExecuteAsync(context))
+                    .Verify(x => x.Execute(context))
                     .WasCalledExactlyOnce();
             }
         }
 
         [Fact]
-        public void execute_async_skips_child_actions_that_are_shorter_than_the_skip_ahead_even_if_the_context_is_paused()
+        public void execute_skips_child_actions_that_are_shorter_than_the_skip_ahead_even_if_the_context_is_paused()
         {
             var action1 = new ActionMock();
             var action2 = new ActionMock();
             var action3 = new ActionMock(MockBehavior.Loose);
 
             action1
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Throw();
 
             action2
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Throw();
 
             action1
@@ -194,58 +194,23 @@
             using (var context = new ExecutionContext(TimeSpan.FromSeconds(11)))
             {
                 context.IsPaused = true;
-                sut.ExecuteAsync(context);
+                sut.Execute(context).Subscribe();
 
                 action3
-                    .Verify(x => x.ExecuteAsync(context))
+                    .Verify(x => x.Execute(context))
                     .WasCalledExactlyOnce();
             }
         }
 
         [Fact]
-        public void execute_async_stops_executing_if_the_context_is_cancelled()
-        {
-            var action1 = new ActionMock(MockBehavior.Loose);
-            var action2 = new ActionMock(MockBehavior.Loose);
-            var action3 = new ActionMock(MockBehavior.Loose);
-            var sut = new SequenceActionBuilder()
-                .WithChild(action1)
-                .WithChild(action2)
-                .WithChild(action3)
-                .Build();
-
-            using (var context = new ExecutionContext())
-            {
-                action2
-                    .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
-                    .Do(() => context.Cancel())
-                    .Return(Observable.Return(Unit.Default));
-
-                Assert.ThrowsAsync<OperationCanceledException>(async () => await sut.ExecuteAsync(context));
-
-                action1
-                    .Verify(x => x.ExecuteAsync(context))
-                    .WasCalledExactlyOnce();
-
-                action2
-                    .Verify(x => x.ExecuteAsync(context))
-                    .WasCalledExactlyOnce();
-
-                action3
-                    .Verify(x => x.ExecuteAsync(context))
-                    .WasNotCalled();
-            }
-        }
-
-        [Fact]
-        public void execute_async_completes_even_if_there_are_no_child_actions()
+        public void execute_completes_even_if_there_are_no_child_actions()
         {
             var sut = new SequenceActionBuilder()
                 .Build();
 
             var completed = false;
             sut
-                .ExecuteAsync(new ExecutionContext())
+                .Execute(new ExecutionContext())
                 .Subscribe(_ => completed = true);
 
             Assert.True(completed);

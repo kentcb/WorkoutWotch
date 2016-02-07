@@ -22,16 +22,14 @@
 
         public TimeSpan Duration => TimeSpan.Zero;
 
-        public IObservable<Unit> ExecuteAsync(ExecutionContext context)
+        public IObservable<Unit> Execute(ExecutionContext context)
         {
             Ensure.ArgumentNotNull(context, nameof(context));
-            context.CancellationToken.ThrowIfCancellationRequested();
 
             return context
-                .WaitWhilePausedAsync()
-                .SelectMany(_ => this.audioService.PlayAsync(this.audioName))
-                .FirstAsync()
-                .RunAsync(context.CancellationToken);
+                .WaitWhilePaused()
+                .SelectMany(_ => this.audioService.Play(this.audioName))
+                .FirstAsync();
         }
     }
 }

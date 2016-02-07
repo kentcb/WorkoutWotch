@@ -61,7 +61,7 @@
 
             var documentsFromCache = this
                 .stateService
-                .GetAsync<string>(exerciseProgramsCacheKey)
+                .Get<string>(exerciseProgramsCacheKey)
                 .Where(x => x != null)
                 .Select(x => new DocumentSourceWith<string>(DocumentSource.Cache, x));
 
@@ -126,7 +126,7 @@
 
             safeDocuments
                 .Where(x => x.Source == DocumentSource.Service)
-                .SelectMany(x => this.stateService.SetAsync(exerciseProgramsCacheKey, x.Item))
+                .SelectMany(x => this.stateService.Set(exerciseProgramsCacheKey, x.Item))
                 .Subscribe()
                 .AddTo(this.disposables);
 

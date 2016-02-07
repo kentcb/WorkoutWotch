@@ -3,7 +3,6 @@
     using System;
     using System.Reactive;
     using System.Reactive.Linq;
-    using System.Threading;
     using PCLMock;
 
     public sealed partial class DelayServiceMock
@@ -11,7 +10,7 @@
         partial void ConfigureLooseBehavior()
         {
             this
-                .When(x => x.DelayAsync(It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()))
+                .When(x => x.Delay(It.IsAny<TimeSpan>()))
                 .Return(Observable.Return(Unit.Default));
         }
     }

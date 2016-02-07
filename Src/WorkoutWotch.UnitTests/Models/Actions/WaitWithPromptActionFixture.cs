@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Reactive;
     using System.Reactive.Linq;
-    using System.Threading;
     using Builders;
     using PCLMock;
     using WorkoutWotch.Models;
@@ -29,20 +28,20 @@
         }
 
         [Fact]
-        public void execute_async_composes_actions_appropriately_for_long_durations()
+        public void execute_composes_actions_appropriately_for_long_durations()
         {
             var delayService = new DelayServiceMock();
             var speechService = new SpeechServiceMock();
             var performedActions = new List<string>();
 
             delayService
-                .When(x => x.DelayAsync(It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()))
-                .Do<TimeSpan, CancellationToken>((duration, ct) => performedActions.Add("Delayed for " + duration))
+                .When(x => x.Delay(It.IsAny<TimeSpan>()))
+                .Do<TimeSpan>(duration => performedActions.Add("Delayed for " + duration))
                 .Return(Observable.Return(Unit.Default));
 
             speechService
-                .When(x => x.SpeakAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .Do<string, CancellationToken>((speechText, cty) => performedActions.Add("Saying '" + speechText + "'"))
+                .When(x => x.Speak(It.IsAny<string>()))
+                .Do<string>(speechText => performedActions.Add("Saying '" + speechText + "'"))
                 .Return(Observable.Return(Unit.Default));
 
             var sut = new WaitWithPromptActionBuilder()
@@ -52,7 +51,9 @@
                 .WithPromptSpeechText("break")
                 .Build();
 
-            sut.ExecuteAsync(new ExecutionContext());
+            sut
+                .Execute(new ExecutionContext())
+                .Subscribe();
 
             Assert.Equal(7, performedActions.Count);
             Assert.Equal("Saying 'break'", performedActions[0]);
@@ -65,20 +66,20 @@
         }
 
         [Fact]
-        public void execute_async_composes_actions_appropriately_for_short_durations()
+        public void execute_composes_actions_appropriately_for_short_durations()
         {
             var delayService = new DelayServiceMock();
             var speechService = new SpeechServiceMock();
             var performedActions = new List<string>();
 
             delayService
-                .When(x => x.DelayAsync(It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()))
-                .Do<TimeSpan, CancellationToken>((duration, ct) => performedActions.Add("Delayed for " + duration))
+                .When(x => x.Delay(It.IsAny<TimeSpan>()))
+                .Do<TimeSpan>(duration => performedActions.Add("Delayed for " + duration))
                 .Return(Observable.Return(Unit.Default));
 
             speechService
-                .When(x => x.SpeakAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .Do<string, CancellationToken>((speechText, cty) => performedActions.Add("Saying '" + speechText + "'"))
+                .When(x => x.Speak(It.IsAny<string>()))
+                .Do<string>(speechText => performedActions.Add("Saying '" + speechText + "'"))
                 .Return(Observable.Return(Unit.Default));
 
             var sut = new WaitWithPromptActionBuilder()
@@ -88,7 +89,9 @@
                 .WithPromptSpeechText("break")
                 .Build();
 
-            sut.ExecuteAsync(new ExecutionContext());
+            sut
+                .Execute(new ExecutionContext())
+                .Subscribe();
 
             Assert.Equal(2, performedActions.Count);
             Assert.Equal("Saying 'break'", performedActions[0]);
@@ -99,7 +102,7 @@
         [InlineData("hello")]
         [InlineData("hello world")]
         [InlineData("goodbye")]
-        public void execute_async_uses_the_specified_prompt_speech_text(string promptSpeechText)
+        public void execute_uses_the_specified_prompt_speech_text(string promptSpeechText)
         {
             var speechService = new SpeechServiceMock(MockBehavior.Loose);
 
@@ -109,10 +112,12 @@
                 .WithPromptSpeechText(promptSpeechText)
                 .Build();
 
-            sut.ExecuteAsync(new ExecutionContext());
+            sut
+                .Execute(new ExecutionContext())
+                .Subscribe();
 
             speechService
-                .Verify(x => x.SpeakAsync(promptSpeechText, It.IsAny<CancellationToken>()))
+                .Verify(x => x.Speak(promptSpeechText))
                 .WasCalledExactlyOnce();
         }
     }

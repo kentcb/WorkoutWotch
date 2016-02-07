@@ -6,6 +6,7 @@ namespace WorkoutWotch.Models
     using System.Linq;
     using System.Reactive;
     using System.Reactive.Linq;
+    using System.Threading;
     using Utility;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Models.Events;
@@ -59,7 +60,7 @@ namespace WorkoutWotch.Models
 
         public TimeSpan Duration => this.duration;
 
-        public IObservable<Unit> ExecuteAsync(ExecutionContext context)
+        public IObservable<Unit> Execute(ExecutionContext context)
         {
             Ensure.ArgumentNotNull(context, nameof(context));
 
@@ -82,9 +83,8 @@ namespace WorkoutWotch.Models
                                 }
 
                                 this.logger.Debug("Executing action {0} for event {1}.", action, @event);
-                                return action.ExecuteAsync(context);
-                            }))
-                .RunAsync(context.CancellationToken);
+                                return action.Execute(context);
+                            }));
         }
 
         private IEnumerable<IEvent> GetEvents(ExecutionContext executionContext)

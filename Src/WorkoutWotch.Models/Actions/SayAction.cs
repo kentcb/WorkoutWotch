@@ -25,16 +25,14 @@
 
         public string SpeechText => this.speechText;
 
-        public IObservable<Unit> ExecuteAsync(ExecutionContext context)
+        public IObservable<Unit> Execute(ExecutionContext context)
         {
             Ensure.ArgumentNotNull(context, nameof(context));
-            context.CancellationToken.ThrowIfCancellationRequested();
 
             return context
-                .WaitWhilePausedAsync()
-                .SelectMany(_ => this.speechService.SpeakAsync(this.speechText, context.CancellationToken))
-                .FirstAsync()
-                .RunAsync(CancellationToken.None);
+                .WaitWhilePaused()
+                .SelectMany(_ => this.speechService.Speak(this.speechText))
+                .FirstAsync();
         }
     }
 }

@@ -23,7 +23,7 @@
 
         public TimeSpan Duration => this.delay;
 
-        public IObservable<Unit> ExecuteAsync(ExecutionContext context)
+        public IObservable<Unit> Execute(ExecutionContext context)
         {
             Ensure.ArgumentNotNull(context, nameof(context));
 
@@ -45,8 +45,9 @@
                         var delayFor = MathExt.Min(remainingDelay, maximumDelayTime);
                         return r - delayFor;
                     },
-                    r => r)
-                .Publish();
+                    r => r);
+                //.Publish();
+                //.RefCount();
             var nextRemaining = remaining
                 .Skip(1)
                 .Concat(Observable.Return(TimeSpan.Zero));
@@ -57,7 +58,7 @@
             var result = Observable
                 .Concat(
                     delays
-                        .SelectMany(delay => context.WaitWhilePausedAsync().Select(_ => delay))
+                        .SelectMany(delay => context.WaitWhilePaused().Select(_ => delay))
                         .Select(
                             delay =>
                                 Observable
@@ -65,14 +66,13 @@
                                         () =>
                                             this
                                                 .delayService
-                                                .DelayAsync(delay, context.CancellationToken)
+                                                .Delay(delay)
                                                 .Select(_ => delay))))
                 .Do(delay => context.AddProgress(delay))
                 .Select(_ => Unit.Default)
-                .DefaultIfEmpty()
-                .RunAsync(context.CancellationToken);
+                .DefaultIfEmpty();
 
-            remaining.Connect();
+            //remaining.Connect();
 
             return result;
         }

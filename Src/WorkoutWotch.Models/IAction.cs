@@ -10,6 +10,6 @@
             get;
         }
 
-        IObservable<Unit> ExecuteAsync(ExecutionContext context);
+        IObservable<Unit> Execute(ExecutionContext context);
     }
 }

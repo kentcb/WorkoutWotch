@@ -105,11 +105,11 @@
             var stateService = new StateServiceMock(MockBehavior.Loose);
 
             stateService
-                .When(x => x.GetAsync<string>(It.IsAny<string>()))
+                .When(x => x.Get<string>(It.IsAny<string>()))
                 .Return(Observable.Return(cachedDocument));
 
             stateService
-                .When(x => x.SetAsync<string>(It.IsAny<string>(), It.IsAny<string>()))
+                .When(x => x.Set<string>(It.IsAny<string>(), It.IsAny<string>()))
                 .Return(Observable.Return(Unit.Default));
 
             return this.WithStateService(stateService);

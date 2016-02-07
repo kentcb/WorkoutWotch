@@ -79,7 +79,7 @@
         }
 
         [Fact]
-        public void execute_async_completes_even_if_there_are_no_exercises()
+        public void execute_completes_even_if_there_are_no_exercises()
         {
             var sut = new ExerciseProgramBuilder()
                 .Build();
@@ -88,7 +88,7 @@
             {
                 var completed = false;
                 sut
-                    .ExecuteAsync(executionContext)
+                    .Execute(executionContext)
                     .Subscribe(_ => completed = true);
 
                 Assert.True(completed);
@@ -96,7 +96,7 @@
         }
 
         [Fact]
-        public void execute_async_executes_each_exercise()
+        public void execute_executes_each_exercise()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
             var action2 = new ActionMock(MockBehavior.Loose);
@@ -110,20 +110,20 @@
 
             using (var executionContext = new ExecutionContext())
             {
-                sut.ExecuteAsync(executionContext);
+                sut.Execute(executionContext).Subscribe();
 
                 action1
-                    .Verify(x => x.ExecuteAsync(executionContext))
+                    .Verify(x => x.Execute(executionContext))
                     .WasCalledExactlyOnce();
 
                 action2
-                    .Verify(x => x.ExecuteAsync(executionContext))
+                    .Verify(x => x.Execute(executionContext))
                     .WasCalledExactlyOnce();
             }
         }
 
         [Fact]
-        public void execute_async_skips_exercises_that_are_shorter_than_the_skip_ahead()
+        public void execute_skips_exercises_that_are_shorter_than_the_skip_ahead()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
             var action2 = new ActionMock(MockBehavior.Loose);
@@ -142,11 +142,11 @@
                 .Return(TimeSpan.FromSeconds(5));
 
             action1
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Throw();
 
             action2
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Throw();
 
             var sut = new ExerciseProgramBuilder()
@@ -160,10 +160,10 @@
 
             using (var executionContext = new ExecutionContext(TimeSpan.FromSeconds(23)))
             {
-                sut.ExecuteAsync(executionContext);
+                sut.Execute(executionContext).Subscribe();
 
                 action3
-                    .Verify(x => x.ExecuteAsync(executionContext))
+                    .Verify(x => x.Execute(executionContext))
                     .WasCalledExactlyOnce();
             }
         }

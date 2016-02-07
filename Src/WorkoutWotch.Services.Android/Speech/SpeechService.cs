@@ -24,7 +24,7 @@ namespace WorkoutWotch.Services.Android.Speech
             this.inFlightSpeech = new ConcurrentDictionary<int, AsyncSubject<Unit>>();
         }
 
-        public IObservable<Unit> SpeakAsync(string speechString, CancellationToken cancellationToken = default(CancellationToken))
+        public IObservable<Unit> Speak(string speechString)
         {
             var id = Interlocked.Increment(ref this.nextId);
             var result = new AsyncSubject<Unit>();

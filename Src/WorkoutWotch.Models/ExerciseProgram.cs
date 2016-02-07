@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Reactive;
     using System.Reactive.Linq;
+    using System.Threading;
     using Utility;
     using WorkoutWotch.Services.Contracts.Logger;
 
@@ -38,7 +39,7 @@
 
         public IImmutableList<Exercise> Exercises => this.exercises;
 
-        public IObservable<Unit> ExecuteAsync(ExecutionContext context)
+        public IObservable<Unit> Execute(ExecutionContext context)
         {
             Ensure.ArgumentNotNull(context, nameof(context));
 
@@ -57,10 +58,9 @@
                                 }
 
                                 this.logger.Debug("Executing exercise '{0}'.", exercise.Name);
-                                return exercise.ExecuteAsync(context);
+                                return exercise.Execute(context);
                             }))
-                .DefaultIfEmpty()
-                .RunAsync(context.CancellationToken);
+                .DefaultIfEmpty();
         }
     }
 }

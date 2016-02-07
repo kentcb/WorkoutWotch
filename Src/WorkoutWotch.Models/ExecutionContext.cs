@@ -5,15 +5,13 @@ namespace WorkoutWotch.Models
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
-    using System.Threading;
     using ReactiveUI;
     using WorkoutWotch.Utility;
 
     public sealed class ExecutionContext : DisposableReactiveObject
     {
         private readonly CompositeDisposable disposables;
-        private readonly CancellationTokenSource cancellationTokenSource;
-        private readonly Subject<Unit> cancelRequested;
+        private readonly BehaviorSubject<bool> cancelRequested;
         private readonly Subject<TimeSpan> progressDeltas;
         private bool isCancelled;
         private TimeSpan progress;
@@ -27,22 +25,15 @@ namespace WorkoutWotch.Models
         public ExecutionContext(TimeSpan skipAhead = default(TimeSpan))
         {
             this.disposables = new CompositeDisposable();
-            this.cancellationTokenSource = new CancellationTokenSource()
-                .AddTo(this.disposables);
-            this.cancelRequested = new Subject<Unit>()
+            this.cancelRequested = new BehaviorSubject<bool>(false)
                 .AddTo(this.disposables);
             this.progressDeltas = new Subject<TimeSpan>()
                 .AddTo(this.disposables);
 
             this
                 .cancelRequested
-                .Subscribe(_ => this.IsCancelled = true)
-                .AddTo(this.disposables);
-
-            this
-                .WhenAnyValue(x => x.IsCancelled)
                 .Where(x => x)
-                .Subscribe(_ => this.cancellationTokenSource.Cancel())
+                .Subscribe(_ => this.IsCancelled = true)
                 .AddTo(this.disposables);
 
             this
@@ -66,8 +57,6 @@ namespace WorkoutWotch.Models
                 .Subscribe(x => this.SkipAhead = x)
                 .AddTo(this.disposables);
         }
-
-        public CancellationToken CancellationToken => this.cancellationTokenSource.Token;
 
         public bool IsCancelled
         {
@@ -117,15 +106,15 @@ namespace WorkoutWotch.Models
             private set { this.RaiseAndSetIfChanged(ref this.skipAhead, value); }
         }
 
-        public IObservable<Unit> WaitWhilePausedAsync() =>
+        public IObservable<Unit> WaitWhilePaused() =>
             this.WhenAnyValue(x => x.IsPaused)
-                .Where(x => !x)
+                .CombineLatest(this.cancelRequested, (isPaused, cancelRequested) => new { IsPaused = isPaused, CancelRequested = cancelRequested })
+                .Where(x => !x.CancelRequested && !x.IsPaused)
                 .FirstAsync()
-                .Select(_ => Unit.Default)
-                .RunAsync(this.CancellationToken);
+                .Select(_ => Unit.Default);
 
         public void Cancel() =>
-            this.cancelRequested.OnNext(Unit.Default);
+            this.cancelRequested.OnNext(true);
 
         internal void AddProgress(TimeSpan progressDelta) =>
             this.progressDeltas.OnNext(progressDelta);

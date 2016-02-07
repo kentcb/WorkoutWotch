@@ -3,7 +3,6 @@
     using System;
     using System.Linq;
     using System.Reactive.Linq;
-    using System.Threading;
     using Builders;
     using global::ReactiveUI;
     using PCLMock;
@@ -106,7 +105,7 @@
         }
 
         [Fact]
-        public void execute_async_completes_even_if_there_are_no_actions()
+        public void execute_completes_even_if_there_are_no_actions()
         {
             var sut = new ExerciseBuilder()
                 .Build();
@@ -115,7 +114,7 @@
             {
                 var completed = false;
                 sut
-                    .ExecuteAsync(executionContext)
+                    .Execute(executionContext)
                     .Subscribe(_ => completed = true);
 
                 Assert.True(completed);
@@ -123,7 +122,7 @@
         }
 
         [Fact]
-        public void execute_async_executes_all_appropriate_actions()
+        public void execute_executes_all_appropriate_actions()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
             var action2 = new ActionMock(MockBehavior.Loose);
@@ -154,24 +153,24 @@
 
             using (var executionContext = new ExecutionContext())
             {
-                sut.ExecuteAsync(executionContext);
+                sut.Execute(executionContext).Subscribe();
 
                 action1
-                    .Verify(x => x.ExecuteAsync(executionContext))
+                    .Verify(x => x.Execute(executionContext))
                     .WasCalledExactlyOnce();
 
                 action2
-                    .Verify(x => x.ExecuteAsync(executionContext))
+                    .Verify(x => x.Execute(executionContext))
                     .WasCalledExactly(times: 6);
 
                 action3
-                    .Verify(x => x.ExecuteAsync(executionContext))
+                    .Verify(x => x.Execute(executionContext))
                     .WasCalledExactly(times: 2);
             }
         }
 
         [Fact]
-        public void execute_async_does_not_skip_zero_duration_actions()
+        public void execute_does_not_skip_zero_duration_actions()
         {
             var action = new ActionMock(MockBehavior.Loose);
             var eventMatcher = new EventMatcherMock();
@@ -186,16 +185,16 @@
 
             using (var executionContext = new ExecutionContext())
             {
-                sut.ExecuteAsync(executionContext);
+                sut.Execute(executionContext).Subscribe();
 
                 action
-                    .Verify(x => x.ExecuteAsync(executionContext))
+                    .Verify(x => x.Execute(executionContext))
                     .WasCalledExactlyOnce();
             }
         }
 
         [Fact]
-        public void execute_async_skips_actions_that_are_shorter_than_the_skip_ahead()
+        public void execute_skips_actions_that_are_shorter_than_the_skip_ahead()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
             var action2 = new ActionMock(MockBehavior.Loose);
@@ -217,11 +216,11 @@
                 .Return(TimeSpan.FromSeconds(1));
 
             action1
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Throw();
 
             action2
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Throw();
 
             eventMatcher1
@@ -244,16 +243,16 @@
 
             using (var executionContext = new ExecutionContext(TimeSpan.FromSeconds(13)))
             {
-                sut.ExecuteAsync(executionContext);
+                sut.Execute(executionContext).Subscribe();
 
                 action3
-                    .Verify(x => x.ExecuteAsync(executionContext))
+                    .Verify(x => x.Execute(executionContext))
                     .WasCalledExactlyOnce();
             }
         }
 
         [Fact]
-        public void execute_async_skips_actions_that_are_shorter_than_the_skip_ahead_even_if_the_context_is_paused()
+        public void execute_skips_actions_that_are_shorter_than_the_skip_ahead_even_if_the_context_is_paused()
         {
             var action1 = new ActionMock(MockBehavior.Loose);
             var action2 = new ActionMock(MockBehavior.Loose);
@@ -275,11 +274,11 @@
                 .Return(TimeSpan.FromSeconds(1));
 
             action1
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Throw();
 
             action2
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Throw();
 
             eventMatcher1
@@ -303,28 +302,28 @@
             using (var executionContext = new ExecutionContext(TimeSpan.FromSeconds(13)))
             {
                 executionContext.IsPaused = true;
-                sut.ExecuteAsync(executionContext);
+                sut.Execute(executionContext).Subscribe();
 
                 action3
-                    .Verify(x => x.ExecuteAsync(executionContext))
+                    .Verify(x => x.Execute(executionContext))
                     .WasCalledExactlyOnce();
             }
         }
 
         [Fact]
-        public void execute_async_updates_the_current_exercise_in_the_context()
+        public void execute_updates_the_current_exercise_in_the_context()
         {
             var sut = new ExerciseBuilder()
                 .Build();
             var context = new ExecutionContext();
 
-            sut.ExecuteAsync(context);
+            sut.Execute(context).Subscribe();
 
             Assert.Same(sut, context.CurrentExercise);
         }
 
         [Fact]
-        public void execute_async_updates_the_current_set_in_the_context()
+        public void execute_updates_the_current_set_in_the_context()
         {
             var sut = new ExerciseBuilder()
                 .WithSetCount(3)
@@ -335,7 +334,7 @@
                 .Select(x => x.Value)
                 .CreateCollection();
 
-            sut.ExecuteAsync(context);
+            sut.Execute(context).Subscribe();
 
             Assert.Equal(3, currentSets.Count);
             Assert.Equal(1, currentSets[0]);
@@ -344,7 +343,7 @@
         }
 
         [Fact]
-        public void execute_async_updates_the_current_repetitions_in_the_context()
+        public void execute_updates_the_current_repetitions_in_the_context()
         {
             var sut = new ExerciseBuilder()
                 .WithRepetitionCount(5)
@@ -355,7 +354,7 @@
                 .Select(x => x.Value)
                 .CreateCollection();
 
-            sut.ExecuteAsync(context);
+            sut.Execute(context).Subscribe();
 
             Assert.Equal(5, currentRepetitions.Count);
             Assert.Equal(1, currentRepetitions[0]);
@@ -366,7 +365,7 @@
         }
 
         [Fact]
-        public void execute_async_says_exercise_name_first()
+        public void execute_says_exercise_name_first()
         {
             var speechService = new SpeechServiceMock(MockBehavior.Loose);
             var sut = new ExerciseBuilder()
@@ -374,10 +373,10 @@
                 .WithSpeechService(speechService)
                 .Build();
 
-            sut.ExecuteAsync(new ExecutionContext());
+            sut.Execute(new ExecutionContext()).Subscribe();
 
             speechService
-                .Verify(x => x.SpeakAsync("some name", It.IsAny<CancellationToken>()))
+                .Verify(x => x.Speak("some name"))
                 .WasCalledExactlyOnce();
         }
     }

@@ -3,7 +3,6 @@ namespace WorkoutWotch.Services.iOS.Speech
     using System;
     using System.Reactive;
     using System.Reactive.Linq;
-    using System.Threading;
     using AVFoundation;
     using WorkoutWotch.Services.Contracts.Speech;
     using WorkoutWotch.Utility;
@@ -12,7 +11,7 @@ namespace WorkoutWotch.Services.iOS.Speech
     {
         private static readonly AVSpeechSynthesisVoice voice = AVSpeechSynthesisVoice.FromLanguage("en-AU");
 
-        public IObservable<Unit> SpeakAsync(string speechString, CancellationToken cancellationToken = default(CancellationToken))
+        public IObservable<Unit> Speak(string speechString)
         {
             Ensure.ArgumentNotNull(speechString, nameof(speechString));
 
@@ -35,27 +34,26 @@ namespace WorkoutWotch.Services.iOS.Speech
                         synthesizer.Dispose();
                     });
 
-            if (cancellationToken.CanBeCanceled)
-            {
-                cancellationToken.Register(() => synthesizer.StopSpeaking(AVSpeechBoundary.Immediate));
+            //if (cancellationToken.CanBeCanceled)
+            //{
+            //    cancellationToken.Register(() => synthesizer.StopSpeaking(AVSpeechBoundary.Immediate));
 
-                Observable
-                    .FromEventPattern<AVSpeechSynthesizerUteranceEventArgs>(x => synthesizer.DidCancelSpeechUtterance += x, x => synthesizer.DidCancelSpeechUtterance -= x)
-                    .Select(_ => Unit.Default)
-                    .Subscribe(
-                        _ =>
-                        {
-                            utterance.Dispose();
-                            synthesizer.Dispose();
-                        });
-            }
+            //    Observable
+            //        .FromEventPattern<AVSpeechSynthesizerUteranceEventArgs>(x => synthesizer.DidCancelSpeechUtterance += x, x => synthesizer.DidCancelSpeechUtterance -= x)
+            //        .Select(_ => Unit.Default)
+            //        .Subscribe(
+            //            _ =>
+            //            {
+            //                utterance.Dispose();
+            //                synthesizer.Dispose();
+            //            });
+            //}
 
             synthesizer.SpeakUtterance(utterance);
             finishedUtterance.Connect();
 
             return finishedUtterance
-                .FirstAsync()
-                .RunAsync(cancellationToken);
+                .FirstAsync();
         }
     }
 }

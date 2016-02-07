@@ -24,13 +24,13 @@
 
         public TimeSpan Duration => this.innerAction.Duration;
 
-        public IObservable<Unit> ExecuteAsync(ExecutionContext context)
+        public IObservable<Unit> Execute(ExecutionContext context)
         {
             Ensure.ArgumentNotNull(context, nameof(context));
 
             return this
                 .innerAction
-                .ExecuteAsync(context);
+                .Execute(context);
         }
 
         private static IEnumerable<IAction> GetInnerActions(IDelayService delayService, ISpeechService speechService, TimeSpan duration, string promptSpeechText)

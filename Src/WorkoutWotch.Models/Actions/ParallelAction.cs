@@ -30,7 +30,7 @@
 
         public IImmutableList<IAction> Children =>  this.children;
 
-        public IObservable<Unit> ExecuteAsync(ExecutionContext context)
+        public IObservable<Unit> Execute(ExecutionContext context)
         {
             Ensure.ArgumentNotNull(context, nameof(context));
 
@@ -51,7 +51,7 @@
 
             // only the longest-running child gets the real execution context. The other actions get a shadowed context so that progress does not compound incorrectly
             var childExecutions = childrenToExecute
-                .Select((action, index) => action.ExecuteAsync(index == 0 ? context : shadowedContext))
+                .Select((action, index) => action.Execute(index == 0 ? context : shadowedContext))
                 .ToList();
 
             return Observable

@@ -9,7 +9,7 @@
         partial void ConfigureLooseBehavior()
         {
             this
-                .When(x => x.PlayAsync(It.IsAny<string>()))
+                .When(x => x.Play(It.IsAny<string>()))
                 .Return(Observable.Return(Unit.Default));
         }
     }

@@ -29,7 +29,7 @@
 
         public IImmutableList<IAction> Children =>  this.children;
 
-        public IObservable<Unit> ExecuteAsync(ExecutionContext context)
+        public IObservable<Unit> Execute(ExecutionContext context)
         {
             Ensure.ArgumentNotNull(context, nameof(context));
 
@@ -41,7 +41,6 @@
                         .Select(
                             _ =>
                             {
-                                context.CancellationToken.ThrowIfCancellationRequested();
                                 var execute = true;
 
                                 if (context.SkipAhead > TimeSpan.Zero && context.SkipAhead >= child.Duration)
@@ -57,12 +56,11 @@
                                 };
                             })
                         .Where(x => x.Execute)
-                        .SelectMany(x => x.Child.ExecuteAsync(context)));
+                        .SelectMany(x => x.Child.Execute(context)));
 
             return Observable
                 .Concat(childExecutions)
-                .DefaultIfEmpty()
-                .RunAsync(context.CancellationToken);
+                .DefaultIfEmpty();
         }
     }
 }

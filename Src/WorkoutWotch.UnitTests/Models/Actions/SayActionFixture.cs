@@ -1,7 +1,6 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Actions
 {
     using System;
-    using System.Threading;
     using Builders;
     using PCLMock;
     using WorkoutWotch.Models;
@@ -20,21 +19,7 @@
         }
 
         [Fact]
-        public void execute_async_cancels_if_context_is_cancelled()
-        {
-            var sut = new SayActionBuilder()
-                .Build();
-
-            using (var context = new ExecutionContext())
-            {
-                context.Cancel();
-
-                Assert.Throws<OperationCanceledException>(() => sut.ExecuteAsync(context));
-            }
-        }
-
-        [Fact]
-        public void execute_async_pauses_if_context_is_paused()
+        public void execute_pauses_if_context_is_paused()
         {
             var speechService = new SpeechServiceMock(MockBehavior.Loose);
             var sut = new SayActionBuilder()
@@ -45,10 +30,10 @@
             {
                 context.IsPaused = true;
 
-                sut.ExecuteAsync(context);
+                sut.Execute(context).Subscribe();
 
                 speechService
-                    .Verify(x => x.SpeakAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                    .Verify(x => x.Speak(It.IsAny<string>()))
                     .WasNotCalled();
             }
         }
@@ -57,7 +42,7 @@
         [InlineData("hello")]
         [InlineData("hello, world")]
         [InlineData("you've got nothing to say. nothing but the one thing.")]
-        public void execute_async_passes_the_speech_text_onto_the_speech_service(string speechText)
+        public void execute_passes_the_speech_text_onto_the_speech_service(string speechText)
         {
             var speechService = new SpeechServiceMock(MockBehavior.Loose);
             var sut = new SayActionBuilder()
@@ -65,10 +50,10 @@
                 .WithSpeechText(speechText)
                 .Build();
 
-            sut.ExecuteAsync(new ExecutionContext());
+            sut.Execute(new ExecutionContext()).Subscribe();
 
             speechService
-                .Verify(x => x.SpeakAsync(speechText, It.IsAny<CancellationToken>()))
+                .Verify(x => x.Speak(speechText))
                 .WasCalledExactlyOnce();
         }
     }

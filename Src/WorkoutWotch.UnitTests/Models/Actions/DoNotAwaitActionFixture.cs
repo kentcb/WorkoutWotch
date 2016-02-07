@@ -31,12 +31,12 @@
         }
 
         [Fact]
-        public void execute_async_does_not_wait_for_inner_actions_execution_to_complete_before_itself_completing()
+        public void execute_does_not_wait_for_inner_actions_execution_to_complete_before_itself_completing()
         {
             var action = new ActionMock();
 
             action
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Return(Observable.Never<Unit>());
 
             var sut = new DoNotAwaitActionBuilder()
@@ -45,7 +45,7 @@
 
             var completed = false;
             sut
-                .ExecuteAsync(new ExecutionContext())
+                .Execute(new ExecutionContext())
                 .Subscribe(_ => completed = true);
 
             Assert.True(completed);
@@ -54,7 +54,7 @@
 #if DEBUG
 
         [Fact]
-        public void execute_async_logs_any_error_raised_by_the_inner_action()
+        public void execute_logs_any_error_raised_by_the_inner_action()
         {
             var waitHandle = new ManualResetEventSlim();
             var logger = new LoggerMock(MockBehavior.Loose);
@@ -70,7 +70,7 @@
                 .Return(logger);
 
             action
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Return(Observable.Throw<Unit>(new InvalidOperationException("Something bad happened")));
 
             var sut = new DoNotAwaitActionBuilder()
@@ -78,7 +78,7 @@
                 .WithInnerAction(action)
                 .Build();
 
-            sut.ExecuteAsync(new ExecutionContext());
+            sut.Execute(new ExecutionContext());
 
             Assert.True(waitHandle.Wait(TimeSpan.FromSeconds(3)));
         }

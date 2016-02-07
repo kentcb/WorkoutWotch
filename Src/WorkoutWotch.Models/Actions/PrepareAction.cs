@@ -16,9 +16,9 @@
 
         public TimeSpan Duration => this.innerAction.Duration;
 
-        public IObservable<Unit> ExecuteAsync(ExecutionContext context) =>
+        public IObservable<Unit> Execute(ExecutionContext context) =>
             this
                 .innerAction
-                .ExecuteAsync(context);
+                .Execute(context);
     }
 }

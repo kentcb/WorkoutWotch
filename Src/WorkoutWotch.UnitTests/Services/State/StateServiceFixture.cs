@@ -14,7 +14,7 @@
     public class StateServiceFixture
     {
         [Fact]
-        public void get_async_forwards_the_call_onto_the_blob_cache()
+        public void get_forwards_the_call_onto_the_blob_cache()
         {
             var blobCache = new BlobCacheMock();
 
@@ -26,7 +26,7 @@
                 .WithBlobCache(blobCache)
                 .Build();
 
-            sut.GetAsync<string>("some key");
+            sut.Get<string>("some key");
 
             // we don't verify the specific key because Akavache does some key manipulation internally
             blobCache
@@ -35,7 +35,7 @@
         }
 
         [Fact]
-        public void set_async_forwards_the_call_onto_the_blob_cache()
+        public void set_forwards_the_call_onto_the_blob_cache()
         {
             var blobCache = new BlobCacheMock(MockBehavior.Loose);
 
@@ -47,7 +47,7 @@
                 .WithBlobCache(blobCache)
                 .Build();
 
-            sut.SetAsync<string>("some key", "some value");
+            sut.Set<string>("some key", "some value");
 
             // we don't verify the specific key because Akavache does some key manipulation internally
             blobCache
@@ -56,7 +56,7 @@
         }
 
         [Fact]
-        public void remove_async_forwards_the_call_onto_the_blob_cache()
+        public void remove_forwards_the_call_onto_the_blob_cache()
         {
             var blobCache = new BlobCacheMock(MockBehavior.Loose);
 
@@ -68,7 +68,7 @@
                 .WithBlobCache(blobCache)
                 .Build();
 
-            sut.RemoveAsync<string>("some key");
+            sut.Remove<string>("some key");
 
             // we don't verify the specific key because Akavache does some key manipulation internally
             blobCache
@@ -77,7 +77,7 @@
         }
 
         [Fact]
-        public void save_async_executes_all_tasks_returned_by_saved_callbacks()
+        public void save_executes_all_tasks_returned_by_saved_callbacks()
         {
             var sut = new StateServiceBuilder()
                 .Build();
@@ -98,14 +98,14 @@
                         return Observable.Return(Unit.Default);
                     });
 
-            sut.SaveAsync();
+            sut.Save().Subscribe();
 
             Assert.True(firstExecuted);
             Assert.True(secondExecuted);
         }
 
         [Fact]
-        public void save_async_ignores_any_null_tasks_returned_by_saved_callbacks()
+        public void save_ignores_any_null_tasks_returned_by_saved_callbacks()
         {
             var logger = new LoggerMock(MockBehavior.Loose);
             var loggerService = new LoggerServiceMock(MockBehavior.Loose);
@@ -136,7 +136,7 @@
                         return Observable.Return(Unit.Default);
                     });
 
-            sut.SaveAsync();
+            sut.Save().Subscribe();
 
             Assert.True(firstExecuted);
             Assert.True(secondExecuted);
@@ -151,19 +151,19 @@
         }
 
         [Fact]
-        public void save_async_does_not_fail_if_a_save_callback_fails()
+        public void save_does_not_fail_if_a_save_callback_fails()
         {
             var sut = new StateServiceBuilder()
                 .Build();
             sut.RegisterSaveCallback(_ => Observable.Throw<Unit>(new Exception("Failed")));
 
-            sut.SaveAsync();
+            sut.Save().Subscribe();
         }
 
 #if DEBUG
 
         [Fact]
-        public void save_async_logs_an_error_if_a_save_callback_fails()
+        public void save_logs_an_error_if_a_save_callback_fails()
         {
             var logger = new LoggerMock(MockBehavior.Loose);
             var loggerService = new LoggerServiceMock(MockBehavior.Loose);
@@ -178,7 +178,7 @@
 
             sut.RegisterSaveCallback(_ => Observable.Throw<Unit>(new Exception("whatever")));
 
-            sut.SaveAsync();
+            sut.Save().Subscribe();
 
             logger
                 .Verify(x => x.Log(LogLevel.Error, It.IsAny<string>()))
@@ -188,14 +188,14 @@
 #endif
 
         [Fact]
-        public void save_async_completes_even_if_there_are_no_save_callbacks()
+        public void save_completes_even_if_there_are_no_save_callbacks()
         {
             var sut = new StateServiceBuilder()
                 .Build();
 
             var completed = false;
             sut
-                .SaveAsync()
+                .Save()
                 .Subscribe(_ => completed = true);
 
             Assert.True(completed);
@@ -226,7 +226,7 @@
 
             handle.Dispose();
 
-            sut.SaveAsync();
+            sut.Save().Subscribe();
 
             Assert.False(firstExecuted);
             Assert.True(secondExecuted);

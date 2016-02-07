@@ -11,7 +11,7 @@
         partial void ConfigureLooseBehavior()
         {
             this
-                .When(x => x.SaveAsync())
+                .When(x => x.Save())
                 .Return(Observable.Return(Unit.Default));
             this
                 .When(x => x.RegisterSaveCallback(It.IsAny<SaveCallback>()))

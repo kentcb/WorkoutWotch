@@ -10,7 +10,7 @@
         partial void ConfigureLooseBehavior()
         {
             this
-                .When(x => x.ExecuteAsync(It.IsAny<ExecutionContext>()))
+                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Return(Observable.Return(Unit.Default));
         }
     }
