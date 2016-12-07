@@ -42,7 +42,7 @@
 
             scheduler.AdvanceMinimal();
             Assert.NotNull(sut.ParseErrorMessage);
-            Assert.Equal("Parsing failure: unexpected '#'; expected end of input (Line 3, Column 1); recently consumed: rogram\r\n\r\n", sut.ParseErrorMessage);
+            Assert.Equal("Parsing failure: unexpected '#'; expected end of input (Line 3, Column 1); recently consumed:  Program\n\n", sut.ParseErrorMessage);
         }
 
         [Fact]
@@ -363,7 +363,7 @@
             var routeTo = new ExerciseProgramViewModelBuilder()
                 .Build();
             sut.SelectedProgram = routeTo;
-            
+
             Assert.Equal(1, navigationStack.Count);
             Assert.Same(routeTo, navigationStack[0]);
         }
