@@ -36,7 +36,6 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="DisposableBase.cs" />
-    <Compile Include="ReactiveUI\WhenActivatedExtensions.cs" />
     <Compile Include="System\Reactive\Disposables\SerialDisposable.cs" />
     <Compile Include="System\Reactive\Linq\ObservableExtensions.cs" />
     <Compile Include="System\Threading\Tasks\TaskExtensions.cs" />
@@ -47,8 +46,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
-    <Reference Include="ReactiveUI">
-      <HintPath>..\..\Lib\ReactiveUI\ReactiveUI.dll</HintPath>
+    <Reference Include="ReactiveUI, Version=7.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\reactiveui-core.7.0.0\lib\portable-net45+netcore45+wpa81+win8+wp8+UAP10+MonoAndroid403+MonoTouch10+Xamarin.iOS10\ReactiveUI.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Splat, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Splat.1.6.2\lib\Portable-net45+win+wpa81+wp80\Splat.dll</HintPath>

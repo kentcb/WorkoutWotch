@@ -89,7 +89,10 @@
                 .WhenAnyValue(x => x.IsStarted)
                 .CreateCollection();
 
-            sut.StartCommand.ExecuteAsync();
+            sut
+                .StartCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
 
             Assert.Equal(3, isStarted.Count);
@@ -123,7 +126,10 @@
                 .WhenAnyValue(x => x.IsStartVisible)
                 .CreateCollection();
 
-            sut.StartCommand.ExecuteAsync();
+            sut
+                .StartCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
 
             Assert.Equal(5, isStartVisible.Count);
@@ -160,11 +166,17 @@
 
             Assert.False(sut.IsPaused);
 
-            sut.StartCommand.ExecuteAsync();
+            sut
+                .StartCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
             Assert.False(sut.IsPaused);
 
-            sut.PauseCommand.ExecuteAsync();
+            sut
+                .PauseCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
             Assert.True(sut.IsPaused);
         }
@@ -206,7 +218,10 @@
 
             Assert.False(sut.IsPauseVisible);
 
-            sut.StartCommand.ExecuteAsync();
+            sut
+                .StartCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
             Assert.True(sut.IsPauseVisible);
 
@@ -233,18 +248,22 @@
                 .WhenAnyValue(x => x.IsPauseVisible)
                 .CreateCollection();
 
-            sut.StartCommand.ExecuteAsync();
+            sut
+                .StartCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
 
-            sut.PauseCommand.ExecuteAsync();
+            sut
+                .PauseCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
 
-            Assert.Equal(5, isPauseVisible.Count);
+            Assert.Equal(3, isPauseVisible.Count);
             Assert.False(isPauseVisible[0]);
             Assert.True(isPauseVisible[1]);
             Assert.False(isPauseVisible[2]);
-            Assert.True(isPauseVisible[3]);
-            Assert.False(isPauseVisible[4]);
         }
 
         [Fact]
@@ -275,10 +294,16 @@
                 .WhenAnyValue(x => x.IsResumeVisible)
                 .CreateCollection();
 
-            sut.StartCommand.ExecuteAsync();
+            sut
+                .StartCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
 
-            sut.PauseCommand.ExecuteAsync();
+            sut
+                .PauseCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
 
             Assert.Equal(2, isResumeVisible.Count);
@@ -316,7 +341,10 @@
                 .WhenAnyValue(x => x.ProgressTimeSpan)
                 .CreateCollection();
 
-            sut.StartCommand.ExecuteAsync();
+            sut
+                .StartCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
 
             Assert.Equal(3, progressTimeSpan.Count);
@@ -359,7 +387,10 @@
                 .WhenAnyValue(x => x.Progress)
                 .CreateCollection();
 
-            sut.StartCommand.ExecuteAsync();
+            sut
+                .StartCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
 
             Assert.Equal(3, progress.Count);
@@ -390,7 +421,10 @@
                 .WithScheduler(scheduler)
                 .Build();
 
-            sut.StartCommand.ExecuteAsync();
+            sut
+                .StartCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
 
             Assert.False(sut.SkipBackwardsCommand.CanExecute.FirstAsync().Wait());
@@ -426,7 +460,10 @@
                 .CanExecute
                 .CreateCollection();
 
-            sut.StartCommand.ExecuteAsync();
+            sut
+                .StartCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
 
             Assert.Equal(2, canExecute.Count);
@@ -462,10 +499,16 @@
                 .WhenAnyValue(x => x.ProgressTimeSpan)
                 .CreateCollection();
 
-            sut.StartCommand.ExecuteAsync();
+            sut
+                .StartCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
 
-            sut.SkipBackwardsCommand.ExecuteAsync();
+            sut
+                .SkipBackwardsCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
 
             Assert.Equal(3, progress.Count);
@@ -517,10 +560,16 @@
                 .CreateCollection();
 
             // start from the second exercise
-            sut.StartCommand.ExecuteAsync(exercise1.Duration);
+            sut
+                .StartCommand
+                .Execute(exercise1.Duration)
+                .Subscribe();
             scheduler.AdvanceMinimal();
 
-            sut.SkipBackwardsCommand.ExecuteAsync();
+            sut
+                .SkipBackwardsCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
 
             Assert.Equal(5, progress.Count);
@@ -573,10 +622,16 @@
                 .CanExecute
                 .CreateCollection();
 
-            sut.StartCommand.ExecuteAsync();
+            sut
+                .StartCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
 
-            sut.SkipForwardsCommand.ExecuteAsync();
+            sut
+                .SkipForwardsCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
 
             Assert.Equal(5, canExecute.Count);
@@ -628,10 +683,16 @@
                 .WhenAnyValue(x => x.ProgressTimeSpan)
                 .CreateCollection();
 
-            sut.StartCommand.ExecuteAsync();
+            sut
+                .StartCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
 
-            sut.SkipForwardsCommand.ExecuteAsync();
+            sut
+                .SkipForwardsCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
 
             Assert.Equal(2, progress.Count);
@@ -681,23 +742,35 @@
                 .WithScheduler(scheduler)
                 .Build();
 
-            sut.StartCommand.ExecuteAsync();
+            sut
+                .StartCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
             Assert.Equal("Exercise 1", sut.CurrentExercise?.Name);
 
-            sut.SkipForwardsCommand.ExecuteAsync();
+            sut
+                .SkipForwardsCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
             Assert.Equal("Exercise 2", sut.CurrentExercise?.Name);
 
-            sut.SkipForwardsCommand.ExecuteAsync();
+            sut
+                .SkipForwardsCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
             Assert.Equal("Exercise 3", sut.CurrentExercise?.Name);
 
-            sut.SkipBackwardsCommand.ExecuteAsync();
+            sut
+                .SkipBackwardsCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
             Assert.Equal("Exercise 2", sut.CurrentExercise?.Name);
         }
-        
+
         [Fact]
         public void execution_context_is_cancelled_if_user_navigates_away()
         {
@@ -718,7 +791,10 @@
                 .NavigationStack
                 .Add(sut);
 
-            sut.StartCommand.ExecuteAsync();
+            sut
+                .StartCommand
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
 
             Assert.True(sut.IsStarted);
@@ -727,7 +803,8 @@
                 .HostScreen
                 .Router
                 .NavigateBack
-                .ExecuteAsync();
+                .Execute()
+                .Subscribe();
             scheduler.AdvanceMinimal();
 
             Assert.False(sut.IsStarted);

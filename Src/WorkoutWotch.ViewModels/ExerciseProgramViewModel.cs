@@ -463,15 +463,15 @@ namespace WorkoutWotch.ViewModels
             {
                 if (this.owner.IsStartVisible)
                 {
-                    this.owner.StartCommand.ExecuteAsync((TimeSpan?)parameter);
+                    this.owner.StartCommand.Execute((TimeSpan?)parameter);
                 }
                 else if (this.owner.IsPauseVisible)
                 {
-                    this.owner.PauseCommand.ExecuteAsync();
+                    this.owner.PauseCommand.Execute();
                 }
                 else
                 {
-                    this.owner.ResumeCommand.ExecuteAsync();
+                    this.owner.ResumeCommand.Execute();
                 }
             }
         }

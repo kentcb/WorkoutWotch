@@ -406,7 +406,8 @@
                 .HostScreen
                 .Router
                 .NavigateBack
-                .ExecuteAsync();
+                .Execute()
+                .Subscribe();
 
             Assert.Null(sut.SelectedProgram);
         }

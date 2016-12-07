@@ -149,8 +149,10 @@
       <HintPath>..\packages\PCLMock.4.0.0\lib\portable-win+net40+sl50+WindowsPhoneApp81+wp80+MonoAndroid+Xamarin.iOS10+MonoTouch\PCLMock.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ReactiveUI">
-      <HintPath>..\..\Lib\ReactiveUI\ReactiveUI.dll</HintPath>
+    <Reference Include="ReactiveUI, Version=7.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\reactiveui-core.7.0.0\lib\portable-net45+netcore45+wpa81+win8+wp8+UAP10+MonoAndroid403+MonoTouch10+Xamarin.iOS10\ReactiveUI.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Splat, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Splat.1.6.2\lib\Portable-net45+win+wpa81+wp80\Splat.dll</HintPath>
@@ -198,7 +200,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\Lib\ReactiveUI\net45\ReactiveUI.dll">
+    <Content Include="..\..\Lib\Rx-Xaml\System.Reactive.Windows.Threading.dll">
+      <Link>net45\System.Reactive.Windows.Threading.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\packages\reactiveui-core.7.0.0\lib\Net45\ReactiveUI.dll">
       <Link>net45\ReactiveUI.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
