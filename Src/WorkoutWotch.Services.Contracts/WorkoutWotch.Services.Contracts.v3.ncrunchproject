@@ -1,5 +1,10 @@
 ﻿<ProjectConfiguration>
   <Settings>
+    <FrameworkUtilisationTypeForGallio>Disabled</FrameworkUtilisationTypeForGallio>
+    <FrameworkUtilisationTypeForMSpec>Disabled</FrameworkUtilisationTypeForMSpec>
+    <FrameworkUtilisationTypeForMSTest>Disabled</FrameworkUtilisationTypeForMSTest>
+    <FrameworkUtilisationTypeForNUnit2>Disabled</FrameworkUtilisationTypeForNUnit2>
+    <FrameworkUtilisationTypeForXUnit2>UseStaticAnalysis</FrameworkUtilisationTypeForXUnit2>
     <PreviouslyBuiltSuccessfully>True</PreviouslyBuiltSuccessfully>
   </Settings>
 </ProjectConfiguration>
