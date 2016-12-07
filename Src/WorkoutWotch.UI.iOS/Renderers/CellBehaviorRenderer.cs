@@ -58,7 +58,7 @@
         public static void Monitor(Cell element, UITableViewCell nativeView)
         {
             var monitor = GetCellMonitor(element);
-            
+
             if (monitor == null || !monitor.IsAlive)
             {
                 monitor = new CellMonitor(element, nativeView);

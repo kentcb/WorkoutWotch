@@ -4,16 +4,22 @@
 
     public sealed class ControlButton : Image
     {
-        public static readonly BindableProperty IsEnabledExColorProperty = BindableProperty.Create<ControlButton, bool>(
-            x => x.IsEnabledEx,
+        public static readonly BindableProperty IsEnabledExColorProperty = BindableProperty.Create(
+            nameof(IsEnabledEx),
+            typeof(bool),
+            typeof(ControlButton),
             true);
 
-        public static readonly BindableProperty EnabledTintColorProperty = BindableProperty.Create<ControlButton, Color>(
-            x => x.EnabledTintColor,
+        public static readonly BindableProperty EnabledTintColorProperty = BindableProperty.Create(
+            nameof(EnabledTintColor),
+            typeof(Color),
+            typeof(ControlButton),
             Color.Black);
 
-        public static readonly BindableProperty DisabledTintColorProperty = BindableProperty.Create<ControlButton, Color>(
-            x => x.DisabledTintColor,
+        public static readonly BindableProperty DisabledTintColorProperty = BindableProperty.Create(
+            nameof(DisabledTintColor),
+            typeof(Color),
+            typeof(ControlButton),
             Color.Gray);
 
         private readonly TapGestureRecognizer tapGestureRecognizer;
