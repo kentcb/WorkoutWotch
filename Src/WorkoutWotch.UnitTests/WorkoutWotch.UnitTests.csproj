@@ -34,9 +34,6 @@
     <DefineConstants>NO_SERIALIZABLE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BuilderExtensions.cs" />
-    <Compile Include="DebugAttribute.cs" />
-    <Compile Include="IBuilder.cs" />
     <Compile Include="Mocks.g.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -111,18 +108,6 @@
     <Compile Include="Services\State\Mocks\BlobCacheMock.cs" />
     <Compile Include="Services\State\Mocks\StateServiceMock.cs" />
     <Compile Include="Services\State\StateServiceFixture.cs" />
-    <Compile Include="Reactive\TestSchedulerExtensions.cs" />
-    <Compile Include="Reactive\Testing\ColdObservable.cs" />
-    <Compile Include="Reactive\Testing\GlobalSuppressions.cs" />
-    <Compile Include="Reactive\Testing\HotObservable.cs" />
-    <Compile Include="Reactive\Testing\ITestObservable.cs" />
-    <Compile Include="Reactive\Testing\ITestObserver.cs" />
-    <Compile Include="Reactive\Testing\MockObserver.cs" />
-    <Compile Include="Reactive\Testing\ReactiveAssert.cs" />
-    <Compile Include="Reactive\Testing\ReactiveTest.cs" />
-    <Compile Include="Reactive\Testing\Recorded.cs" />
-    <Compile Include="Reactive\Testing\Subscription.cs" />
-    <Compile Include="Reactive\Testing\TestScheduler.cs" />
     <Compile Include="Utility\MathExtFixture.cs" />
     <Compile Include="ViewModels\Builders\ExerciseProgramsViewModelBuilder.cs" />
     <Compile Include="ViewModels\Builders\ExerciseProgramViewModelBuilder.cs" />
@@ -138,12 +123,12 @@
       <HintPath>..\packages\akavache.core.4.1.2\lib\Portable-Net45+Win8+WP8+Wpa81\Akavache.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Genesis.Ensure, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Genesis.Ensure.1.0.4-alpha\lib\portable-net45+win8+wp8+wpa81\Genesis.Ensure.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Genesis.Observables, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Genesis.Observables.1.0.1-alpha\lib\portable-net45+win8+wp8+wpa81\Genesis.Observables.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Genesis.TestUtil, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Genesis.TestUtil.1.0.6-alpha\lib\portable-net45+win8+wp8+wpa81\Genesis.TestUtil.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -244,7 +229,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Reactive\Testing\README.txt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

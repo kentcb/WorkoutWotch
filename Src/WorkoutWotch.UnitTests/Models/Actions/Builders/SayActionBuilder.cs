@@ -1,5 +1,6 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Actions.Builders
 {
+    using Genesis.TestUtil;
     using PCLMock;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Services.Contracts.Speech;

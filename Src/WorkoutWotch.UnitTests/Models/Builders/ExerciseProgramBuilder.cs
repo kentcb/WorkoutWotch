@@ -1,6 +1,7 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Builders
 {
     using System.Collections.Generic;
+    using Genesis.TestUtil;
     using WorkoutWotch.Models;
 
     public sealed class ExerciseProgramBuilder : IBuilder

@@ -1,7 +1,6 @@
 ﻿namespace WorkoutWotch.UnitTests.ViewModels
 {
     using System;
-    using System.Reactive;
     using System.Reactive.Linq;
     using Builders;
     using global::ReactiveUI;
@@ -12,7 +11,6 @@
     using Services.Delay.Builders;
     using WorkoutWotch.Models;
     using WorkoutWotch.UnitTests.Models.Mocks;
-    using WorkoutWotch.UnitTests.Reactive;
     using Xunit;
 
     public sealed class ExerciseProgramViewModelFixture

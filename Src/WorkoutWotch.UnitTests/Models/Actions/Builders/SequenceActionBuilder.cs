@@ -1,6 +1,7 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Actions.Builders
 {
     using System.Collections.Generic;
+    using Genesis.TestUtil;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Actions;
 

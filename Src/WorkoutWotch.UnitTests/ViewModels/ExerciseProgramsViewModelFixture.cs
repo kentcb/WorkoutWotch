@@ -2,13 +2,11 @@
 {
     using System;
     using System.Linq;
-    using System.Reactive;
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
     using Builders;
     using Microsoft.Reactive.Testing;
     using PCLMock;
-    using WorkoutWotch.UnitTests.Reactive;
     using WorkoutWotch.UnitTests.Services.ExerciseDocument.Mocks;
     using WorkoutWotch.UnitTests.Services.State.Mocks;
     using WorkoutWotch.ViewModels;

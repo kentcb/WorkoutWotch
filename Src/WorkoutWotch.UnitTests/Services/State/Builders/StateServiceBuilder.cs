@@ -1,6 +1,7 @@
 ﻿namespace WorkoutWotch.UnitTests.Services.State.Builders
 {
     using Akavache;
+    using Genesis.TestUtil;
     using PCLMock;
     using WorkoutWotch.Services.State;
     using WorkoutWotch.UnitTests.Services.State.Mocks;

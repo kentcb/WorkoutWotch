@@ -1,6 +1,7 @@
 ﻿namespace WorkoutWotch.UnitTests.Models.Actions.Builders
 {
     using System.Collections.Generic;
+    using Genesis.TestUtil;
     using PCLMock;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Services.Contracts.Audio;

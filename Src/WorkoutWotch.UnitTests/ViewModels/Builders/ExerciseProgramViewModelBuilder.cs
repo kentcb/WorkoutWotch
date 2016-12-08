@@ -1,6 +1,7 @@
 ﻿namespace WorkoutWotch.UnitTests.ViewModels.Builders
 {
     using System.Reactive.Concurrency;
+    using Genesis.TestUtil;
     using global::ReactiveUI;
     using Models.Builders;
     using PCLMock;

@@ -2,7 +2,6 @@
 {
     using System;
     using Microsoft.Reactive.Testing;
-    using WorkoutWotch.UnitTests.Reactive;
     using WorkoutWotch.UnitTests.Services.Delay.Builders;
     using Xunit;
 

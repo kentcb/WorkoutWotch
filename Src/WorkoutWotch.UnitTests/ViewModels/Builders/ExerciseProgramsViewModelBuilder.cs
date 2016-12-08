@@ -1,8 +1,8 @@
 ﻿namespace WorkoutWotch.UnitTests.ViewModels.Builders
 {
-    using System.Reactive;
     using System.Reactive.Concurrency;
     using System.Reactive.Linq;
+    using Genesis.TestUtil;
     using global::ReactiveUI;
     using PCLMock;
     using ReactiveUI.Mocks;

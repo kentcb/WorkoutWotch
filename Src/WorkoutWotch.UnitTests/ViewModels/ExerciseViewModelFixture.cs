@@ -8,7 +8,6 @@
     using PCLMock;
     using WorkoutWotch.Models;
     using WorkoutWotch.UnitTests.Models.Mocks;
-    using WorkoutWotch.UnitTests.Reactive;
     using Xunit;
 
     public sealed class ExerciseViewModelFixture
