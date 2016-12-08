@@ -11,18 +11,11 @@ All patterns specified in this file are .NET regular expressions.
     -->
     <NamespaceTransformations>
         <!--
-        inject "WorkoutWotch" into the namespace
+        inject "UnitTests" into the namespace
         -->
         <Transformation>
-            <Pattern><![CDATA[WorkoutWotch\.(?<remainder>.*)]]></Pattern>
-            <Replacement>WorkoutWotch.UnitTests.${remainder}</Replacement>
-        </Transformation>
-        <!--
-        strip "Contracts"
-        -->
-        <Transformation>
-            <Pattern><![CDATA[(?<prefix>.*?)\.Contracts\.(?<suffix>.*?)]]></Pattern>
-            <Replacement>${prefix}.${suffix}</Replacement>
+          <Pattern><![CDATA[WorkoutWotch\.(?<remainder>.*)]]></Pattern>
+          <Replacement>WorkoutWotch.UnitTests.${remainder}</Replacement>
         </Transformation>
         <!--
         append ".Mocks" onto the namespace
@@ -30,6 +23,13 @@ All patterns specified in this file are .NET regular expressions.
         <Transformation>
             <Pattern><![CDATA[(?<name>.+)]]></Pattern>
             <Replacement>${name}.Mocks</Replacement>
+        </Transformation>
+          <!--
+          strip out "Contracts"
+          -->
+        <Transformation>
+          <Pattern><![CDATA[(?<name_start>[A-Z].*)\.Contracts\.(?<name_end>[A-Z].*)]]></Pattern>
+          <Replacement>${name_start}.${name_end}</Replacement>
         </Transformation>
     </NamespaceTransformations>
 
@@ -68,16 +68,20 @@ All patterns specified in this file are .NET regular expressions.
     -->
     <Interfaces>
         <Include>
-            <Pattern>WorkoutWotch\.Models\..*</Pattern>
+            <Pattern>WorkoutWotch\.Services\.Contracts\..*</Pattern>
         </Include>
         <Include>
-            <Pattern>WorkoutWotch\.Services\..*</Pattern>
+            <Pattern>WorkoutWotch\.Models\..*</Pattern>
         </Include>
-        <Exclude>
-            <Pattern>WorkoutWotch\.Services\.Android\..*</Pattern>
-        </Exclude>
-        <Exclude>
-            <Pattern>WorkoutWotch\.Services\.iOS\..*</Pattern>
-        </Exclude>
     </Interfaces>
+
+    <!--
+    List any plugins you want to execute during mock generation. See the documentation for more information.
+    -->
+    <Plugins>
+        <Plugin>PCLMock.CodeGeneration.Plugins.Collections, PCLMock.CodeGeneration</Plugin>
+        <Plugin>PCLMock.CodeGeneration.Plugins.TaskBasedAsynchrony, PCLMock.CodeGeneration</Plugin>
+        <Plugin>PCLMock.CodeGeneration.Plugins.ObservableBasedAsynchrony, PCLMock.CodeGeneration</Plugin>
+        <Plugin>PCLMock.CodeGeneration.Plugins.Disposables, PCLMock.CodeGeneration</Plugin>
+    </Plugins>
 </Mocks>
