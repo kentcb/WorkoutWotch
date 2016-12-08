@@ -37,12 +37,12 @@
             delayService
                 .When(x => x.Delay(It.IsAny<TimeSpan>()))
                 .Do<TimeSpan>(duration => performedActions.Add("Delayed for " + duration))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             speechService
                 .When(x => x.Speak(It.IsAny<string>()))
                 .Do<string>(speechText => performedActions.Add("Saying '" + speechText + "'"))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             var sut = new WaitWithPromptActionBuilder()
                 .WithDelayService(delayService)
@@ -75,12 +75,12 @@
             delayService
                 .When(x => x.Delay(It.IsAny<TimeSpan>()))
                 .Do<TimeSpan>(duration => performedActions.Add("Delayed for " + duration))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             speechService
                 .When(x => x.Speak(It.IsAny<string>()))
                 .Do<string>(speechText => performedActions.Add("Saying '" + speechText + "'"))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             var sut = new WaitWithPromptActionBuilder()
                 .WithDelayService(delayService)

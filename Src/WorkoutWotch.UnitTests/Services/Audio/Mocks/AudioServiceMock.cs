@@ -10,7 +10,7 @@
         {
             this
                 .When(x => x.Play(It.IsAny<string>()))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
         }
     }
 }

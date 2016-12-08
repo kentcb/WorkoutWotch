@@ -152,7 +152,7 @@
 
             stateService
                 .When(x => x.Set<string>(It.IsAny<string>(), It.IsAny<string>()))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             var sut = new ExerciseProgramsViewModelBuilder()
                 .WithCloudDocument(document)
@@ -304,7 +304,7 @@
 
             stateService
                 .When(x => x.Set<string>(It.IsAny<string>(), It.IsAny<string>()))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             var sut = new ExerciseProgramsViewModelBuilder()
                 .WithCloudDocument(document)
@@ -333,7 +333,7 @@
 
             stateService
                 .When(x => x.Set<string>(It.IsAny<string>(), It.IsAny<string>()))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             var sut = new ExerciseProgramsViewModelBuilder()
                 .WithScheduler(scheduler)

@@ -36,27 +36,28 @@
             var childExecutions = this
                 .children
                 .Select(
-                    child => Observable
-                        .Return(Unit.Default)
-                        .Select(
-                            _ =>
-                            {
-                                var execute = true;
-
-                                if (context.SkipAhead > TimeSpan.Zero && context.SkipAhead >= child.Duration)
+                    child =>
+                        Observables
+                            .Unit
+                            .Select(
+                                _ =>
                                 {
-                                    context.AddProgress(child.Duration);
-                                    execute = false;
-                                }
+                                    var execute = true;
 
-                                return new
-                                {
-                                    Child = child,
-                                    Execute = execute
-                                };
-                            })
-                        .Where(x => x.Execute)
-                        .SelectMany(x => x.Child.Execute(context)));
+                                    if (context.SkipAhead > TimeSpan.Zero && context.SkipAhead >= child.Duration)
+                                    {
+                                        context.AddProgress(child.Duration);
+                                        execute = false;
+                                    }
+
+                                    return new
+                                    {
+                                        Child = child,
+                                        Execute = execute
+                                    };
+                                })
+                            .Where(x => x.Execute)
+                            .SelectMany(x => x.Child.Execute(context)));
 
             return Observable
                 .Concat(childExecutions)

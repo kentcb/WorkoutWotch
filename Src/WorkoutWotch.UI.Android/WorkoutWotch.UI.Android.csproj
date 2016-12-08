@@ -86,6 +86,10 @@
       <HintPath>..\packages\Genesis.Logging.1.0.7-alpha\lib\portable-net45+win8+wp8+wpa81\Genesis.Logging.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Genesis.Observables, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Genesis.Observables.1.0.1-alpha\lib\portable-net45+win8+wp8+wpa81\Genesis.Observables.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">

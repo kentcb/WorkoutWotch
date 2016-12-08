@@ -34,7 +34,7 @@
 
             action
                 .When(x => x.Execute(It.IsAny<ExecutionContext>()))
-                .Return(Observable.Never<Unit>());
+                .Return(Observable<Unit>.Never);
 
             var sut = new DoNotAwaitActionBuilder()
                 .WithInnerAction(action)

@@ -44,7 +44,7 @@
             {
                 // although this shouldn't really happen, we've been asked to execute even though the skip ahead exceeds even our longest-running child
                 context.AddProgress(this.Duration);
-                return Observable.Return(Unit.Default);
+                return Observables.Unit;
             }
 
             var shadowedContext = CreateShadowExecutionContext(context);

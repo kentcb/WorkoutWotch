@@ -67,6 +67,10 @@
       <HintPath>..\packages\Genesis.Logging.1.0.7-alpha\lib\portable-net45+win8+wp8+wpa81\Genesis.Logging.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Genesis.Observables, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Genesis.Observables.1.0.1-alpha\lib\portable-net45+win8+wp8+wpa81\Genesis.Observables.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Humanizer, Version=2.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
       <HintPath>..\packages\Humanizer.Core.2.0.0\lib\portable-win+net45+wp8+wpa81\Humanizer.dll</HintPath>
       <Private>True</Private>

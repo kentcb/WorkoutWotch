@@ -21,7 +21,7 @@
             this.activation = true;
             this.scheduler = new SchedulerMock(MockBehavior.Loose);
             this.model = new ExerciseBuilder();
-            this.executionContext = Observable.Never<ExecutionContext>();
+            this.executionContext = Observable<ExecutionContext>.Never;
         }
 
         public ExerciseViewModelBuilder WithActivation(bool activation) =>

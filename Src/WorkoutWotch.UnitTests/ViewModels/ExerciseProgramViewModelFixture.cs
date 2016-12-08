@@ -202,8 +202,8 @@
                 .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Return<ExecutionContext>(
                     ec =>
-                        Observable
-                            .Return(Unit.Default)
+                        Observables
+                            .Unit
                             .Do(_ => { })
                             .Delay(TimeSpan.FromMinutes(1), scheduler)
                             .Do(_ => ec.AddProgress(TimeSpan.FromMinutes(1))));

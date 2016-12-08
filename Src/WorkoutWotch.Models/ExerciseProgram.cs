@@ -52,7 +52,7 @@
                                 {
                                     this.logger.Debug("Skipping exercise '{0}' because its duration ({1}) is less than the remaining skip ahead ({2}).", exercise.Name, exercise.Duration, context.SkipAhead);
                                     context.AddProgress(exercise.Duration);
-                                    return Observable.Return(Unit.Default);
+                                    return Observables.Unit;
                                 }
 
                                 this.logger.Debug("Executing exercise '{0}'.", exercise.Name);

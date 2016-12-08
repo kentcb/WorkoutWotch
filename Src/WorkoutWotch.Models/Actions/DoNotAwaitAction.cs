@@ -34,7 +34,7 @@
                     _ => { },
                     ex => this.logger.Error("Failed to execute inner action: " + ex));
 
-            return Observable.Return(Unit.Default);
+            return Observables.Unit;
         }
     }
 }

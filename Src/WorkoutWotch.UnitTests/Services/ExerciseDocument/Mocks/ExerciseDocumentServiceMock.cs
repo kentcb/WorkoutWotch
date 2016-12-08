@@ -8,7 +8,7 @@
         {
             this
                 .When(x => x.ExerciseDocument)
-                .Return(Observable.Empty<string>());
+                .Return(Observable<string>.Empty);
         }
     }
 }

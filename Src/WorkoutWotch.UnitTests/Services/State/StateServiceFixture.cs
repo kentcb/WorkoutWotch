@@ -38,7 +38,7 @@
 
             blobCache
                 .When(x => x.Insert(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<DateTimeOffset?>()))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             var sut = new StateServiceBuilder()
                 .WithBlobCache(blobCache)
@@ -59,7 +59,7 @@
 
             blobCache
                 .When(x => x.Invalidate(It.IsAny<string>()))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             var sut = new StateServiceBuilder()
                 .WithBlobCache(blobCache)
@@ -85,14 +85,14 @@
                     _ =>
                     {
                         firstExecuted = true;
-                        return Observable.Return(Unit.Default);
+                        return Observables.Unit;
                     });
             sut
                 .RegisterSaveCallback(
                     _ =>
                     {
                         secondExecuted = true;
-                        return Observable.Return(Unit.Default);
+                        return Observables.Unit;
                     });
 
             sut.Save().Subscribe();
@@ -114,7 +114,7 @@
                     _ =>
                     {
                         firstExecuted = true;
-                        return Observable.Return(Unit.Default);
+                        return Observables.Unit;
                     });
             sut.RegisterSaveCallback(_ => null);
             sut
@@ -122,7 +122,7 @@
                     _ =>
                     {
                         secondExecuted = true;
-                        return Observable.Return(Unit.Default);
+                        return Observables.Unit;
                     });
 
             sut.Save().Subscribe();
@@ -168,14 +168,14 @@
                     _ =>
                     {
                         firstExecuted = true;
-                        return Observable.Return(Unit.Default);
+                        return Observables.Unit;
                     });
             sut
                 .RegisterSaveCallback(
                     _ =>
                     {
                         secondExecuted = true;
-                        return Observable.Return(Unit.Default);
+                        return Observables.Unit;
                     });
 
             handle.Dispose();

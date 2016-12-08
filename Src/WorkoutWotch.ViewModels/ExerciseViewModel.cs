@@ -41,11 +41,11 @@ namespace WorkoutWotch.ViewModels
                 .CombineLatest(
                     this
                         .WhenAnyValue(x => x.ExecutionContext)
-                        .Select(ec => ec == null ? Observable.Never<TimeSpan>() : ec.WhenAnyValue(x => x.SkipAhead))
+                        .Select(ec => ec == null ? Observable<TimeSpan>.Never : ec.WhenAnyValue(x => x.SkipAhead))
                         .Switch(),
                     this
                         .WhenAnyValue(x => x.ExecutionContext)
-                        .Select(ec => ec == null ? Observable.Never<Exercise>() : ec.WhenAnyValue(x => x.CurrentExercise))
+                        .Select(ec => ec == null ? Observable<Exercise>.Never : ec.WhenAnyValue(x => x.CurrentExercise))
                         .Switch(),
                     (skip, current) => skip == TimeSpan.Zero && current == this.model)
                 .ObserveOn(scheduler)

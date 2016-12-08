@@ -69,7 +69,7 @@
                             .saveCallbacks
                             .Select(x => x(this))
                             .Where(x => x != null)
-                            .DefaultIfEmpty(Observable.Return(Unit.Default))
+                            .DefaultIfEmpty(Observables.Unit)
                             .ToList());
             }
 
@@ -79,7 +79,7 @@
                     (Exception ex) =>
                     {
                         this.logger.Error(ex, "Failed to save.");
-                        return Observable.Return(Unit.Default);
+                        return Observables.Unit;
                     });
         }
 

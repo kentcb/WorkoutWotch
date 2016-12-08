@@ -46,12 +46,12 @@
             audioService
                 .When(x => x.Play(It.IsAny<string>()))
                 .Do<string>((resource) => actionsPerformed.Add("Played audio resource " + resource))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             delayService
                 .When(x => x.Delay(It.IsAny<TimeSpan>()))
                 .Do<TimeSpan>(period => actionsPerformed.Add("Delayed for " + period))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             var sut = new MetronomeActionBuilder()
                 .WithAudioService(audioService)

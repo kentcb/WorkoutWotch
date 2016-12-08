@@ -18,8 +18,8 @@
         }
 
         public IObservable<Unit> Delay(TimeSpan duration) =>
-            Observable
-                .Return(Unit.Default)
+            Observables
+                .Unit
                 .Delay(duration, scheduler);
     }
 }

@@ -11,7 +11,7 @@
         {
             this
                 .When(x => x.Execute(It.IsAny<ExecutionContext>()))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
         }
     }
 }

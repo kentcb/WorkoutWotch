@@ -12,7 +12,7 @@
         {
             this
                 .When(x => x.Save())
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
             this
                 .When(x => x.RegisterSaveCallback(It.IsAny<SaveCallback>()))
                 .Return(Disposable.Empty);

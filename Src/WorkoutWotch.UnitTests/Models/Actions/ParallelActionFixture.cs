@@ -258,22 +258,22 @@
             action1
                 .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.AddProgress(action1.Duration))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             action2
                 .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.AddProgress(action2.Duration))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             action3
                 .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.AddProgress(action3.Duration))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             action4
                 .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.AddProgress(action4.Duration))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             var sut = new ParallelActionBuilder()
                 .WithChild(action1)
@@ -315,22 +315,22 @@
             action1
                 .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.AddProgress(action1.Duration))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             action2
                 .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.AddProgress(action2.Duration))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             action3
                 .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.AddProgress(action3.Duration))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             action4
                 .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.AddProgress(action4.Duration))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             var sut = new ParallelActionBuilder()
                 .WithChild(action1)
@@ -370,7 +370,7 @@
             action1
                 .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.Cancel())
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             var sut = new ParallelActionBuilder()
                 .WithChild(action1)
@@ -401,7 +401,7 @@
             action1
                 .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.Cancel())
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             var sut = new ParallelActionBuilder()
                 .WithChild(action1)
@@ -432,7 +432,7 @@
             action1
                 .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.IsPaused = true)
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             var sut = new ParallelActionBuilder()
                 .WithChild(action1)
@@ -463,7 +463,7 @@
             action1
                 .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Do<ExecutionContext>(ec => ec.IsPaused = true)
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             var sut = new ParallelActionBuilder()
                 .WithChild(action1)

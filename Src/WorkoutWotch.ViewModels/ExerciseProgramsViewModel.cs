@@ -85,7 +85,7 @@
                             .Select(x => new DocumentSourceWith<string>(DocumentSource.Service, x));
 
                         var documents = documentsFromCache
-                            .Catch((Exception ex) => Observable.Empty<DocumentSourceWith<string>>())
+                            .Catch((Exception ex) => Observable<DocumentSourceWith<string>>.Empty)
                             .Concat(documentsFromService)
                             .Do(x => this.logger.Debug("Received document from {0}.", x.Source))
                             .Publish();
@@ -107,7 +107,7 @@
                             .Publish();
 
                         var safeResults = results
-                            .Catch((Exception ex) => Observable.Empty<DocumentSourceWith<IResult<ExercisePrograms>>>());
+                            .Catch((Exception ex) => Observable<DocumentSourceWith<IResult<ExercisePrograms>>>.Empty);
 
                         safeResults
                             .Select(x => x.Item.WasSuccessful ? null : x.Item.ToString())
@@ -129,7 +129,7 @@
                             .AddTo(disposables);
 
                         var safeDocuments = documents
-                            .Catch((Exception ex) => Observable.Empty<DocumentSourceWith<string>>());
+                            .Catch((Exception ex) => Observable<DocumentSourceWith<string>>.Empty);
 
                         safeDocuments
                             .Where(x => x.Source == DocumentSource.Service)

@@ -11,7 +11,7 @@
         {
             this
                 .When(x => x.Delay(It.IsAny<TimeSpan>()))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
         }
     }
 }

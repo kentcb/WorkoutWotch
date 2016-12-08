@@ -68,7 +68,7 @@ namespace WorkoutWotch.ViewModels
 
             this
                 .WhenAnyValue(x => x.ExecutionContext)
-                .Select(x => x == null ? Observable.Return(false) : x.WhenAnyValue(y => y.IsPaused))
+                .Select(x => x == null ? Observables.False : x.WhenAnyValue(y => y.IsPaused))
                 .Switch()
                 .ObserveOn(scheduler)
                 .Subscribe(x => this.IsPaused = x);
@@ -310,7 +310,7 @@ namespace WorkoutWotch.ViewModels
                         Observable
                             .Start(() => this.ExecutionContext = executionContext, this.scheduler)
                             .SelectMany(__ => this.model.Execute(executionContext)))
-                .Catch<Unit, OperationCanceledException>(_ => Observable.Return(Unit.Default));
+                .Catch<Unit, OperationCanceledException>(_ => Observables.Unit);
         }
 
         public IObservable<Unit> Stop()
@@ -322,7 +322,7 @@ namespace WorkoutWotch.ViewModels
             if (executionContext == null)
             {
                 this.logger.Warn("Execution context is null - cannot stop.");
-                return Observable.Return(Unit.Default);
+                return Observables.Unit;
             }
 
             executionContext.Cancel();
@@ -344,7 +344,7 @@ namespace WorkoutWotch.ViewModels
             if (executionContext == null)
             {
                 this.logger.Warn("Execution context is null - cannot skip backwards.");
-                return Observable.Return(Unit.Default);
+                return Observables.Unit;
             }
 
             var totalProgress = executionContext.Progress;
@@ -387,7 +387,7 @@ namespace WorkoutWotch.ViewModels
             if (executionContext == null)
             {
                 this.logger.Warn("Execution context is null - cannot skip forwards.");
-                return Observable.Return(Unit.Default);
+                return Observables.Unit;
             }
 
             var totalProgress = executionContext.Progress;

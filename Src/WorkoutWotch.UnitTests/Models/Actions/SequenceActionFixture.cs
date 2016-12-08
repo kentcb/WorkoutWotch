@@ -93,7 +93,7 @@
                         childAction
                             .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                             .Do(() => childExecutionOrder[i] = Interlocked.Increment(ref executionOrder))
-                            .Return(Observable.Return(Unit.Default));
+                            .Return(Observables.Unit);
                         return childAction;
                     })
                 .ToList();

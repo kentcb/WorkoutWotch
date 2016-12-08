@@ -56,7 +56,7 @@
             delayService
                 .When(x => x.Delay(It.IsAny<TimeSpan>()))
                 .Do<TimeSpan>(t => totalDelay += t)
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             var sut = new WaitActionBuilder()
                 .WithDelayService(delayService)
@@ -82,7 +82,7 @@
             delayService
                 .When(x => x.Delay(It.IsAny<TimeSpan>()))
                 .Do<TimeSpan>(t => totalDelay += t)
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             var sut = new WaitActionBuilder()
                 .WithDelayService(delayService)
@@ -108,7 +108,7 @@
             delayService
                 .When(x => x.Delay(It.IsAny<TimeSpan>()))
                 .Do<TimeSpan>(t => totalDelay += t)
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             var sut = new WaitActionBuilder()
                 .WithDelayService(delayService)
@@ -173,7 +173,7 @@
             delayService
                 .When(x => x.Delay(It.IsAny<TimeSpan>()))
                 .Do(() => context.IsPaused = delayCallCount++ == 2)
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             var sut = new WaitActionBuilder()
                 .WithDelayService(delayService)

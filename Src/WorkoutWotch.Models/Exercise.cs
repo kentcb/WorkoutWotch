@@ -75,7 +75,7 @@ namespace WorkoutWotch.Models
                                 {
                                     this.logger.Debug("Skipping action {0} for event {1} because its duration ({2}) is less than the remaining skip ahead ({3}).", action, @event, action.Duration, context.SkipAhead);
                                     context.AddProgress(action.Duration);
-                                    return Observable.Return(Unit.Default);
+                                    return Observables.Unit;
                                 }
 
                                 this.logger.Debug("Executing action {0} for event {1}.", action, @event);

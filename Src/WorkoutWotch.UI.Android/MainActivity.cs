@@ -47,7 +47,7 @@
                     .Instance
                     .GetErrorDialog(this, connectionResult.ErrorCode, 0)
                     .Show();
-                return Observable.Return(false);
+                return Observables.False;
             }
 
             try
@@ -58,7 +58,7 @@
             }
             catch (IntentSender.SendIntentException)
             {
-                return Observable.Return(false);
+                return Observables.False;
             }
         }
 

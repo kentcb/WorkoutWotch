@@ -108,7 +108,7 @@
 
             stateService
                 .When(x => x.Set<string>(It.IsAny<string>(), It.IsAny<string>()))
-                .Return(Observable.Return(Unit.Default));
+                .Return(Observables.Unit);
 
             return this.WithStateService(stateService);
         }
