@@ -69,7 +69,7 @@
                                                 .Delay(delay)
                                                 .Select(_ => delay))))
                 .Do(delay => context.AddProgress(delay))
-                .Select(_ => Unit.Default)
+                .ToSignal()
                 .DefaultIfEmpty();
 
             //remaining.Connect();

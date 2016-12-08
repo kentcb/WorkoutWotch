@@ -56,7 +56,7 @@
 
             return Observable
                 .CombineLatest(childExecutions)
-                .Select(_ => Unit.Default);
+                .ToSignal();
         }
 
         private static ExecutionContext CreateShadowExecutionContext(ExecutionContext context)

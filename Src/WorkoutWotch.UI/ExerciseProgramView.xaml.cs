@@ -79,7 +79,7 @@
                         button
                             .ScaleTo(1, 150, Easing.CubicIn)
                             .ToObservable())
-                .Select(_ => Unit.Default)
+                .ToSignal()
                 .FirstAsync();
     }
 }

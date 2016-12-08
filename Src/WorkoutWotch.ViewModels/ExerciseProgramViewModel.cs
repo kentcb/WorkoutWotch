@@ -281,12 +281,12 @@ namespace WorkoutWotch.ViewModels
         private IObservable<Unit> OnPause() =>
             Observable
                 .Start(() => this.ExecutionContext.IsPaused = true, this.scheduler)
-                .Select(__ => Unit.Default);
+                .ToSignal();
 
         private IObservable<Unit> OnResume() =>
             Observable
                 .Start(() => this.ExecutionContext.IsPaused = false, this.scheduler)
-                .Select(__ => Unit.Default);
+                .ToSignal();
 
         private IObservable<Unit> OnSkipBackwards() =>
             this.SkipBackwards();
@@ -330,7 +330,7 @@ namespace WorkoutWotch.ViewModels
             return this
                 .WhenAnyValue(x => x.IsStarted)
                 .Where(x => !x)
-                .Select(_ => Unit.Default)
+                .ToSignal()
                 .Do(_ => this.logger.Debug("Stop completed."))
                 .FirstAsync();
         }

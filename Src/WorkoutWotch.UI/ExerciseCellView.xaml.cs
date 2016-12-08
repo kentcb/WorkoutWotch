@@ -73,7 +73,7 @@
                         .progressBar
                         .FadeTo(isActive ? 1 : 0, animationDurationMs, easing)
                         .ToObservable())
-                .Select(_ => Unit.Default);
+                .ToSignal();
         }
 
         private IObservable<Unit> AnimateScale(bool isActive)
@@ -84,7 +84,7 @@
                     .rootLayout
                     .ScaleTo(inactiveScale, 100, Easing.CubicOut)
                     .ToObservable()
-                    .Select(_ => Unit.Default);
+                    .ToSignal();
             }
             else
             {
@@ -99,7 +99,7 @@
                                 .rootLayout
                                 .ScaleTo(1, 100, Easing.CubicIn)
                                 .ToObservable())
-                    .Select(_ => Unit.Default);
+                    .ToSignal();
             }
         }
     }

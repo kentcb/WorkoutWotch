@@ -87,7 +87,7 @@
                             this.activityIndicator.IsRunning = false;
                         }
                     })
-                .Select(_ => Unit.Default);
+                .ToSignal();
 
         private IObservable<Unit> AnimateListViewOpacity(bool isVisible) =>
             Observable
@@ -112,7 +112,7 @@
                             this.exerciseProgramsListView.IsVisible = false;
                         }
                     })
-                .Select(_ => Unit.Default);
+                .ToSignal();
 
         private static bool IsLoadingStatus(ExerciseProgramsViewModelStatus status) =>
             status == ExerciseProgramsViewModelStatus.Loading;

@@ -23,7 +23,7 @@ namespace WorkoutWotch.Services.iOS.Speech
             var synthesizer = new AVSpeechSynthesizer();
             var finishedUtterance = Observable
                 .FromEventPattern<AVSpeechSynthesizerUteranceEventArgs>(x => synthesizer.DidFinishSpeechUtterance += x, x => synthesizer.DidFinishSpeechUtterance -= x)
-                .Select(_ => Unit.Default)
+                .ToSignal()
                 .Publish();
 
             finishedUtterance
@@ -40,7 +40,7 @@ namespace WorkoutWotch.Services.iOS.Speech
 
             //    Observable
             //        .FromEventPattern<AVSpeechSynthesizerUteranceEventArgs>(x => synthesizer.DidCancelSpeechUtterance += x, x => synthesizer.DidCancelSpeechUtterance -= x)
-            //        .Select(_ => Unit.Default)
+            //        .ToSignal()
             //        .Subscribe(
             //            _ =>
             //            {

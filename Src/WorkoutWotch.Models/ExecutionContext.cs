@@ -102,7 +102,7 @@ namespace WorkoutWotch.Models
                 .CombineLatest(this.cancelRequested, (isPaused, cancelRequested) => new { IsPaused = isPaused, CancelRequested = cancelRequested })
                 .Where(x => !x.CancelRequested && !x.IsPaused)
                 .FirstAsync()
-                .Select(_ => Unit.Default);
+                .ToSignal();
 
         public void Cancel() =>
             this.cancelRequested.OnNext(true);

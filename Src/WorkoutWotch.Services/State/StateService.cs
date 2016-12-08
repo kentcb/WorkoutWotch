@@ -74,7 +74,7 @@
             }
 
             return saves
-                .Select(_ => Unit.Default)
+                .ToSignal()
                 .Catch(
                     (Exception ex) =>
                     {

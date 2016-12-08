@@ -28,7 +28,7 @@ namespace WorkoutWotch.Services.iOS.Audio
             var audioPlayer = AVAudioPlayer.FromUrl(url);
             var finishedPlaying = Observable
                 .FromEventPattern<AVStatusEventArgs>(x => audioPlayer.FinishedPlaying += x, x => audioPlayer.FinishedPlaying -= x)
-                .Select(_ => Unit.Default)
+                .ToSignal()
                 .Publish();
 
             finishedPlaying
