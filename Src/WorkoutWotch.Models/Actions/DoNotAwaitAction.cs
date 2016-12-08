@@ -4,19 +4,18 @@
     using System.Reactive;
     using System.Reactive.Linq;
     using Genesis.Ensure;
-    using WorkoutWotch.Services.Contracts.Logger;
+    using Genesis.Logging;
 
     public sealed class DoNotAwaitAction : IAction
     {
         private readonly ILogger logger;
         private readonly IAction innerAction;
 
-        public DoNotAwaitAction(ILoggerService loggerService, IAction innerAction)
+        public DoNotAwaitAction(IAction innerAction)
         {
-            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
             Ensure.ArgumentNotNull(innerAction, nameof(innerAction));
 
-            this.logger = loggerService.GetLogger(this.GetType());
+            this.logger = LoggerService.GetLogger(this.GetType());
             this.innerAction = innerAction;
         }
 

@@ -7,9 +7,9 @@ namespace WorkoutWotch.Models
     using System.Reactive;
     using System.Reactive.Linq;
     using Genesis.Ensure;
+    using Genesis.Logging;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Models.Events;
-    using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.Contracts.Speech;
 
     public sealed class Exercise
@@ -22,16 +22,15 @@ namespace WorkoutWotch.Models
         private readonly IImmutableList<MatcherWithAction> matchersWithActions;
         private readonly TimeSpan duration;
 
-        public Exercise(ILoggerService loggerService, ISpeechService speechService, string name, int setCount, int repetitionCount, IEnumerable<MatcherWithAction> matchersWithActions)
+        public Exercise(ISpeechService speechService, string name, int setCount, int repetitionCount, IEnumerable<MatcherWithAction> matchersWithActions)
         {
-            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
             Ensure.ArgumentNotNull(speechService, nameof(speechService));
             Ensure.ArgumentNotNull(name, nameof(name));
             Ensure.ArgumentNotNull(matchersWithActions, nameof(matchersWithActions));
             Ensure.ArgumentCondition(setCount >= 0, "setCount cannot be less than zero.", "setCount");
             Ensure.ArgumentCondition(repetitionCount >= 0, "repetitionCount cannot be less than zero.", "repetitionCount");
 
-            this.logger = loggerService.GetLogger(this.GetType());
+            this.logger = LoggerService.GetLogger(this.GetType());
             this.speechService = speechService;
             this.name = name;
             this.setCount = setCount;

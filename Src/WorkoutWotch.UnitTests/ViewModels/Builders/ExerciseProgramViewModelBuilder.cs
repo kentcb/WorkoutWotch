@@ -6,15 +6,12 @@
     using PCLMock;
     using ReactiveUI.Mocks;
     using WorkoutWotch.Models;
-    using WorkoutWotch.Services.Contracts.Logger;
-    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
     using WorkoutWotch.UnitTests.Services.Scheduler.Mocks;
     using WorkoutWotch.ViewModels;
 
     public sealed class ExerciseProgramViewModelBuilder : IBuilder
     {
         private bool activation;
-        private ILoggerService loggerService;
         private IScheduler scheduler;
         private IScreen hostScreen;
         private ExerciseProgram model;
@@ -22,7 +19,6 @@
         public ExerciseProgramViewModelBuilder()
         {
             this.activation = true;
-            this.loggerService = new LoggerServiceMock(MockBehavior.Loose);
             this.scheduler = new SchedulerMock(MockBehavior.Loose);
             this.hostScreen = new ScreenMock(MockBehavior.Loose);
             this.model = new ExerciseProgramBuilder();
@@ -30,9 +26,6 @@
 
         public ExerciseProgramViewModelBuilder WithActivation(bool activation) =>
             this.With(ref this.activation, activation);
-
-        public ExerciseProgramViewModelBuilder WithLoggerService(ILoggerService loggerService) =>
-            this.With(ref this.loggerService, loggerService);
 
         public ExerciseProgramViewModelBuilder WithScheduler(IScheduler scheduler) =>
             this.With(ref this.scheduler, scheduler);
@@ -46,7 +39,6 @@
         public ExerciseProgramViewModel Build()
         {
             var result = new ExerciseProgramViewModel(
-                this.loggerService,
                 this.scheduler,
                 this.hostScreen,
                 this.model);

@@ -105,9 +105,6 @@
     <Compile Include="Services\Delay\DelayServiceFixture.cs" />
     <Compile Include="Services\Delay\Mocks\DelayServiceMock.cs" />
     <Compile Include="Services\ExerciseDocument\Mocks\ExerciseDocumentServiceMock.cs" />
-    <Compile Include="Services\Logger\LoggerServiceFixture.cs" />
-    <Compile Include="Services\Logger\Mocks\LoggerMock.cs" />
-    <Compile Include="Services\Logger\Mocks\LoggerServiceMock.cs" />
     <Compile Include="Services\Scheduler\Mocks\SchedulerMock.cs" />
     <Compile Include="Services\Speech\Mocks\SpeechServiceMock.cs" />
     <Compile Include="Services\State\Builders\StateServiceBuilder.cs" />

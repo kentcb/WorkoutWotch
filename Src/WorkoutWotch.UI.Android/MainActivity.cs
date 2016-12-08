@@ -1,8 +1,6 @@
 ﻿namespace WorkoutWotch.UI.Android
 {
     using System;
-    using System.Diagnostics;
-    using System.Reactive;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
@@ -13,8 +11,6 @@
     using global::Android.OS;
     using Services.Android.ExerciseDocument;
     using Splat;
-    using WorkoutWotch.Services.Contracts.Logger;
-    using WorkoutWotch.UI;
 
     [Activity(
         Label = "Workout Wotch",
@@ -23,7 +19,6 @@
     public sealed class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicationActivity, IConnectionResultHandler
     {
         private const int RequestCodeResolution = 1;
-        private static App app;
         private readonly SerialDisposable<Subject<bool>> resultResolutionSubject;
 
         public MainActivity()
@@ -37,23 +32,12 @@
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
 
-            if (app == null)
-            {
-                var compositionRoot = new AndroidCompositionRoot(this);
-                DirectLoggingOutputToConsole(compositionRoot.ResolveLoggerService());
-                new AndroidSplatRegistrar().Register(Locator.CurrentMutable, compositionRoot);
-                app = compositionRoot.ResolveApp();
-                app.Initialize();
-            }
-
-            LoadApplication(app);
+            var compositionRoot = MainApplication.Instance.CompositionRoot;
+            new AndroidSplatRegistrar().Register(Locator.CurrentMutable, compositionRoot);
+            var app = compositionRoot.ResolveApp();
+            app.Initialize();
+            LoadApplication(compositionRoot.ResolveApp());
         }
-
-        [Conditional("DEBUG")]
-        private static void DirectLoggingOutputToConsole(ILoggerService loggerService) =>
-            loggerService
-                .Entries
-                .Subscribe(entry => Console.WriteLine("[{0}] #{1} {2} : {3}", entry.Level, entry.ThreadId, entry.Name, entry.Message));
 
         IObservable<bool> IConnectionResultHandler.HandleConnectionResult(ConnectionResult connectionResult)
         {

@@ -9,8 +9,8 @@ namespace WorkoutWotch.Services.Android.ExerciseDocument
     using System.Reactive.Subjects;
     using System.Threading;
     using System.Threading.Tasks;
-    using Contracts.Logger;
     using Genesis.Ensure;
+    using Genesis.Logging;
     using global::Android.App;
     using global::Android.Gms.Common;
     using global::Android.Gms.Common.Apis;
@@ -26,8 +26,7 @@ namespace WorkoutWotch.Services.Android.ExerciseDocument
         IExerciseDocumentService,
         GoogleApiClient.IConnectionCallbacks,
         GoogleApiClient.IOnConnectionFailedListener,
-        IChangeListener,
-        IDisposable
+        IChangeListener
     {
         private static readonly string documentFilename = "Workout Wotch Exercise Programs.mkd";
         private readonly ILogger logger;
@@ -39,13 +38,11 @@ namespace WorkoutWotch.Services.Android.ExerciseDocument
         private int initialized;
 
         public GoogleDriveExerciseDocumentService(
-            ILoggerService loggerService,
             IConnectionResultHandler connectionResultHandler)
         {
-            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
             Ensure.ArgumentNotNull(connectionResultHandler, nameof(connectionResultHandler));
 
-            this.logger = loggerService.GetLogger(this.GetType());
+            this.logger = LoggerService.GetLogger(this.GetType());
             this.connectionResultHandler = connectionResultHandler;
             this.exerciseDocument = new BehaviorSubject<string>(null);
             this.sync = new object();
@@ -278,11 +275,16 @@ namespace WorkoutWotch.Services.Android.ExerciseDocument
             await this.TickFileContents(file);
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            this.exerciseDocument.Dispose();
-            this.connectedDisposable.Dispose();
-            this.client?.Dispose();
+            base.Dispose(disposing);
+
+            if (disposing)
+            {
+                this.exerciseDocument.Dispose();
+                this.connectedDisposable.Dispose();
+                this.client?.Dispose();
+            }
         }
     }
 }

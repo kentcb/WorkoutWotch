@@ -8,9 +8,9 @@ namespace WorkoutWotch.ViewModels
     using System.Reactive.Linq;
     using System.Windows.Input;
     using Genesis.Ensure;
+    using Genesis.Logging;
     using ReactiveUI;
     using WorkoutWotch.Models;
-    using WorkoutWotch.Services.Contracts.Logger;
 
     public delegate ExerciseProgramViewModel ExerciseProgramViewModelFactory(ExerciseProgram model);
 
@@ -43,18 +43,16 @@ namespace WorkoutWotch.ViewModels
         private ExecutionContext executionContext;
 
         public ExerciseProgramViewModel(
-            ILoggerService loggerService,
             IScheduler scheduler,
             IScreen hostScreen,
             ExerciseProgram model)
         {
-            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
             Ensure.ArgumentNotNull(scheduler, nameof(scheduler));
             Ensure.ArgumentNotNull(hostScreen, nameof(hostScreen));
             Ensure.ArgumentNotNull(model, nameof(model));
 
             this.activator = new ViewModelActivator();
-            this.logger = loggerService.GetLogger(this.GetType());
+            this.logger = LoggerService.GetLogger(this.GetType());
             this.scheduler = scheduler;
             this.model = model;
             this.hostScreen = hostScreen;

@@ -11,7 +11,6 @@
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Models.EventMatchers;
     using WorkoutWotch.Models.Events;
-    using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.Contracts.Speech;
 
     internal static class ExerciseParser
@@ -51,7 +50,6 @@
                 Parser<Unit> nameParser,
                 IAudioService audioService,
                 IDelayService delayService,
-                ILoggerService loggerService,
                 ISpeechService speechService)
             where T : IEvent =>
                 from _ in Parse.String("*")
@@ -59,7 +57,7 @@
                 from ___ in nameParser
                 from ____ in Parse.Char(':').Token(HorizontalWhitespaceParser.Parser)
                 from _____ in NewLineParser.Parser
-                from actions in ActionListParser.GetParser(1, audioService, delayService, loggerService, speechService)
+                from actions in ActionListParser.GetParser(1, audioService, delayService, speechService)
                 let action = new SequenceAction(actions)
                 select new MatcherWithAction(new TypedEventMatcher<T>(), action);
 
@@ -72,7 +70,6 @@
                 Func<ExecutionContext, int> getLast,
                 IAudioService audioService,
                 IDelayService delayService,
-                ILoggerService loggerService,
                 ISpeechService speechService)
             where T : NumberedEvent =>
                 from _ in Parse.String("*")
@@ -82,7 +79,7 @@
                 from numericalConstraint in NumericalConstraintParser.GetParser(getActual, getFirst, getLast)
                 from _____ in Parse.String(":").Token(HorizontalWhitespaceParser.Parser)
                 from ______ in NewLineParser.Parser
-                from actions in ActionListParser.GetParser(1, audioService, delayService, loggerService, speechService)
+                from actions in ActionListParser.GetParser(1, audioService, delayService, speechService)
                 let action = new SequenceAction(actions)
                 select new MatcherWithAction(new NumberedEventMatcher<T>(e => numericalConstraint(e.ExecutionContext)), action);
 
@@ -91,7 +88,6 @@
         private static Parser<MatcherWithAction> GetMatcherWithActionParser(
             IAudioService audioService,
             IDelayService delayService,
-            ILoggerService loggerService,
             ISpeechService speechService)
         {
             var beforeSetNameParser = GetEventMatcherName(EventMatcherPreposition.Before, EventMatcherNoun.Set);
@@ -100,39 +96,36 @@
             var duringRepNameParser =  GetEventMatcherName(EventMatcherPreposition.During, EventMatcherNoun.Rep);
             var afterRepNameParser =  GetEventMatcherName(EventMatcherPreposition.After, EventMatcherNoun.Rep);
 
-            return GetTypedEventMatcherWithActionParser<BeforeExerciseEvent>(GetEventMatcherName(EventMatcherPreposition.Before), audioService, delayService, loggerService, speechService)
-                .Or(GetTypedEventMatcherWithActionParser<AfterExerciseEvent>(GetEventMatcherName(EventMatcherPreposition.After), audioService, delayService, loggerService, speechService))
-                .Or(GetTypedEventMatcherWithActionParser<BeforeSetEvent>(beforeSetNameParser, audioService, delayService, loggerService, speechService))
-                .Or(GetTypedEventMatcherWithActionParser<AfterSetEvent>(afterSetNameParser, audioService, delayService, loggerService, speechService))
-                .Or(GetTypedEventMatcherWithActionParser<BeforeRepetitionEvent>(beforeRepNameParser, audioService, delayService, loggerService, speechService))
-                .Or(GetTypedEventMatcherWithActionParser<DuringRepetitionEvent>(duringRepNameParser, audioService, delayService, loggerService, speechService))
-                .Or(GetTypedEventMatcherWithActionParser<AfterRepetitionEvent>(afterRepNameParser, audioService, delayService, loggerService, speechService))
-                .Or(GetNumberedEventMatcherWithActionParser<BeforeSetEvent>(beforeSetNameParser,  ec => ec.CurrentSet, ec => 1, ec => ec.CurrentExercise.SetCount, audioService, delayService, loggerService, speechService))
-                .Or(GetNumberedEventMatcherWithActionParser<AfterSetEvent>(afterSetNameParser, ec => ec.CurrentSet, ec => 1, ec => ec.CurrentExercise.SetCount, audioService, delayService, loggerService, speechService))
-                .Or(GetNumberedEventMatcherWithActionParser<BeforeRepetitionEvent>(beforeRepNameParser, ec => ec.CurrentRepetition, ec => 1, ec => ec.CurrentExercise.RepetitionCount, audioService, delayService, loggerService, speechService))
-                .Or(GetNumberedEventMatcherWithActionParser<DuringRepetitionEvent>(duringRepNameParser, ec => ec.CurrentRepetition, ec => 1, ec => ec.CurrentExercise.RepetitionCount, audioService, delayService, loggerService, speechService))
-                .Or(GetNumberedEventMatcherWithActionParser<AfterRepetitionEvent>(afterRepNameParser, ec => ec.CurrentRepetition, ec => 1, ec => ec.CurrentExercise.RepetitionCount, audioService, delayService, loggerService, speechService));
+            return GetTypedEventMatcherWithActionParser<BeforeExerciseEvent>(GetEventMatcherName(EventMatcherPreposition.Before), audioService, delayService, speechService)
+                .Or(GetTypedEventMatcherWithActionParser<AfterExerciseEvent>(GetEventMatcherName(EventMatcherPreposition.After), audioService, delayService, speechService))
+                .Or(GetTypedEventMatcherWithActionParser<BeforeSetEvent>(beforeSetNameParser, audioService, delayService, speechService))
+                .Or(GetTypedEventMatcherWithActionParser<AfterSetEvent>(afterSetNameParser, audioService, delayService, speechService))
+                .Or(GetTypedEventMatcherWithActionParser<BeforeRepetitionEvent>(beforeRepNameParser, audioService, delayService, speechService))
+                .Or(GetTypedEventMatcherWithActionParser<DuringRepetitionEvent>(duringRepNameParser, audioService, delayService, speechService))
+                .Or(GetTypedEventMatcherWithActionParser<AfterRepetitionEvent>(afterRepNameParser, audioService, delayService, speechService))
+                .Or(GetNumberedEventMatcherWithActionParser<BeforeSetEvent>(beforeSetNameParser,  ec => ec.CurrentSet, ec => 1, ec => ec.CurrentExercise.SetCount, audioService, delayService, speechService))
+                .Or(GetNumberedEventMatcherWithActionParser<AfterSetEvent>(afterSetNameParser, ec => ec.CurrentSet, ec => 1, ec => ec.CurrentExercise.SetCount, audioService, delayService, speechService))
+                .Or(GetNumberedEventMatcherWithActionParser<BeforeRepetitionEvent>(beforeRepNameParser, ec => ec.CurrentRepetition, ec => 1, ec => ec.CurrentExercise.RepetitionCount, audioService, delayService, speechService))
+                .Or(GetNumberedEventMatcherWithActionParser<DuringRepetitionEvent>(duringRepNameParser, ec => ec.CurrentRepetition, ec => 1, ec => ec.CurrentExercise.RepetitionCount, audioService, delayService, speechService))
+                .Or(GetNumberedEventMatcherWithActionParser<AfterRepetitionEvent>(afterRepNameParser, ec => ec.CurrentRepetition, ec => 1, ec => ec.CurrentExercise.RepetitionCount, audioService, delayService, speechService));
         }
 
         // parses any number of matchers with their associated action
         private static Parser<IEnumerable<MatcherWithAction>> GetMatchersWithActionsParser(
                 IAudioService audioService,
                 IDelayService delayService,
-                ILoggerService loggerService,
                 ISpeechService speechService) =>
-            GetMatcherWithActionParser(audioService, delayService, loggerService, speechService)
+            GetMatcherWithActionParser(audioService, delayService, speechService)
                 .DelimitedBy(NewLineParser.Parser.Token(HorizontalWhitespaceParser.Parser)
                 .AtLeastOnce());
 
         public static Parser<Exercise> GetParser(
             IAudioService audioService,
             IDelayService delayService,
-            ILoggerService loggerService,
             ISpeechService speechService)
         {
             Ensure.ArgumentNotNull(audioService, nameof(audioService));
             Ensure.ArgumentNotNull(delayService, nameof(delayService));
-            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
             Ensure.ArgumentNotNull(speechService, nameof(speechService));
 
             return
@@ -140,9 +133,8 @@
                 from _ in VerticalSeparationParser.Parser
                 from setAndRepetitionCount in setAndRepetitionCountParser
                 from __ in VerticalSeparationParser.Parser
-                from matchersWithActions in GetMatchersWithActionsParser(audioService, delayService, loggerService, speechService).Optional()
+                from matchersWithActions in GetMatchersWithActionsParser(audioService, delayService, speechService).Optional()
                 select new Exercise(
-                    loggerService,
                     speechService,
                     name,
                     setAndRepetitionCount.Item1,

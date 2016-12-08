@@ -3,13 +3,10 @@
     using System;
     using System.Reactive;
     using System.Reactive.Linq;
-    using System.Threading;
     using Builders;
     using PCLMock;
     using WorkoutWotch.Models;
-    using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.UnitTests.Models.Mocks;
-    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
     using Xunit;
 
     public sealed class DoNotAwaitActionFixture
@@ -50,39 +47,5 @@
 
             Assert.True(completed);
         }
-
-#if DEBUG
-
-        [Fact]
-        public void execute_logs_any_error_raised_by_the_inner_action()
-        {
-            var waitHandle = new ManualResetEventSlim();
-            var logger = new LoggerMock(MockBehavior.Loose);
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-            var action = new ActionMock(MockBehavior.Loose);
-
-            logger
-                .When(x => x.Log(LogLevel.Error, It.IsAny<string>()))
-                .Do(waitHandle.Set);
-
-            loggerService
-                .When(x => x.GetLogger(It.IsAny<Type>()))
-                .Return(logger);
-
-            action
-                .When(x => x.Execute(It.IsAny<ExecutionContext>()))
-                .Return(Observable.Throw<Unit>(new InvalidOperationException("Something bad happened")));
-
-            var sut = new DoNotAwaitActionBuilder()
-                .WithLoggerService(loggerService)
-                .WithInnerAction(action)
-                .Build();
-
-            sut.Execute(new ExecutionContext());
-
-            Assert.True(waitHandle.Wait(TimeSpan.FromSeconds(3)));
-        }
-
-#endif
     }
 }

@@ -5,7 +5,6 @@
     using PCLMock;
     using Services.Audio.Mocks;
     using Services.Delay.Mocks;
-    using Services.Logger.Mocks;
     using Services.Speech.Mocks;
     using Sprache;
     using WorkoutWotch.Models.EventMatchers;
@@ -27,7 +26,6 @@
                 .GetParser(
                     new AudioServiceMock(MockBehavior.Loose),
                     new DelayServiceMock(MockBehavior.Loose),
-                    new LoggerServiceMock(MockBehavior.Loose),
                     new SpeechServiceMock(MockBehavior.Loose))
                 .Parse(input);
 
@@ -51,7 +49,6 @@
                 .GetParser(
                     new AudioServiceMock(MockBehavior.Loose),
                     new DelayServiceMock(MockBehavior.Loose),
-                    new LoggerServiceMock(MockBehavior.Loose),
                     new SpeechServiceMock(MockBehavior.Loose))
                 .Parse(input);
 
@@ -169,7 +166,6 @@
                 .GetParser(
                     new AudioServiceMock(MockBehavior.Loose),
                     new DelayServiceMock(MockBehavior.Loose),
-                    new LoggerServiceMock(MockBehavior.Loose),
                     new SpeechServiceMock(MockBehavior.Loose))
                 .Parse(input);
 
@@ -204,7 +200,6 @@
                .GetParser(
                    new AudioServiceMock(MockBehavior.Loose),
                    new DelayServiceMock(MockBehavior.Loose),
-                   new LoggerServiceMock(MockBehavior.Loose),
                    new SpeechServiceMock(MockBehavior.Loose))(new Input(input));
             Assert.False(result.WasSuccessful && result.Remainder.AtEnd);
         }

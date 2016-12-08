@@ -9,7 +9,7 @@
     using System.Reactive.Linq;
     using Akavache;
     using Genesis.Ensure;
-    using WorkoutWotch.Services.Contracts.Logger;
+    using Genesis.Logging;
     using WorkoutWotch.Services.Contracts.State;
     using WorkoutWotch.Utility;
 
@@ -20,13 +20,12 @@
         private readonly object sync;
         private volatile IImmutableList<SaveCallback> saveCallbacks;
 
-        public StateService(IBlobCache blobCache, ILoggerService loggerService)
+        public StateService(IBlobCache blobCache)
         {
             Ensure.ArgumentNotNull(blobCache, nameof(blobCache));
-            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
 
             this.blobCache = blobCache;
-            this.logger = loggerService.GetLogger(this.GetType());
+            this.logger = LoggerService.GetLogger(this.GetType());
             this.saveCallbacks = ImmutableList<SaveCallback>.Empty;
             this.sync = new object();
         }

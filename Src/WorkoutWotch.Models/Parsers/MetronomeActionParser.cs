@@ -5,7 +5,6 @@
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Services.Contracts.Audio;
     using WorkoutWotch.Services.Contracts.Delay;
-    using WorkoutWotch.Services.Contracts.Logger;
 
     internal static class MetronomeActionParser
     {
@@ -16,12 +15,10 @@
 
         public static Parser<MetronomeAction> GetParser(
             IAudioService audioService,
-            IDelayService delayService,
-            ILoggerService loggerService)
+            IDelayService delayService)
         {
             Ensure.ArgumentNotNull(audioService, nameof(audioService));
             Ensure.ArgumentNotNull(delayService, nameof(delayService));
-            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
 
             return
                 from _ in Parse.IgnoreCase("metronome")
@@ -32,7 +29,6 @@
                 select new MetronomeAction(
                     audioService,
                     delayService,
-                    loggerService,
                     ticks);
         }
 

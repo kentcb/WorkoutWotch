@@ -5,7 +5,6 @@
     using PCLMock;
     using Services.Audio.Mocks;
     using Services.Delay.Mocks;
-    using Services.Logger.Mocks;
     using Sprache;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Models.Parsers;
@@ -41,8 +40,7 @@
             var result = MetronomeActionParser
                 .GetParser(
                     new AudioServiceMock(MockBehavior.Loose),
-                    new DelayServiceMock(MockBehavior.Loose),
-                    new LoggerServiceMock(MockBehavior.Loose))
+                    new DelayServiceMock(MockBehavior.Loose))
                 .Parse(input);
             Assert.NotNull(result);
             Assert.Equal(expectedPeriodsBeforeMilliseconds.Length, result.Ticks.Count);
@@ -76,8 +74,7 @@
             var result = MetronomeActionParser
                  .GetParser(
                      new AudioServiceMock(MockBehavior.Loose),
-                     new DelayServiceMock(MockBehavior.Loose),
-                     new LoggerServiceMock(MockBehavior.Loose))(new Input(input));
+                     new DelayServiceMock(MockBehavior.Loose))(new Input(input));
             Assert.False(result.WasSuccessful && result.Remainder.AtEnd);
         }
     }

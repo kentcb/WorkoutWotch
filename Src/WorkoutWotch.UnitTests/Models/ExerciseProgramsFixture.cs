@@ -5,7 +5,6 @@
     using PCLMock;
     using Services.Audio.Mocks;
     using Services.Delay.Mocks;
-    using Services.Logger.Mocks;
     using Services.Speech.Mocks;
     using WorkoutWotch.Models;
     using Xunit;
@@ -44,7 +43,6 @@
                 input,
                 new AudioServiceMock(MockBehavior.Loose),
                 new DelayServiceMock(MockBehavior.Loose),
-                new LoggerServiceMock(MockBehavior.Loose),
                 new SpeechServiceMock(MockBehavior.Loose));
 
             Assert.NotNull(result);
@@ -64,7 +62,6 @@
                 input,
                 new AudioServiceMock(MockBehavior.Loose),
                 new DelayServiceMock(MockBehavior.Loose),
-                new LoggerServiceMock(MockBehavior.Loose),
                 new SpeechServiceMock(MockBehavior.Loose));
 
             Assert.NotNull(result);

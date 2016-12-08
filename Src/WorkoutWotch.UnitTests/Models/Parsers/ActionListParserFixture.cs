@@ -5,7 +5,6 @@
     using PCLMock;
     using Services.Audio.Mocks;
     using Services.Delay.Mocks;
-    using Services.Logger.Mocks;
     using Services.Speech.Mocks;
     using Sprache;
     using WorkoutWotch.Models.Actions;
@@ -58,7 +57,6 @@
                     indentLevel,
                     new AudioServiceMock(MockBehavior.Loose),
                     new DelayServiceMock(MockBehavior.Loose),
-                    new LoggerServiceMock(MockBehavior.Loose),
                     new SpeechServiceMock(MockBehavior.Loose))(new Input(input));
 
             Assert.True(result.WasSuccessful);
@@ -82,7 +80,6 @@
                     indentLevel,
                     new AudioServiceMock(MockBehavior.Loose),
                     new DelayServiceMock(MockBehavior.Loose),
-                    new LoggerServiceMock(MockBehavior.Loose),
                     new SpeechServiceMock(MockBehavior.Loose))(new Input(input));
             Assert.False(result.WasSuccessful && result.Remainder.AtEnd);
         }

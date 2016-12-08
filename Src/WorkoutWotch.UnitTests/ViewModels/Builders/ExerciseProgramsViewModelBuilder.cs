@@ -12,11 +12,9 @@
     using WorkoutWotch.Services.Contracts.Audio;
     using WorkoutWotch.Services.Contracts.Delay;
     using WorkoutWotch.Services.Contracts.ExerciseDocument;
-    using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.Contracts.Speech;
     using WorkoutWotch.Services.Contracts.State;
     using WorkoutWotch.UnitTests.Services.ExerciseDocument.Mocks;
-    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
     using WorkoutWotch.UnitTests.Services.Scheduler.Mocks;
     using WorkoutWotch.UnitTests.Services.State.Mocks;
     using WorkoutWotch.ViewModels;
@@ -27,7 +25,6 @@
         private IAudioService audioService;
         private IDelayService delayService;
         private IExerciseDocumentService exerciseDocumentService;
-        private ILoggerService loggerService;
         private IScheduler mainScheduler;
         private IScheduler taskPoolScheduler;
         private ISpeechService speechService;
@@ -41,7 +38,6 @@
             this.audioService = new AudioServiceMock(MockBehavior.Loose);
             this.delayService = new DelayServiceMock(MockBehavior.Loose);
             this.exerciseDocumentService = new ExerciseDocumentServiceMock(MockBehavior.Loose);
-            this.loggerService = new LoggerServiceMock(MockBehavior.Loose);
             this.mainScheduler = new SchedulerMock(MockBehavior.Loose);
             this.taskPoolScheduler = new SchedulerMock(MockBehavior.Loose);
             this.speechService = new SpeechServiceMock(MockBehavior.Loose);
@@ -67,9 +63,6 @@
 
         public ExerciseProgramsViewModelBuilder WithExerciseDocumentService(IExerciseDocumentService exerciseDocumentService) =>
             this.With(ref this.exerciseDocumentService, exerciseDocumentService);
-
-        public ExerciseProgramsViewModelBuilder WithLoggerService(ILoggerService loggerService) =>
-            this.With(ref this.loggerService, loggerService);
 
         public ExerciseProgramsViewModelBuilder WithMainScheduler(IScheduler mainScheduler) =>
             this.With(ref this.mainScheduler, mainScheduler);
@@ -126,7 +119,6 @@
                 this.audioService,
                 this.delayService,
                 this.exerciseDocumentService,
-                this.loggerService,
                 this.mainScheduler,
                 this.taskPoolScheduler,
                 this.speechService,

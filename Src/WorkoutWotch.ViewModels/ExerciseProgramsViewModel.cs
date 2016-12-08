@@ -5,6 +5,7 @@
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using Genesis.Ensure;
+    using Genesis.Logging;
     using ReactiveUI;
     using Services.Contracts.Audio;
     using Services.Contracts.Delay;
@@ -12,7 +13,6 @@
     using Sprache;
     using WorkoutWotch.Models;
     using WorkoutWotch.Services.Contracts.ExerciseDocument;
-    using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.Contracts.State;
 
     public sealed class ExerciseProgramsViewModel : ReactiveObject, IRoutableViewModel, ISupportsActivation
@@ -34,7 +34,6 @@
             IAudioService audioService,
             IDelayService delayService,
             IExerciseDocumentService exerciseDocumentService,
-            ILoggerService loggerService,
             IScheduler mainScheduler,
             IScheduler taskPoolScheduler,
             ISpeechService speechService,
@@ -45,7 +44,6 @@
             Ensure.ArgumentNotNull(audioService, nameof(audioService));
             Ensure.ArgumentNotNull(delayService, nameof(delayService));
             Ensure.ArgumentNotNull(exerciseDocumentService, nameof(exerciseDocumentService));
-            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
             Ensure.ArgumentNotNull(mainScheduler, nameof(mainScheduler));
             Ensure.ArgumentNotNull(taskPoolScheduler, nameof(taskPoolScheduler));
             Ensure.ArgumentNotNull(speechService, nameof(speechService));
@@ -56,7 +54,7 @@
             this.activator = new ViewModelActivator();
             this.exerciseDocumentService = exerciseDocumentService;
             this.stateService = stateService;
-            this.logger = loggerService.GetLogger(this.GetType());
+            this.logger = LoggerService.GetLogger(this.GetType());
             this.hostScreen = hostScreen;
 
             this.WhenAnyValue(x => x.Model)
@@ -101,7 +99,7 @@
 
                                     using (this.logger.Perf("Parsing exercise programs from {0}.", x.Source))
                                     {
-                                        parsedExercisePrograms = ExercisePrograms.TryParse(x.Item, audioService, delayService, loggerService, speechService);
+                                        parsedExercisePrograms = ExercisePrograms.TryParse(x.Item, audioService, delayService, speechService);
                                     }
 
                                     return new DocumentSourceWith<IResult<ExercisePrograms>>(x.Source, parsedExercisePrograms);

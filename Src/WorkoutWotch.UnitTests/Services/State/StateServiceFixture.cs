@@ -5,9 +5,6 @@
     using System.Reactive.Linq;
     using Builders;
     using PCLMock;
-    using WorkoutWotch.Services.Contracts.Logger;
-    using WorkoutWotch.Services.State;
-    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
     using WorkoutWotch.UnitTests.Services.State.Mocks;
     using Xunit;
 
@@ -107,15 +104,7 @@
         [Fact]
         public void save_ignores_any_null_tasks_returned_by_saved_callbacks()
         {
-            var logger = new LoggerMock(MockBehavior.Loose);
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-
-            loggerService
-                .When(x => x.GetLogger(typeof(StateService)))
-                .Return(logger);
-
             var sut = new StateServiceBuilder()
-                .WithLoggerService(loggerService)
                 .Build();
 
             var firstExecuted = false;
@@ -140,14 +129,6 @@
 
             Assert.True(firstExecuted);
             Assert.True(secondExecuted);
-
-            loggerService
-                .Verify(x => x.GetLogger(typeof(StateService)))
-                .WasCalledExactlyOnce();
-
-            logger
-                .Verify(x => x.Log(LogLevel.Error, It.IsAny<string>()))
-                .WasNotCalled();
         }
 
         [Fact]
@@ -159,33 +140,6 @@
 
             sut.Save().Subscribe();
         }
-
-#if DEBUG
-
-        [Fact]
-        public void save_logs_an_error_if_a_save_callback_fails()
-        {
-            var logger = new LoggerMock(MockBehavior.Loose);
-            var loggerService = new LoggerServiceMock(MockBehavior.Loose);
-
-            loggerService
-                .When(x => x.GetLogger(typeof(StateService)))
-                .Return(logger);
-
-            var sut = new StateServiceBuilder()
-                .WithLoggerService(loggerService)
-                .Build();
-
-            sut.RegisterSaveCallback(_ => Observable.Throw<Unit>(new Exception("whatever")));
-
-            sut.Save().Subscribe();
-
-            logger
-                .Verify(x => x.Log(LogLevel.Error, It.IsAny<string>()))
-                .WasCalledExactlyOnce();
-        }
-
-#endif
 
         [Fact]
         public void save_completes_even_if_there_are_no_save_callbacks()

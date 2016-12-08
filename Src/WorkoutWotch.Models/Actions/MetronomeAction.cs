@@ -7,22 +7,20 @@
     using Genesis.Ensure;
     using WorkoutWotch.Services.Contracts.Audio;
     using WorkoutWotch.Services.Contracts.Delay;
-    using WorkoutWotch.Services.Contracts.Logger;
 
     public sealed class MetronomeAction : IAction
     {
         private readonly IImmutableList<MetronomeTick> ticks;
         private readonly SequenceAction innerAction;
 
-        public MetronomeAction(IAudioService audioService, IDelayService delayService, ILoggerService loggerService, IEnumerable<MetronomeTick> ticks)
+        public MetronomeAction(IAudioService audioService, IDelayService delayService, IEnumerable<MetronomeTick> ticks)
         {
             Ensure.ArgumentNotNull(audioService, nameof(audioService));
             Ensure.ArgumentNotNull(delayService, nameof(delayService));
-            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
             Ensure.ArgumentNotNull(ticks, nameof(ticks));
 
             this.ticks = ticks.ToImmutableList();
-            this.innerAction = new SequenceAction(GetInnerActions(audioService, delayService, loggerService, this.ticks));
+            this.innerAction = new SequenceAction(GetInnerActions(audioService, delayService, this.ticks));
         }
 
         public TimeSpan Duration => this.innerAction.Duration;
@@ -38,7 +36,7 @@
                 .Execute(context);
         }
 
-        private static IEnumerable<IAction> GetInnerActions(IAudioService audioService, IDelayService delayService, ILoggerService loggerService, IEnumerable<MetronomeTick> ticks)
+        private static IEnumerable<IAction> GetInnerActions(IAudioService audioService, IDelayService delayService, IEnumerable<MetronomeTick> ticks)
         {
             foreach (var tick in ticks)
             {
@@ -47,10 +45,10 @@
                 switch (tick.Type)
                 {
                     case MetronomeTickType.Click:
-                        yield return new DoNotAwaitAction(loggerService, new AudioAction(audioService, "MetronomeClick"));
+                        yield return new DoNotAwaitAction(new AudioAction(audioService, "MetronomeClick"));
                         break;
                     case MetronomeTickType.Bell:
-                        yield return new DoNotAwaitAction(loggerService, new AudioAction(audioService, "MetronomeBell"));
+                        yield return new DoNotAwaitAction(new AudioAction(audioService, "MetronomeBell"));
                         break;
                 }
             }

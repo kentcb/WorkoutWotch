@@ -4,16 +4,13 @@
     using PCLMock;
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Events;
-    using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.Contracts.Speech;
     using WorkoutWotch.UnitTests.Models.Mocks;
-    using WorkoutWotch.UnitTests.Services.Logger.Mocks;
     using WorkoutWotch.UnitTests.Services.Speech.Mocks;
 
     public sealed class ExerciseBuilder : IBuilder
     {
         private List<MatcherWithAction> matchersWithActions;
-        private ILoggerService loggerService;
         private ISpeechService speechService;
         private string name;
         private int setCount;
@@ -22,15 +19,11 @@
         public ExerciseBuilder()
         {
             this.matchersWithActions = new List<MatcherWithAction>();
-            this.loggerService = new LoggerServiceMock(MockBehavior.Loose);
             this.speechService = new SpeechServiceMock(MockBehavior.Loose);
             this.name = "Name";
             this.setCount = 1;
             this.repetitionCount = 1;
         }
-
-        public ExerciseBuilder WithLoggerService(ILoggerService loggerService) =>
-            this.With(ref this.loggerService, loggerService);
 
         public ExerciseBuilder WithSpeechService(ISpeechService speechService) =>
             this.With(ref this.speechService, speechService);
@@ -59,7 +52,6 @@
 
         public Exercise Build() =>
             new Exercise(
-                this.loggerService,
                 this.speechService,
                 this.name,
                 this.setCount,

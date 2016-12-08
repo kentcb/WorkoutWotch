@@ -7,7 +7,7 @@
     using System.Reactive;
     using System.Reactive.Linq;
     using Genesis.Ensure;
-    using WorkoutWotch.Services.Contracts.Logger;
+    using Genesis.Logging;
 
     public sealed class ExerciseProgram
     {
@@ -16,13 +16,12 @@
         private readonly IImmutableList<Exercise> exercises;
         private readonly TimeSpan duration;
 
-        public ExerciseProgram(ILoggerService loggerService, string name, IEnumerable<Exercise> exercises)
+        public ExerciseProgram(string name, IEnumerable<Exercise> exercises)
         {
-            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
             Ensure.ArgumentNotNull(name, nameof(name));
             Ensure.ArgumentNotNull(exercises, nameof(exercises), assertContentsNotNull: true);
 
-            this.logger = loggerService.GetLogger(this.GetType());
+            this.logger = LoggerService.GetLogger(this.GetType());
             this.name = name;
             this.exercises = exercises.ToImmutableList();
             this.duration = this

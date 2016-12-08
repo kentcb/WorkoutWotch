@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;ENSURE</DefineConstants>
+    <DefineConstants>DEBUG;ENSURE;LOGGING</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -35,13 +35,10 @@
     <Compile Include="Analytics\AnalyticsService.cs" />
     <Compile Include="Analytics\ExceptionLevelExtensions.cs" />
     <Compile Include="ExerciseDocument\CannedExerciseDocumentService.cs" />
-    <Compile Include="Logger\LogFileSink.cs" />
-    <Compile Include="Logger\NullLoggerService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Logger\LoggerService.cs" />
     <Compile Include="State\StateService.cs" />
     <Compile Include="Delay\DelayService.cs" />
   </ItemGroup>
@@ -64,6 +61,10 @@
     </Reference>
     <Reference Include="Genesis.Ensure, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Genesis.Ensure.1.0.4-alpha\lib\portable-net45+win8+wp8+wpa81\Genesis.Ensure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Genesis.Logging, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Genesis.Logging.1.0.7-alpha\lib\portable-net45+win8+wp8+wpa81\Genesis.Logging.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Humanizer, Version=2.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">

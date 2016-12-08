@@ -6,11 +6,10 @@ namespace WorkoutWotch.Services.iOS.ExerciseDocument
     using System.Threading;
     using System.Threading.Tasks;
     using Foundation;
-    using Genesis.Ensure;
+    using Genesis.Logging;
     using Services.ExerciseDocument;
     using UIKit;
     using WorkoutWotch.Services.Contracts.ExerciseDocument;
-    using WorkoutWotch.Services.Contracts.Logger;
 
     public sealed class iCloudExerciseDocumentService : NSObject, IExerciseDocumentService
     {
@@ -22,11 +21,9 @@ namespace WorkoutWotch.Services.iOS.ExerciseDocument
         private int initialized;
         private NSUrl ubiquityContainerUrl;
 
-        public iCloudExerciseDocumentService(ILoggerService loggerService)
+        public iCloudExerciseDocumentService()
         {
-            Ensure.ArgumentNotNull(loggerService, nameof(loggerService));
-
-            this.logger = loggerService.GetLogger(this.GetType());
+            this.logger = LoggerService.GetLogger(this.GetType());
             this.exerciseDocument = new BehaviorSubject<string>(null);
             this.sync = new object();
         }

@@ -8,11 +8,9 @@
     using WorkoutWotch.Services.Contracts.Audio;
     using WorkoutWotch.Services.Contracts.Delay;
     using WorkoutWotch.Services.Contracts.ExerciseDocument;
-    using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.Contracts.Speech;
     using WorkoutWotch.Services.Contracts.State;
     using WorkoutWotch.Services.Delay;
-    using WorkoutWotch.Services.Logger;
     using WorkoutWotch.Services.State;
     using WorkoutWotch.ViewModels;
 
@@ -23,7 +21,6 @@
         protected readonly Lazy<IAudioService> audioService;
         protected readonly Lazy<IDelayService> delayService;
         protected readonly Lazy<IExerciseDocumentService> exerciseDocumentService;
-        protected readonly Lazy<ILoggerService> loggerService;
         protected readonly Lazy<IScheduler> mainScheduler;
         protected readonly Lazy<IScheduler> taskPoolScheduler;
         protected readonly Lazy<ISpeechService> speechService;
@@ -38,7 +35,6 @@
             this.audioService = new Lazy<IAudioService>(this.CreateAudioService);
             this.delayService = new Lazy<IDelayService>(this.CreateDelayService);
             this.exerciseDocumentService = new Lazy<IExerciseDocumentService>(this.CreateExerciseDocumentService);
-            this.loggerService = new Lazy<ILoggerService>(this.CreateLoggerService);
             this.mainScheduler = new Lazy<IScheduler>(this.CreateMainScheduler);
             this.speechService = new Lazy<ISpeechService>(this.CreateSpeechService);
             this.stateService = new Lazy<IStateService>(this.CreateStateService);
@@ -47,9 +43,6 @@
             this.mainViewModel = new Lazy<MainViewModel>(this.CreateMainViewModel);
             this.exerciseProgramsViewModel = new Lazy<ExerciseProgramsViewModel>(this.CreateExerciseProgramsViewModel);
         }
-
-        public ILoggerService ResolveLoggerService() =>
-            this.loggerService.Value;
 
         public IStateService ResolveStateService() =>
             this.stateService.Value;
@@ -71,9 +64,6 @@
 
         protected abstract IExerciseDocumentService CreateExerciseDocumentService();
 
-        private ILoggerService CreateLoggerService() =>
-            new LoggerService();
-
         private IScheduler CreateMainScheduler() =>
             new SynchronizationContextScheduler(SynchronizationContext.Current);
 
@@ -81,8 +71,7 @@
 
         private IStateService CreateStateService() =>
             new StateService(
-                this.blobCache.Value,
-                this.loggerService.Value);
+                this.blobCache.Value);
 
         private IScheduler CreateTaskPoolScheduler() =>
             TaskPoolScheduler.Default;
@@ -100,7 +89,6 @@
                 this.audioService.Value,
                 this.delayService.Value,
                 this.exerciseDocumentService.Value,
-                this.loggerService.Value,
                 this.mainScheduler.Value,
                 this.taskPoolScheduler.Value,
                 this.speechService.Value,
@@ -110,7 +98,6 @@
 
         private ExerciseProgramViewModel ExerciseProgramViewModelFactory(ExerciseProgram model) =>
             new ExerciseProgramViewModel(
-                this.loggerService.Value,
                 this.mainScheduler.Value,
                 this.mainViewModel.Value,
                 model);
