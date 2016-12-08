@@ -11,7 +11,7 @@
     using WorkoutWotch.Models.Parsers;
     using Xunit;
 
-    public class MetronomeActionParserFixture
+    public sealed class MetronomeActionParserFixture
     {
         private const int msInSecond = 1000;
         private const int msInMinute = 60 * msInSecond;

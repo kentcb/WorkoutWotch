@@ -4,7 +4,7 @@
     using WorkoutWotch.Models.Parsers;
     using Xunit;
 
-    public class VerticalSeparationParserFixture
+    public sealed class VerticalSeparationParserFixture
     {
         [Theory]
         [InlineData("")]

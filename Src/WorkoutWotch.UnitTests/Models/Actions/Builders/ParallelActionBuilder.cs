@@ -4,7 +4,7 @@
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Actions;
 
-    internal sealed class ParallelActionBuilder : IBuilder
+    public sealed class ParallelActionBuilder : IBuilder
     {
         private List<IAction> children;
 
@@ -21,7 +21,7 @@
 
         public ParallelAction Build() =>
             new ParallelAction(this.children);
-        
+
 
         public static implicit operator ParallelAction(ParallelActionBuilder builder) =>
             builder.Build();

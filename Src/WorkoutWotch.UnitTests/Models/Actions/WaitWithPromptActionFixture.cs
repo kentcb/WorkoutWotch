@@ -11,7 +11,7 @@
     using WorkoutWotch.UnitTests.Services.Speech.Mocks;
     using Xunit;
 
-    public class WaitWithPromptActionFixture
+    public sealed class WaitWithPromptActionFixture
     {
         [Theory]
         [InlineData(0)]

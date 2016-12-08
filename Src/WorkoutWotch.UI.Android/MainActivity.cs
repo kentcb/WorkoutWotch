@@ -20,7 +20,7 @@
         Label = "Workout Wotch",
         Icon = "@drawable/icon",
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
-    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicationActivity, IConnectionResultHandler
+    public sealed class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicationActivity, IConnectionResultHandler
     {
         private const int RequestCodeResolution = 1;
         private static App app;

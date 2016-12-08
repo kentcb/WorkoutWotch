@@ -15,7 +15,7 @@
     using WorkoutWotch.UnitTests.Reactive;
     using Xunit;
 
-    public class ExerciseProgramViewModelFixture
+    public sealed class ExerciseProgramViewModelFixture
     {
         [Theory]
         [InlineData("Name")]

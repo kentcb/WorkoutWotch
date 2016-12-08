@@ -4,7 +4,7 @@
     using WorkoutWotch.Models.Parsers;
     using Xunit;
 
-    public class NewLineParserFixture
+    public sealed class NewLineParserFixture
     {
         [Theory]
         [InlineData("\n", NewLineType.Posix)]

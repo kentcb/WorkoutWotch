@@ -5,7 +5,7 @@
     using WorkoutWotch.Models.Parsers;
     using Xunit;
 
-    public class TimeSpanParserFixture
+    public sealed class TimeSpanParserFixture
     {
         private const int msInSecond = 1000;
         private const int msInMinute = 60 * msInSecond;

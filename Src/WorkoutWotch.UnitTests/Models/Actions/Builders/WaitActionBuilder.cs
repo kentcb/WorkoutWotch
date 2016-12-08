@@ -6,7 +6,7 @@
     using WorkoutWotch.Services.Contracts.Delay;
     using WorkoutWotch.UnitTests.Services.Delay.Mocks;
 
-    internal sealed class WaitActionBuilder : IBuilder
+    public sealed class WaitActionBuilder : IBuilder
     {
         private IDelayService delayService;
         private TimeSpan delay;

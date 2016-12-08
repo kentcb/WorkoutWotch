@@ -6,7 +6,7 @@
     using WorkoutWotch.Models.Events;
     using Xunit;
 
-    public class NumberedEventMatcherFixture
+    public sealed class NumberedEventMatcherFixture
     {
         [Fact]
         public void matches_returns_false_if_event_type_differs()

@@ -14,7 +14,7 @@
     using WorkoutWotch.ViewModels;
     using Xunit;
 
-    public class ExerciseProgramsViewModelFixture
+    public sealed class ExerciseProgramsViewModelFixture
     {
         [Fact]
         public void parse_error_message_is_null_by_default()

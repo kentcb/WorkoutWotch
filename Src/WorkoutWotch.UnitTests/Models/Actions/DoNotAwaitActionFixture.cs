@@ -12,7 +12,7 @@
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
     using Xunit;
 
-    public class DoNotAwaitActionFixture
+    public sealed class DoNotAwaitActionFixture
     {
         [Fact]
         public void duration_always_returns_zero_regardless_of_inner_action_duration()

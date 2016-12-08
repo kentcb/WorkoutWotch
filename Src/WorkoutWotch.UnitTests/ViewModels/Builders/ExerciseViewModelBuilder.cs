@@ -9,7 +9,7 @@
     using WorkoutWotch.UnitTests.Services.Scheduler.Mocks;
     using WorkoutWotch.ViewModels;
 
-    internal sealed class ExerciseViewModelBuilder : IBuilder
+    public sealed class ExerciseViewModelBuilder : IBuilder
     {
         private IScheduler scheduler;
         private Exercise model;

@@ -6,7 +6,7 @@
     using WorkoutWotch.Models.Parsers;
     using Xunit;
 
-    public class SayActionParserFixture
+    public sealed class SayActionParserFixture
     {
         [Theory]
         [InlineData("Say 'hello'", "hello")]

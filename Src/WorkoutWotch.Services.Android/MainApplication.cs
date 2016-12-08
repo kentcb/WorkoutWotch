@@ -1,15 +1,14 @@
-using System;
-
-using Android.App;
-using Android.OS;
-using Android.Runtime;
-using Plugin.CurrentActivity;
-
 namespace WorkoutWotch.Services.Android
 {
-	//You can specify additional application information in this attribute
+    using System;
+    using global::Android.App;
+    using global::Android.OS;
+    using global::Android.Runtime;
+    using Plugin.CurrentActivity;
+
+    //You can specify additional application information in this attribute
     [Application]
-    public class MainApplication : Application, Application.IActivityLifecycleCallbacks
+    public sealed class MainApplication : Application, Application.IActivityLifecycleCallbacks
     {
         public MainApplication(IntPtr handle, JniHandleOwnership transer)
           :base(handle, transer)

@@ -21,7 +21,7 @@
     using WorkoutWotch.UnitTests.Services.State.Mocks;
     using WorkoutWotch.ViewModels;
 
-    internal sealed class ExerciseProgramsViewModelBuilder : IBuilder
+    public sealed class ExerciseProgramsViewModelBuilder : IBuilder
     {
         private IAudioService audioService;
         private IDelayService delayService;
@@ -127,7 +127,7 @@
                 this.stateService,
                 this.hostScreen,
                 this.exerciseProgramViewModelFactory);
-        
+
         public static implicit operator ExerciseProgramsViewModel(ExerciseProgramsViewModelBuilder builder) =>
             builder.Build();
     }

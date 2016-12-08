@@ -11,7 +11,7 @@
     using WorkoutWotch.Models.Parsers;
     using Xunit;
 
-    public class ActionParserFixture
+    public sealed class ActionParserFixture
     {
         [Theory]
         [InlineData("Break for 10s", 0, typeof(BreakAction))]

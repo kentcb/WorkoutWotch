@@ -5,7 +5,7 @@
     using WorkoutWotch.Services.Contracts.Audio;
     using WorkoutWotch.UnitTests.Services.Audio.Mocks;
 
-    internal sealed class AudioActionBuilder : IBuilder
+    public sealed class AudioActionBuilder : IBuilder
     {
         private IAudioService audioService;
         private string audioName;

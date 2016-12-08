@@ -9,7 +9,7 @@
     using WorkoutWotch.UnitTests.Models.Mocks;
     using Xunit;
 
-    public class ExerciseProgramFixture
+    public sealed class ExerciseProgramFixture
     {
         [Theory]
         [InlineData("Name")]

@@ -6,7 +6,7 @@
     using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
 
-    internal sealed class ExerciseProgramBuilder : IBuilder
+    public sealed class ExerciseProgramBuilder : IBuilder
     {
         private List<Exercise> exercises;
         private ILoggerService loggerService;

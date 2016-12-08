@@ -7,7 +7,7 @@
     using WorkoutWotch.Services.Logger;
     using Xunit;
 
-    public class LoggerServiceFixture
+    public sealed class LoggerServiceFixture
     {
         [Fact]
         public void is_debug_enabled_honors_threshold()

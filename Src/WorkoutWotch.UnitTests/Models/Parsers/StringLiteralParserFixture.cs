@@ -6,7 +6,7 @@
     using WorkoutWotch.Models.Parsers;
     using Xunit;
 
-    public class StringLiteralParserFixture
+    public sealed class StringLiteralParserFixture
     {
         [Theory]
         [InlineData("''", "")]

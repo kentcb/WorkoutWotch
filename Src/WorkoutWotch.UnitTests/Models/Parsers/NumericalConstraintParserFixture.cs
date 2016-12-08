@@ -6,7 +6,7 @@
     using WorkoutWotch.Models.Parsers;
     using Xunit;
 
-    public class NumericalConstraintParserFixture
+    public sealed class NumericalConstraintParserFixture
     {
         [Theory]
         [InlineData("1", 1, 1, 4, true)]

@@ -12,7 +12,7 @@
     using WorkoutWotch.UnitTests.Services.Speech.Mocks;
     using Xunit;
 
-    public class ExerciseFixture
+    public sealed class ExerciseFixture
     {
         [Theory]
         [InlineData("Name")]

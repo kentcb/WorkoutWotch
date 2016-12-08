@@ -8,7 +8,7 @@
     using WorkoutWotch.Models.Parsers;
     using Xunit;
 
-    public class BreakActionParserFixture
+    public sealed class BreakActionParserFixture
     {
         private const int msInSecond = 1000;
         private const int msInMinute = 60 * msInSecond;

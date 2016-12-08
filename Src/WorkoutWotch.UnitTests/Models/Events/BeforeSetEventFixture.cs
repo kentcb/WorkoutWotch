@@ -4,7 +4,7 @@
     using WorkoutWotch.Models.Events;
     using Xunit;
 
-    public class BeforeSetEventFixture
+    public sealed class BeforeSetEventFixture
     {
         [Theory]
         [InlineData(0)]

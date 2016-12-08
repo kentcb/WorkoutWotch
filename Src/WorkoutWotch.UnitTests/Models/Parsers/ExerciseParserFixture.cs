@@ -13,7 +13,7 @@
     using WorkoutWotch.Models.Parsers;
     using Xunit;
 
-    public class ExerciseParserFixture
+    public sealed class ExerciseParserFixture
     {
         [Theory]
         [InlineData("## foo\n* 1 set x 1 rep", "foo")]

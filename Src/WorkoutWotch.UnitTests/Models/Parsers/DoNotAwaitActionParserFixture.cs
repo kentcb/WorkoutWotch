@@ -12,7 +12,7 @@
     using WorkoutWotch.Models.Parsers;
     using Xunit;
 
-    public class DoNotAwaitActionParserFixture
+    public sealed class DoNotAwaitActionParserFixture
     {
         [Theory]
         [InlineData(

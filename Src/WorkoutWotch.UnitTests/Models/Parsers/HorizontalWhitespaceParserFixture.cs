@@ -4,7 +4,7 @@
     using WorkoutWotch.Models.Parsers;
     using Xunit;
 
-    public class HorizontalWhitespaceParserFixture
+    public sealed class HorizontalWhitespaceParserFixture
     {
         [InlineData(" ")]
         [InlineData("\t")]

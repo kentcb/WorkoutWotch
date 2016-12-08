@@ -7,7 +7,7 @@
     using WorkoutWotch.UnitTests.Models.Mocks;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
 
-    internal sealed class DoNotAwaitActionBuilder : IBuilder
+    public sealed class DoNotAwaitActionBuilder : IBuilder
     {
         private ILoggerService loggerService;
         private IAction innerAction;

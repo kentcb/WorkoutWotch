@@ -9,7 +9,7 @@
     using WorkoutWotch.Models.Parsers;
     using Xunit;
 
-    public class ExerciseProgramsParserFixture
+    public sealed class ExerciseProgramsParserFixture
     {
         [Theory]
         [InlineData("", 0)]

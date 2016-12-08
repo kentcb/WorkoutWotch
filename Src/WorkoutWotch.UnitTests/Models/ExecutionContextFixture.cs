@@ -7,7 +7,7 @@
     using WorkoutWotch.Models;
     using Xunit;
 
-    public class ExecutionContextFixture
+    public sealed class ExecutionContextFixture
     {
         [Fact]
         public void cancel_raises_property_changed_for_is_cancelled()

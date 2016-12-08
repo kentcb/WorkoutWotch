@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Reactive;
     using System.Reactive.Linq;
-    using System.Threading;
     using Builders;
     using PCLMock;
     using WorkoutWotch.Models;
@@ -13,7 +12,7 @@
     using WorkoutWotch.UnitTests.Services.Delay.Mocks;
     using Xunit;
 
-    public class MetronomeActionFixture
+    public sealed class MetronomeActionFixture
     {
         [Fact]
         public void duration_is_zero_if_there_are_no_ticks()

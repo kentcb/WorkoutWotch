@@ -12,7 +12,7 @@
     using WorkoutWotch.Models.Parsers;
     using Xunit;
 
-    public class ActionListParserFixture
+    public sealed class ActionListParserFixture
     {
         [Theory]
         [InlineData(

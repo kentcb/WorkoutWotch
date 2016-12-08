@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using WorkoutWotch.Models;
 
-    internal sealed class ExerciseProgramsBuilder : IBuilder
+    public sealed class ExerciseProgramsBuilder : IBuilder
     {
         private List<ExerciseProgram> programs;
 
@@ -20,7 +20,7 @@
 
         public ExercisePrograms Build() =>
             new ExercisePrograms(this.programs);
-        
+
         public static implicit operator ExercisePrograms(ExerciseProgramsBuilder builder) =>
             builder.Build();
     }

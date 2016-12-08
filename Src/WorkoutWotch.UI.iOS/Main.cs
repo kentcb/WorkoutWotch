@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using Foundation;
-using UIKit;
-
-namespace WorkoutWotch.UI.iOS
+﻿namespace WorkoutWotch.UI.iOS
 {
-    public class Application
+    using UIKit;
+
+    public sealed class Application
     {
         // This is the main entry point of the application.
         static void Main(string[] args)

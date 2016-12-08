@@ -3,7 +3,7 @@
     using System;
     using Xunit;
 
-    public class MathExtFixture
+    public sealed class MathExtFixture
     {
         [Theory]
         [InlineData(0, 0, 0)]

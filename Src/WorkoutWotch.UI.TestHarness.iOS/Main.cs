@@ -2,9 +2,9 @@ namespace WorkoutWotch.UI.TestHarness.iOS
 {
     using UIKit;
 
-    public class Application
+    public sealed class Application
     {
-        static void Main(string[] args)
-            => UIApplication.Main(args, null, nameof(AppDelegate));
+        static void Main(string[] args) =>
+            UIApplication.Main(args, null, nameof(AppDelegate));
     }
 }

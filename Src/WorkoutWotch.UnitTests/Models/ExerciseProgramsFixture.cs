@@ -10,7 +10,7 @@
     using WorkoutWotch.Models;
     using Xunit;
 
-    public class ExerciseProgramsFixture
+    public sealed class ExerciseProgramsFixture
     {
         [Theory]
         [InlineData(0)]

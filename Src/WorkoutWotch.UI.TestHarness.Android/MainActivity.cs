@@ -7,7 +7,7 @@
     using Xunit.Sdk;
 
     [Activity(Label = "Workout Wotch Unit Tests", MainLauncher = true, Theme = "@android:style/Theme.Material.Light")]
-    public class MainActivity : RunnerActivity
+    public sealed class MainActivity : RunnerActivity
     {
         protected override void OnCreate(Bundle bundle)
         {

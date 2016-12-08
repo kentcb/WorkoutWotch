@@ -4,7 +4,7 @@
     using WorkoutWotch.Models.Events;
     using Xunit;
 
-    public class DuringRepetitionEventFixture
+    public sealed class DuringRepetitionEventFixture
     {
         [Theory]
         [InlineData(0)]

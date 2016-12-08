@@ -11,7 +11,7 @@
     using WorkoutWotch.UnitTests.Services.Scheduler.Mocks;
     using WorkoutWotch.ViewModels;
 
-    internal sealed class ExerciseProgramViewModelBuilder : IBuilder
+    public sealed class ExerciseProgramViewModelBuilder : IBuilder
     {
         private ILoggerService loggerService;
         private IScheduler scheduler;
@@ -44,7 +44,7 @@
                 this.scheduler,
                 this.hostScreen,
                 this.model);
-        
+
         public static implicit operator ExerciseProgramViewModel(ExerciseProgramViewModelBuilder builder) =>
             builder.Build();
     }

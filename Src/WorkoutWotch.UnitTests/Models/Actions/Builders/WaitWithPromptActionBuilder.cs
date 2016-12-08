@@ -8,7 +8,7 @@
     using WorkoutWotch.UnitTests.Services.Delay.Mocks;
     using WorkoutWotch.UnitTests.Services.Speech.Mocks;
 
-    internal sealed class WaitWithPromptActionBuilder : IBuilder
+    public sealed class WaitWithPromptActionBuilder : IBuilder
     {
         private IDelayService delayService;
         private ISpeechService speechService;
@@ -40,7 +40,7 @@
                 this.speechService,
                 this.duration,
                 this.promptSpeechText);
-        
+
         public static implicit operator WaitWithPromptAction(WaitWithPromptActionBuilder builder) =>
             builder.Build();
     }

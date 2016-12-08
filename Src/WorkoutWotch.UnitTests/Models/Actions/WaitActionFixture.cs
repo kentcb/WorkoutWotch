@@ -11,7 +11,7 @@
     using WorkoutWotch.UnitTests.Services.Delay.Mocks;
     using Xunit;
 
-    public class WaitActionFixture
+    public sealed class WaitActionFixture
     {
         [Theory]
         [InlineData(0)]

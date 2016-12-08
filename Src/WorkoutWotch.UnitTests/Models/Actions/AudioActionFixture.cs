@@ -7,7 +7,7 @@
     using WorkoutWotch.UnitTests.Services.Audio.Mocks;
     using Xunit;
 
-    public class AudioActionFixture
+    public sealed class AudioActionFixture
     {
         [Fact]
         public void duration_returns_zero()

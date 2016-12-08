@@ -1,7 +1,7 @@
 using System;
 using Akavache.Sqlite3;
 
-// Note: This class file is *required* for iOS to work correctly, and is 
+// Note: This class file is *required* for iOS to work correctly, and is
 // also a good idea for Android if you enable "Link All Assemblies".
 namespace WorkoutWotch.Models
 {
@@ -15,7 +15,7 @@ namespace WorkoutWotch.Models
     }
 
 
-    public class PreserveAttribute : Attribute
+    public sealed class PreserveAttribute : Attribute
     {
     }
 }

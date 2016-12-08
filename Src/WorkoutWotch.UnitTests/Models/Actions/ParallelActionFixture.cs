@@ -9,7 +9,7 @@
     using WorkoutWotch.UnitTests.Models.Mocks;
     using Xunit;
 
-    public class ParallelActionFixture
+    public sealed class ParallelActionFixture
     {
         [Fact]
         public void duration_is_zero_if_there_are_no_children()

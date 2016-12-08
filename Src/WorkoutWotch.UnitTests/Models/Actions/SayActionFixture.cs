@@ -7,7 +7,7 @@
     using WorkoutWotch.UnitTests.Services.Speech.Mocks;
     using Xunit;
 
-    public class SayActionFixture
+    public sealed class SayActionFixture
     {
         [Fact]
         public void duration_returns_zero()

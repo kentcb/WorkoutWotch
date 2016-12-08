@@ -5,7 +5,7 @@
     using WorkoutWotch.Models.Parsers;
     using Xunit;
 
-    public class HeadingParserFixture
+    public sealed class HeadingParserFixture
     {
         [Theory]
         [InlineData("# Title", 1, "Title")]

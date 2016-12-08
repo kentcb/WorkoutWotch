@@ -6,7 +6,7 @@
     using Xunit.Sdk;
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public class DebugAttribute : BeforeAfterTestAttribute
+    public sealed class DebugAttribute : BeforeAfterTestAttribute
     {
         public override void Before(MethodInfo methodUnderTest) =>
             Debug.WriteLine("BEFORE: " + methodUnderTest.Name);

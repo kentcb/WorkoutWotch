@@ -7,7 +7,7 @@
     using Xamarin.Forms;
     using XF=Xamarin.Forms.Platform.iOS;
 
-    public class ViewCellBehaviorRenderer : XF.ViewCellRenderer
+    public sealed class ViewCellBehaviorRenderer : XF.ViewCellRenderer
     {
         public override UITableViewCell GetCell(Cell element, UITableViewCell reusableCell, UITableView tv)
         {
@@ -17,7 +17,7 @@
         }
     }
 
-    public class TextCellBehaviorRenderer : XF.TextCellRenderer
+    public sealed class TextCellBehaviorRenderer : XF.TextCellRenderer
     {
         public override UITableViewCell GetCell(Cell element, UITableViewCell reusableCell, UITableView tv)
         {
@@ -27,7 +27,7 @@
         }
     }
 
-    public class ImageCellBehaviorRenderer : XF.ImageCellRenderer
+    public sealed class ImageCellBehaviorRenderer : XF.ImageCellRenderer
     {
         public override UITableViewCell GetCell(Cell element, UITableViewCell reusableCell, UITableView tv)
         {

@@ -5,7 +5,7 @@
     using WorkoutWotch.Services.Contracts.Speech;
     using WorkoutWotch.UnitTests.Services.Speech.Mocks;
 
-    internal sealed class SayActionBuilder : IBuilder
+    public sealed class SayActionBuilder : IBuilder
     {
         private ISpeechService speechService;
         private string speechText;
@@ -26,7 +26,7 @@
             new SayAction(
                 this.speechService,
                 this.speechText);
-        
+
         public static implicit operator SayAction(SayActionBuilder builder) =>
             builder.Build();
     }

@@ -11,7 +11,7 @@
     using WorkoutWotch.UnitTests.Models.Mocks;
     using Xunit;
 
-    public class SequenceActionFixture
+    public sealed class SequenceActionFixture
     {
         [Fact]
         public void duration_is_zero_if_there_are_no_child_actions()

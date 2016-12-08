@@ -11,7 +11,7 @@
     using WorkoutWotch.UnitTests.Services.State.Mocks;
     using Xunit;
 
-    public class StateServiceFixture
+    public sealed class StateServiceFixture
     {
         [Fact]
         public void get_forwards_the_call_onto_the_blob_cache()

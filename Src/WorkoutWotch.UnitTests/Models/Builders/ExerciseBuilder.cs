@@ -10,7 +10,7 @@
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
     using WorkoutWotch.UnitTests.Services.Speech.Mocks;
 
-    internal sealed class ExerciseBuilder : IBuilder
+    public sealed class ExerciseBuilder : IBuilder
     {
         private List<MatcherWithAction> matchersWithActions;
         private ILoggerService loggerService;

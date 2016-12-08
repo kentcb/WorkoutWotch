@@ -10,7 +10,7 @@
     using WorkoutWotch.UnitTests.Services.Delay.Mocks;
     using WorkoutWotch.UnitTests.Services.Logger.Mocks;
 
-    internal sealed class MetronomeActionBuilder : IBuilder
+    public sealed class MetronomeActionBuilder : IBuilder
     {
         private IAudioService audioService;
         private IDelayService delayService;

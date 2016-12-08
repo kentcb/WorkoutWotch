@@ -14,7 +14,7 @@ namespace Microsoft.Reactive.Testing
         /// Default virtual time used for creation of observable sequences in <see cref="ReactiveTest"/>-based unit tests.
         /// </summary>
         public const long Created = 100;
-        
+
         /// <summary>
         /// Default virtual time used to subscribe to observable sequences in <see cref="ReactiveTest"/>-based unit tests.
         /// </summary>
@@ -107,7 +107,7 @@ namespace Microsoft.Reactive.Testing
 
             return new Recorded<Notification<T>>(ticks, new OnErrorPredicate<T>(predicate));
         }
-        
+
         /// <summary>
         /// Factory method for an OnError notification record at a given time with a given error, using inference to determine the type of <typeparamref name="T"/>.
         /// </summary>

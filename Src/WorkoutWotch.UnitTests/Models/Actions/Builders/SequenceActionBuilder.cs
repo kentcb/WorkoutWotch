@@ -4,7 +4,7 @@
     using WorkoutWotch.Models;
     using WorkoutWotch.Models.Actions;
 
-    internal sealed class SequenceActionBuilder : IBuilder
+    public sealed class SequenceActionBuilder : IBuilder
     {
         private List<IAction> children;
 
@@ -21,7 +21,7 @@
 
         public SequenceAction Build() =>
             new SequenceAction(this.children);
-        
+
         public static implicit operator SequenceAction(SequenceActionBuilder builder) =>
             builder.Build();
     }
