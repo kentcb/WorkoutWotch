@@ -70,19 +70,19 @@
             context
                 .WhenAnyValue(x => x.IsCancelled)
                 .Where(x => x)
-                .Subscribe(_ => shadowExecutionContext.Cancel());
+                .SubscribeSafe(_ => shadowExecutionContext.Cancel());
             shadowExecutionContext
                 .WhenAnyValue(x => x.IsCancelled)
                 .Where(x => x)
-                .Subscribe(_ => context.Cancel());
+                .SubscribeSafe(_ => context.Cancel());
 
             // if either context is paused, pause the other
             context
                 .WhenAnyValue(x => x.IsPaused)
-                .Subscribe(x => shadowExecutionContext.IsPaused = x);
+                .SubscribeSafe(x => shadowExecutionContext.IsPaused = x);
             shadowExecutionContext
                 .WhenAnyValue(x => x.IsPaused)
-                .Subscribe(x => context.IsPaused = x);
+                .SubscribeSafe(x => context.IsPaused = x);
 
             return shadowExecutionContext;
         }

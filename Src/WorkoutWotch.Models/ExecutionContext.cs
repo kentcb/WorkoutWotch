@@ -28,25 +28,25 @@ namespace WorkoutWotch.Models
             this
                 .cancelRequested
                 .Where(x => x)
-                .Subscribe(_ => this.IsCancelled = true);
+                .SubscribeSafe(_ => this.IsCancelled = true);
 
             this
                 .progressDeltas
                 .Scan((running, next) => running + next)
-                .Subscribe(x => this.Progress = x);
+                .SubscribeSafe(x => this.Progress = x);
 
             this
                 .WhenAnyValue(x => x.CurrentExercise)
                 .Select(x => this.progressDeltas.StartWith(TimeSpan.Zero).Scan((running, next) => running + next))
                 .Switch()
-                .Subscribe(x => this.CurrentExerciseProgress = x);
+                .SubscribeSafe(x => this.CurrentExerciseProgress = x);
 
             this
                 .progressDeltas
                 .StartWith(skipAhead)
                 .Scan((running, next) => running - next)
                 .Select(x => x < TimeSpan.Zero ? TimeSpan.Zero : x)
-                .Subscribe(x => this.SkipAhead = x);
+                .SubscribeSafe(x => this.SkipAhead = x);
         }
 
         public bool IsCancelled

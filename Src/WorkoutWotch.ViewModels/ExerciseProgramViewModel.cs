@@ -64,26 +64,26 @@ namespace WorkoutWotch.ViewModels
                     x => x.ExecutionContext.IsCancelled,
                     (ec, isCancelled) => ec != null && !isCancelled)
                 .ObserveOn(scheduler)
-                .Subscribe(x => this.IsStarted = x);
+                .SubscribeSafe(x => this.IsStarted = x);
 
             this
                 .WhenAnyValue(x => x.ExecutionContext)
                 .Select(x => x == null ? Observables.False : x.WhenAnyValue(y => y.IsPaused))
                 .Switch()
                 .ObserveOn(scheduler)
-                .Subscribe(x => this.IsPaused = x);
+                .SubscribeSafe(x => this.IsPaused = x);
 
             this
                 .WhenAnyValue(x => x.ExecutionContext)
                 .Select(x => x == null ? Observable.Return(TimeSpan.Zero) : x.WhenAnyValue(y => y.Progress))
                 .Switch()
                 .ObserveOn(scheduler)
-                .Subscribe(x => this.ProgressTimeSpan = x);
+                .SubscribeSafe(x => this.ProgressTimeSpan = x);
 
             this
                 .WhenAnyValue(x => x.ProgressTimeSpan)
                 .Select(x => x.TotalMilliseconds / this.model.Duration.TotalMilliseconds)
-                .Subscribe(x => this.Progress = x);
+                .SubscribeSafe(x => this.Progress = x);
 
             this
                 .WhenAnyValue(
@@ -92,7 +92,7 @@ namespace WorkoutWotch.ViewModels
                     (ec, currentExercise) => ec == null ? null : currentExercise)
                 .Select(x => this.Exercises.SingleOrDefault(y => y.Model == x))
                 .ObserveOn(scheduler)
-                .Subscribe(x => this.CurrentExercise = x);
+                .SubscribeSafe(x => this.CurrentExercise = x);
 
             var canStart = this
                 .WhenAnyValue(x => x.IsStarted)
@@ -141,35 +141,35 @@ namespace WorkoutWotch.ViewModels
 
             this.startCommand
                 .CanExecute
-                .Subscribe(x => this.IsStartVisible = x);
+                .SubscribeSafe(x => this.IsStartVisible = x);
 
             this.pauseCommand
                 .CanExecute
-                .Subscribe(x => this.IsPauseVisible = x);
+                .SubscribeSafe(x => this.IsPauseVisible = x);
 
             this.resumeCommand
                 .CanExecute
-                .Subscribe(x => this.IsResumeVisible = x);
+                .SubscribeSafe(x => this.IsResumeVisible = x);
 
             this.startCommand
                 .ThrownExceptions
-                .Subscribe(ex => this.OnThrownException("start", ex));
+                .SubscribeSafe(ex => this.OnThrownException("start", ex));
 
             this.pauseCommand
                 .ThrownExceptions
-                .Subscribe(ex => this.OnThrownException("pause", ex));
+                .SubscribeSafe(ex => this.OnThrownException("pause", ex));
 
             this.resumeCommand
                 .ThrownExceptions
-                .Subscribe(ex => this.OnThrownException("resume", ex));
+                .SubscribeSafe(ex => this.OnThrownException("resume", ex));
 
             this.skipBackwardsCommand
                 .ThrownExceptions
-                .Subscribe(ex => this.OnThrownException("skip backwards", ex));
+                .SubscribeSafe(ex => this.OnThrownException("skip backwards", ex));
 
             this.skipForwardsCommand
                 .ThrownExceptions
-                .Subscribe(ex => this.OnThrownException("skip forwards", ex));
+                .SubscribeSafe(ex => this.OnThrownException("skip forwards", ex));
 
             // we don't use a reactive command here because switching in different commands causes it to get confused and
             // command binding leaves the target button disabled. We could also have not used command binding to get around
@@ -188,7 +188,7 @@ namespace WorkoutWotch.ViewModels
                             .ItemsRemoved
                             .OfType<ExerciseProgramViewModel>()
                             .SelectMany(x => x.Stop())
-                            .Subscribe()
+                            .SubscribeSafe()
                             .AddTo(disposables);
                     });
         }
@@ -372,7 +372,9 @@ namespace WorkoutWotch.ViewModels
                             currentExerciseProgress -
                             (currentExerciseProgress < skipBackwardsThreshold && priorExercise != null ? priorExercise.Duration : TimeSpan.Zero);
 
-                        this.Start(skipTo, isPaused).Subscribe();
+                        this
+                            .Start(skipTo, isPaused)
+                            .SubscribeSafe();
                         this.logger.Debug("Skip backwards completed.");
                     })
                 .FirstAsync();
@@ -400,7 +402,9 @@ namespace WorkoutWotch.ViewModels
                 .Do(
                     _ =>
                     {
-                        this.Start(totalProgress - currentExerciseProgress + currentExercise.Duration, isPaused).Subscribe();
+                        this
+                            .Start(totalProgress - currentExerciseProgress + currentExercise.Duration, isPaused)
+                            .SubscribeSafe();
                         this.logger.Debug("Skip forwards completed.");
                     })
                 .FirstAsync();
@@ -440,7 +444,7 @@ namespace WorkoutWotch.ViewModels
                         .owner
                         .StartCommand
                         .Execute((TimeSpan?)parameter)
-                        .Subscribe();
+                        .SubscribeSafe();
                 }
                 else if (this.owner.IsPauseVisible)
                 {
@@ -448,7 +452,7 @@ namespace WorkoutWotch.ViewModels
                         .owner
                         .PauseCommand
                         .Execute()
-                        .Subscribe();
+                        .SubscribeSafe();
                 }
                 else
                 {
@@ -456,7 +460,7 @@ namespace WorkoutWotch.ViewModels
                         .owner
                         .ResumeCommand
                         .Execute()
-                        .Subscribe();
+                        .SubscribeSafe();
                 }
             }
         }

@@ -124,7 +124,9 @@
                 .Skip(1)
                 .CreateCollection();
 
-            sut.Execute(context).Subscribe();
+            sut
+                .Execute(context)
+                .Subscribe();
 
             Assert.Equal(TimeSpan.FromMilliseconds(skipInMs), progress.First());
         }
@@ -141,7 +143,9 @@
 
             Assert.Equal(TimeSpan.Zero, context.Progress);
 
-            sut.Execute(context).Subscribe();
+            sut
+                .Execute(context)
+                .Subscribe();
 
             Assert.Equal(TimeSpan.FromMilliseconds(50), context.Progress);
         }
@@ -158,7 +162,9 @@
 
             Assert.Equal(TimeSpan.Zero, context.Progress);
 
-            sut.Execute(context).Subscribe();
+            sut
+                .Execute(context)
+                .Subscribe();
 
             Assert.Equal(TimeSpan.FromMilliseconds(50), context.Progress);
         }

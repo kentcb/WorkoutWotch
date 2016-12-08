@@ -25,7 +25,7 @@
             LoggerService
                 .Current
                 .Entries
-                .Subscribe(
+                .SubscribeSafe(
                     entry =>
                     {
                         Console.Out.Write(entry.Timestamp.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture));

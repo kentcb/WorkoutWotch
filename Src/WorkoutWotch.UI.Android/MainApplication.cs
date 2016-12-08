@@ -91,7 +91,7 @@
             LoggerService
                 .Current
                 .Entries
-                .Subscribe(
+                .SubscribeSafe(
                     entry =>
                     {
                         FormattableString message = $"#{entry.ThreadId} {entry.Message}";

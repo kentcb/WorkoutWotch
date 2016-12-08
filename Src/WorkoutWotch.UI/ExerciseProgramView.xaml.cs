@@ -43,14 +43,14 @@
                                 x => x.ViewModel.IsPauseVisible,
                                 x => x.ViewModel.IsResumeVisible,
                                 (isStartVisible, isPauseVisible, isResumeVisible) => isPauseVisible ? "Pause" : "Play")
-                            .Subscribe(imageName => this.playbackButton.Source = new FileImageSource { File = imageName })
+                            .SubscribeSafe(imageName => this.playbackButton.Source = new FileImageSource { File = imageName })
                             .AddTo(disposables);
 
                         this
                             .WhenAnyObservable(x => x.ViewModel.SkipBackwardsCommand.IsExecuting)
                             .Where(isExecuting => isExecuting)
                             .SelectMany(_ => this.AnimateButtonAsync(this.skipBackwardButton))
-                            .Subscribe()
+                            .SubscribeSafe()
                             .AddTo(disposables);
                         this
                             .playbackButton
@@ -58,13 +58,13 @@
                             .Events()
                             .Tapped
                             .SelectMany(_ => this.AnimateButtonAsync(this.playbackButton))
-                            .Subscribe()
+                            .SubscribeSafe()
                             .AddTo(disposables);
                         this
                             .WhenAnyObservable(x => x.ViewModel.SkipForwardsCommand.IsExecuting)
                             .Where(isExecuting => isExecuting)
                             .SelectMany(_ => this.AnimateButtonAsync(this.skipForwardButton))
-                            .Subscribe()
+                            .SubscribeSafe()
                             .AddTo(disposables);
                     });
         }

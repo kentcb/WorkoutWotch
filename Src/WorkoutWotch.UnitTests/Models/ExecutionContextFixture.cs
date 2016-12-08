@@ -14,7 +14,8 @@
         {
             var sut = new ExecutionContext();
             var called = false;
-            sut.ObservableForProperty(x => x.IsCancelled)
+            sut
+                .ObservableForProperty(x => x.IsCancelled)
                 .Subscribe(_ => called = true);
 
             Assert.False(called);

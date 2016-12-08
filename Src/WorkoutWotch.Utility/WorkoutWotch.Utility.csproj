@@ -37,6 +37,7 @@
     <Compile Include="DisposableBase.cs" />
     <Compile Include="System\Reactive\Disposables\SerialDisposable.cs" />
     <Compile Include="System\Reactive\Linq\ToSignalExtensions.cs" />
+    <Compile Include="System\SubscribeSafeExtensions.cs" />
     <Compile Include="System\Threading\Tasks\TaskExtensions.cs" />
     <Compile Include="System\Reactive\Disposables\CompositeDisposableExtensions.cs" />
     <Compile Include="System\MathExt.cs" />
@@ -46,6 +47,10 @@
   <ItemGroup>
     <Reference Include="Genesis.Ensure, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Genesis.Ensure.1.0.4-alpha\lib\portable-net45+win8+wp8+wpa81\Genesis.Ensure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Genesis.Logging, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Genesis.Logging.1.0.7-alpha\lib\portable-net45+win8+wp8+wpa81\Genesis.Logging.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ReactiveUI, Version=7.0.0.0, Culture=neutral, processorArchitecture=MSIL">

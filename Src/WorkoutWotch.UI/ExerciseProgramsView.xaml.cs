@@ -49,7 +49,7 @@
                             .DistinctUntilChanged()
                             .Select(isActive => Observable.Defer(() => this.AnimateActivityIndicatorOpacity(isActive)))
                             .Concat()
-                            .Subscribe()
+                            .SubscribeSafe()
                             .AddTo(disposables);
 
                         this
@@ -57,7 +57,7 @@
                             .DistinctUntilChanged()
                             .Select(isVisible => Observable.Defer(() => this.AnimateListViewOpacity(isVisible)))
                             .Concat()
-                            .Subscribe()
+                            .SubscribeSafe()
                             .AddTo(disposables);
                     });
         }

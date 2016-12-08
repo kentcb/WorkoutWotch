@@ -30,9 +30,7 @@
             this
                 .innerAction
                 .Execute(context)
-                .Subscribe(
-                    _ => { },
-                    ex => this.logger.Error("Failed to execute inner action: " + ex));
+                .SubscribeSafe();
 
             return Observables.Unit;
         }

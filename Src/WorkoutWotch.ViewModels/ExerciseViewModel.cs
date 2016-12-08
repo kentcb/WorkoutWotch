@@ -35,7 +35,7 @@ namespace WorkoutWotch.ViewModels
                 .Select(progressRatio => Math.Min(1d, progressRatio))
                 .Select(progressRatio => Math.Max(0d, progressRatio))
                 .ObserveOn(scheduler)
-                .Subscribe(x => this.Progress = x);
+                .SubscribeSafe(x => this.Progress = x);
 
             Observable
                 .CombineLatest(
@@ -49,7 +49,7 @@ namespace WorkoutWotch.ViewModels
                         .Switch(),
                     (skip, current) => skip == TimeSpan.Zero && current == this.model)
                 .ObserveOn(scheduler)
-                .Subscribe(x => this.IsActive = x);
+                .SubscribeSafe(x => this.IsActive = x);
 
             this
                 .WhenActivated(
@@ -57,7 +57,7 @@ namespace WorkoutWotch.ViewModels
                     {
                         executionContext
                             .ObserveOn(scheduler)
-                            .Subscribe(x => this.ExecutionContext = x)
+                            .SubscribeSafe(x => this.ExecutionContext = x)
                             .AddTo(disposables);
 
                         this
@@ -72,7 +72,7 @@ namespace WorkoutWotch.ViewModels
                                             .StartWith(TimeSpan.Zero))
                             .Switch()
                             .ObserveOn(scheduler)
-                            .Subscribe(x => this.ProgressTimeSpan = x)
+                            .SubscribeSafe(x => this.ProgressTimeSpan = x)
                             .AddTo(disposables);
                     });
         }

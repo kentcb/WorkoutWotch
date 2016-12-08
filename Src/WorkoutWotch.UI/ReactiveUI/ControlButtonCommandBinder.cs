@@ -25,14 +25,14 @@
                 .Events()
                 .Tapped
                 .Where(_ => controlButton.IsEnabledEx)
-                .Subscribe(_ => command.Execute(null))
+                .SubscribeSafe(_ => command.Execute(null))
                 .AddTo(disposables);
 
             Observable
                 .FromEventPattern(x => command.CanExecuteChanged += x, x => command.CanExecuteChanged -= x)
                 .Select(_ => command.CanExecute(null))
                 .StartWith(command.CanExecute(null))
-                .Subscribe(canExecute => controlButton.IsEnabledEx = canExecute)
+                .SubscribeSafe(canExecute => controlButton.IsEnabledEx = canExecute)
                 .AddTo(disposables);
 
             return disposables;

@@ -150,7 +150,9 @@
                 .Build();
             var executionContext = new ExecutionContext();
 
-            sut.Execute(executionContext).Subscribe();
+            sut
+                .Execute(executionContext)
+                .Subscribe();
 
             action1
                 .Verify(x => x.Execute(executionContext))
@@ -180,7 +182,9 @@
                 .Build();
             var executionContext = new ExecutionContext();
 
-            sut.Execute(executionContext).Subscribe();
+            sut
+                .Execute(executionContext)
+                .Subscribe();
 
             action
                 .Verify(x => x.Execute(executionContext))
@@ -236,7 +240,9 @@
                 .Build();
             var executionContext = new ExecutionContext(TimeSpan.FromSeconds(13));
 
-            sut.Execute(executionContext).Subscribe();
+            sut
+                .Execute(executionContext)
+                .Subscribe();
 
             action3
                 .Verify(x => x.Execute(executionContext))
@@ -293,7 +299,9 @@
             var executionContext = new ExecutionContext(TimeSpan.FromSeconds(13));
 
             executionContext.IsPaused = true;
-            sut.Execute(executionContext).Subscribe();
+            sut
+                .Execute(executionContext)
+                .Subscribe();
 
             action3
                 .Verify(x => x.Execute(executionContext))
@@ -307,7 +315,9 @@
                 .Build();
             var context = new ExecutionContext();
 
-            sut.Execute(context).Subscribe();
+            sut
+                .Execute(context)
+                .Subscribe();
 
             Assert.Same(sut, context.CurrentExercise);
         }
@@ -324,7 +334,9 @@
                 .Select(x => x.Value)
                 .CreateCollection();
 
-            sut.Execute(context).Subscribe();
+            sut
+                .Execute(context)
+                .Subscribe();
 
             Assert.Equal(3, currentSets.Count);
             Assert.Equal(1, currentSets[0]);
@@ -344,7 +356,9 @@
                 .Select(x => x.Value)
                 .CreateCollection();
 
-            sut.Execute(context).Subscribe();
+            sut
+                .Execute(context)
+                .Subscribe();
 
             Assert.Equal(5, currentRepetitions.Count);
             Assert.Equal(1, currentRepetitions[0]);
@@ -363,7 +377,9 @@
                 .WithSpeechService(speechService)
                 .Build();
 
-            sut.Execute(new ExecutionContext()).Subscribe();
+            sut
+                .Execute(new ExecutionContext())
+                .Subscribe();
 
             speechService
                 .Verify(x => x.Speak("some name"))

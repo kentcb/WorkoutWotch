@@ -33,7 +33,7 @@ namespace WorkoutWotch.Services.iOS.Audio
 
             finishedPlaying
                 .ObserveOn(this.scheduler)
-                .Subscribe(_ => audioPlayer.Dispose());
+                .SubscribeSafe(_ => audioPlayer.Dispose());
 
             finishedPlaying.Connect();
             audioPlayer.Play();

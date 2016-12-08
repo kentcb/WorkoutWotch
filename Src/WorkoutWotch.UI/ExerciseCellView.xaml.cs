@@ -44,7 +44,7 @@
                             .WhenAnyValue(x => x.ViewModel.IsActive)
                             .Select(isActive => Observable.Defer(() => this.Animate(isActive)))
                             .Concat()
-                            .Subscribe()
+                            .SubscribeSafe()
                             .AddTo(disposables);
                     });
         }

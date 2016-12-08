@@ -107,7 +107,9 @@
                 .Build();
             var executionContext = new ExecutionContext();
 
-            sut.Execute(executionContext).Subscribe();
+            sut
+                .Execute(executionContext)
+                .Subscribe();
 
             action1
                 .Verify(x => x.Execute(executionContext))
@@ -155,7 +157,9 @@
                 .Build();
             var executionContext = new ExecutionContext(TimeSpan.FromSeconds(23));
 
-            sut.Execute(executionContext).Subscribe();
+            sut
+                .Execute(executionContext)
+                .Subscribe();
 
             action3
                 .Verify(x => x.Execute(executionContext))

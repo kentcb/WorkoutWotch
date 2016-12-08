@@ -63,7 +63,9 @@
                 .Build();
             var context = new ExecutionContext();
 
-            sut.Execute(context).Subscribe();
+            sut
+                .Execute(context)
+                .Subscribe();
 
             action1
                 .Verify(x => x.Execute(context))
@@ -103,7 +105,9 @@
                 .Build();
             var context = new ExecutionContext();
 
-            sut.Execute(context).Subscribe();
+            sut
+                .Execute(context)
+                .Subscribe();
 
             for (var i = 0; i < childExecutionOrder.Length; ++i)
             {
@@ -145,7 +149,9 @@
                 .Build();
             var context = new ExecutionContext(TimeSpan.FromSeconds(11));
 
-            sut.Execute(context).Subscribe();
+            sut
+                .Execute(context)
+                .Subscribe();
 
             action3
                 .Verify(x => x.Execute(context))
@@ -187,7 +193,9 @@
             var context = new ExecutionContext(TimeSpan.FromSeconds(11));
 
             context.IsPaused = true;
-            sut.Execute(context).Subscribe();
+            sut
+                .Execute(context)
+                .Subscribe();
 
             action3
                 .Verify(x => x.Execute(context))

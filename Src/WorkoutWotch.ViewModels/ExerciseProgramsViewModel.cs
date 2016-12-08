@@ -60,13 +60,13 @@
             this.WhenAnyValue(x => x.Model)
                 .Select(x => x == null ? null : x.Programs.CreateDerivedCollection(y => exerciseProgramViewModelFactory(y)))
                 .ObserveOn(mainScheduler)
-                .Subscribe(x => this.Programs = x);
+                .SubscribeSafe(x => this.Programs = x);
 
             this
                 .WhenAnyValue(x => x.SelectedProgram)
                 .Where(x => x != null)
                 .SelectMany(x => this.hostScreen.Router.Navigate.Execute(x))
-                .Subscribe();
+                .SubscribeSafe();
 
             this
                 .WhenActivated(
@@ -112,20 +112,20 @@
                         safeResults
                             .Select(x => x.Item.WasSuccessful ? null : x.Item.ToString())
                             .ObserveOn(mainScheduler)
-                            .Subscribe(x => this.ParseErrorMessage = x)
+                            .SubscribeSafe(x => this.ParseErrorMessage = x)
                             .AddTo(disposables);
 
                         results
                             .Select(x => !x.Item.WasSuccessful ? ExerciseProgramsViewModelStatus.ParseFailed : x.Source == DocumentSource.Cache ? ExerciseProgramsViewModelStatus.LoadedFromCache : ExerciseProgramsViewModelStatus.LoadedFromService)
                             .Catch((Exception ex) => Observable.Return(ExerciseProgramsViewModelStatus.LoadFailed))
                             .ObserveOn(mainScheduler)
-                            .Subscribe(x => this.Status = x)
+                            .SubscribeSafe(x => this.Status = x)
                             .AddTo(disposables);
 
                         safeResults
                             .Select(x => x.Item.WasSuccessful ? x.Item.Value : null)
                             .ObserveOn(mainScheduler)
-                            .Subscribe(x => this.Model = x)
+                            .SubscribeSafe(x => this.Model = x)
                             .AddTo(disposables);
 
                         var safeDocuments = documents
@@ -134,7 +134,7 @@
                         safeDocuments
                             .Where(x => x.Source == DocumentSource.Service)
                             .SelectMany(x => this.stateService.Set(exerciseProgramsCacheKey, x.Item))
-                            .Subscribe()
+                            .SubscribeSafe()
                             .AddTo(disposables);
 
                         results
@@ -150,7 +150,7 @@
                             .Router
                             .CurrentViewModel
                             .OfType<ExerciseProgramsViewModel>()
-                            .Subscribe(x => x.SelectedProgram = null)
+                            .SubscribeSafe(x => x.SelectedProgram = null)
                             .AddTo(disposables);
                     });
         }

@@ -29,7 +29,9 @@
 
             context.IsPaused = true;
 
-            sut.Execute(context).Subscribe();
+            sut
+                .Execute(context)
+                .Subscribe();
 
             speechService
                 .Verify(x => x.Speak(It.IsAny<string>()))
@@ -48,7 +50,9 @@
                 .WithSpeechText(speechText)
                 .Build();
 
-            sut.Execute(new ExecutionContext()).Subscribe();
+            sut
+                .Execute(new ExecutionContext())
+                .Subscribe();
 
             speechService
                 .Verify(x => x.Speak(speechText))

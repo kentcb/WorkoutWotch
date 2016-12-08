@@ -27,7 +27,7 @@ namespace WorkoutWotch.Services.iOS.Speech
                 .Publish();
 
             finishedUtterance
-                .Subscribe(
+                .SubscribeSafe(
                     _ =>
                     {
                         utterance.Dispose();
@@ -41,7 +41,7 @@ namespace WorkoutWotch.Services.iOS.Speech
             //    Observable
             //        .FromEventPattern<AVSpeechSynthesizerUteranceEventArgs>(x => synthesizer.DidCancelSpeechUtterance += x, x => synthesizer.DidCancelSpeechUtterance -= x)
             //        .ToSignal()
-            //        .Subscribe(
+            //        .SubscribeSafe(
             //            _ =>
             //            {
             //                utterance.Dispose();

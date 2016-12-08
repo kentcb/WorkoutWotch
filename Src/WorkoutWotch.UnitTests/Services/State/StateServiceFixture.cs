@@ -95,7 +95,9 @@
                         return Observables.Unit;
                     });
 
-            sut.Save().Subscribe();
+            sut
+                .Save()
+                .Subscribe();
 
             Assert.True(firstExecuted);
             Assert.True(secondExecuted);
@@ -125,7 +127,9 @@
                         return Observables.Unit;
                     });
 
-            sut.Save().Subscribe();
+            sut
+                .Save()
+                .Subscribe();
 
             Assert.True(firstExecuted);
             Assert.True(secondExecuted);
@@ -138,7 +142,9 @@
                 .Build();
             sut.RegisterSaveCallback(_ => Observable.Throw<Unit>(new Exception("Failed")));
 
-            sut.Save().Subscribe();
+            sut
+                .Save()
+                .Subscribe();
         }
 
         [Fact]
@@ -180,7 +186,9 @@
 
             handle.Dispose();
 
-            sut.Save().Subscribe();
+            sut
+                .Save()
+                .Subscribe();
 
             Assert.False(firstExecuted);
             Assert.True(secondExecuted);

@@ -28,7 +28,9 @@
 
             context.IsPaused = true;
 
-            sut.Execute(context).Subscribe();
+            sut
+                .Execute(context)
+                .Subscribe();
 
             audioService
                 .Verify(x => x.Play(It.IsAny<string>()))
@@ -47,7 +49,9 @@
                 .WithAudioName(audioName)
                 .Build();
 
-            sut.Execute(new ExecutionContext()).Subscribe();
+            sut
+                .Execute(new ExecutionContext())
+                .Subscribe();
 
             audioService
                 .Verify(x => x.Play(audioName))
