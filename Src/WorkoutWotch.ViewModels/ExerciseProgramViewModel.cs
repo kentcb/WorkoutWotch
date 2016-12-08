@@ -14,17 +14,17 @@ namespace WorkoutWotch.ViewModels
 
     public delegate ExerciseProgramViewModel ExerciseProgramViewModelFactory(ExerciseProgram model);
 
-    public sealed class ExerciseProgramViewModel : DisposableReactiveObject, IRoutableViewModel
+    public sealed class ExerciseProgramViewModel : ReactiveObject, IRoutableViewModel, ISupportsActivation
     {
         // if an exercise has progressed less that this threshold and the user skips backwards, we will skip to the prior exercise
         // otherwise, we'll return to the start of the current exercise
         private static readonly TimeSpan skipBackwardsThreshold = TimeSpan.FromMilliseconds(500);
 
+        private readonly ViewModelActivator activator;
         private readonly ILogger logger;
         private readonly IScheduler scheduler;
         private readonly ExerciseProgram model;
         private readonly IScreen hostScreen;
-        private readonly CompositeDisposable disposables;
         private readonly ReactiveCommand<TimeSpan?, Unit> startCommand;
         private readonly ReactiveCommand<Unit, Unit> pauseCommand;
         private readonly ReactiveCommand<Unit, Unit> resumeCommand;
@@ -53,11 +53,11 @@ namespace WorkoutWotch.ViewModels
             Ensure.ArgumentNotNull(hostScreen, nameof(hostScreen));
             Ensure.ArgumentNotNull(model, nameof(model));
 
+            this.activator = new ViewModelActivator();
             this.logger = loggerService.GetLogger(this.GetType());
             this.scheduler = scheduler;
             this.model = model;
             this.hostScreen = hostScreen;
-            this.disposables = new CompositeDisposable();
             this.exercises = this.model.Exercises.CreateDerivedCollection(x => new ExerciseViewModel(scheduler, x, this.WhenAnyValue(y => y.ExecutionContext)));
 
             this
@@ -66,30 +66,26 @@ namespace WorkoutWotch.ViewModels
                     x => x.ExecutionContext.IsCancelled,
                     (ec, isCancelled) => ec != null && !isCancelled)
                 .ObserveOn(scheduler)
-                .Subscribe(x => this.IsStarted = x)
-                .AddTo(this.disposables);
+                .Subscribe(x => this.IsStarted = x);
 
             this
                 .WhenAnyValue(x => x.ExecutionContext)
                 .Select(x => x == null ? Observable.Return(false) : x.WhenAnyValue(y => y.IsPaused))
                 .Switch()
                 .ObserveOn(scheduler)
-                .Subscribe(x => this.IsPaused = x)
-                .AddTo(this.disposables);
+                .Subscribe(x => this.IsPaused = x);
 
             this
                 .WhenAnyValue(x => x.ExecutionContext)
                 .Select(x => x == null ? Observable.Return(TimeSpan.Zero) : x.WhenAnyValue(y => y.Progress))
                 .Switch()
                 .ObserveOn(scheduler)
-                .Subscribe(x => this.ProgressTimeSpan = x)
-                .AddTo(this.disposables);
+                .Subscribe(x => this.ProgressTimeSpan = x);
 
             this
                 .WhenAnyValue(x => x.ProgressTimeSpan)
                 .Select(x => x.TotalMilliseconds / this.model.Duration.TotalMilliseconds)
-                .Subscribe(x => this.Progress = x)
-                .AddTo(this.disposables);
+                .Subscribe(x => this.Progress = x);
 
             this
                 .WhenAnyValue(
@@ -98,16 +94,14 @@ namespace WorkoutWotch.ViewModels
                     (ec, currentExercise) => ec == null ? null : currentExercise)
                 .Select(x => this.Exercises.SingleOrDefault(y => y.Model == x))
                 .ObserveOn(scheduler)
-                .Subscribe(x => this.CurrentExercise = x)
-                .AddTo(this.disposables);
+                .Subscribe(x => this.CurrentExercise = x);
 
             var canStart = this
                 .WhenAnyValue(x => x.IsStarted)
                 .Select(x => !x);
 
             this.startCommand = ReactiveCommand
-                .CreateFromObservable<TimeSpan?, Unit>(this.OnStart, canStart, scheduler)
-                .AddTo(this.disposables);
+                .CreateFromObservable<TimeSpan?, Unit>(this.OnStart, canStart, scheduler);
 
             var canPause = this
                 .WhenAnyValue(x => x.IsStarted)
@@ -115,8 +109,7 @@ namespace WorkoutWotch.ViewModels
                 .ObserveOn(scheduler);
 
             this.pauseCommand = ReactiveCommand
-                .CreateFromObservable(this.OnPause, canPause, scheduler)
-                .AddTo(this.disposables);
+                .CreateFromObservable(this.OnPause, canPause, scheduler);
 
             var canResume = this
                 .WhenAnyValue(x => x.IsStarted)
@@ -124,8 +117,7 @@ namespace WorkoutWotch.ViewModels
                 .ObserveOn(scheduler);
 
             this.resumeCommand = ReactiveCommand
-                .CreateFromObservable(this.OnResume, canResume, scheduler)
-                .AddTo(this.disposables);
+                .CreateFromObservable(this.OnResume, canResume, scheduler);
 
             var canSkipBackwards = this
                 .WhenAnyValue(
@@ -136,8 +128,7 @@ namespace WorkoutWotch.ViewModels
                 .ObserveOn(scheduler);
 
             this.skipBackwardsCommand = ReactiveCommand
-                .CreateFromObservable(this.OnSkipBackwards, canSkipBackwards, scheduler)
-                .AddTo(this.disposables);
+                .CreateFromObservable(this.OnSkipBackwards, canSkipBackwards, scheduler);
 
             var canSkipForwards = this
                 .WhenAnyValue(
@@ -148,65 +139,63 @@ namespace WorkoutWotch.ViewModels
                 .ObserveOn(scheduler);
 
             this.skipForwardsCommand = ReactiveCommand
-                .CreateFromObservable(this.OnSkipForwards, canSkipForwards, scheduler)
-                .AddTo(this.disposables);
+                .CreateFromObservable(this.OnSkipForwards, canSkipForwards, scheduler);
 
             this.startCommand
                 .CanExecute
-                .Subscribe(x => this.IsStartVisible = x)
-                .AddTo(this.disposables);
+                .Subscribe(x => this.IsStartVisible = x);
 
             this.pauseCommand
                 .CanExecute
-                .Subscribe(x => this.IsPauseVisible = x)
-                .AddTo(this.disposables);
+                .Subscribe(x => this.IsPauseVisible = x);
 
             this.resumeCommand
                 .CanExecute
-                .Subscribe(x => this.IsResumeVisible = x)
-                .AddTo(this.disposables);
+                .Subscribe(x => this.IsResumeVisible = x);
 
             this.startCommand
                 .ThrownExceptions
-                .Subscribe(ex => this.OnThrownException("start", ex))
-                .AddTo(this.disposables);
+                .Subscribe(ex => this.OnThrownException("start", ex));
 
             this.pauseCommand
                 .ThrownExceptions
-                .Subscribe(ex => this.OnThrownException("pause", ex))
-                .AddTo(this.disposables);
+                .Subscribe(ex => this.OnThrownException("pause", ex));
 
             this.resumeCommand
                 .ThrownExceptions
-                .Subscribe(ex => this.OnThrownException("resume", ex))
-                .AddTo(this.disposables);
+                .Subscribe(ex => this.OnThrownException("resume", ex));
 
             this.skipBackwardsCommand
                 .ThrownExceptions
-                .Subscribe(ex => this.OnThrownException("skip backwards", ex))
-                .AddTo(this.disposables);
+                .Subscribe(ex => this.OnThrownException("skip backwards", ex));
 
             this.skipForwardsCommand
                 .ThrownExceptions
-                .Subscribe(ex => this.OnThrownException("skip forwards", ex))
-                .AddTo(this.disposables);
+                .Subscribe(ex => this.OnThrownException("skip forwards", ex));
 
             // we don't use a reactive command here because switching in different commands causes it to get confused and
             // command binding leaves the target button disabled. We could also have not used command binding to get around
             // this problem
             this.playbackCommand = new PlaybackCommandImpl(this);
 
-            // cancel the exercise program if the user navigates away
             this
-                .hostScreen
-                .Router
-                .NavigationStack
-                .ItemsRemoved
-                .OfType<ExerciseProgramViewModel>()
-                .SelectMany(x => x.Stop())
-                .Subscribe()
-                .AddTo(this.disposables);
+                .WhenActivated(
+                    disposables =>
+                    {
+                        // cancel the exercise program if the user navigates away
+                        this
+                            .hostScreen
+                            .Router
+                            .NavigationStack
+                            .ItemsRemoved
+                            .OfType<ExerciseProgramViewModel>()
+                            .SelectMany(x => x.Stop())
+                            .Subscribe()
+                            .AddTo(disposables);
+                    });
         }
+
+        public ViewModelActivator Activator => this.activator;
 
         public IScreen HostScreen => this.hostScreen;
 
@@ -288,16 +277,6 @@ namespace WorkoutWotch.ViewModels
             set { this.RaiseAndSetIfChanged(ref this.executionContext, value); }
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            if (disposing)
-            {
-                this.disposables.Dispose();
-            }
-        }
-
         private IObservable<Unit> OnStart(TimeSpan? skipAhead) =>
             this.Start(skipAhead.GetValueOrDefault(TimeSpan.Zero));
 
@@ -326,13 +305,9 @@ namespace WorkoutWotch.ViewModels
                 IsPaused = isPaused
             };
 
-            var disposables = new CompositeDisposable(
-                executionContext,
-                Disposable.Create(() => this.ExecutionContext = null));
-
             return Observable
                 .Using(
-                    () => disposables,
+                    () => Disposable.Create(() => this.ExecutionContext = null),
                     _ =>
                         Observable
                             .Start(() => this.ExecutionContext = executionContext, this.scheduler)

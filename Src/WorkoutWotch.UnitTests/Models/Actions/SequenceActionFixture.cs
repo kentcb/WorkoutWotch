@@ -61,23 +61,21 @@
                 .WithChild(action2)
                 .WithChild(action3)
                 .Build();
+            var context = new ExecutionContext();
 
-            using (var context = new ExecutionContext())
-            {
-                sut.Execute(context).Subscribe();
+            sut.Execute(context).Subscribe();
 
-                action1
-                    .Verify(x => x.Execute(context))
-                    .WasCalledExactlyOnce();
+            action1
+                .Verify(x => x.Execute(context))
+                .WasCalledExactlyOnce();
 
-                action2
-                    .Verify(x => x.Execute(context))
-                    .WasCalledExactlyOnce();
+            action2
+                .Verify(x => x.Execute(context))
+                .WasCalledExactlyOnce();
 
-                action3
-                    .Verify(x => x.Execute(context))
-                    .WasCalledExactlyOnce();
-            }
+            action3
+                .Verify(x => x.Execute(context))
+                .WasCalledExactlyOnce();
         }
 
         [Fact]
@@ -99,19 +97,17 @@
                         return childAction;
                     })
                 .ToList();
-            
+
             var sut = new SequenceActionBuilder()
                 .WithChildren(childActions)
                 .Build();
+            var context = new ExecutionContext();
 
-            using (var context = new ExecutionContext())
+            sut.Execute(context).Subscribe();
+
+            for (var i = 0; i < childExecutionOrder.Length; ++i)
             {
-                sut.Execute(context).Subscribe();
-
-                for (var i = 0; i < childExecutionOrder.Length; ++i)
-                {
-                    Assert.Equal(i + 1, childExecutionOrder[i]);
-                }
+                Assert.Equal(i + 1, childExecutionOrder[i]);
             }
         }
 
@@ -147,15 +143,13 @@
                 .WithChild(action2)
                 .WithChild(action3)
                 .Build();
+            var context = new ExecutionContext(TimeSpan.FromSeconds(11));
 
-            using (var context = new ExecutionContext(TimeSpan.FromSeconds(11)))
-            {
-                sut.Execute(context).Subscribe();
+            sut.Execute(context).Subscribe();
 
-                action3
-                    .Verify(x => x.Execute(context))
-                    .WasCalledExactlyOnce();
-            }
+            action3
+                .Verify(x => x.Execute(context))
+                .WasCalledExactlyOnce();
         }
 
         [Fact]
@@ -190,16 +184,14 @@
                 .WithChild(action2)
                 .WithChild(action3)
                 .Build();
+            var context = new ExecutionContext(TimeSpan.FromSeconds(11));
 
-            using (var context = new ExecutionContext(TimeSpan.FromSeconds(11)))
-            {
-                context.IsPaused = true;
-                sut.Execute(context).Subscribe();
+            context.IsPaused = true;
+            sut.Execute(context).Subscribe();
 
-                action3
-                    .Verify(x => x.Execute(context))
-                    .WasCalledExactlyOnce();
-            }
+            action3
+                .Verify(x => x.Execute(context))
+                .WasCalledExactlyOnce();
         }
 
         [Fact]

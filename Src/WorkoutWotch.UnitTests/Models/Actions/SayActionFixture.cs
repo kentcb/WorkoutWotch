@@ -25,17 +25,15 @@
             var sut = new SayActionBuilder()
                 .WithSpeechService(speechService)
                 .Build();
+            var context = new ExecutionContext();
 
-            using (var context = new ExecutionContext())
-            {
-                context.IsPaused = true;
+            context.IsPaused = true;
 
-                sut.Execute(context).Subscribe();
+            sut.Execute(context).Subscribe();
 
-                speechService
-                    .Verify(x => x.Speak(It.IsAny<string>()))
-                    .WasNotCalled();
-            }
+            speechService
+                .Verify(x => x.Speak(It.IsAny<string>()))
+                .WasNotCalled();
         }
 
         [Theory]

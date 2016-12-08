@@ -24,17 +24,15 @@
             var sut = new AudioActionBuilder()
                 .WithAudioService(audioService)
                 .Build();
+            var context = new ExecutionContext();
 
-            using (var context = new ExecutionContext())
-            {
-                context.IsPaused = true;
+            context.IsPaused = true;
 
-                sut.Execute(context).Subscribe();
+            sut.Execute(context).Subscribe();
 
-                audioService
-                    .Verify(x => x.Play(It.IsAny<string>()))
-                    .WasNotCalled();
-            }
+            audioService
+                .Verify(x => x.Play(It.IsAny<string>()))
+                .WasNotCalled();
         }
 
         [Theory]

@@ -39,15 +39,13 @@ namespace WorkoutWotch.Models
             this.repetitionCount = repetitionCount;
             this.matchersWithActions = matchersWithActions.ToImmutableList();
 
-            using (var dummyExecutionContext = new ExecutionContext())
-            {
-                this.duration = this
-                    .GetEventsWithActions(dummyExecutionContext)
-                    .SelectMany(x => x.Actions)
-                    .Select(x => x.Duration)
-                    .DefaultIfEmpty()
-                    .Aggregate((running, next) => running + next);
-            }
+            var dummyExecutionContext = new ExecutionContext();
+            this.duration = this
+                .GetEventsWithActions(dummyExecutionContext)
+                .SelectMany(x => x.Actions)
+                .Select(x => x.Duration)
+                .DefaultIfEmpty()
+                .Aggregate((running, next) => running + next);
         }
 
         public string Name => this.name;

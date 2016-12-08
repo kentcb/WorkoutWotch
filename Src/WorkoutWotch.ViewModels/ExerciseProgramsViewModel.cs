@@ -15,15 +15,15 @@
     using WorkoutWotch.Services.Contracts.State;
     using WorkoutWotch.Utility;
 
-    public sealed class ExerciseProgramsViewModel : DisposableReactiveObject, IRoutableViewModel
+    public sealed class ExerciseProgramsViewModel : ReactiveObject, IRoutableViewModel, ISupportsActivation
     {
         private const string exerciseProgramsCacheKey = "ExerciseProgramsDocument";
 
+        private readonly ViewModelActivator activator;
         private readonly IExerciseDocumentService exerciseDocumentService;
         private readonly IStateService stateService;
         private readonly ILogger logger;
         private readonly IScreen hostScreen;
-        private readonly CompositeDisposable disposables;
         private IReadOnlyReactiveList<ExerciseProgramViewModel> programs;
         private ExerciseProgramsViewModelStatus status;
         private ExercisePrograms model;
@@ -53,106 +53,111 @@
             Ensure.ArgumentNotNull(hostScreen, nameof(hostScreen));
             Ensure.ArgumentNotNull(exerciseProgramViewModelFactory, nameof(exerciseProgramViewModelFactory));
 
+            this.activator = new ViewModelActivator();
             this.exerciseDocumentService = exerciseDocumentService;
             this.stateService = stateService;
             this.logger = loggerService.GetLogger(this.GetType());
             this.hostScreen = hostScreen;
-            this.disposables = new CompositeDisposable();
-
-            var documentsFromCache = this
-                .stateService
-                .Get<string>(exerciseProgramsCacheKey)
-                .Where(x => x != null)
-                .Select(x => new DocumentSourceWith<string>(DocumentSource.Cache, x));
-
-            var documentsFromService = this
-                .exerciseDocumentService
-                .ExerciseDocument
-                .Where(x => x != null)
-                .Select(x => new DocumentSourceWith<string>(DocumentSource.Service, x));
-
-            var documents = documentsFromCache
-                .Catch((Exception ex) => Observable.Empty<DocumentSourceWith<string>>())
-                .Concat(documentsFromService)
-                .Do(x => this.logger.Debug("Received document from {0}.", x.Source))
-                .Publish();
-
-            var safeDocuments = documents
-                .Catch((Exception ex) => Observable.Empty<DocumentSourceWith<string>>());
-
-            var results = documents
-                .ObserveOn(taskPoolScheduler)
-                .Select(
-                    x =>
-                    {
-                        IResult<ExercisePrograms> parsedExercisePrograms;
-
-                        using (this.logger.Perf("Parsing exercise programs from {0}.", x.Source))
-                        {
-                            parsedExercisePrograms = ExercisePrograms.TryParse(x.Item, audioService, delayService, loggerService, speechService);
-                        }
-
-                        return new DocumentSourceWith<IResult<ExercisePrograms>>(x.Source, parsedExercisePrograms);
-                    })
-                .Publish();
-
-            var safeResults = results
-                .Catch((Exception ex) => Observable.Empty<DocumentSourceWith<IResult<ExercisePrograms>>>());
-
-            safeResults
-                .Select(x => x.Item.WasSuccessful ? null : x.Item.ToString())
-                .ObserveOn(mainScheduler)
-                .Subscribe(x => this.ParseErrorMessage = x)
-                .AddTo(this.disposables);
-
-            results
-                .Select(x => !x.Item.WasSuccessful ? ExerciseProgramsViewModelStatus.ParseFailed : x.Source == DocumentSource.Cache ? ExerciseProgramsViewModelStatus.LoadedFromCache : ExerciseProgramsViewModelStatus.LoadedFromService)
-                .Catch((Exception ex) => Observable.Return(ExerciseProgramsViewModelStatus.LoadFailed))
-                .ObserveOn(mainScheduler)
-                .Subscribe(x => this.Status = x)
-                .AddTo(this.disposables);
-
-            safeResults
-                .Select(x => x.Item.WasSuccessful ? x.Item.Value : null)
-                .ObserveOn(mainScheduler)
-                .Subscribe(x => this.Model = x)
-                .AddTo(this.disposables);
 
             this.WhenAnyValue(x => x.Model)
                 .Select(x => x == null ? null : x.Programs.CreateDerivedCollection(y => exerciseProgramViewModelFactory(y)))
                 .ObserveOn(mainScheduler)
-                .Subscribe(x => this.Programs = x)
-                .AddTo(this.disposables);
-
-            safeDocuments
-                .Where(x => x.Source == DocumentSource.Service)
-                .SelectMany(x => this.stateService.Set(exerciseProgramsCacheKey, x.Item))
-                .Subscribe()
-                .AddTo(this.disposables);
-
-            results
-                .Connect()
-                .AddTo(this.disposables);
-
-            documents
-                .Connect()
-                .AddTo(this.disposables);
+                .Subscribe(x => this.Programs = x);
 
             this
                 .WhenAnyValue(x => x.SelectedProgram)
                 .Where(x => x != null)
                 .SelectMany(x => this.hostScreen.Router.Navigate.Execute(x))
-                .Subscribe()
-                .AddTo(this.disposables);
+                .Subscribe();
 
             this
-                .hostScreen
-                .Router
-                .CurrentViewModel
-                .OfType<ExerciseProgramsViewModel>()
-                .Subscribe(x => x.SelectedProgram = null)
-                .AddTo(this.disposables);
+                .WhenActivated(
+                    disposables =>
+                    {
+                        var documentsFromCache = this
+                            .stateService
+                            .Get<string>(exerciseProgramsCacheKey)
+                            .Where(x => x != null)
+                            .Select(x => new DocumentSourceWith<string>(DocumentSource.Cache, x));
+
+                        var documentsFromService = this
+                            .exerciseDocumentService
+                            .ExerciseDocument
+                            .Where(x => x != null)
+                            .Select(x => new DocumentSourceWith<string>(DocumentSource.Service, x));
+
+                        var documents = documentsFromCache
+                            .Catch((Exception ex) => Observable.Empty<DocumentSourceWith<string>>())
+                            .Concat(documentsFromService)
+                            .Do(x => this.logger.Debug("Received document from {0}.", x.Source))
+                            .Publish();
+
+                        var results = documents
+                            .ObserveOn(taskPoolScheduler)
+                            .Select(
+                                x =>
+                                {
+                                    IResult<ExercisePrograms> parsedExercisePrograms;
+
+                                    using (this.logger.Perf("Parsing exercise programs from {0}.", x.Source))
+                                    {
+                                        parsedExercisePrograms = ExercisePrograms.TryParse(x.Item, audioService, delayService, loggerService, speechService);
+                                    }
+
+                                    return new DocumentSourceWith<IResult<ExercisePrograms>>(x.Source, parsedExercisePrograms);
+                                })
+                            .Publish();
+
+                        var safeResults = results
+                            .Catch((Exception ex) => Observable.Empty<DocumentSourceWith<IResult<ExercisePrograms>>>());
+
+                        safeResults
+                            .Select(x => x.Item.WasSuccessful ? null : x.Item.ToString())
+                            .ObserveOn(mainScheduler)
+                            .Subscribe(x => this.ParseErrorMessage = x)
+                            .AddTo(disposables);
+
+                        results
+                            .Select(x => !x.Item.WasSuccessful ? ExerciseProgramsViewModelStatus.ParseFailed : x.Source == DocumentSource.Cache ? ExerciseProgramsViewModelStatus.LoadedFromCache : ExerciseProgramsViewModelStatus.LoadedFromService)
+                            .Catch((Exception ex) => Observable.Return(ExerciseProgramsViewModelStatus.LoadFailed))
+                            .ObserveOn(mainScheduler)
+                            .Subscribe(x => this.Status = x)
+                            .AddTo(disposables);
+
+                        safeResults
+                            .Select(x => x.Item.WasSuccessful ? x.Item.Value : null)
+                            .ObserveOn(mainScheduler)
+                            .Subscribe(x => this.Model = x)
+                            .AddTo(disposables);
+
+                        var safeDocuments = documents
+                            .Catch((Exception ex) => Observable.Empty<DocumentSourceWith<string>>());
+
+                        safeDocuments
+                            .Where(x => x.Source == DocumentSource.Service)
+                            .SelectMany(x => this.stateService.Set(exerciseProgramsCacheKey, x.Item))
+                            .Subscribe()
+                            .AddTo(disposables);
+
+                        results
+                            .Connect()
+                            .AddTo(disposables);
+
+                        documents
+                            .Connect()
+                            .AddTo(disposables);
+
+                        this
+                            .hostScreen
+                            .Router
+                            .CurrentViewModel
+                            .OfType<ExerciseProgramsViewModel>()
+                            .Subscribe(x => x.SelectedProgram = null)
+                            .AddTo(disposables);
+                    });
         }
+
+        public ViewModelActivator Activator => this.activator;
 
         public string UrlPathSegment => "Exercise Programs";
 
@@ -186,16 +191,6 @@
         {
             get { return this.model; }
             set { this.RaiseAndSetIfChanged(ref this.model, value); }
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            if (disposing)
-            {
-                this.disposables.Dispose();
-            }
         }
 
         private enum DocumentSource

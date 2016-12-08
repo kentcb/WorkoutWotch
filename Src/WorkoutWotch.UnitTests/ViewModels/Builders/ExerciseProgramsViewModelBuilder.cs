@@ -23,6 +23,7 @@
 
     public sealed class ExerciseProgramsViewModelBuilder : IBuilder
     {
+        private bool activation;
         private IAudioService audioService;
         private IDelayService delayService;
         private IExerciseDocumentService exerciseDocumentService;
@@ -36,6 +37,7 @@
 
         public ExerciseProgramsViewModelBuilder()
         {
+            this.activation = true;
             this.audioService = new AudioServiceMock(MockBehavior.Loose);
             this.delayService = new DelayServiceMock(MockBehavior.Loose);
             this.exerciseDocumentService = new ExerciseDocumentServiceMock(MockBehavior.Loose);
@@ -53,6 +55,9 @@
 
             this.WithCachedDocument(null);
         }
+
+        public ExerciseProgramsViewModelBuilder WithActivation(bool activation) =>
+            this.With(ref this.activation, activation);
 
         public ExerciseProgramsViewModelBuilder WithAudioService(IAudioService audioService) =>
             this.With(ref this.audioService, audioService);
@@ -115,8 +120,9 @@
             return this.WithStateService(stateService);
         }
 
-        public ExerciseProgramsViewModel Build() =>
-            new ExerciseProgramsViewModel(
+        public ExerciseProgramsViewModel Build()
+        {
+            var result = new ExerciseProgramsViewModel(
                 this.audioService,
                 this.delayService,
                 this.exerciseDocumentService,
@@ -127,6 +133,14 @@
                 this.stateService,
                 this.hostScreen,
                 this.exerciseProgramViewModelFactory);
+
+            if (this.activation)
+            {
+                result.Activator.Activate();
+            }
+
+            return result;
+        }
 
         public static implicit operator ExerciseProgramsViewModel(ExerciseProgramsViewModelBuilder builder) =>
             builder.Build();

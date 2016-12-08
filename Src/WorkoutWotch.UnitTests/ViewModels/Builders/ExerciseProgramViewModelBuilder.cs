@@ -13,6 +13,7 @@
 
     public sealed class ExerciseProgramViewModelBuilder : IBuilder
     {
+        private bool activation;
         private ILoggerService loggerService;
         private IScheduler scheduler;
         private IScreen hostScreen;
@@ -20,11 +21,15 @@
 
         public ExerciseProgramViewModelBuilder()
         {
+            this.activation = true;
             this.loggerService = new LoggerServiceMock(MockBehavior.Loose);
             this.scheduler = new SchedulerMock(MockBehavior.Loose);
             this.hostScreen = new ScreenMock(MockBehavior.Loose);
             this.model = new ExerciseProgramBuilder();
         }
+
+        public ExerciseProgramViewModelBuilder WithActivation(bool activation) =>
+            this.With(ref this.activation, activation);
 
         public ExerciseProgramViewModelBuilder WithLoggerService(ILoggerService loggerService) =>
             this.With(ref this.loggerService, loggerService);
@@ -38,12 +43,21 @@
         public ExerciseProgramViewModelBuilder WithModel(ExerciseProgram model) =>
             this.With(ref this.model, model);
 
-        public ExerciseProgramViewModel Build() =>
-            new ExerciseProgramViewModel(
+        public ExerciseProgramViewModel Build()
+        {
+            var result = new ExerciseProgramViewModel(
                 this.loggerService,
                 this.scheduler,
                 this.hostScreen,
                 this.model);
+
+            if (this.activation)
+            {
+                result.Activator.Activate();
+            }
+
+            return result;
+        }
 
         public static implicit operator ExerciseProgramViewModel(ExerciseProgramViewModelBuilder builder) =>
             builder.Build();

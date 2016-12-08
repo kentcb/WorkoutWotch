@@ -109,16 +109,14 @@
         {
             var sut = new ExerciseBuilder()
                 .Build();
+            var executionContext = new ExecutionContext();
 
-            using (var executionContext = new ExecutionContext())
-            {
-                var completed = false;
-                sut
-                    .Execute(executionContext)
-                    .Subscribe(_ => completed = true);
+            var completed = false;
+            sut
+                .Execute(executionContext)
+                .Subscribe(_ => completed = true);
 
-                Assert.True(completed);
-            }
+            Assert.True(completed);
         }
 
         [Fact]
@@ -150,23 +148,21 @@
                 .WithMatcherWithAction(new MatcherWithAction(eventMatcher2, action2))
                 .WithMatcherWithAction(new MatcherWithAction(eventMatcher3, action3))
                 .Build();
+            var executionContext = new ExecutionContext();
 
-            using (var executionContext = new ExecutionContext())
-            {
-                sut.Execute(executionContext).Subscribe();
+            sut.Execute(executionContext).Subscribe();
 
-                action1
-                    .Verify(x => x.Execute(executionContext))
-                    .WasCalledExactlyOnce();
+            action1
+                .Verify(x => x.Execute(executionContext))
+                .WasCalledExactlyOnce();
 
-                action2
-                    .Verify(x => x.Execute(executionContext))
-                    .WasCalledExactly(times: 6);
+            action2
+                .Verify(x => x.Execute(executionContext))
+                .WasCalledExactly(times: 6);
 
-                action3
-                    .Verify(x => x.Execute(executionContext))
-                    .WasCalledExactly(times: 2);
-            }
+            action3
+                .Verify(x => x.Execute(executionContext))
+                .WasCalledExactly(times: 2);
         }
 
         [Fact]
@@ -182,15 +178,13 @@
             var sut = new ExerciseBuilder()
                 .WithMatcherWithAction(new MatcherWithAction(eventMatcher, action))
                 .Build();
+            var executionContext = new ExecutionContext();
 
-            using (var executionContext = new ExecutionContext())
-            {
-                sut.Execute(executionContext).Subscribe();
+            sut.Execute(executionContext).Subscribe();
 
-                action
-                    .Verify(x => x.Execute(executionContext))
-                    .WasCalledExactlyOnce();
-            }
+            action
+                .Verify(x => x.Execute(executionContext))
+                .WasCalledExactlyOnce();
         }
 
         [Fact]
@@ -240,15 +234,13 @@
                 .WithMatcherWithAction(new MatcherWithAction(eventMatcher2, action2))
                 .WithMatcherWithAction(new MatcherWithAction(eventMatcher3, action3))
                 .Build();
+            var executionContext = new ExecutionContext(TimeSpan.FromSeconds(13));
 
-            using (var executionContext = new ExecutionContext(TimeSpan.FromSeconds(13)))
-            {
-                sut.Execute(executionContext).Subscribe();
+            sut.Execute(executionContext).Subscribe();
 
-                action3
-                    .Verify(x => x.Execute(executionContext))
-                    .WasCalledExactlyOnce();
-            }
+            action3
+                .Verify(x => x.Execute(executionContext))
+                .WasCalledExactlyOnce();
         }
 
         [Fact]
@@ -298,16 +290,14 @@
                 .WithMatcherWithAction(new MatcherWithAction(eventMatcher2, action2))
                 .WithMatcherWithAction(new MatcherWithAction(eventMatcher3, action3))
                 .Build();
+            var executionContext = new ExecutionContext(TimeSpan.FromSeconds(13));
 
-            using (var executionContext = new ExecutionContext(TimeSpan.FromSeconds(13)))
-            {
-                executionContext.IsPaused = true;
-                sut.Execute(executionContext).Subscribe();
+            executionContext.IsPaused = true;
+            sut.Execute(executionContext).Subscribe();
 
-                action3
-                    .Verify(x => x.Execute(executionContext))
-                    .WasCalledExactlyOnce();
-            }
+            action3
+                .Verify(x => x.Execute(executionContext))
+                .WasCalledExactlyOnce();
         }
 
         [Fact]

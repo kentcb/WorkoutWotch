@@ -84,27 +84,25 @@
                 .WithChild(action3)
                 .WithChild(action4)
                 .Build();
+            var context = new ExecutionContext();
 
-            using (var context = new ExecutionContext())
-            {
-                sut.Execute(context);
+            sut.Execute(context);
 
-                action1
-                    .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
-                    .WasCalledExactlyOnce();
+            action1
+                .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
+                .WasCalledExactlyOnce();
 
-                action2
-                    .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
-                    .WasCalledExactlyOnce();
+            action2
+                .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
+                .WasCalledExactlyOnce();
 
-                action3
-                    .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
-                    .WasCalledExactlyOnce();
+            action3
+                .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
+                .WasCalledExactlyOnce();
 
-                action4
-                    .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
-                    .WasCalledExactlyOnce();
-            }
+            action4
+                .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
+                .WasCalledExactlyOnce();
         }
 
         [Fact]
@@ -131,23 +129,21 @@
                 .WithChild(action2)
                 .WithChild(action3)
                 .Build();
+            var context = new ExecutionContext(TimeSpan.FromSeconds(70));
 
-            using (var context = new ExecutionContext(TimeSpan.FromSeconds(70)))
-            {
-                sut.Execute(context);
+            sut.Execute(context);
 
-                action1
-                    .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
-                    .WasNotCalled();
+            action1
+                .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
+                .WasNotCalled();
 
-                action2
-                    .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
-                    .WasNotCalled();
+            action2
+                .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
+                .WasNotCalled();
 
-                action3
-                    .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
-                    .WasCalledExactlyOnce();
-            }
+            action3
+                .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
+                .WasCalledExactlyOnce();
         }
 
         [Fact]
@@ -174,24 +170,22 @@
                 .WithChild(action2)
                 .WithChild(action3)
                 .Build();
+            var context = new ExecutionContext(TimeSpan.FromSeconds(70));
 
-            using (var context = new ExecutionContext(TimeSpan.FromSeconds(70)))
-            {
-                context.IsPaused = true;
-                sut.Execute(context);
+            context.IsPaused = true;
+            sut.Execute(context);
 
-                action1
-                    .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
-                    .WasNotCalled();
+            action1
+                .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
+                .WasNotCalled();
 
-                action2
-                    .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
-                    .WasNotCalled();
+            action2
+                .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
+                .WasNotCalled();
 
-                action3
-                    .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
-                    .WasCalledExactlyOnce();
-            }
+            action3
+                .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
+                .WasCalledExactlyOnce();
         }
 
         [Fact]
@@ -218,25 +212,23 @@
                 .WithChild(action2)
                 .WithChild(action3)
                 .Build();
+            var context = new ExecutionContext(TimeSpan.FromMinutes(3));
 
-            using (var context = new ExecutionContext(TimeSpan.FromMinutes(3)))
-            {
-                sut.Execute(context);
+            sut.Execute(context);
 
-                action1
-                    .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
-                    .WasNotCalled();
+            action1
+                .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
+                .WasNotCalled();
 
-                action2
-                    .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
-                    .WasNotCalled();
+            action2
+                .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
+                .WasNotCalled();
 
-                action3
-                    .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
-                    .WasNotCalled();
+            action3
+                .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
+                .WasNotCalled();
 
-                Assert.Equal(TimeSpan.FromSeconds(71), context.Progress);
-            }
+            Assert.Equal(TimeSpan.FromSeconds(71), context.Progress);
         }
 
         [Fact]
@@ -289,13 +281,11 @@
                 .WithChild(action3)
                 .WithChild(action4)
                 .Build();
+            var context = new ExecutionContext();
 
-            using (var context = new ExecutionContext())
-            {
-                sut.Execute(context);
+            sut.Execute(context);
 
-                Assert.Equal(TimeSpan.FromSeconds(2), context.Progress);
-            }
+            Assert.Equal(TimeSpan.FromSeconds(2), context.Progress);
         }
 
         [Fact]
@@ -348,21 +338,19 @@
                 .WithChild(action3)
                 .WithChild(action4)
                 .Build();
+            var context = new ExecutionContext(TimeSpan.FromSeconds(5));
 
-            using (var context = new ExecutionContext(TimeSpan.FromSeconds(5)))
-            {
-                sut.Execute(context);
+            sut.Execute(context);
 
-                Assert.Equal(TimeSpan.FromSeconds(10), context.Progress);
+            Assert.Equal(TimeSpan.FromSeconds(10), context.Progress);
 
-                action1
-                    .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
-                    .WasNotCalled();
+            action1
+                .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
+                .WasNotCalled();
 
-                action4
-                    .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
-                    .WasNotCalled();
-            }
+            action4
+                .Verify(x => x.Execute(It.IsAny<ExecutionContext>()))
+                .WasNotCalled();
         }
 
         [Fact]
@@ -388,14 +376,12 @@
                 .WithChild(action1)
                 .WithChild(action2)
                 .Build();
+            var context = new ExecutionContext();
 
-            using (var context = new ExecutionContext())
-            {
-                sut.Execute(context);
+            sut.Execute(context);
 
-                // can't assume certain actions did not execute because actions run in parallel, but we can check the context is cancelled
-                Assert.True(context.IsCancelled);
-            }
+            // can't assume certain actions did not execute because actions run in parallel, but we can check the context is cancelled
+            Assert.True(context.IsCancelled);
         }
 
         [Fact]
@@ -421,14 +407,12 @@
                 .WithChild(action1)
                 .WithChild(action2)
                 .Build();
+            var context = new ExecutionContext();
 
-            using (var context = new ExecutionContext())
-            {
-                sut.Execute(context);
+            sut.Execute(context);
 
-                // can't assume certain actions did not execute because actions run in parallel, but we can check the context is cancelled
-                Assert.True(context.IsCancelled);
-            }
+            // can't assume certain actions did not execute because actions run in parallel, but we can check the context is cancelled
+            Assert.True(context.IsCancelled);
         }
 
         [Fact]
@@ -454,14 +438,12 @@
                 .WithChild(action1)
                 .WithChild(action2)
                 .Build();
+            var context = new ExecutionContext();
 
-            using (var context = new ExecutionContext())
-            {
-                sut.Execute(context);
+            sut.Execute(context);
 
-                // can't assume certain actions did not execute because actions run in parallel, but we can check the context is paused
-                Assert.True(context.IsPaused);
-            }
+            // can't assume certain actions did not execute because actions run in parallel, but we can check the context is paused
+            Assert.True(context.IsPaused);
         }
 
         [Fact]
@@ -487,14 +469,12 @@
                 .WithChild(action1)
                 .WithChild(action2)
                 .Build();
+            var context = new ExecutionContext();
 
-            using (var context = new ExecutionContext())
-            {
-                sut.Execute(context);
+            sut.Execute(context);
 
-                // can't assume certain actions did not execute because actions run in parallel, but we can check the context is paused
-                Assert.True(context.IsPaused);
-            }
+            // can't assume certain actions did not execute because actions run in parallel, but we can check the context is paused
+            Assert.True(context.IsPaused);
         }
     }
 }

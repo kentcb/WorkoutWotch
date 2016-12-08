@@ -34,15 +34,13 @@
                 .WithDelay(TimeSpan.Zero)
                 .Build();
 
-            using (var executionContext = new ExecutionContext())
-            {
-                var completed = false;
-                sut
-                    .Execute(executionContext)
-                    .Subscribe(_ => completed = true);
+            var executionContext = new ExecutionContext();
+            var completed = false;
+            sut
+                .Execute(executionContext)
+                .Subscribe(_ => completed = true);
 
-                Assert.True(completed);
-            }
+            Assert.True(completed);
         }
 
         [Theory]
@@ -117,17 +115,18 @@
                 .WithDelay(TimeSpan.FromMilliseconds(delayInMs))
                 .Build();
 
-            using (var context = new ExecutionContext(TimeSpan.FromMilliseconds(skipInMs)) { IsPaused = true })
+            var context = new ExecutionContext(TimeSpan.FromMilliseconds(skipInMs))
             {
-                var progress = context
-                    .WhenAnyValue(x => x.Progress)
-                    .Skip(1)
-                    .CreateCollection();
+                IsPaused = true
+            };
+            var progress = context
+                .WhenAnyValue(x => x.Progress)
+                .Skip(1)
+                .CreateCollection();
 
-                sut.Execute(context).Subscribe();
+            sut.Execute(context).Subscribe();
 
-                Assert.Equal(TimeSpan.FromMilliseconds(skipInMs), progress.First());
-            }
+            Assert.Equal(TimeSpan.FromMilliseconds(skipInMs), progress.First());
         }
 
         [Fact]
@@ -138,15 +137,13 @@
                 .WithDelayService(delayService)
                 .WithDelay(TimeSpan.FromMilliseconds(50))
                 .Build();
+            var context = new ExecutionContext();
 
-            using (var context = new ExecutionContext())
-            {
-                Assert.Equal(TimeSpan.Zero, context.Progress);
+            Assert.Equal(TimeSpan.Zero, context.Progress);
 
-                sut.Execute(context).Subscribe();
+            sut.Execute(context).Subscribe();
 
-                Assert.Equal(TimeSpan.FromMilliseconds(50), context.Progress);
-            }
+            Assert.Equal(TimeSpan.FromMilliseconds(50), context.Progress);
         }
 
         [Fact]
@@ -157,15 +154,13 @@
                 .WithDelayService(delayService)
                 .WithDelay(TimeSpan.FromMilliseconds(50))
                 .Build();
+            var context = new ExecutionContext(TimeSpan.FromMilliseconds(100));
 
-            using (var context = new ExecutionContext(TimeSpan.FromMilliseconds(100)))
-            {
-                Assert.Equal(TimeSpan.Zero, context.Progress);
+            Assert.Equal(TimeSpan.Zero, context.Progress);
 
-                sut.Execute(context).Subscribe();
+            sut.Execute(context).Subscribe();
 
-                Assert.Equal(TimeSpan.FromMilliseconds(50), context.Progress);
-            }
+            Assert.Equal(TimeSpan.FromMilliseconds(50), context.Progress);
         }
 
         [Fact]
@@ -173,28 +168,26 @@
         {
             var delayService = new DelayServiceMock();
             var delayCallCount = 0;
+            var context = new ExecutionContext();
 
-            using (var context = new ExecutionContext())
-            {
-                delayService
-                    .When(x => x.Delay(It.IsAny<TimeSpan>()))
-                    .Do(() => context.IsPaused = delayCallCount++ == 2)
-                    .Return(Observable.Return(Unit.Default));
+            delayService
+                .When(x => x.Delay(It.IsAny<TimeSpan>()))
+                .Do(() => context.IsPaused = delayCallCount++ == 2)
+                .Return(Observable.Return(Unit.Default));
 
-                var sut = new WaitActionBuilder()
-                    .WithDelayService(delayService)
-                    .WithDelay(TimeSpan.FromSeconds(50))
-                    .Build();
+            var sut = new WaitActionBuilder()
+                .WithDelayService(delayService)
+                .WithDelay(TimeSpan.FromSeconds(50))
+                .Build();
 
-                sut
-                    .Execute(context)
-                    .Subscribe();
+            sut
+                .Execute(context)
+                .Subscribe();
 
-                Assert.True(context.IsPaused);
-                delayService
-                    .Verify(x => x.Delay(It.IsAny<TimeSpan>()))
-                    .WasCalledExactly(times: 3);
-            }
+            Assert.True(context.IsPaused);
+            delayService
+                .Verify(x => x.Delay(It.IsAny<TimeSpan>()))
+                .WasCalledExactly(times: 3);
         }
     }
 }
