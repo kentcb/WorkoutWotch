@@ -2,8 +2,8 @@
 {
     using System;
     using System.Reactive.Concurrency;
+    using Genesis.Ensure;
     using Microsoft.Reactive.Testing;
-    using WorkoutWotch.Utility;
 
     public static class TestSchedulerExtensions
     {

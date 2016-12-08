@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.Models.EventMatchers
 {
     using System;
-    using Utility;
+    using Genesis.Ensure;
     using WorkoutWotch.Models.Events;
 
     public sealed class NumberedEventMatcher<T> : IEventMatcher

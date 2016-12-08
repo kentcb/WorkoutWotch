@@ -3,7 +3,7 @@
     using System;
     using System.Reactive;
     using System.Reactive.Linq;
-    using Utility;
+    using Genesis.Ensure;
     using WorkoutWotch.Services.Contracts.Logger;
 
     public sealed class DoNotAwaitAction : IAction

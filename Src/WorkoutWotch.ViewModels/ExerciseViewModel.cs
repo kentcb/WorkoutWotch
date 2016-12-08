@@ -4,9 +4,9 @@ namespace WorkoutWotch.ViewModels
     using System.Reactive.Concurrency;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
+    using Genesis.Ensure;
     using ReactiveUI;
     using WorkoutWotch.Models;
-    using WorkoutWotch.Utility;
 
     public sealed class ExerciseViewModel : ReactiveObject, ISupportsActivation
     {

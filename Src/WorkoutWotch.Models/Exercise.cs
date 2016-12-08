@@ -6,8 +6,7 @@ namespace WorkoutWotch.Models
     using System.Linq;
     using System.Reactive;
     using System.Reactive.Linq;
-    using System.Threading;
-    using Utility;
+    using Genesis.Ensure;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Models.Events;
     using WorkoutWotch.Services.Contracts.Logger;

@@ -8,6 +8,7 @@
     using System.Reactive;
     using System.Reactive.Linq;
     using Akavache;
+    using Genesis.Ensure;
     using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.Contracts.State;
     using WorkoutWotch.Utility;

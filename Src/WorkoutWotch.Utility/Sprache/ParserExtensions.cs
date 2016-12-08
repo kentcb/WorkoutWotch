@@ -2,7 +2,7 @@
 {
     using System;
     using System.Reactive;
-    using WorkoutWotch.Utility;
+    using Genesis.Ensure;
 
     public static class ParserExtensions
     {

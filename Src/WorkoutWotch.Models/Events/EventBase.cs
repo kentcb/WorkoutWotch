@@ -1,6 +1,6 @@
 ﻿namespace WorkoutWotch.Models.Events
 {
-    using WorkoutWotch.Utility;
+    using Genesis.Ensure;
 
     public abstract class EventBase : IEvent
     {

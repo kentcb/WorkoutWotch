@@ -4,7 +4,7 @@
     using System.Reactive;
     using System.Reactive.Concurrency;
     using System.Reactive.Linq;
-    using Utility;
+    using Genesis.Ensure;
     using WorkoutWotch.Services.Contracts.Delay;
 
     public sealed class DelayService : IDelayService

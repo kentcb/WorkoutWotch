@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Reactive;
-    using Utility;
+    using Genesis.Ensure;
     using WorkoutWotch.Services.Contracts.Delay;
     using WorkoutWotch.Services.Contracts.Speech;
 

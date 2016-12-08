@@ -3,8 +3,7 @@
     using System;
     using System.Reactive;
     using System.Reactive.Linq;
-    using System.Threading;
-    using Utility;
+    using Genesis.Ensure;
     using WorkoutWotch.Services.Contracts.Speech;
 
     public sealed class SayAction : IAction

@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.UI
 {
     using System;
-    using Utility;
+    using Genesis.Ensure;
     using WorkoutWotch.ViewModels;
     using Xamarin.Forms;
 

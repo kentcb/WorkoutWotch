@@ -6,8 +6,8 @@ namespace WorkoutWotch.Services.iOS.Audio
     using System.Reactive.Linq;
     using AVFoundation;
     using Foundation;
+    using Genesis.Ensure;
     using WorkoutWotch.Services.Contracts.Audio;
-    using WorkoutWotch.Utility;
 
     public sealed class AudioService : IAudioService
     {

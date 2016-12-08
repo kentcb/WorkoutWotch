@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Reactive;
-    using Utility;
+    using Genesis.Ensure;
     using WorkoutWotch.Services.Contracts.Audio;
     using WorkoutWotch.Services.Contracts.Delay;
     using WorkoutWotch.Services.Contracts.Logger;

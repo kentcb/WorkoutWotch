@@ -1,9 +1,9 @@
 ﻿namespace WorkoutWotch.UI
 {
+    using Genesis.Ensure;
     using global::ReactiveUI;
     using ReactiveUI;
     using Splat;
-    using Utility;
     using WorkoutWotch.ViewModels;
 
     // ReactiveUI depends on Splat, which is essentially a service locator. Thus, we cannot rely solely on our

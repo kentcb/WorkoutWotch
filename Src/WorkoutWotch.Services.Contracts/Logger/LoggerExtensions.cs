@@ -4,6 +4,7 @@
     using System.Diagnostics;
     using System.Globalization;
     using System.Reactive.Disposables;
+    using Genesis.Ensure;
     using WorkoutWotch.Utility;
 
     // extends ILogger to include level-specific logging methods, as well as poor man's variadic templates

@@ -6,9 +6,9 @@ namespace WorkoutWotch.Services.iOS.ExerciseDocument
     using System.Threading;
     using System.Threading.Tasks;
     using Foundation;
+    using Genesis.Ensure;
     using Services.ExerciseDocument;
     using UIKit;
-    using Utility;
     using WorkoutWotch.Services.Contracts.ExerciseDocument;
     using WorkoutWotch.Services.Contracts.Logger;
 
@@ -86,7 +86,7 @@ namespace WorkoutWotch.Services.iOS.ExerciseDocument
             }
         }
 
-        private Task InitializeUbiquityContainerUrlAsync() => 
+        private Task InitializeUbiquityContainerUrlAsync() =>
             Task.Run(
                 () =>
                 {
@@ -238,7 +238,7 @@ namespace WorkoutWotch.Services.iOS.ExerciseDocument
                 {
                     this.data = NSString.FromData((NSData)contents, NSStringEncoding.UTF8);
                 }
-            
+
                 return true;
             }
 

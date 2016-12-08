@@ -7,10 +7,10 @@ namespace WorkoutWotch.ViewModels
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Windows.Input;
+    using Genesis.Ensure;
     using ReactiveUI;
     using WorkoutWotch.Models;
     using WorkoutWotch.Services.Contracts.Logger;
-    using WorkoutWotch.Utility;
 
     public delegate ExerciseProgramViewModel ExerciseProgramViewModelFactory(ExerciseProgram model);
 

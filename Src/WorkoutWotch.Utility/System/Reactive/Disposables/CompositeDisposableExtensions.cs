@@ -1,6 +1,6 @@
 ﻿namespace System.Reactive.Disposables
 {
-    using WorkoutWotch.Utility;
+    using Genesis.Ensure;
 
     public static class CompositeDisposableExtensions
     {

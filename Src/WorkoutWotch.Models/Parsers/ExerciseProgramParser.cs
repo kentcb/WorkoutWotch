@@ -1,11 +1,11 @@
 ﻿namespace WorkoutWotch.Models.Parsers
 {
     using System.Linq;
+    using Genesis.Ensure;
     using Services.Contracts.Audio;
     using Services.Contracts.Delay;
     using Services.Contracts.Speech;
     using Sprache;
-    using Utility;
     using WorkoutWotch.Services.Contracts.Logger;
 
     internal static class ExerciseProgramParser

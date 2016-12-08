@@ -6,7 +6,7 @@
     using System.Linq;
     using System.Reactive;
     using System.Reactive.Linq;
-    using Utility;
+    using Genesis.Ensure;
 
     public sealed class SequenceAction : IAction
     {

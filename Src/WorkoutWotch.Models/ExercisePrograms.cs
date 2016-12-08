@@ -2,12 +2,12 @@
 {
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using Genesis.Ensure;
     using Services.Contracts.Audio;
     using Services.Contracts.Delay;
     using Services.Contracts.Logger;
     using Services.Contracts.Speech;
     using Sprache;
-    using Utility;
     using WorkoutWotch.Models.Parsers;
 
     public sealed class ExercisePrograms

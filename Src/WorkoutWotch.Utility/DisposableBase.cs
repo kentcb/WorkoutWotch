@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading;
+    using Genesis.Ensure;
 
     public abstract class DisposableBase : object, IDisposable
     {

@@ -10,6 +10,7 @@ namespace WorkoutWotch.Services.Android.ExerciseDocument
     using System.Threading;
     using System.Threading.Tasks;
     using Contracts.Logger;
+    using Genesis.Ensure;
     using global::Android.App;
     using global::Android.Gms.Common;
     using global::Android.Gms.Common.Apis;
@@ -18,7 +19,6 @@ namespace WorkoutWotch.Services.Android.ExerciseDocument
     using global::Android.Gms.Drive.Query;
     using Services.ExerciseDocument;
     using WorkoutWotch.Services.Contracts.ExerciseDocument;
-    using WorkoutWotch.Utility;
 
     // TODO/WARNING: an unholy marriage of Rx and TPL follows
     public sealed class GoogleDriveExerciseDocumentService :
@@ -91,7 +91,7 @@ namespace WorkoutWotch.Services.Android.ExerciseDocument
             var query = new QueryClass.Builder()
                 .AddFilter(Filters.Eq(SearchableField.Title, documentFilename))
                 .Build();
-                
+
             var result = await rootFolder.QueryChildrenAsync(this.client, query);
 
             if (!result.Status.IsSuccess || result.MetadataBuffer.Count == 0)
@@ -135,7 +135,7 @@ namespace WorkoutWotch.Services.Android.ExerciseDocument
                 .DriveApi
                 .GetRootFolder(this.client)
                 .CreateFile(this.client, changeSet, result.DriveContents);
-            
+
             if (!createResult.Status.IsSuccess)
             {
                 this.logger.Error("Failed to create file. Status code: {0}. Status message: {1}.", result.Status.StatusCode, result.Status.StatusMessage);

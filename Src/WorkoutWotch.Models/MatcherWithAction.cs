@@ -1,6 +1,6 @@
 namespace WorkoutWotch.Models
 {
-    using Utility;
+    using Genesis.Ensure;
 
     public sealed class MatcherWithAction 
     {

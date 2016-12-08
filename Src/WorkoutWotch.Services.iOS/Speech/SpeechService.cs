@@ -4,8 +4,8 @@ namespace WorkoutWotch.Services.iOS.Speech
     using System.Reactive;
     using System.Reactive.Linq;
     using AVFoundation;
+    using Genesis.Ensure;
     using WorkoutWotch.Services.Contracts.Speech;
-    using WorkoutWotch.Utility;
 
     public sealed class SpeechService : ISpeechService
     {

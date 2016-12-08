@@ -1,8 +1,8 @@
 ﻿namespace WorkoutWotch.ViewModels
 {
     using System;
+    using Genesis.Ensure;
     using ReactiveUI;
-    using Utility;
 
     public sealed class MainViewModel : ReactiveObject, IScreen
     {

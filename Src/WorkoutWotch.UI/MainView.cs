@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.UI
 {
+    using Genesis.Ensure;
     using global::ReactiveUI.XamForms;
-    using Utility;
     using ViewModels;
 
     public sealed class MainView : RoutedViewHost

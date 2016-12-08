@@ -4,8 +4,8 @@
     using System.Collections.Generic;
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
+    using Genesis.Ensure;
     using WorkoutWotch.Services.Contracts.Logger;
-    using WorkoutWotch.Utility;
 
     public sealed class LoggerService : ILoggerService
     {

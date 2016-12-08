@@ -1,7 +1,7 @@
 ﻿namespace System.Threading.Tasks
 {
     using System.Runtime.CompilerServices;
-    using WorkoutWotch.Utility;
+    using Genesis.Ensure;
 
     public static class TaskExtensions
     {

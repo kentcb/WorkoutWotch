@@ -4,6 +4,7 @@
     using System.Reactive.Concurrency;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
+    using Genesis.Ensure;
     using ReactiveUI;
     using Services.Contracts.Audio;
     using Services.Contracts.Delay;
@@ -13,7 +14,6 @@
     using WorkoutWotch.Services.Contracts.ExerciseDocument;
     using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.Contracts.State;
-    using WorkoutWotch.Utility;
 
     public sealed class ExerciseProgramsViewModel : ReactiveObject, IRoutableViewModel, ISupportsActivation
     {

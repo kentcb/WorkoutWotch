@@ -3,10 +3,10 @@ namespace WorkoutWotch.Services.Android.Audio
     using System;
     using System.Reactive;
     using System.Reactive.Linq;
+    using Genesis.Ensure;
     using global::Android.App;
     using global::Android.Media;
     using WorkoutWotch.Services.Contracts.Audio;
-    using WorkoutWotch.Utility;
 
     public sealed class AudioService : IAudioService
     {

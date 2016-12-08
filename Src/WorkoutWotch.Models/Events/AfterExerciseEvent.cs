@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.Models.Events
 {
     using System.Globalization;
-    using Utility;
+    using Genesis.Ensure;
 
     public sealed class AfterExerciseEvent : EventBase
     {

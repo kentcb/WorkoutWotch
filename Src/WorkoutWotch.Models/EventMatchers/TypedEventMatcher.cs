@@ -1,6 +1,6 @@
 ﻿namespace WorkoutWotch.Models.EventMatchers
 {
-    using WorkoutWotch.Utility;
+    using Genesis.Ensure;
 
     public sealed class TypedEventMatcher<T> : IEventMatcher
         where T : IEvent

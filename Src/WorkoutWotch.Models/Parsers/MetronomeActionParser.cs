@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.Models.Parsers
 {
+    using Genesis.Ensure;
     using Sprache;
-    using Utility;
     using WorkoutWotch.Models.Actions;
     using WorkoutWotch.Services.Contracts.Audio;
     using WorkoutWotch.Services.Contracts.Delay;

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reactive;
+    using Genesis.Ensure;
     using Services.Contracts.Audio;
     using Services.Contracts.Delay;
     using Sprache;
@@ -12,7 +13,6 @@
     using WorkoutWotch.Models.Events;
     using WorkoutWotch.Services.Contracts.Logger;
     using WorkoutWotch.Services.Contracts.Speech;
-    using WorkoutWotch.Utility;
 
     internal static class ExerciseParser
     {
@@ -53,7 +53,7 @@
                 IDelayService delayService,
                 ILoggerService loggerService,
                 ISpeechService speechService)
-            where T : IEvent => 
+            where T : IEvent =>
                 from _ in Parse.String("*")
                 from __ in HorizontalWhitespaceParser.Parser.AtLeastOnce()
                 from ___ in nameParser
@@ -74,7 +74,7 @@
                 IDelayService delayService,
                 ILoggerService loggerService,
                 ISpeechService speechService)
-            where T : NumberedEvent => 
+            where T : NumberedEvent =>
                 from _ in Parse.String("*")
                 from __ in HorizontalWhitespaceParser.Parser.AtLeastOnce()
                 from ___ in nameParser

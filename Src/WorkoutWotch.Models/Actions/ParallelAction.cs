@@ -6,8 +6,8 @@
     using System.Linq;
     using System.Reactive;
     using System.Reactive.Linq;
+    using Genesis.Ensure;
     using ReactiveUI;
-    using Utility;
 
     public sealed class ParallelAction : IAction
     {
