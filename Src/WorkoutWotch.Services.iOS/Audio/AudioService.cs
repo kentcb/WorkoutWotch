@@ -3,6 +3,7 @@ namespace WorkoutWotch.Services.iOS.Audio
     using System;
     using System.Reactive;
     using System.Reactive.Concurrency;
+    using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using AVFoundation;
     using Foundation;
@@ -24,22 +25,36 @@ namespace WorkoutWotch.Services.iOS.Audio
         {
             Ensure.ArgumentNotNull(name, nameof(name));
 
-            var url = new NSUrl("Audio/" + name + ".mp3");
-            var audioPlayer = AVAudioPlayer.FromUrl(url);
-            var finishedPlaying = Observable
-                .FromEventPattern<AVStatusEventArgs>(x => audioPlayer.FinishedPlaying += x, x => audioPlayer.FinishedPlaying -= x)
-                .ToSignal()
-                .Publish();
+            return Observable
+                .Create<Unit>(
+                    observer =>
+                    {
+                        var disposables = new CompositeDisposable();
+                        var url = NSBundle.MainBundle.GetUrlForResource(name, "mp3", "Audio");
+                        var audioPlayer = AVAudioPlayer.FromUrl(url);
+                        var finishedPlaying = Observable
+                            .FromEventPattern<AVStatusEventArgs>(x => audioPlayer.FinishedPlaying += x, x => audioPlayer.FinishedPlaying -= x)
+                            .FirstAsync()
+                            .Select(_ => Unit.Default)
+                            .Publish();
 
-            finishedPlaying
-                .ObserveOn(this.scheduler)
-                .SubscribeSafe(_ => audioPlayer.Dispose());
+                        finishedPlaying
+                            .Subscribe(observer)
+                            .AddTo(disposables);
 
-            finishedPlaying.Connect();
-            audioPlayer.Play();
+                        finishedPlaying
+                            .ObserveOn(this.scheduler)
+                            .Subscribe(_ => audioPlayer.Dispose())
+                            .AddTo(disposables);
 
-            return finishedPlaying
-                .FirstAsync();
+                        finishedPlaying
+                            .Connect()
+                            .AddTo(disposables);
+
+                        audioPlayer.Play();
+
+                        return disposables;
+                    });
         }
     }
 }
