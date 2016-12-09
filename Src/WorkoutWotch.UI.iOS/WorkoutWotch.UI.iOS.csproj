@@ -253,6 +253,7 @@
     <ImageAsset Include="Resources\Images.xcassets\SkipForward.imageset\Contents.json">
       <InProject>false</InProject>
     </ImageAsset>
+    <InterfaceDefinition Include="Resources\Launch.storyboard" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default-568h%402x.png" />
@@ -270,7 +271,6 @@
     <BundleResource Include="Resources\Icon-Small.png" />
     <BundleResource Include="Resources\Icon-Small%402x.png" />
     <BundleResource Include="Resources\Icon-Small%403x.png" />
-    <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Akavache">
@@ -508,6 +508,7 @@
     </Content>
     <Content Include="Audio\MetronomeBell.mp3" />
     <Content Include="Audio\MetronomeClick.mp3" />
+    <BundleResource Include="Resources\launch.png" />
     <ImageAsset Include="Resources\Images.xcassets\SkipForward.imageset\SkipForward%403x.png">
       <InProject>false</InProject>
     </ImageAsset>
