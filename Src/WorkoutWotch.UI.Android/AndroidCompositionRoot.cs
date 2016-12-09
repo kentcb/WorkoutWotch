@@ -1,6 +1,5 @@
 ﻿namespace WorkoutWotch.UI.Android
 {
-    using Services.ExerciseDocument;
     using WorkoutWotch.Services.Android.Audio;
     using WorkoutWotch.Services.Android.Speech;
     using WorkoutWotch.Services.Contracts.Audio;
@@ -14,11 +13,10 @@
 
         protected override IExerciseDocumentService CreateExerciseDocumentService() =>
             // just used canned data - useful for getting you up and running quickly
-            new CannedExerciseDocumentService();
+            new Services.ExerciseDocument.CannedExerciseDocumentService();
             // comment the above lines and uncomment this line if you want to use an iCloud-based document service
-            //new GoogleDriveExerciseDocumentService(
-            //    this.loggerService.Value,
-            //    this.mainActivity);
+            //new Services.Android.ExerciseDocument.GoogleDriveExerciseDocumentService(
+            //        (MainActivity)Plugin.CurrentActivity.CrossCurrentActivity.Current.Activity);
 
         protected override ISpeechService CreateSpeechService() =>
             new SpeechService();
