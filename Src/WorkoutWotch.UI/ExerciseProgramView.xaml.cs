@@ -6,6 +6,7 @@
     using System.Reactive.Linq;
     using System.Reactive.Threading.Tasks;
     using Controls;
+    using Genesis.Logging;
     using global::ReactiveUI;
     using global::ReactiveUI.XamForms;
     using WorkoutWotch.ViewModels;
@@ -15,57 +16,65 @@
     {
         public ExerciseProgramView()
         {
-            InitializeComponent();
+            var logger = LoggerService.GetLogger(this.GetType());
+
+            using (logger.Perf("Initialize component."))
+            {
+                InitializeComponent();
+            }
 
             this
                 .WhenActivated(
                     disposables =>
                     {
-                        this
-                            .OneWayBind(this.ViewModel, x => x.Progress, x => x.progressBar.Progress)
-                            .AddTo(disposables);
-                        this
-                            .OneWayBind(this.ViewModel, x => x.Exercises, x => x.exercisesListView.ItemsSource)
-                            .AddTo(disposables);
-                        this
-                            .BindCommand(this.ViewModel, x => x.SkipBackwardsCommand, x => x.skipBackwardButton)
-                            .AddTo(disposables);
-                        this
-                            .BindCommand(this.ViewModel, x => x.PlaybackCommand, x => x.playbackButton)
-                            .AddTo(disposables);
-                        this
-                            .BindCommand(this.ViewModel, x => x.SkipForwardsCommand, x => x.skipForwardButton)
-                            .AddTo(disposables);
+                        using (logger.Perf("Activate."))
+                        {
+                            this
+                                .OneWayBind(this.ViewModel, x => x.Progress, x => x.progressBar.Progress)
+                                .AddTo(disposables);
+                            this
+                                .OneWayBind(this.ViewModel, x => x.Exercises, x => x.exercisesListView.ItemsSource)
+                                .AddTo(disposables);
+                            this
+                                .BindCommand(this.ViewModel, x => x.SkipBackwardsCommand, x => x.skipBackwardButton)
+                                .AddTo(disposables);
+                            this
+                                .BindCommand(this.ViewModel, x => x.PlaybackCommand, x => x.playbackButton)
+                                .AddTo(disposables);
+                            this
+                                .BindCommand(this.ViewModel, x => x.SkipForwardsCommand, x => x.skipForwardButton)
+                                .AddTo(disposables);
 
-                        this
-                            .WhenAnyValue(
-                                x => x.ViewModel.IsStartVisible,
-                                x => x.ViewModel.IsPauseVisible,
-                                x => x.ViewModel.IsResumeVisible,
-                                (isStartVisible, isPauseVisible, isResumeVisible) => isPauseVisible ? "Pause" : "Play")
-                            .SubscribeSafe(imageName => this.playbackButton.Source = new FileImageSource { File = imageName })
-                            .AddTo(disposables);
+                            this
+                                .WhenAnyValue(
+                                    x => x.ViewModel.IsStartVisible,
+                                    x => x.ViewModel.IsPauseVisible,
+                                    x => x.ViewModel.IsResumeVisible,
+                                    (isStartVisible, isPauseVisible, isResumeVisible) => isPauseVisible ? "Pause" : "Play")
+                                .SubscribeSafe(imageName => this.playbackButton.Source = new FileImageSource { File = imageName })
+                                .AddTo(disposables);
 
-                        this
-                            .WhenAnyObservable(x => x.ViewModel.SkipBackwardsCommand.IsExecuting)
-                            .Where(isExecuting => isExecuting)
-                            .SelectMany(_ => this.AnimateButtonAsync(this.skipBackwardButton))
-                            .SubscribeSafe()
-                            .AddTo(disposables);
-                        this
-                            .playbackButton
-                            .TapGestureRecognizer
-                            .Events()
-                            .Tapped
-                            .SelectMany(_ => this.AnimateButtonAsync(this.playbackButton))
-                            .SubscribeSafe()
-                            .AddTo(disposables);
-                        this
-                            .WhenAnyObservable(x => x.ViewModel.SkipForwardsCommand.IsExecuting)
-                            .Where(isExecuting => isExecuting)
-                            .SelectMany(_ => this.AnimateButtonAsync(this.skipForwardButton))
-                            .SubscribeSafe()
-                            .AddTo(disposables);
+                            this
+                                .WhenAnyObservable(x => x.ViewModel.SkipBackwardsCommand.IsExecuting)
+                                .Where(isExecuting => isExecuting)
+                                .SelectMany(_ => this.AnimateButtonAsync(this.skipBackwardButton))
+                                .SubscribeSafe()
+                                .AddTo(disposables);
+                            this
+                                .playbackButton
+                                .TapGestureRecognizer
+                                .Events()
+                                .Tapped
+                                .SelectMany(_ => this.AnimateButtonAsync(this.playbackButton))
+                                .SubscribeSafe()
+                                .AddTo(disposables);
+                            this
+                                .WhenAnyObservable(x => x.ViewModel.SkipForwardsCommand.IsExecuting)
+                                .Where(isExecuting => isExecuting)
+                                .SelectMany(_ => this.AnimateButtonAsync(this.skipForwardButton))
+                                .SubscribeSafe()
+                                .AddTo(disposables);
+                        }
                     });
         }
 

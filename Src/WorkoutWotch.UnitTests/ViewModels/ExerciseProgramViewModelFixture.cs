@@ -77,11 +77,8 @@
         [Fact]
         public void is_started_cycles_correctly_if_start_command_is_executed()
         {
-            var scheduler = new TestScheduler();
             var sut = new ExerciseProgramViewModelBuilder()
-                .WithScheduler(scheduler)
                 .Build();
-            scheduler.AdvanceMinimal();
 
             var isStarted = sut
                 .WhenAnyValue(x => x.IsStarted)
@@ -91,7 +88,6 @@
                 .StartCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
 
             Assert.Equal(3, isStarted.Count);
             Assert.False(isStarted[0]);
@@ -102,11 +98,8 @@
         [Fact]
         public void is_start_visible_is_true_by_default()
         {
-            var scheduler = new TestScheduler();
             var sut = new ExerciseProgramViewModelBuilder()
-                .WithScheduler(scheduler)
                 .Build();
-            scheduler.AdvanceMinimal();
 
             Assert.True(sut.IsStartVisible);
         }
@@ -114,11 +107,8 @@
         [Fact]
         public void is_start_visible_cycles_correctly_if_start_command_is_executed()
         {
-            var scheduler = new TestScheduler();
             var sut = new ExerciseProgramViewModelBuilder()
-                .WithScheduler(scheduler)
                 .Build();
-            scheduler.AdvanceMinimal();
 
             var isStartVisible = sut
                 .WhenAnyValue(x => x.IsStartVisible)
@@ -128,7 +118,6 @@
                 .StartCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
 
             Assert.Equal(5, isStartVisible.Count);
             Assert.True(isStartVisible[0]);
@@ -150,7 +139,6 @@
         [Fact]
         public void is_paused_cycles_correctly_if_pause_command_is_executed()
         {
-            var scheduler = new TestScheduler();
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(new ExerciseBuilder()
@@ -159,7 +147,6 @@
                                 .WithDelayService(new DelayServiceBuilder().Build())
                                 .WithDelay(TimeSpan.FromMinutes(1))
                                 .Build())))
-                .WithScheduler(scheduler)
                 .Build();
 
             Assert.False(sut.IsPaused);
@@ -168,14 +155,12 @@
                 .StartCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
             Assert.False(sut.IsPaused);
 
             sut
                 .PauseCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
             Assert.True(sut.IsPaused);
         }
 
@@ -230,7 +215,6 @@
         [Fact]
         public void is_pause_visible_cycles_correctly_if_pause_command_is_executed()
         {
-            var scheduler = new TestScheduler();
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(new ExerciseBuilder()
@@ -239,7 +223,6 @@
                                 .WithDelayService(new DelayServiceBuilder().Build())
                                 .WithDelay(TimeSpan.FromMinutes(1))
                                 .Build())))
-                .WithScheduler(scheduler)
                 .Build();
 
             var isPauseVisible = sut
@@ -250,13 +233,11 @@
                 .StartCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
 
             sut
                 .PauseCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
 
             Assert.Equal(3, isPauseVisible.Count);
             Assert.False(isPauseVisible[0]);
@@ -276,7 +257,6 @@
         [Fact]
         public void is_resume_visible_cycles_correctly_if_start_command_is_executed_and_execution_is_paused()
         {
-            var scheduler = new TestScheduler();
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(new ExerciseBuilder()
@@ -285,7 +265,6 @@
                                 .WithDelayService(new DelayServiceBuilder().Build())
                                 .WithDelay(TimeSpan.FromMinutes(1))
                                 .Build())))
-                .WithScheduler(scheduler)
                 .Build();
 
             var isResumeVisible = sut
@@ -296,13 +275,11 @@
                 .StartCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
 
             sut
                 .PauseCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
 
             Assert.Equal(2, isResumeVisible.Count);
             Assert.False(isResumeVisible[0]);
@@ -312,7 +289,6 @@
         [Fact]
         public void progress_time_span_is_updated_throughout_execution()
         {
-            var scheduler = new TestScheduler();
             var action = new ActionMock(MockBehavior.Loose);
 
             action
@@ -332,7 +308,6 @@
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(action)))
-                .WithScheduler(scheduler)
                 .Build();
 
             var progressTimeSpan = sut
@@ -343,7 +318,6 @@
                 .StartCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
 
             Assert.Equal(3, progressTimeSpan.Count);
             Assert.Equal(TimeSpan.Zero, progressTimeSpan[0]);
@@ -354,7 +328,6 @@
         [Fact]
         public void progress_is_updated_throughout_execution()
         {
-            var scheduler = new TestScheduler();
             var action = new ActionMock(MockBehavior.Loose);
 
             action
@@ -378,7 +351,6 @@
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(action)))
-                .WithScheduler(scheduler)
                 .Build();
 
             var progress = sut
@@ -389,7 +361,6 @@
                 .StartCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
 
             Assert.Equal(3, progress.Count);
             Assert.Equal(0, progress[0]);
@@ -400,7 +371,6 @@
         [Fact]
         public void skip_backwards_command_is_disabled_if_on_first_exercise()
         {
-            var scheduler = new TestScheduler();
             var action = new ActionMock(MockBehavior.Loose);
 
             action
@@ -416,14 +386,12 @@
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(action)))
-                .WithScheduler(scheduler)
                 .Build();
 
             sut
                 .StartCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
 
             Assert.False(sut.SkipBackwardsCommand.CanExecute.FirstAsync().Wait());
         }
@@ -431,7 +399,6 @@
         [Fact]
         public void skip_backwards_command_is_enabled_if_sufficient_progress_has_been_made_through_first_exercise()
         {
-            var scheduler = new TestScheduler();
             var action = new ActionMock(MockBehavior.Loose);
 
             action
@@ -448,7 +415,6 @@
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(action)))
-                .WithScheduler(scheduler)
                 .Build();
 
             // TODO: technically, I should just check CanExecute(null) at the end, but without this subscription the RxCommand does not update CanExecute correctly
@@ -462,7 +428,6 @@
                 .StartCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
 
             Assert.Equal(2, canExecute.Count);
             Assert.False(canExecute[0]);
@@ -472,7 +437,6 @@
         [Fact]
         public void skip_backwards_command_restarts_the_execution_context_from_the_start_of_the_current_exercise_if_sufficient_progress_has_been_made()
         {
-            var scheduler = new TestScheduler();
             var action = new ActionMock(MockBehavior.Loose);
 
             action
@@ -490,7 +454,6 @@
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(new ExerciseBuilder()
                         .WithBeforeExerciseAction(action)))
-                .WithScheduler(scheduler)
                 .Build();
 
             var progress = sut
@@ -501,13 +464,11 @@
                 .StartCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
 
             sut
                 .SkipBackwardsCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
 
             Assert.Equal(3, progress.Count);
             Assert.Equal(TimeSpan.Zero, progress[0]);
@@ -518,7 +479,6 @@
         [Fact]
         public void skip_backwards_command_restarts_the_execution_context_from_the_start_of_the_previous_exercise_if_the_current_exercise_if_only_recently_started()
         {
-            var scheduler = new TestScheduler();
             var action = new ActionMock();
 
             action
@@ -550,7 +510,6 @@
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(exercise1)
                     .WithExercise(exercise2))
-                .WithScheduler(scheduler)
                 .Build();
 
             var progress = sut
@@ -562,13 +521,11 @@
                 .StartCommand
                 .Execute(exercise1.Duration)
                 .Subscribe();
-            scheduler.AdvanceMinimal();
 
             sut
                 .SkipBackwardsCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
 
             Assert.Equal(5, progress.Count);
             Assert.Equal(TimeSpan.Zero, progress[0]);
@@ -581,7 +538,6 @@
         [Fact]
         public void skip_forwards_command_is_disabled_if_on_last_exercise()
         {
-            var scheduler = new TestScheduler();
             var action = new ActionMock();
 
             action
@@ -612,7 +568,6 @@
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(exercise1)
                     .WithExercise(exercise2))
-                .WithScheduler(scheduler)
                 .Build();
 
             var canExecute = sut
@@ -624,13 +579,11 @@
                 .StartCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
 
             sut
                 .SkipForwardsCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
 
             Assert.Equal(5, canExecute.Count);
             Assert.False(canExecute[0]);
@@ -643,7 +596,6 @@
         [Fact]
         public void skip_forwards_command_skips_to_the_next_exercise()
         {
-            var scheduler = new TestScheduler();
             var action = new ActionMock();
 
             action
@@ -674,7 +626,6 @@
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(exercise1)
                     .WithExercise(exercise2))
-                .WithScheduler(scheduler)
                 .Build();
 
             var progress = sut
@@ -685,13 +636,11 @@
                 .StartCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
 
             sut
                 .SkipForwardsCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
 
             Assert.Equal(2, progress.Count);
             Assert.Equal(TimeSpan.Zero, progress[0]);
@@ -701,7 +650,6 @@
         [Fact]
         public void current_exercise_reflects_that_in_the_execution_context()
         {
-            var scheduler = new TestScheduler();
             var action = new ActionMock();
 
             action
@@ -737,42 +685,36 @@
                     .WithExercise(exercise1)
                     .WithExercise(exercise2)
                     .WithExercise(exercise3))
-                .WithScheduler(scheduler)
                 .Build();
 
             sut
                 .StartCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
             Assert.Equal("Exercise 1", sut.CurrentExercise?.Name);
 
             sut
                 .SkipForwardsCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
             Assert.Equal("Exercise 2", sut.CurrentExercise?.Name);
 
             sut
                 .SkipForwardsCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
             Assert.Equal("Exercise 3", sut.CurrentExercise?.Name);
 
             sut
                 .SkipBackwardsCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
             Assert.Equal("Exercise 2", sut.CurrentExercise?.Name);
         }
 
         [Fact]
         public void execution_context_is_cancelled_if_user_navigates_away()
         {
-            var scheduler = new TestScheduler();
             var sut = new ExerciseProgramViewModelBuilder()
                 .WithModel(new ExerciseProgramBuilder()
                     .WithExercise(new ExerciseBuilder()
@@ -781,7 +723,6 @@
                                 .WithDelayService(new DelayServiceBuilder().Build())
                                 .WithDelay(TimeSpan.FromMinutes(1))
                                 .Build())))
-                .WithScheduler(scheduler)
                 .Build();
             sut
                 .HostScreen
@@ -793,7 +734,6 @@
                 .StartCommand
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
 
             Assert.True(sut.IsStarted);
 
@@ -803,7 +743,6 @@
                 .NavigateBack
                 .Execute()
                 .Subscribe();
-            scheduler.AdvanceMinimal();
 
             Assert.False(sut.IsStarted);
         }

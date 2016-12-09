@@ -1,7 +1,7 @@
 ﻿namespace WorkoutWotch.UI
 {
-    using System.Reactive.Disposables;
     using Behaviors;
+    using Genesis.Logging;
     using global::ReactiveUI;
     using global::ReactiveUI.XamForms;
     using WorkoutWotch.ViewModels;
@@ -10,7 +10,12 @@
     {
         public ExerciseProgramCellView()
         {
-            InitializeComponent();
+            var logger = LoggerService.GetLogger(this.GetType());
+
+            using (logger.Perf("Initialize component."))
+            {
+                InitializeComponent();
+            }
 
             // TODO: setting this from XAML is currently causing a compilation exception (last tried with XF 2.0.0)
             CellBehavior.SetAccessory(this, AccessoryType.HasChildView);
@@ -19,12 +24,11 @@
                 .WhenActivated(
                     disposables =>
                     {
-                        this
-                            .OneWayBind(this.ViewModel, x => x.Name, x => x.Text)
-                            .AddTo(disposables);
-                        this
-                            .OneWayBind(this.ViewModel, x => x.Duration, x => x.Detail, x => x.ToString("mm\\:ss"))
-                            .AddTo(disposables);
+                        using (logger.Perf("Activate."))
+                        {
+                            this.Text = this.ViewModel.Name;
+                            this.Detail = this.ViewModel.Duration.ToString("mm\\:ss");
+                        }
                     });
         }
     }

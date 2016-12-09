@@ -5,6 +5,7 @@
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Reactive.Threading.Tasks;
+    using Genesis.Logging;
     using global::ReactiveUI;
     using global::ReactiveUI.XamForms;
     using WorkoutWotch.ViewModels;
@@ -14,7 +15,12 @@
     {
         public ExerciseProgramsView()
         {
-            InitializeComponent();
+            var logger = LoggerService.GetLogger(this.GetType());
+
+            using (logger.Perf("Initialize component."))
+            {
+                InitializeComponent();
+            }
 
             this.activityIndicator.Opacity = 0;
             this.activityIndicator.IsVisible = false;
@@ -25,40 +31,43 @@
                 .WhenActivated(
                     disposables =>
                     {
-                        this
-                            .OneWayBind(this.ViewModel, x => x.Programs, x => x.exerciseProgramsListView.ItemsSource)
-                            .AddTo(disposables);
-                        this
-                            .Bind(this.ViewModel, x => x.SelectedProgram, x => x.exerciseProgramsListView.SelectedItem)
-                            .AddTo(disposables);
-                        this
-                            .OneWayBind(this.ViewModel, x => x.Status, x => x.errorLabel.Text, x => GetErrorMessage(x))
-                            .AddTo(disposables);
-                        this
-                            .OneWayBind(this.ViewModel, x => x.ParseErrorMessage, x => x.errorDetailLabel.Text)
-                            .AddTo(disposables);
-                        this
-                            .OneWayBind(this.ViewModel, x => x.Programs, x => x.exerciseProgramsListView.ItemsSource)
-                            .AddTo(disposables);
-                        this
-                            .OneWayBind(this.ViewModel, x => x.Status, x => x.errorLayout.IsVisible, x => IsErrorStatus(x))
-                            .AddTo(disposables);
+                        using (logger.Perf("Activate."))
+                        {
+                            this
+                                .OneWayBind(this.ViewModel, x => x.Programs, x => x.exerciseProgramsListView.ItemsSource)
+                                .AddTo(disposables);
+                            this
+                                .Bind(this.ViewModel, x => x.SelectedProgram, x => x.exerciseProgramsListView.SelectedItem)
+                                .AddTo(disposables);
+                            this
+                                .OneWayBind(this.ViewModel, x => x.Status, x => x.errorLabel.Text, x => GetErrorMessage(x))
+                                .AddTo(disposables);
+                            this
+                                .OneWayBind(this.ViewModel, x => x.ParseErrorMessage, x => x.errorDetailLabel.Text)
+                                .AddTo(disposables);
+                            this
+                                .OneWayBind(this.ViewModel, x => x.Programs, x => x.exerciseProgramsListView.ItemsSource)
+                                .AddTo(disposables);
+                            this
+                                .OneWayBind(this.ViewModel, x => x.Status, x => x.errorLayout.IsVisible, x => IsErrorStatus(x))
+                                .AddTo(disposables);
 
-                        this
-                            .WhenAnyValue(x => x.ViewModel.Status, IsLoadingStatus)
-                            .DistinctUntilChanged()
-                            .Select(isActive => Observable.Defer(() => this.AnimateActivityIndicatorOpacity(isActive)))
-                            .Concat()
-                            .SubscribeSafe()
-                            .AddTo(disposables);
+                            this
+                                .WhenAnyValue(x => x.ViewModel.Status, IsLoadingStatus)
+                                .DistinctUntilChanged()
+                                .Select(isActive => Observable.Defer(() => this.AnimateActivityIndicatorOpacity(isActive)))
+                                .Concat()
+                                .SubscribeSafe()
+                                .AddTo(disposables);
 
-                        this
-                            .WhenAnyValue(x => x.ViewModel.Status, x => !IsLoadingStatus(x) && !IsErrorStatus(x))
-                            .DistinctUntilChanged()
-                            .Select(isVisible => Observable.Defer(() => this.AnimateListViewOpacity(isVisible)))
-                            .Concat()
-                            .SubscribeSafe()
-                            .AddTo(disposables);
+                            this
+                                .WhenAnyValue(x => x.ViewModel.Status, x => !IsLoadingStatus(x) && !IsErrorStatus(x))
+                                .DistinctUntilChanged()
+                                .Select(isVisible => Observable.Defer(() => this.AnimateListViewOpacity(isVisible)))
+                                .Concat()
+                                .SubscribeSafe()
+                                .AddTo(disposables);
+                        }
                     });
         }
 

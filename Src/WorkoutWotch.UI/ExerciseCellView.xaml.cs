@@ -5,7 +5,7 @@
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Reactive.Threading.Tasks;
-    using System.Threading;
+    using Genesis.Logging;
     using global::ReactiveUI;
     using global::ReactiveUI.XamForms;
     using WorkoutWotch.ViewModels;
@@ -19,7 +19,12 @@
 
         public ExerciseCellView()
         {
-            InitializeComponent();
+            var logger = LoggerService.GetLogger(this.GetType());
+
+            using (logger.Perf("Initialize component."))
+            {
+                InitializeComponent();
+            }
 
             // set initial opacity/scale so that there is no temporal "active" appearance prior to the animations below kicking in
             this.rootLayout.Opacity = inactiveAlpha;
@@ -30,22 +35,22 @@
                 .WhenActivated(
                     disposables =>
                     {
-                        this
-                            .OneWayBind(this.ViewModel, x => x.Name, x => x.nameLabel.Text)
-                            .AddTo(disposables);
-                        this
-                            .OneWayBind(this.ViewModel, x => x.Duration, x => x.durationLabel.Text, x => x.ToString("mm\\:ss"))
-                            .AddTo(disposables);
-                        this
-                            .OneWayBind(this.ViewModel, x => x.Progress, x => x.progressBar.Progress)
-                            .AddTo(disposables);
+                        using (logger.Perf("Activate."))
+                        {
+                            this.nameLabel.Text = this.ViewModel.Name;
+                            this.durationLabel.Text = this.ViewModel.Duration.ToString("mm\\:ss");
 
-                        this
-                            .WhenAnyValue(x => x.ViewModel.IsActive)
-                            .Select(isActive => Observable.Defer(() => this.Animate(isActive)))
-                            .Concat()
-                            .SubscribeSafe()
-                            .AddTo(disposables);
+                            this
+                                .OneWayBind(this.ViewModel, x => x.Progress, x => x.progressBar.Progress)
+                                .AddTo(disposables);
+
+                            this
+                                .WhenAnyValue(x => x.ViewModel.IsActive)
+                                .Select(isActive => Observable.Defer(() => this.Animate(isActive)))
+                                .Concat()
+                                .SubscribeSafe()
+                                .AddTo(disposables);
+                        }
                     });
         }
 

@@ -7,7 +7,6 @@
     using PCLMock;
     using ReactiveUI.Mocks;
     using WorkoutWotch.Models;
-    using WorkoutWotch.UnitTests.Services.Scheduler.Mocks;
     using WorkoutWotch.ViewModels;
 
     public sealed class ExerciseProgramViewModelBuilder : IBuilder
@@ -20,7 +19,7 @@
         public ExerciseProgramViewModelBuilder()
         {
             this.activation = true;
-            this.scheduler = new SchedulerMock(MockBehavior.Loose);
+            this.scheduler = CurrentThreadScheduler.Instance;
             this.hostScreen = new ScreenMock(MockBehavior.Loose);
             this.model = new ExerciseProgramBuilder();
         }

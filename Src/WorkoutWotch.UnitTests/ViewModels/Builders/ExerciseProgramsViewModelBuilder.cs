@@ -15,7 +15,6 @@
     using WorkoutWotch.Services.Contracts.Speech;
     using WorkoutWotch.Services.Contracts.State;
     using WorkoutWotch.UnitTests.Services.ExerciseDocument.Mocks;
-    using WorkoutWotch.UnitTests.Services.Scheduler.Mocks;
     using WorkoutWotch.UnitTests.Services.State.Mocks;
     using WorkoutWotch.ViewModels;
 
@@ -26,7 +25,7 @@
         private IDelayService delayService;
         private IExerciseDocumentService exerciseDocumentService;
         private IScheduler mainScheduler;
-        private IScheduler taskPoolScheduler;
+        private IScheduler backgroundScheduler;
         private ISpeechService speechService;
         private IStateService stateService;
         private IScreen hostScreen;
@@ -38,8 +37,8 @@
             this.audioService = new AudioServiceMock(MockBehavior.Loose);
             this.delayService = new DelayServiceMock(MockBehavior.Loose);
             this.exerciseDocumentService = new ExerciseDocumentServiceMock(MockBehavior.Loose);
-            this.mainScheduler = new SchedulerMock(MockBehavior.Loose);
-            this.taskPoolScheduler = new SchedulerMock(MockBehavior.Loose);
+            this.mainScheduler = CurrentThreadScheduler.Instance;
+            this.backgroundScheduler = CurrentThreadScheduler.Instance;
             this.speechService = new SpeechServiceMock(MockBehavior.Loose);
             this.stateService = new StateServiceMock(MockBehavior.Loose);
             this.hostScreen = new ScreenMock(MockBehavior.Loose);
@@ -67,13 +66,13 @@
         public ExerciseProgramsViewModelBuilder WithMainScheduler(IScheduler mainScheduler) =>
             this.With(ref this.mainScheduler, mainScheduler);
 
-        public ExerciseProgramsViewModelBuilder WithTaskPoolScheduler(IScheduler taskPoolScheduler) =>
-            this.With(ref this.taskPoolScheduler, taskPoolScheduler);
+        public ExerciseProgramsViewModelBuilder WithBackgroundScheduler(IScheduler backgroundScheduler) =>
+            this.With(ref this.backgroundScheduler, backgroundScheduler);
 
         public ExerciseProgramsViewModelBuilder WithScheduler(IScheduler scheduler) =>
             this
                 .WithMainScheduler(scheduler)
-                .WithTaskPoolScheduler(scheduler);
+                .WithBackgroundScheduler(scheduler);
 
         public ExerciseProgramsViewModelBuilder WithSpeechService(ISpeechService speechService) =>
             this.With(ref this.speechService, speechService);
@@ -120,7 +119,7 @@
                 this.delayService,
                 this.exerciseDocumentService,
                 this.mainScheduler,
-                this.taskPoolScheduler,
+                this.backgroundScheduler,
                 this.speechService,
                 this.stateService,
                 this.hostScreen,

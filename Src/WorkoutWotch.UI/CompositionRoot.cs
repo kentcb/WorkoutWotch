@@ -4,6 +4,7 @@
     using System.Reactive.Concurrency;
     using System.Threading;
     using Akavache;
+    using Genesis.Logging;
     using WorkoutWotch.Models;
     using WorkoutWotch.Services.Contracts.Audio;
     using WorkoutWotch.Services.Contracts.Delay;
@@ -16,13 +17,15 @@
 
     public abstract class CompositionRoot
     {
+        private readonly ILogger logger;
+
         // singletons
+        protected readonly Lazy<IScheduler> backgroundScheduler;
         protected readonly Lazy<IBlobCache> blobCache;
         protected readonly Lazy<IAudioService> audioService;
         protected readonly Lazy<IDelayService> delayService;
         protected readonly Lazy<IExerciseDocumentService> exerciseDocumentService;
         protected readonly Lazy<IScheduler> mainScheduler;
-        protected readonly Lazy<IScheduler> taskPoolScheduler;
         protected readonly Lazy<ISpeechService> speechService;
         protected readonly Lazy<IStateService> stateService;
         protected readonly Lazy<App> app;
@@ -31,6 +34,9 @@
 
         protected CompositionRoot()
         {
+            this.logger = LoggerService.GetLogger(this.GetType());
+
+            this.backgroundScheduler = new Lazy<IScheduler>(this.CreateBackgroundScheduler);
             this.blobCache = new Lazy<IBlobCache>(this.CreateBlobCache);
             this.audioService = new Lazy<IAudioService>(this.CreateAudioService);
             this.delayService = new Lazy<IDelayService>(this.CreateDelayService);
@@ -38,7 +44,6 @@
             this.mainScheduler = new Lazy<IScheduler>(this.CreateMainScheduler);
             this.speechService = new Lazy<ISpeechService>(this.CreateSpeechService);
             this.stateService = new Lazy<IStateService>(this.CreateStateService);
-            this.taskPoolScheduler = new Lazy<IScheduler>(this.CreateTaskPoolScheduler);
             this.app = new Lazy<App>(this.CreateApp);
             this.mainViewModel = new Lazy<MainViewModel>(this.CreateMainViewModel);
             this.exerciseProgramsViewModel = new Lazy<ExerciseProgramsViewModel>(this.CreateExerciseProgramsViewModel);
@@ -59,8 +64,15 @@
         protected abstract IAudioService CreateAudioService();
 
         private IDelayService CreateDelayService() =>
-            new DelayService(
-                this.mainScheduler.Value);
+            this.LoggedCreation(
+                () =>
+                    new DelayService(
+                        this.mainScheduler.Value));
+
+        private IScheduler CreateBackgroundScheduler() =>
+            this.LoggedCreation(
+                () =>
+                    new EventLoopScheduler());
 
         protected abstract IExerciseDocumentService CreateExerciseDocumentService();
 
@@ -70,36 +82,53 @@
         protected abstract ISpeechService CreateSpeechService();
 
         private IStateService CreateStateService() =>
-            new StateService(
-                this.blobCache.Value);
-
-        private IScheduler CreateTaskPoolScheduler() =>
-            TaskPoolScheduler.Default;
+            this.LoggedCreation(
+                () =>
+                    new StateService(
+                        this.blobCache.Value));
 
         private App CreateApp() =>
-            new App(
-                this.mainViewModel.Value);
+            this.LoggedCreation(
+                () =>
+                    new App(
+                        this.mainViewModel.Value));
 
         private MainViewModel CreateMainViewModel() =>
-            new MainViewModel(
-                () => this.exerciseProgramsViewModel.Value);
+            this.LoggedCreation(
+                () =>
+                    new MainViewModel(
+                        () => this.exerciseProgramsViewModel.Value));
 
         private ExerciseProgramsViewModel CreateExerciseProgramsViewModel() =>
-            new ExerciseProgramsViewModel(
-                this.audioService.Value,
-                this.delayService.Value,
-                this.exerciseDocumentService.Value,
-                this.mainScheduler.Value,
-                this.taskPoolScheduler.Value,
-                this.speechService.Value,
-                this.stateService.Value,
-                this.mainViewModel.Value,
-                this.ExerciseProgramViewModelFactory);
+            this.LoggedCreation(
+                () =>
+                    new ExerciseProgramsViewModel(
+                        this.audioService.Value,
+                        this.delayService.Value,
+                        this.exerciseDocumentService.Value,
+                        this.mainScheduler.Value,
+                        this.backgroundScheduler.Value,
+                        this.speechService.Value,
+                        this.stateService.Value,
+                        this.mainViewModel.Value,
+                        this.ExerciseProgramViewModelFactory));
 
         private ExerciseProgramViewModel ExerciseProgramViewModelFactory(ExerciseProgram model) =>
-            new ExerciseProgramViewModel(
-                this.mainScheduler.Value,
-                this.mainViewModel.Value,
-                model);
+            this.LoggedCreation(
+                () =>
+                    new ExerciseProgramViewModel(
+                        this.mainScheduler.Value,
+                        this.mainViewModel.Value,
+                        model));
+
+        protected T LoggedCreation<T>(Func<T> factory)
+        {
+            this.logger.Debug("Instance of {0} requested.", typeof(T).FullName);
+
+            using (this.logger.Perf("Create {0}.", typeof(T).FullName))
+            {
+                return factory();
+            }
+        }
     }
 }

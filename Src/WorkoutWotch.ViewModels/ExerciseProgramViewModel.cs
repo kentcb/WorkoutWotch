@@ -51,146 +51,153 @@ namespace WorkoutWotch.ViewModels
             Ensure.ArgumentNotNull(hostScreen, nameof(hostScreen));
             Ensure.ArgumentNotNull(model, nameof(model));
 
-            this.activator = new ViewModelActivator();
             this.logger = LoggerService.GetLogger(this.GetType());
-            this.scheduler = scheduler;
-            this.model = model;
-            this.hostScreen = hostScreen;
-            this.exercises = this.model.Exercises.CreateDerivedCollection(x => new ExerciseViewModel(scheduler, x, this.WhenAnyValue(y => y.ExecutionContext)));
 
-            this
-                .WhenAnyValue(
-                    x => x.ExecutionContext,
-                    x => x.ExecutionContext.IsCancelled,
-                    (ec, isCancelled) => ec != null && !isCancelled)
-                .ObserveOn(scheduler)
-                .SubscribeSafe(x => this.IsStarted = x);
+            using (this.logger.Perf("Construction"))
+            {
+                this.activator = new ViewModelActivator();
+                this.scheduler = scheduler;
+                this.model = model;
+                this.hostScreen = hostScreen;
+                this.exercises = this.model.Exercises.CreateDerivedCollection(x => new ExerciseViewModel(scheduler, x, this.WhenAnyValue(y => y.ExecutionContext)));
 
-            this
-                .WhenAnyValue(x => x.ExecutionContext)
-                .Select(x => x == null ? Observables.False : x.WhenAnyValue(y => y.IsPaused))
-                .Switch()
-                .ObserveOn(scheduler)
-                .SubscribeSafe(x => this.IsPaused = x);
+                this
+                    .WhenAnyValue(
+                        x => x.ExecutionContext,
+                        x => x.ExecutionContext.IsCancelled,
+                        (ec, isCancelled) => ec != null && !isCancelled)
+                    .ObserveOn(scheduler)
+                    .SubscribeSafe(x => this.IsStarted = x);
 
-            this
-                .WhenAnyValue(x => x.ExecutionContext)
-                .Select(x => x == null ? Observable.Return(TimeSpan.Zero) : x.WhenAnyValue(y => y.Progress))
-                .Switch()
-                .ObserveOn(scheduler)
-                .SubscribeSafe(x => this.ProgressTimeSpan = x);
+                this
+                    .WhenAnyValue(x => x.ExecutionContext)
+                    .Select(x => x == null ? Observables.False : x.WhenAnyValue(y => y.IsPaused))
+                    .Switch()
+                    .ObserveOn(scheduler)
+                    .SubscribeSafe(x => this.IsPaused = x);
 
-            this
-                .WhenAnyValue(x => x.ProgressTimeSpan)
-                .Select(x => x.TotalMilliseconds / this.model.Duration.TotalMilliseconds)
-                .SubscribeSafe(x => this.Progress = x);
+                this
+                    .WhenAnyValue(x => x.ExecutionContext)
+                    .Select(x => x == null ? Observable.Return(TimeSpan.Zero) : x.WhenAnyValue(y => y.Progress))
+                    .Switch()
+                    .ObserveOn(scheduler)
+                    .SubscribeSafe(x => this.ProgressTimeSpan = x);
 
-            this
-                .WhenAnyValue(
-                    x => x.ExecutionContext,
-                    x => x.ExecutionContext.CurrentExercise,
-                    (ec, currentExercise) => ec == null ? null : currentExercise)
-                .Select(x => this.Exercises.SingleOrDefault(y => y.Model == x))
-                .ObserveOn(scheduler)
-                .SubscribeSafe(x => this.CurrentExercise = x);
+                this
+                    .WhenAnyValue(x => x.ProgressTimeSpan)
+                    .Select(x => x.TotalMilliseconds / this.model.Duration.TotalMilliseconds)
+                    .SubscribeSafe(x => this.Progress = x);
 
-            var canStart = this
-                .WhenAnyValue(x => x.IsStarted)
-                .Select(x => !x);
+                this
+                    .WhenAnyValue(
+                        x => x.ExecutionContext,
+                        x => x.ExecutionContext.CurrentExercise,
+                        (ec, currentExercise) => ec == null ? null : currentExercise)
+                    .Select(x => this.Exercises.SingleOrDefault(y => y.Model == x))
+                    .ObserveOn(scheduler)
+                    .SubscribeSafe(x => this.CurrentExercise = x);
 
-            this.startCommand = ReactiveCommand
-                .CreateFromObservable<TimeSpan?, Unit>(this.OnStart, canStart, scheduler);
+                var canStart = this
+                    .WhenAnyValue(x => x.IsStarted)
+                    .Select(x => !x);
 
-            var canPause = this
-                .WhenAnyValue(x => x.IsStarted)
-                .CombineLatest(this.WhenAnyValue(x => x.ExecutionContext.IsPaused), (isStarted, isPaused) => isStarted && !isPaused)
-                .ObserveOn(scheduler);
+                this.startCommand = ReactiveCommand
+                    .CreateFromObservable<TimeSpan?, Unit>(this.OnStart, canStart, scheduler);
 
-            this.pauseCommand = ReactiveCommand
-                .CreateFromObservable(this.OnPause, canPause, scheduler);
+                var canPause = this
+                    .WhenAnyValue(x => x.IsStarted)
+                    .CombineLatest(this.WhenAnyValue(x => x.ExecutionContext.IsPaused), (isStarted, isPaused) => isStarted && !isPaused)
+                    .ObserveOn(scheduler);
 
-            var canResume = this
-                .WhenAnyValue(x => x.IsStarted)
-                .CombineLatest(this.WhenAnyValue(x => x.ExecutionContext.IsPaused), (isStarted, isPaused) => isStarted && isPaused)
-                .ObserveOn(scheduler);
+                this.pauseCommand = ReactiveCommand
+                    .CreateFromObservable(this.OnPause, canPause, scheduler);
 
-            this.resumeCommand = ReactiveCommand
-                .CreateFromObservable(this.OnResume, canResume, scheduler);
+                var canResume = this
+                    .WhenAnyValue(x => x.IsStarted)
+                    .CombineLatest(this.WhenAnyValue(x => x.ExecutionContext.IsPaused), (isStarted, isPaused) => isStarted && isPaused)
+                    .ObserveOn(scheduler);
 
-            var canSkipBackwards = this
-                .WhenAnyValue(
-                    x => x.ExecutionContext,
-                    x => x.ProgressTimeSpan,
-                    (ec, progress) => new { ExecutionContext = ec, Progress = progress })
-                .Select(x => x.ExecutionContext != null && x.Progress >= skipBackwardsThreshold)
-                .ObserveOn(scheduler);
+                this.resumeCommand = ReactiveCommand
+                    .CreateFromObservable(this.OnResume, canResume, scheduler);
 
-            this.skipBackwardsCommand = ReactiveCommand
-                .CreateFromObservable(this.OnSkipBackwards, canSkipBackwards, scheduler);
+                var canSkipBackwards = this
+                    .WhenAnyValue(
+                        x => x.ExecutionContext,
+                        x => x.ProgressTimeSpan,
+                        (ec, progress) => new { ExecutionContext = ec, Progress = progress })
+                    .Select(x => x.ExecutionContext != null && x.Progress >= skipBackwardsThreshold)
+                    .ObserveOn(scheduler);
 
-            var canSkipForwards = this
-                .WhenAnyValue(
-                    x => x.ExecutionContext,
-                    x => x.CurrentExercise,
-                    (ec, currentExercise) => new { ExecutionContext = ec, CurrentExercise = currentExercise })
-                .Select(x => x.ExecutionContext != null && x.CurrentExercise != null && x.CurrentExercise != this.exercises.LastOrDefault())
-                .ObserveOn(scheduler);
+                this.skipBackwardsCommand = ReactiveCommand
+                    .CreateFromObservable(this.OnSkipBackwards, canSkipBackwards, scheduler);
 
-            this.skipForwardsCommand = ReactiveCommand
-                .CreateFromObservable(this.OnSkipForwards, canSkipForwards, scheduler);
+                var canSkipForwards = this
+                    .WhenAnyValue(
+                        x => x.ExecutionContext,
+                        x => x.CurrentExercise,
+                        (ec, currentExercise) => new { ExecutionContext = ec, CurrentExercise = currentExercise })
+                    .Select(x => x.ExecutionContext != null && x.CurrentExercise != null && x.CurrentExercise != this.exercises.LastOrDefault())
+                    .ObserveOn(scheduler);
 
-            this.startCommand
-                .CanExecute
-                .SubscribeSafe(x => this.IsStartVisible = x);
+                this.skipForwardsCommand = ReactiveCommand
+                    .CreateFromObservable(this.OnSkipForwards, canSkipForwards, scheduler);
 
-            this.pauseCommand
-                .CanExecute
-                .SubscribeSafe(x => this.IsPauseVisible = x);
+                this.startCommand
+                    .CanExecute
+                    .SubscribeSafe(x => this.IsStartVisible = x);
 
-            this.resumeCommand
-                .CanExecute
-                .SubscribeSafe(x => this.IsResumeVisible = x);
+                this.pauseCommand
+                    .CanExecute
+                    .SubscribeSafe(x => this.IsPauseVisible = x);
 
-            this.startCommand
-                .ThrownExceptions
-                .SubscribeSafe(ex => this.OnThrownException("start", ex));
+                this.resumeCommand
+                    .CanExecute
+                    .SubscribeSafe(x => this.IsResumeVisible = x);
 
-            this.pauseCommand
-                .ThrownExceptions
-                .SubscribeSafe(ex => this.OnThrownException("pause", ex));
+                this.startCommand
+                    .ThrownExceptions
+                    .SubscribeSafe(ex => this.OnThrownException("start", ex));
 
-            this.resumeCommand
-                .ThrownExceptions
-                .SubscribeSafe(ex => this.OnThrownException("resume", ex));
+                this.pauseCommand
+                    .ThrownExceptions
+                    .SubscribeSafe(ex => this.OnThrownException("pause", ex));
 
-            this.skipBackwardsCommand
-                .ThrownExceptions
-                .SubscribeSafe(ex => this.OnThrownException("skip backwards", ex));
+                this.resumeCommand
+                    .ThrownExceptions
+                    .SubscribeSafe(ex => this.OnThrownException("resume", ex));
 
-            this.skipForwardsCommand
-                .ThrownExceptions
-                .SubscribeSafe(ex => this.OnThrownException("skip forwards", ex));
+                this.skipBackwardsCommand
+                    .ThrownExceptions
+                    .SubscribeSafe(ex => this.OnThrownException("skip backwards", ex));
 
-            // we don't use a reactive command here because switching in different commands causes it to get confused and
-            // command binding leaves the target button disabled. We could also have not used command binding to get around
-            // this problem
-            this.playbackCommand = new PlaybackCommandImpl(this);
+                this.skipForwardsCommand
+                    .ThrownExceptions
+                    .SubscribeSafe(ex => this.OnThrownException("skip forwards", ex));
 
-            this
-                .WhenActivated(
-                    disposables =>
-                    {
-                        // cancel the exercise program if the user navigates away
-                        this
-                            .hostScreen
-                            .Router
-                            .NavigationStack
-                            .ItemsRemoved
-                            .OfType<ExerciseProgramViewModel>()
-                            .SelectMany(x => x.Stop())
-                            .SubscribeSafe()
-                            .AddTo(disposables);
-                    });
+                // we don't use a reactive command here because switching in different commands causes it to get confused and
+                // command binding leaves the target button disabled. We could also have not used command binding to get around
+                // this problem
+                this.playbackCommand = new PlaybackCommandImpl(this);
+
+                this
+                    .WhenActivated(
+                        disposables =>
+                        {
+                            using (this.logger.Perf("Activation"))
+                            {
+                                // cancel the exercise program if the user navigates away
+                                this
+                                    .hostScreen
+                                    .Router
+                                    .NavigationStack
+                                    .ItemsRemoved
+                                    .OfType<ExerciseProgramViewModel>()
+                                    .SelectMany(x => x.Stop())
+                                    .SubscribeSafe()
+                                    .AddTo(disposables);
+                            }
+                        });
+            }
         }
 
         public ViewModelActivator Activator => this.activator;

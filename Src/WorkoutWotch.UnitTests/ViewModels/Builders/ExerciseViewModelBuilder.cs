@@ -20,7 +20,7 @@
         public ExerciseViewModelBuilder()
         {
             this.activation = true;
-            this.scheduler = new SchedulerMock(MockBehavior.Loose);
+            this.scheduler = CurrentThreadScheduler.Instance;
             this.model = new ExerciseBuilder();
             this.executionContext = Observable<ExecutionContext>.Never;
         }

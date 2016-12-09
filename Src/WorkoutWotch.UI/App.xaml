@@ -11,8 +11,7 @@
             <Color x:Key="NavigationColor">#EDB824</Color>
             <Color x:Key="DisabledColor">#989898</Color>
 
-            <!-- TODO: XF cannot yet apply page styles implicitly (as of 2.0.0) -->
-            <Style x:Key="PageStyle" TargetType="Page">
+            <Style TargetType="Page" ApplyToDerivedTypes="True">
                 <Setter Property="BackgroundColor" Value="{StaticResource BackgroundColor}"/>
             </Style>
 
@@ -30,7 +29,7 @@
                 <Setter Property="EnabledTintColor" Value="{StaticResource NavigationColor}"/>
                 <Setter Property="DisabledTintColor" Value="{StaticResource DisabledColor}"/>
             </Style>
-            
+
             <Style TargetType="ActivityIndicator">
                 <Setter Property="Color" Value="{StaticResource NavigationColor}"/>
             </Style>

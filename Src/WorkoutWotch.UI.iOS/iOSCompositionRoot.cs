@@ -11,16 +11,22 @@
     public sealed class iOSCompositionRoot : CompositionRoot
     {
         protected override IAudioService CreateAudioService() =>
-            new AudioService(
-                this.mainScheduler.Value);
+            this.LoggedCreation(
+                () =>
+                    new AudioService(
+                        this.mainScheduler.Value));
 
         protected override IExerciseDocumentService CreateExerciseDocumentService() =>
-            // just used canned data - useful for getting you up and running quickly
-            new CannedExerciseDocumentService();
-            // comment the above lines and uncomment this line if you want to use an iCloud-based document service
-            //new iCloudExerciseDocumentService(this.loggerService.Value);
+            this.LoggedCreation(
+                () =>
+                    // just used canned data - useful for getting you up and running quickly
+                    new CannedExerciseDocumentService());
+                    // comment the above lines and uncomment this line if you want to use an iCloud-based document service
+                    //new iCloudExerciseDocumentService(this.loggerService.Value));
 
         protected override ISpeechService CreateSpeechService() =>
-            new SpeechService();
+            this.LoggedCreation(
+                () =>
+                    new SpeechService());
     }
 }
