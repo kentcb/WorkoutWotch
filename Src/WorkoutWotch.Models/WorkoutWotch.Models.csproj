@@ -98,8 +98,8 @@
       <HintPath>..\packages\akavache.sqlite3.5.0.0\lib\Portable-Net45+Win8+WP8+Wpa81\Akavache.Sqlite3.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Genesis.Ensure, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Genesis.Ensure.1.0.4-alpha\lib\portable-net45+win8+wp8+wpa81\Genesis.Ensure.dll</HintPath>
+    <Reference Include="Genesis.Ensure, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Genesis.Ensure.1.0.5-alpha\lib\netstandard1.0\Genesis.Ensure.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Genesis.Logging, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
