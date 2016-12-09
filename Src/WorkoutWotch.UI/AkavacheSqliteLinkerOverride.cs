@@ -15,7 +15,7 @@ namespace WorkoutWotch.UI
     }
 
 
-    public sealed class PreserveAttribute : Attribute
+    public class PreserveAttribute : Attribute
     {
     }
 }
