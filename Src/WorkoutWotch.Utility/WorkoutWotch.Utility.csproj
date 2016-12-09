@@ -35,7 +35,6 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="DisposableBase.cs" />
-    <Compile Include="System\Reactive\Disposables\SerialDisposable.cs" />
     <Compile Include="System\Reactive\Linq\ToSignalExtensions.cs" />
     <Compile Include="System\SubscribeSafeExtensions.cs" />
     <Compile Include="System\Threading\Tasks\TaskExtensions.cs" />
