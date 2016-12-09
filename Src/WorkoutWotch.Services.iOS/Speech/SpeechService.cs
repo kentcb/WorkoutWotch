@@ -2,6 +2,7 @@ namespace WorkoutWotch.Services.iOS.Speech
 {
     using System;
     using System.Reactive;
+    using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using AVFoundation;
     using Genesis.Ensure;
@@ -15,45 +16,46 @@ namespace WorkoutWotch.Services.iOS.Speech
         {
             Ensure.ArgumentNotNull(speechString, nameof(speechString));
 
-            var utterance = new AVSpeechUtterance(speechString)
-            {
-                Voice = voice,
-                Rate = 0.55f
-            };
-            var synthesizer = new AVSpeechSynthesizer();
-            var finishedUtterance = Observable
-                .FromEventPattern<AVSpeechSynthesizerUteranceEventArgs>(x => synthesizer.DidFinishSpeechUtterance += x, x => synthesizer.DidFinishSpeechUtterance -= x)
-                .ToSignal()
-                .Publish();
-
-            finishedUtterance
-                .SubscribeSafe(
-                    _ =>
+            return Observable
+                .Create<Unit>(
+                    observer =>
                     {
-                        utterance.Dispose();
-                        synthesizer.Dispose();
+                        var disposables = new CompositeDisposable();
+                        var utterance = new AVSpeechUtterance(speechString)
+                            {
+                                Voice = voice,
+                                Rate = 0.55f
+                            }
+                            .AddTo(disposables);
+                        var synthesizer = new AVSpeechSynthesizer()
+                            .AddTo(disposables);
+                        var finishedUtterance = Observable
+                            .FromEventPattern<AVSpeechSynthesizerUteranceEventArgs>(x => synthesizer.DidFinishSpeechUtterance += x, x => synthesizer.DidFinishSpeechUtterance -= x)
+                            .ToSignal()
+                            .Publish();
+
+                        finishedUtterance
+                            .SubscribeSafe(
+                                _ =>
+                                {
+                                    utterance.Dispose();
+                                    synthesizer.Dispose();
+                                })
+                            .AddTo(disposables);
+
+                        finishedUtterance
+                            .FirstAsync()
+                            .Subscribe(observer)
+                            .AddTo(disposables);
+
+                        finishedUtterance
+                            .Connect()
+                            .AddTo(disposables);
+
+                        synthesizer.SpeakUtterance(utterance);
+
+                        return disposables;
                     });
-
-            //if (cancellationToken.CanBeCanceled)
-            //{
-            //    cancellationToken.Register(() => synthesizer.StopSpeaking(AVSpeechBoundary.Immediate));
-
-            //    Observable
-            //        .FromEventPattern<AVSpeechSynthesizerUteranceEventArgs>(x => synthesizer.DidCancelSpeechUtterance += x, x => synthesizer.DidCancelSpeechUtterance -= x)
-            //        .ToSignal()
-            //        .SubscribeSafe(
-            //            _ =>
-            //            {
-            //                utterance.Dispose();
-            //                synthesizer.Dispose();
-            //            });
-            //}
-
-            synthesizer.SpeakUtterance(utterance);
-            finishedUtterance.Connect();
-
-            return finishedUtterance
-                .FirstAsync();
         }
     }
 }
