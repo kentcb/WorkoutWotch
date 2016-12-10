@@ -9,5 +9,6 @@
         xmlns:vms="clr-namespace:WorkoutWotch.ViewModels;assembly=WorkoutWotch.ViewModels"
         xmlns:b="clr-namespace:WorkoutWotch.UI.Behaviors;assembly=WorkoutWotch.UI"
         TextColor="{StaticResource ForegroundColor}"
-        DetailColor="{StaticResource NavigationColor}"/>
+        DetailColor="{StaticResource NavigationColor}"
+        b:CellBehavior.Accessory="HasChildView"/>
 <!-- TODO: XF does not yet support text cell styles (as of 2.0.0) -->

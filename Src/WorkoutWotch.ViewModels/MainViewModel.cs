@@ -21,8 +21,10 @@
         public RoutingState Router => this.router;
 
         public void Initialize() =>
-            // TODO: navigating here ends up showing the view twice. Probably some whackiness in the iOS RoutedViewHost implementation
-            //this.router.NavigateAndReset.Execute(exerciseProgramsViewModelFactory());
-            this.router.NavigationStack.Add(exerciseProgramsViewModelFactory());
+            this
+                .router
+                .NavigateAndReset
+                .Execute(exerciseProgramsViewModelFactory())
+                .SubscribeSafe();
     }
 }

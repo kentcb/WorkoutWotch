@@ -17,9 +17,6 @@
                 InitializeComponent();
             }
 
-            // TODO: setting this from XAML is currently causing a compilation exception (last tried with XF 2.0.0)
-            CellBehavior.SetAccessory(this, AccessoryType.HasChildView);
-
             this
                 .WhenActivated(
                     disposables =>

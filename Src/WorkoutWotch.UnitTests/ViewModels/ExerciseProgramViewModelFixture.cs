@@ -417,21 +417,12 @@
                         .WithBeforeExerciseAction(action)))
                 .Build();
 
-            // TODO: technically, I should just check CanExecute(null) at the end, but without this subscription the RxCommand does not update CanExecute correctly
-            //       try changing this once I'm using new RxCommand
-            var canExecute = sut
-                .SkipBackwardsCommand
-                .CanExecute
-                .CreateCollection();
-
             sut
                 .StartCommand
                 .Execute()
                 .Subscribe();
 
-            Assert.Equal(2, canExecute.Count);
-            Assert.False(canExecute[0]);
-            Assert.True(canExecute[1]);
+            Assert.True(sut.SkipBackwardsCommand.CanExecute.FirstAsync().Wait());
         }
 
         [Fact]
