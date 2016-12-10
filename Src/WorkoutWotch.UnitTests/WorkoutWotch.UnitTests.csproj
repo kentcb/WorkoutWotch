@@ -105,7 +105,9 @@
     <Compile Include="Utility\MathExtFixture.cs" />
     <Compile Include="ViewModels\Builders\ExerciseProgramsViewModelBuilder.cs" />
     <Compile Include="ViewModels\Builders\ExerciseProgramViewModelBuilder.cs" />
+    <Compile Include="ViewModels\Builders\ExerciseProgramViewModelFactoryBuilder.cs" />
     <Compile Include="ViewModels\Builders\ExerciseViewModelBuilder.cs" />
+    <Compile Include="ViewModels\Builders\ExerciseViewModelFactoryBuilder.cs" />
     <Compile Include="ViewModels\ExerciseProgramsViewModelFixture.cs" />
     <Compile Include="ViewModels\ExerciseProgramViewModelFixture.cs" />
     <Compile Include="ViewModels\ExerciseViewModelFixture.cs" />

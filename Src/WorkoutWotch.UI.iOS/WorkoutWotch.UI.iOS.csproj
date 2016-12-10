@@ -511,7 +511,9 @@
     </Content>
     <Content Include="Audio\MetronomeBell.mp3" />
     <Content Include="Audio\MetronomeClick.mp3" />
-    <BundleResource Include="Resources\launch.png" />
+    <BundleResource Include="Resources\Launch.png" />
+    <BundleResource Include="Resources\Launch%402x.png" />
+    <BundleResource Include="Resources\Launch%403x.png" />
     <ImageAsset Include="Resources\Images.xcassets\SkipForward.imageset\SkipForward%403x.png">
       <InProject>false</InProject>
     </ImageAsset>

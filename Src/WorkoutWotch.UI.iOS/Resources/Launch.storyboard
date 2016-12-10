@@ -15,14 +15,14 @@
                         <viewControllerLayoutGuide type="bottom" id="3"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="6">
-                        <rect key="frame" x="0.0" y="0.0" width="1000" height="410"/>
+                        <rect key="frame" x="0.0" y="0.0" width="500" height="205"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch.png" translatesAutoresizingMaskIntoConstraints="NO" id="9">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Launch.png" translatesAutoresizingMaskIntoConstraints="NO" id="9">
                                 <constraints>
-                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="1000" id="3ZZ-1a-938"/>
-                                    <constraint firstAttribute="width" secondItem="9" secondAttribute="height" multiplier="1000:410" id="O9C-jX-7ig"/>
-                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="410" id="yAg-CA-uZq"/>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="500" id="3ZZ-1a-938"/>
+                                    <constraint firstAttribute="width" secondItem="9" secondAttribute="height" multiplier="500:205" id="O9C-jX-7ig"/>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="205" id="yAg-CA-uZq"/>
                                 </constraints>
                             </imageView>
                         </subviews>
@@ -42,6 +42,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="launch.png" width="1000" height="410"/>
+        <image name="Launch.png" width="500" height="205"/>
     </resources>
 </document>
