@@ -26,7 +26,11 @@ If you want to make changes to the exercise document, you'll need to modify the 
 
 ## Running with Google Drive Integration
 
-Running with Google Drive integration should be a straightforward affair. Simply edit the *AndroidCompositionRoot.cs* file and follow the comments. If it doesn't exist already, Workout Wotch will create a file named *Workout Wotch Exercise Programs.mkd* in the root of your Google Drive. See [writing exercise programs](Doc/writing-exercise-programs.md) for details on the syntax of the document.
+1. Set up API credentials as described [here](https://developers.google.com/drive/android/get-started)
+2. Make sure the package name in *WorkoutWotch.UI.Android* matches that in the credentials
+3. Edit the *AndroidCompositionRoot.cs* file and follow the comments
+
+If it doesn't exist already, Workout Wotch will create a file named *Workout Wotch Exercise Programs.mkd* in the root of your Google Drive. See [writing exercise programs](Doc/writing-exercise-programs.md) for details on the syntax of the document.
 
 ## Running with iCloud Integration
 

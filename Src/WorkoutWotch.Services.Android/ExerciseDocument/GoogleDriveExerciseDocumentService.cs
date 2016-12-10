@@ -74,6 +74,22 @@ namespace WorkoutWotch.Services.Android.ExerciseDocument
             client.Connect();
         }
 
+        void GoogleApiClient.IOnConnectionFailedListener.OnConnectionFailed(ConnectionResult result)
+        {
+            this
+                .connectionResultHandler
+                .HandleConnectionResult(result)
+                .Subscribe(
+                    handled =>
+                    {
+                        if (handled)
+                        {
+                            this.client.Connect();
+                        }
+                    },
+                    ex => this.logger.Error(ex, "Handling connection result failed."));
+        }
+
         private async Task TickFileContents(IDriveFile file)
         {
             var contents = await this.ReadFileAsync(file);
@@ -98,9 +114,9 @@ namespace WorkoutWotch.Services.Android.ExerciseDocument
             }
 
             var fileMetadata = result.MetadataBuffer.First();
-            var file = DriveClass
-                .DriveApi
-                .GetFile(this.client, fileMetadata.DriveId);
+            var file = fileMetadata
+                .DriveId
+                .AsDriveFile();
 
             return file;
         }
@@ -233,22 +249,6 @@ namespace WorkoutWotch.Services.Android.ExerciseDocument
         {
             this.logger.Warn("Connection suspended. Cause: {0}.", cause);
             this.connectedDisposable.Disposable = null;
-        }
-
-        void GoogleApiClient.IOnConnectionFailedListener.OnConnectionFailed(ConnectionResult result)
-        {
-            this
-                .connectionResultHandler
-                .HandleConnectionResult(result)
-                .Subscribe(
-                    handled =>
-                    {
-                        if (handled)
-                        {
-                            this.client.Connect();
-                        }
-                    },
-                    ex => this.logger.Error(ex, "Handling connection result failed."));
         }
 
         public void OnChange(ChangeEvent evt)
