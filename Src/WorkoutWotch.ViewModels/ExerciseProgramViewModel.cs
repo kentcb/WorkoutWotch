@@ -44,10 +44,12 @@ namespace WorkoutWotch.ViewModels
         private ExecutionContext executionContext;
 
         public ExerciseProgramViewModel(
+            ExerciseViewModelFactory exerciseViewModelFactory,
             IScheduler scheduler,
             IScreen hostScreen,
             ExerciseProgram model)
         {
+            Ensure.ArgumentNotNull(exerciseViewModelFactory, nameof(exerciseViewModelFactory));
             Ensure.ArgumentNotNull(scheduler, nameof(scheduler));
             Ensure.ArgumentNotNull(hostScreen, nameof(hostScreen));
             Ensure.ArgumentNotNull(model, nameof(model));
@@ -63,7 +65,7 @@ namespace WorkoutWotch.ViewModels
                 this.exercises = this
                     .model
                     .Exercises
-                    .Select(exercise => new ExerciseViewModel(scheduler, exercise, this.WhenAnyValue(y => y.ExecutionContext)))
+                    .Select(exercise => exerciseViewModelFactory(exercise, this.WhenAnyValue(y => y.ExecutionContext)))
                     .ToImmutableList();
 
                 this.isStarted = this

@@ -7,6 +7,8 @@ namespace WorkoutWotch.ViewModels
     using ReactiveUI;
     using WorkoutWotch.Models;
 
+    public delegate ExerciseViewModel ExerciseViewModelFactory(Exercise model, IObservable<ExecutionContext> executionContext);
+
     public sealed class ExerciseViewModel : ReactiveObject, ISupportsActivation
     {
         private readonly ViewModelActivator activator;
@@ -16,7 +18,10 @@ namespace WorkoutWotch.ViewModels
         private readonly ObservableAsPropertyHelper<bool> isActive;
         private readonly ObservableAsPropertyHelper<double> progress;
 
-        public ExerciseViewModel(IScheduler scheduler, Exercise model, IObservable<ExecutionContext> executionContext)
+        public ExerciseViewModel(
+            IScheduler scheduler,
+            Exercise model,
+            IObservable<ExecutionContext> executionContext)
         {
             Ensure.ArgumentNotNull(scheduler, nameof(scheduler));
             Ensure.ArgumentNotNull(model, nameof(model));

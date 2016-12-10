@@ -29,7 +29,6 @@
         private ISpeechService speechService;
         private IStateService stateService;
         private IScreen hostScreen;
-        private ExerciseProgramViewModelFactory exerciseProgramViewModelFactory;
 
         public ExerciseProgramsViewModelBuilder()
         {
@@ -42,11 +41,6 @@
             this.speechService = new SpeechServiceMock(MockBehavior.Loose);
             this.stateService = new StateServiceMock(MockBehavior.Loose);
             this.hostScreen = new ScreenMock(MockBehavior.Loose);
-            this.exerciseProgramViewModelFactory =
-                model =>
-                    new ExerciseProgramViewModelBuilder()
-                        .WithModel(model)
-                        .Build();
 
             this.WithCachedDocument(null);
         }
@@ -82,9 +76,6 @@
 
         public ExerciseProgramsViewModelBuilder WithHostScreen(IScreen hostScreen) =>
             this.With(ref this.hostScreen, hostScreen);
-
-        public ExerciseProgramsViewModelBuilder WithExerciseProgramViewModelFactory(ExerciseProgramViewModelFactory exerciseProgramViewModelFactory) =>
-            this.With(ref this.exerciseProgramViewModelFactory, exerciseProgramViewModelFactory);
 
         public ExerciseProgramsViewModelBuilder WithCloudDocument(string cloudDocument)
         {
@@ -123,7 +114,7 @@
                 this.speechService,
                 this.stateService,
                 this.hostScreen,
-                this.exerciseProgramViewModelFactory);
+                new ExerciseProgramViewModelFactoryBuilder().WithScheduler(this.mainScheduler));
 
             if (this.activation)
             {

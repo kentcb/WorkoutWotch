@@ -39,6 +39,7 @@
         public ExerciseProgramViewModel Build()
         {
             var result = new ExerciseProgramViewModel(
+                new ExerciseViewModelFactoryBuilder().WithScheduler(this.scheduler),
                 this.scheduler,
                 this.hostScreen,
                 this.model);

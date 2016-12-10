@@ -117,9 +117,17 @@
             this.LoggedCreation(
                 () =>
                     new ExerciseProgramViewModel(
+                        this.CreateExerciseViewModel,
                         this.mainScheduler.Value,
                         this.mainViewModel.Value,
                         model));
+
+        private ExerciseViewModel CreateExerciseViewModel(Exercise model, IObservable<ExecutionContext> executionContext) =>
+            this.LoggedCreation(
+                    () =>
+                        new ExerciseViewModel(
+                            this.mainScheduler.Value,
+                            model, executionContext));
 
         protected T LoggedCreation<T>(Func<T> factory)
         {

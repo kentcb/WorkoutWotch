@@ -28,7 +28,7 @@
         public ExerciseViewModelBuilder WithActivation(bool activation) =>
             this.With(ref this.activation, activation);
 
-        public ExerciseViewModelBuilder WithSchedulerService(IScheduler scheduler) =>
+        public ExerciseViewModelBuilder WithScheduler(IScheduler scheduler) =>
             this.With(ref this.scheduler, scheduler);
 
         public ExerciseViewModelBuilder WithModel(Exercise model) =>
