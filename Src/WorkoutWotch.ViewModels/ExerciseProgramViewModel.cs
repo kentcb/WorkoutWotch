@@ -1,6 +1,7 @@
 namespace WorkoutWotch.ViewModels
 {
     using System;
+    using System.Collections.Immutable;
     using System.Linq;
     using System.Reactive;
     using System.Reactive.Concurrency;
@@ -31,7 +32,7 @@ namespace WorkoutWotch.ViewModels
         private readonly ReactiveCommand<Unit, Unit> skipBackwardsCommand;
         private readonly ReactiveCommand<Unit, Unit> skipForwardsCommand;
         private readonly ICommand playbackCommand;
-        private readonly IReadOnlyReactiveList<ExerciseViewModel> exercises;
+        private readonly IImmutableList<ExerciseViewModel> exercises;
         private readonly ObservableAsPropertyHelper<bool> isStarted;
         private readonly ObservableAsPropertyHelper<bool> isPaused;
         private readonly ObservableAsPropertyHelper<bool> isStartVisible;
@@ -59,7 +60,11 @@ namespace WorkoutWotch.ViewModels
                 this.scheduler = scheduler;
                 this.model = model;
                 this.hostScreen = hostScreen;
-                this.exercises = this.model.Exercises.CreateDerivedCollection(x => new ExerciseViewModel(scheduler, x, this.WhenAnyValue(y => y.ExecutionContext)));
+                this.exercises = this
+                    .model
+                    .Exercises
+                    .Select(exercise => new ExerciseViewModel(scheduler, exercise, this.WhenAnyValue(y => y.ExecutionContext)))
+                    .ToImmutableList();
 
                 this.isStarted = this
                     .WhenAnyValue(
@@ -213,7 +218,7 @@ namespace WorkoutWotch.ViewModels
 
         public double Progress => this.progress.Value;
 
-        public IReadOnlyReactiveList<ExerciseViewModel> Exercises => this.exercises;
+        public IImmutableList<ExerciseViewModel> Exercises => this.exercises;
 
         public ExerciseViewModel CurrentExercise => this.currentExercise.Value;
 

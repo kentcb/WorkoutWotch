@@ -1,6 +1,8 @@
 ﻿namespace WorkoutWotch.ViewModels
 {
     using System;
+    using System.Collections.Immutable;
+    using System.Linq;
     using System.Reactive.Concurrency;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
@@ -25,7 +27,7 @@
         private readonly ILogger logger;
         private readonly IScreen hostScreen;
         private readonly ObservableAsPropertyHelper<ExerciseProgramsViewModelStatus> status;
-        private readonly ObservableAsPropertyHelper<IReadOnlyReactiveList<ExerciseProgramViewModel>> programs;
+        private readonly ObservableAsPropertyHelper<IImmutableList<ExerciseProgramViewModel>> programs;
         private readonly ObservableAsPropertyHelper<ExercisePrograms> model;
         private readonly ObservableAsPropertyHelper<string> parseErrorMessage;
         private ExerciseProgramViewModel selectedProgram;
@@ -137,7 +139,7 @@
 
                 this.programs = this
                     .WhenAnyValue(x => x.Model)
-                    .Select(x => x == null ? null : x.Programs.CreateDerivedCollection(y => exerciseProgramViewModelFactory(y)))
+                    .Select(x => x == null ? null : x.Programs.Select(program => exerciseProgramViewModelFactory(program)).ToImmutableList())
                     .ObserveOn(mainScheduler)
                     .ToProperty(this, x => x.Programs);
 
@@ -189,7 +191,7 @@
 
         public string ParseErrorMessage => this.parseErrorMessage.Value;
 
-        public IReadOnlyReactiveList<ExerciseProgramViewModel> Programs => this.programs.Value;
+        public IImmutableList<ExerciseProgramViewModel> Programs => this.programs.Value;
 
         private ExercisePrograms Model => this.model.Value;
 
