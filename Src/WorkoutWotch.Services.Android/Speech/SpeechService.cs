@@ -2,11 +2,12 @@ namespace WorkoutWotch.Services.Android.Speech
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Collections.Generic;
+    using System.Linq;
     using System.Reactive;
     using System.Reactive.Subjects;
     using System.Threading;
     using global::Android.App;
+    using global::Android.OS;
     using global::Android.Speech.Tts;
     using WorkoutWotch.Services.Contracts.Speech;
 
@@ -29,17 +30,21 @@ namespace WorkoutWotch.Services.Android.Speech
             var id = Interlocked.Increment(ref this.nextId);
             var result = new AsyncSubject<Unit>();
             inFlightSpeech.TryAdd(id, result);
-            var parameters = new Dictionary<string, string>
-            {
-                [TextToSpeech.Engine.KeyParamUtteranceId] = id.ToString(),
-                [TextToSpeech.Engine.KeyFeatureNetworkSynthesis] = "true"
-            };
-            this.textToSpeech.Speak(speechString, QueueMode.Add, parameters);
+
+            this.textToSpeech.Speak(speechString, QueueMode.Add, Bundle.Empty, id.ToString());
             return result;
         }
 
         void TextToSpeech.IOnInitListener.OnInit(OperationResult status)
         {
+            var bestVoice = this
+                .textToSpeech
+                .Voices
+                .Where(voice => voice.Locale.Language == "en" && voice.Locale.Country == "GB")
+                .OrderByDescending(voice => voice.Quality)
+                .ThenByDescending(voice => voice.IsNetworkConnectionRequired)
+                .First();
+            this.textToSpeech.SetVoice(bestVoice);
         }
 
         public override void OnStart(string utteranceId)
