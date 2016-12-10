@@ -85,4 +85,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ReactiveUI\GetIsActivatedExtensions.cs" />
+  </ItemGroup>
 </Project>

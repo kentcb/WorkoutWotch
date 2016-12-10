@@ -2,62 +2,59 @@ namespace WorkoutWotch.Models
 {
     using System;
     using System.Reactive;
+    using System.Reactive.Concurrency;
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
     using ReactiveUI;
-    using Utility;
 
     public sealed class ExecutionContext : ReactiveObject
     {
         private readonly BehaviorSubject<bool> cancelRequested;
         private readonly Subject<TimeSpan> progressDeltas;
-        private bool isCancelled;
-        private TimeSpan progress;
-        private TimeSpan currentExerciseProgress;
+        private readonly ObservableAsPropertyHelper<bool> isCancelled;
+        private readonly ObservableAsPropertyHelper<TimeSpan> currentExerciseProgress;
+        private readonly ObservableAsPropertyHelper<TimeSpan> progress;
+        private readonly ObservableAsPropertyHelper<TimeSpan> skipAhead;
         private bool isPaused;
         private Exercise currentExercise;
         private int currentSet;
         private int currentRepetition;
-        private TimeSpan skipAhead;
 
         public ExecutionContext(TimeSpan skipAhead = default(TimeSpan))
         {
             this.cancelRequested = new BehaviorSubject<bool>(false);
             this.progressDeltas = new Subject<TimeSpan>();
 
-            this
+            this.isCancelled = this
                 .cancelRequested
-                .Where(x => x)
-                .SubscribeSafe(_ => this.IsCancelled = true);
+                .ToProperty(this, x => x.IsCancelled);
 
-            this
+            this.progress = this
                 .progressDeltas
                 .Scan((running, next) => running + next)
-                .SubscribeSafe(x => this.Progress = x);
+                .ToProperty(this, x => x.Progress);
 
-            this
+            this.currentExerciseProgress = this
                 .WhenAnyValue(x => x.CurrentExercise)
                 .Select(x => this.progressDeltas.StartWith(TimeSpan.Zero).Scan((running, next) => running + next))
                 .Switch()
-                .SubscribeSafe(x => this.CurrentExerciseProgress = x);
+                .ToProperty(this, x => x.CurrentExerciseProgress);
 
-            this
+            this.skipAhead = this
                 .progressDeltas
                 .StartWith(skipAhead)
                 .Scan((running, next) => running - next)
                 .Select(x => x < TimeSpan.Zero ? TimeSpan.Zero : x)
-                .SubscribeSafe(x => this.SkipAhead = x);
+                // TODO: I don't understand why immediate scheduler is required here. It seems the heuristics in current thread scheduler are determining that scheduling
+                //       is required rather than doing the work immediately.
+                .ToProperty(this, x => x.SkipAhead, scheduler: ImmediateScheduler.Instance);
         }
 
-        public bool IsCancelled
-        {
-            get { return this.isCancelled; }
-            private set { this.RaiseAndSetIfChanged(ref this.isCancelled, value); }
-        }
+        public bool IsCancelled => this.isCancelled.Value;
 
         public bool IsPaused
         {
-            get {return this.isPaused; }
+            get { return this.isPaused; }
             set { this.RaiseAndSetIfChanged(ref this.isPaused, value); }
         }
 
@@ -79,23 +76,11 @@ namespace WorkoutWotch.Models
             private set { this.RaiseAndSetIfChanged(ref this.currentRepetition, value); }
         }
 
-        public TimeSpan Progress
-        {
-            get { return this.progress; }
-            private set { this.RaiseAndSetIfChanged(ref this.progress, value); }
-        }
+        public TimeSpan Progress => this.progress.Value;
 
-        public TimeSpan CurrentExerciseProgress
-        {
-            get { return this.currentExerciseProgress; }
-            private set { this.RaiseAndSetIfChanged(ref this.currentExerciseProgress, value); }
-        }
+        public TimeSpan CurrentExerciseProgress => this.currentExerciseProgress.Value;
 
-        public TimeSpan SkipAhead
-        {
-            get { return this.skipAhead; }
-            private set { this.RaiseAndSetIfChanged(ref this.skipAhead, value); }
-        }
+        public TimeSpan SkipAhead => this.skipAhead.Value;
 
         public IObservable<Unit> WaitWhilePaused() =>
             this.WhenAnyValue(x => x.IsPaused)

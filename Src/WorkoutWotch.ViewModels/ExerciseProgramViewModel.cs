@@ -31,15 +31,15 @@ namespace WorkoutWotch.ViewModels
         private readonly ReactiveCommand<Unit, Unit> skipBackwardsCommand;
         private readonly ReactiveCommand<Unit, Unit> skipForwardsCommand;
         private readonly ICommand playbackCommand;
-        private IReadOnlyReactiveList<ExerciseViewModel> exercises;
-        private bool isStarted;
-        private bool isPaused;
-        private bool isStartVisible;
-        private bool isPauseVisible;
-        private bool isResumeVisible;
-        private TimeSpan progressTimeSpan;
-        private double progress;
-        private ExerciseViewModel currentExercise;
+        private readonly IReadOnlyReactiveList<ExerciseViewModel> exercises;
+        private readonly ObservableAsPropertyHelper<bool> isStarted;
+        private readonly ObservableAsPropertyHelper<bool> isPaused;
+        private readonly ObservableAsPropertyHelper<bool> isStartVisible;
+        private readonly ObservableAsPropertyHelper<bool> isPauseVisible;
+        private readonly ObservableAsPropertyHelper<bool> isResumeVisible;
+        private readonly ObservableAsPropertyHelper<TimeSpan> progressTimeSpan;
+        private readonly ObservableAsPropertyHelper<double> progress;
+        private readonly ObservableAsPropertyHelper<ExerciseViewModel> currentExercise;
         private ExecutionContext executionContext;
 
         public ExerciseProgramViewModel(
@@ -61,41 +61,37 @@ namespace WorkoutWotch.ViewModels
                 this.hostScreen = hostScreen;
                 this.exercises = this.model.Exercises.CreateDerivedCollection(x => new ExerciseViewModel(scheduler, x, this.WhenAnyValue(y => y.ExecutionContext)));
 
-                this
+                this.isStarted = this
                     .WhenAnyValue(
                         x => x.ExecutionContext,
                         x => x.ExecutionContext.IsCancelled,
                         (ec, isCancelled) => ec != null && !isCancelled)
-                    .ObserveOn(scheduler)
-                    .SubscribeSafe(x => this.IsStarted = x);
+                    .ToProperty(this, x => x.IsStarted, scheduler: scheduler);
 
-                this
+                this.isPaused = this
                     .WhenAnyValue(x => x.ExecutionContext)
                     .Select(x => x == null ? Observables.False : x.WhenAnyValue(y => y.IsPaused))
                     .Switch()
-                    .ObserveOn(scheduler)
-                    .SubscribeSafe(x => this.IsPaused = x);
+                    .ToProperty(this, x => x.IsPaused, scheduler: scheduler);
 
-                this
+                this.progressTimeSpan = this
                     .WhenAnyValue(x => x.ExecutionContext)
                     .Select(x => x == null ? Observable.Return(TimeSpan.Zero) : x.WhenAnyValue(y => y.Progress))
                     .Switch()
-                    .ObserveOn(scheduler)
-                    .SubscribeSafe(x => this.ProgressTimeSpan = x);
+                    .ToProperty(this, x => x.ProgressTimeSpan, scheduler: scheduler);
 
-                this
+                this.progress = this
                     .WhenAnyValue(x => x.ProgressTimeSpan)
                     .Select(x => x.TotalMilliseconds / this.model.Duration.TotalMilliseconds)
-                    .SubscribeSafe(x => this.Progress = x);
+                    .ToProperty(this, x => x.Progress);
 
-                this
+                this.currentExercise = this
                     .WhenAnyValue(
                         x => x.ExecutionContext,
                         x => x.ExecutionContext.CurrentExercise,
                         (ec, currentExercise) => ec == null ? null : currentExercise)
                     .Select(x => this.Exercises.SingleOrDefault(y => y.Model == x))
-                    .ObserveOn(scheduler)
-                    .SubscribeSafe(x => this.CurrentExercise = x);
+                    .ToProperty(this, x => x.CurrentExercise, scheduler: scheduler);
 
                 var canStart = this
                     .WhenAnyValue(x => x.IsStarted)
@@ -142,17 +138,20 @@ namespace WorkoutWotch.ViewModels
                 this.skipForwardsCommand = ReactiveCommand
                     .CreateFromObservable(this.OnSkipForwards, canSkipForwards, scheduler);
 
-                this.startCommand
+                this.isStartVisible = this
+                    .startCommand
                     .CanExecute
-                    .SubscribeSafe(x => this.IsStartVisible = x);
+                    .ToProperty(this, x => x.IsStartVisible);
 
-                this.pauseCommand
+                this.isPauseVisible = this
+                    .pauseCommand
                     .CanExecute
-                    .SubscribeSafe(x => this.IsPauseVisible = x);
+                    .ToProperty(this, x => x.IsPauseVisible);
 
-                this.resumeCommand
+                this.isResumeVisible = this
+                    .resumeCommand
                     .CanExecute
-                    .SubscribeSafe(x => this.IsResumeVisible = x);
+                    .ToProperty(this, x => x.IsResumeVisible);
 
                 this.startCommand
                     .ThrownExceptions
@@ -210,59 +209,23 @@ namespace WorkoutWotch.ViewModels
 
         public TimeSpan Duration => this.model.Duration;
 
-        public TimeSpan ProgressTimeSpan
-        {
-            get { return this.progressTimeSpan; }
-            private set { this.RaiseAndSetIfChanged(ref this.progressTimeSpan, value); }
-        }
+        public TimeSpan ProgressTimeSpan => this.progressTimeSpan.Value;
 
-        public double Progress
-        {
-            get { return this.progress; }
-            private set { this.RaiseAndSetIfChanged(ref this.progress, value); }
-        }
+        public double Progress => this.progress.Value;
 
-        public IReadOnlyReactiveList<ExerciseViewModel> Exercises
-        {
-            get { return this.exercises; }
-            private set { this.RaiseAndSetIfChanged(ref this.exercises, value); }
-        }
+        public IReadOnlyReactiveList<ExerciseViewModel> Exercises => this.exercises;
 
-        public ExerciseViewModel CurrentExercise
-        {
-            get { return this.currentExercise; }
-            private set { this.RaiseAndSetIfChanged(ref this.currentExercise, value); }
-        }
+        public ExerciseViewModel CurrentExercise => this.currentExercise.Value;
 
-        public bool IsStarted
-        {
-            get { return this.isStarted; }
-            private set { this.RaiseAndSetIfChanged(ref this.isStarted, value); }
-        }
+        public bool IsStarted => this.isStarted.Value;
 
-        public bool IsPaused
-        {
-            get { return this.isPaused; }
-            private set { this.RaiseAndSetIfChanged(ref this.isPaused, value); }
-        }
+        public bool IsPaused => this.isPaused.Value;
 
-        public bool IsStartVisible
-        {
-            get { return this.isStartVisible; }
-            private set { this.RaiseAndSetIfChanged(ref this.isStartVisible, value); }
-        }
+        public bool IsStartVisible => this.isStartVisible.Value;
 
-        public bool IsPauseVisible
-        {
-            get { return this.isPauseVisible; }
-            private set { this.RaiseAndSetIfChanged(ref this.isPauseVisible, value); }
-        }
+        public bool IsPauseVisible => this.isPauseVisible.Value;
 
-        public bool IsResumeVisible
-        {
-            get { return this.isResumeVisible; }
-            private set { this.RaiseAndSetIfChanged(ref this.isResumeVisible, value); }
-        }
+        public bool IsResumeVisible => this.isResumeVisible.Value;
 
         public ReactiveCommand<TimeSpan?, Unit> StartCommand => this.startCommand;
 

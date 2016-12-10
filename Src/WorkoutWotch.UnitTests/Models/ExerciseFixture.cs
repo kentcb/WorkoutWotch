@@ -200,39 +200,30 @@
             var eventMatcher1 = new EventMatcherMock();
             var eventMatcher2 = new EventMatcherMock();
             var eventMatcher3 = new EventMatcherMock();
-
             action1
                 .When(x => x.Duration)
                 .Return(TimeSpan.FromSeconds(10));
-
             action2
                 .When(x => x.Duration)
                 .Return(TimeSpan.FromSeconds(3));
-
             action3
                 .When(x => x.Duration)
                 .Return(TimeSpan.FromSeconds(1));
-
             action1
                 .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Throw();
-
             action2
                 .When(x => x.Execute(It.IsAny<ExecutionContext>()))
                 .Throw();
-
             eventMatcher1
                 .When(x => x.Matches(It.IsAny<IEvent>()))
                 .Return((IEvent @event) => @event is BeforeExerciseEvent);
-
             eventMatcher2
                 .When(x => x.Matches(It.IsAny<IEvent>()))
                 .Return((IEvent @event) => @event is BeforeExerciseEvent);
-
             eventMatcher3
                 .When(x => x.Matches(It.IsAny<IEvent>()))
                 .Return((IEvent @event) => @event is BeforeExerciseEvent);
-
             var sut = new ExerciseBuilder()
                 .WithMatcherWithAction(new MatcherWithAction(eventMatcher1, action1))
                 .WithMatcherWithAction(new MatcherWithAction(eventMatcher2, action2))

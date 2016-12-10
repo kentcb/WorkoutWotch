@@ -2,7 +2,6 @@ namespace WorkoutWotch.ViewModels
 {
     using System;
     using System.Reactive.Concurrency;
-    using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using Genesis.Ensure;
     using ReactiveUI;
@@ -12,10 +11,10 @@ namespace WorkoutWotch.ViewModels
     {
         private readonly ViewModelActivator activator;
         private readonly Exercise model;
-        private ExecutionContext executionContext;
-        private TimeSpan progressTimeSpan;
-        private bool isActive;
-        private double progress;
+        private readonly ObservableAsPropertyHelper<ExecutionContext> executionContext;
+        private readonly ObservableAsPropertyHelper<TimeSpan> progressTimeSpan;
+        private readonly ObservableAsPropertyHelper<bool> isActive;
+        private readonly ObservableAsPropertyHelper<double> progress;
 
         public ExerciseViewModel(IScheduler scheduler, Exercise model, IObservable<ExecutionContext> executionContext)
         {
@@ -26,7 +25,42 @@ namespace WorkoutWotch.ViewModels
             this.activator = new ViewModelActivator();
             this.model = model;
 
-            this
+            var isActivated = this
+                .GetIsActivated();
+
+            var activeExecutionContext = isActivated
+                .Select(
+                    activated =>
+                    {
+                        if (activated)
+                        {
+                            return executionContext;
+                        }
+                        else
+                        {
+                            return Observable<ExecutionContext>.Default;
+                        }
+                    })
+                .Switch()
+                .Publish()
+                .RefCount();
+
+            this.executionContext = activeExecutionContext
+                .ToProperty(this, x => x.ExecutionContext, scheduler: scheduler);
+
+            this.progressTimeSpan = activeExecutionContext
+                .Select(
+                    ec =>
+                        ec == null
+                            ? Observable.Return(TimeSpan.Zero)
+                            : ec
+                                .WhenAnyValue(x => x.CurrentExerciseProgress)
+                                .Where(_ => ec.CurrentExercise == this.model)
+                                .StartWith(TimeSpan.Zero))
+                .Switch()
+                .ToProperty(this, x => x.ProgressTimeSpan, scheduler: scheduler);
+
+            this.progress = this
                 .WhenAny(
                     x => x.Duration,
                     x => x.ProgressTimeSpan,
@@ -34,10 +68,9 @@ namespace WorkoutWotch.ViewModels
                 .Select(progressRatio => double.IsNaN(progressRatio) || double.IsInfinity(progressRatio) ? 0d : progressRatio)
                 .Select(progressRatio => Math.Min(1d, progressRatio))
                 .Select(progressRatio => Math.Max(0d, progressRatio))
-                .ObserveOn(scheduler)
-                .SubscribeSafe(x => this.Progress = x);
+                .ToProperty(this, x => x.Progress, scheduler: scheduler);
 
-            Observable
+            this.isActive = Observable
                 .CombineLatest(
                     this
                         .WhenAnyValue(x => x.ExecutionContext)
@@ -48,33 +81,7 @@ namespace WorkoutWotch.ViewModels
                         .Select(ec => ec == null ? Observable<Exercise>.Never : ec.WhenAnyValue(x => x.CurrentExercise))
                         .Switch(),
                     (skip, current) => skip == TimeSpan.Zero && current == this.model)
-                .ObserveOn(scheduler)
-                .SubscribeSafe(x => this.IsActive = x);
-
-            this
-                .WhenActivated(
-                    disposables =>
-                    {
-                        executionContext
-                            .ObserveOn(scheduler)
-                            .SubscribeSafe(x => this.ExecutionContext = x)
-                            .AddTo(disposables);
-
-                        this
-                            .WhenAnyValue(x => x.ExecutionContext)
-                            .Select(
-                                ec =>
-                                    ec == null
-                                        ? Observable.Return(TimeSpan.Zero)
-                                        : ec
-                                            .WhenAnyValue(x => x.CurrentExerciseProgress)
-                                            .Where(_ => ec.CurrentExercise == this.model)
-                                            .StartWith(TimeSpan.Zero))
-                            .Switch()
-                            .ObserveOn(scheduler)
-                            .SubscribeSafe(x => this.ProgressTimeSpan = x)
-                            .AddTo(disposables);
-                    });
+                .ToProperty(this, x => x.IsActive, scheduler: scheduler);
         }
 
         public ViewModelActivator Activator => this.activator;
@@ -85,28 +92,12 @@ namespace WorkoutWotch.ViewModels
 
         public TimeSpan Duration => this.model.Duration;
 
-        public TimeSpan ProgressTimeSpan
-        {
-            get { return this.progressTimeSpan; }
-            private set { this.RaiseAndSetIfChanged(ref this.progressTimeSpan, value); }
-        }
+        public TimeSpan ProgressTimeSpan => this.progressTimeSpan.Value;
 
-        public double Progress
-        {
-            get { return this.progress; }
-            private set { this.RaiseAndSetIfChanged(ref this.progress, value); }
-        }
+        public double Progress => this.progress.Value;
 
-        public bool IsActive
-        {
-            get { return this.isActive; }
-            private set { this.RaiseAndSetIfChanged(ref this.isActive, value); }
-        }
+        public bool IsActive => this.isActive.Value;
 
-        private ExecutionContext ExecutionContext
-        {
-            get { return this.executionContext; }
-            set { this.RaiseAndSetIfChanged(ref this.executionContext, value); }
-        }
+        private ExecutionContext ExecutionContext => this.executionContext.Value;
     }
 }
