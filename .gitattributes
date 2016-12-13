@@ -1,2 +1,8 @@
 * text eol=lf
-* text eol=lf
+
+*.gif binary
+*.dll binary
+*.png binary
+*.key binary
+Src/WorkoutWotch.UI.iOS/iTunesArtwork binary
+Src/WorkoutWotch.UI.iOS/iTunesArtwork@2x binary
